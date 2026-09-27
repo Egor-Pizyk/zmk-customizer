@@ -42,7 +42,7 @@ What screens look like and which primitives exist. Component and state rules: `r
 | `Tabs` | `role="tablist"` buttons | Roving tabindex, arrows + Home/End, automatic activation. Used for layer tabs and file preview. |
 | `Dialog` | `<dialog>` + `showModal()` | `open`, `onClose`, `title` → `aria-labelledby`. Escape and focus return are native. |
 | `Popover` | `popover` attribute | Non-modal pickers (binding picker, overflow menu). No positioning library. |
-| `StatusMessage` | `role="status"` region | Mounted once in the shell; toasts render into it (below). |
+| `StatusMessage` | `<output>` (polite status region) | Lives in `ui/shell/status-message.tsx` (it reads the project context). Always mounted, empty on load; each announcement is a keyed `<span>` inside it, so a repeated text is announced again. |
 | `EmptyState` | `<div>` | One sentence + the primary action ("No keys yet. Add key / Start from preset"). |
 | `Badge` | `<span>` | `tone`: neutral / danger / warning / success; always text, never color alone. |
 | `CodeBlock` | `<pre><code>` | `font-mono text-xs`, `tabIndex={0}` + `aria-label={path}` (scrollable region), "Copy" button → `navigator.clipboard.writeText`. No syntax-highlighting dependency. |
@@ -88,7 +88,7 @@ Every catalog-backed control (behavior, keycode, Kconfig option) shows label, on
 
 - Global: Alt+Shift+key, matched by `KeyboardEvent.code` (Option changes `event.key` on macOS): Alt+Shift+1..4 workspaces, `,` settings, P problems panel, / help. When focus is in a text input, textarea or select, or a modal dialog is open, the native behavior wins; do not intercept.
 - Scoped (single keys, only while their widget has focus, WCAG 2.1.4): canvas `s`, `g`, `=`/`+`, `-`, `0`, arrows, `?` (details in `accessibility.md`).
-- Planned undo/redo: `Mod+Z`, `Mod+Shift+Z`.
+- Project: `Mod+Z` undo, `Mod+Shift+Z` redo, `Mod+S` save, `Mod+O` open, matched by `KeyboardEvent.code` (`specs/002-project-foundation/contracts/shortcuts.md`).
 - Full list: `specs/001-app-shell-ui/contracts/shortcuts.md`. One `as const` list (`SHORTCUTS` in `ui/shortcuts.ts`) is read by both the handler and the help dialog, so help cannot drift. The help dialog opens from the tab-bar footer button "Keyboard shortcuts".
 
 ## Loading and async

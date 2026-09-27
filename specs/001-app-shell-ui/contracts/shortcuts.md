@@ -1,5 +1,7 @@
 # Contract: Keyboard shortcuts
 
+Project shortcuts (Mod+Z, Mod+Shift+Z, Mod+S, Mod+O): `specs/002-project-foundation/contracts/shortcuts.md`.
+
 Source of truth: `SHORTCUTS` in `src/ui/shortcuts.ts`. Both the `keydown` handler and the help dialog read it (SC-008). Rationale: research R9.
 
 ## Global (Alt+Shift, matched by `KeyboardEvent.code`)

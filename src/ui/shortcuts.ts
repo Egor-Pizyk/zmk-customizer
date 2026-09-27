@@ -67,6 +67,25 @@ export const SHORTCUTS = [
   { scope: 'canvas', id: 'pan-up-1u', keys: ['ArrowUp'], shift: true, label: 'Pan up 1u' },
   { scope: 'canvas', id: 'pan-down-1u', keys: ['ArrowDown'], shift: true, label: 'Pan down 1u' },
   { scope: 'canvas', id: 'open-help', keys: ['?'], label: 'Keyboard shortcuts' },
+  // Cmd on macOS, Ctrl elsewhere; matched by `code` so non-Latin layouts work (002 research R12).
+  { scope: 'project', id: 'undo', code: 'KeyZ', keyLabel: 'Z', shift: false, label: 'Undo' },
+  { scope: 'project', id: 'redo', code: 'KeyZ', keyLabel: 'Z', shift: true, label: 'Redo' },
+  {
+    scope: 'project',
+    id: 'save-project',
+    code: 'KeyS',
+    keyLabel: 'S',
+    shift: false,
+    label: 'Save the project to a file',
+  },
+  {
+    scope: 'project',
+    id: 'open-project',
+    code: 'KeyO',
+    keyLabel: 'O',
+    shift: false,
+    label: 'Open a project file',
+  },
 ] as const;
 
 export type Shortcut = (typeof SHORTCUTS)[number];
@@ -93,9 +112,21 @@ function matchesCanvasKey(shortcut: Shortcut, input: ShortcutInput): boolean {
   return isShiftMatched && shortcut.keys.some((shortcutKey) => shortcutKey === key);
 }
 
+function matchProjectShortcut(input: ShortcutInput): ShortcutId | undefined {
+  return SHORTCUTS.find(
+    (shortcut) =>
+      shortcut.scope === 'project' &&
+      shortcut.code === input.code &&
+      shortcut.shift === input.shiftKey,
+  )?.id;
+}
+
 export function matchShortcut(input: ShortcutInput): ShortcutId | undefined {
-  if (input.isTypingTarget || input.isDialogOpen || input.ctrlKey || input.metaKey) {
+  if (input.isTypingTarget || input.isDialogOpen) {
     return undefined;
+  }
+  if (input.ctrlKey || input.metaKey) {
+    return input.altKey ? undefined : matchProjectShortcut(input);
   }
   if (input.altKey && input.shiftKey) {
     return SHORTCUTS.find((shortcut) => shortcut.scope === 'global' && shortcut.code === input.code)
@@ -129,6 +160,8 @@ export const POINTER_GESTURES = [
 ] as const;
 
 const REPEATABLE_SHORTCUT_IDS: ReadonlySet<ShortcutId> = new Set([
+  'undo',
+  'redo',
   'zoom-in',
   'zoom-out',
   'pan-left',

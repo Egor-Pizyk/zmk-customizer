@@ -3,10 +3,12 @@ import { IconButton } from '../components/icon-button';
 import { CloseIcon } from '../components/icons/close-icon';
 import { usePreferences } from '../preferences-context';
 import { getWorkspaceLabel } from '../workspaces';
-import { ISSUES_PANEL_ID, NO_ISSUES } from './workspace-issue';
+import { useProject } from '../project-context';
+import { ISSUES_PANEL_ID } from './workspace-issue';
+import type { WorkspaceIssue } from './workspace-issue';
 
 export function IssuesPanel() {
-  const issues = NO_ISSUES;
+  const { issues } = useProject();
   const { changePreferences } = usePreferences();
   const headingId = useId();
 
@@ -34,12 +36,34 @@ export function IssuesPanel() {
         <ul className="overflow-auto px-3 pb-3">
           {issues.map((issue) => (
             <li key={`${issue.workspaceId}:${issue.code}:${issue.path.join('.')}`}>
-              <span className="font-medium">{getWorkspaceLabel(issue.workspaceId)}</span>
-              {`: ${issue.message}`}
+              <IssueButton issue={issue} />
             </li>
           ))}
         </ul>
       )}
     </section>
+  );
+}
+
+type IssueButtonProps = {
+  readonly issue: WorkspaceIssue;
+};
+
+// Activating an issue focuses the control that owns its path (admin-ui.md "Validation display").
+function IssueButton({ issue }: IssueButtonProps) {
+  function handleClick() {
+    const selector = `[data-issue-path="${issue.path.join('.')}"]`;
+    document.querySelector<HTMLElement>(selector)?.focus();
+  }
+
+  return (
+    <button
+      className="rounded-md px-1 text-left hover:bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+      onClick={handleClick}
+      type="button"
+    >
+      <span className="font-medium">{getWorkspaceLabel(issue.workspaceId)}</span>
+      {`: ${issue.message}`}
+    </button>
   );
 }

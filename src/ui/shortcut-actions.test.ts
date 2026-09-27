@@ -62,3 +62,9 @@ describe('getShortcutAction', () => {
     expect(getShortcutAction('open-help', CONTEXT)).toEqual({ kind: 'open-help' });
   });
 });
+
+describe('getShortcutAction: project shortcuts', () => {
+  it.each(['undo', 'redo', 'save-project', 'open-project'] as const)('%s', (id) => {
+    expect(getShortcutAction(id, CONTEXT)).toEqual({ kind: id });
+  });
+});
