@@ -1,0 +1,64 @@
+import { describe, expect, it } from 'vitest';
+import { DEFAULT_PREFERENCES, DEFAULT_VIEWPORT } from '../storage/preferences';
+import { getShortcutAction } from './shortcut-actions';
+import type { ShortcutContext } from './shortcut-actions';
+
+const CONTEXT: ShortcutContext = {
+  preferences: DEFAULT_PREFERENCES,
+  focusedCanvas: 'bindings',
+  surfaceCenter: { xPx: 200, yPx: 100 },
+};
+
+function bindingsPan(panXPx: number) {
+  return { changes: { viewByWorkspace: { bindings: { panXPx } } } };
+}
+
+describe('getShortcutAction', () => {
+  it('switches workspace', () => {
+    expect(getShortcutAction('workspace-firmware', CONTEXT)).toEqual({
+      kind: 'change-preferences',
+      changes: { activeWorkspaceId: 'firmware' },
+    });
+  });
+
+  it.each([
+    ['toggle-snap', 'isSnapEnabled'],
+    ['toggle-grid', 'isGridVisible'],
+    ['toggle-issues-panel', 'isIssuesPanelOpen'],
+  ] as const)('%s flips %s', (id, field) => {
+    expect(getShortcutAction(id, CONTEXT)).toEqual({
+      kind: 'change-preferences',
+      changes: { [field]: !DEFAULT_PREFERENCES[field] },
+    });
+  });
+
+  it('zooms only the focused canvas, around its center', () => {
+    expect(getShortcutAction('zoom-in', CONTEXT)).toMatchObject({
+      kind: 'change-preferences',
+      changes: {
+        viewByWorkspace: {
+          schematic: DEFAULT_VIEWPORT,
+          bindings: { zoom: 1.25, panXPx: 200 - 200 * 1.25, panYPx: 100 - 100 * 1.25 },
+        },
+      },
+    });
+  });
+
+  it('pans by the grid step, or by 1u with Shift', () => {
+    expect(getShortcutAction('pan-right', CONTEXT)).toMatchObject(
+      bindingsPan(-48 * DEFAULT_PREFERENCES.gridSizeU),
+    );
+    expect(getShortcutAction('pan-right-1u', CONTEXT)).toMatchObject(bindingsPan(-48));
+  });
+
+  it('ignores canvas actions without a focused canvas', () => {
+    expect(
+      getShortcutAction('reset-view', { ...CONTEXT, focusedCanvas: undefined }),
+    ).toBeUndefined();
+  });
+
+  it('opens dialogs', () => {
+    expect(getShortcutAction('open-settings', CONTEXT)).toEqual({ kind: 'open-settings' });
+    expect(getShortcutAction('open-help', CONTEXT)).toEqual({ kind: 'open-help' });
+  });
+});

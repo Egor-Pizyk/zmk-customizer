@@ -1,0 +1,473 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "eslint",
+    "typescript",
+    "oxc",
+    "unicorn",
+    "react",
+    "jsx-a11y",
+    "import",
+    "promise",
+    "vitest"
+  ],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error",
+    "pedantic": "error",
+    "perf": "error"
+  },
+  "options": {
+    "typeAware": true,
+    "reportUnusedDisableDirectives": "error"
+  },
+  "env": {
+    "browser": true,
+    "es2024": true
+  },
+  "ignorePatterns": ["dist", "coverage"],
+  "settings": {
+    "better-tailwindcss": { "entryPoint": "src/styles.css" }
+  },
+  "rules": {
+    // Categories above enable every correctness/suspicious/pedantic/perf rule of the plugins (incl. all jsx-a11y rules, react-hooks + React Compiler rules, type-aware typescript-eslint rules). Below: style/restriction rules ported from typescript-eslint strict+stylistic-type-checked, eslint-plugin-react recommended+jsx-runtime, unicorn recommended, import, promise, vitest recommended, plus project rules.
+
+    "eslint/no-console": "error",
+    "eslint/no-alert": "error",
+    "eslint/no-empty": "error",
+    "eslint/no-empty-function": "error",
+    "eslint/no-nested-ternary": "error",
+    "eslint/max-depth": ["error", 3],
+    "eslint/max-params": ["error", 3],
+    "eslint/max-lines-per-function": [
+      "error",
+      { "max": 40, "skipBlankLines": true, "skipComments": true }
+    ],
+    "eslint/id-length": [
+      "error",
+      {
+        "min": 2,
+        "properties": "never",
+        "exceptions": ["i", "j", "_", "x", "y", "w", "h", "r", "z"]
+      }
+    ],
+    "eslint/no-param-reassign": ["error", { "props": true }],
+    "eslint/prefer-const": "error",
+    "eslint/no-var": "error",
+    "eslint/curly": "error",
+    "eslint/object-shorthand": "error",
+    "eslint/prefer-template": "error",
+    "eslint/no-implicit-coercion": "error",
+    "eslint/default-param-last": "error",
+    "eslint/no-useless-computed-key": "error",
+    "eslint/no-lone-blocks": "error",
+    "eslint/no-labels": "error",
+    "eslint/no-sequences": "error",
+    "eslint/no-return-assign": "error",
+    "eslint/no-multi-assign": "error",
+    "eslint/no-proto": "error",
+    "eslint/no-new-func": "error",
+    "eslint/no-script-url": "error",
+    "eslint/yoda": "error",
+    "eslint/operator-assignment": "error",
+    "eslint/logical-assignment-operators": "error",
+    "eslint/prefer-object-spread": "error",
+    "eslint/prefer-object-has-own": "error",
+    "eslint/prefer-spread": "error",
+    "eslint/prefer-rest-params": "error",
+    "eslint/prefer-exponentiation-operator": "error",
+    "eslint/prefer-numeric-literals": "error",
+    "eslint/no-restricted-globals": [
+      "error",
+      { "name": "fetch", "message": "Static app: no runtime network calls." },
+      { "name": "XMLHttpRequest", "message": "Static app: no runtime network calls." },
+      { "name": "WebSocket", "message": "Static app: no runtime network calls." }
+    ],
+    "eslint/no-restricted-properties": [
+      "error",
+      { "object": "Math", "property": "random", "message": "Output must be deterministic." },
+      { "object": "Date", "property": "now", "message": "Output must be deterministic." },
+      { "object": "navigator", "property": "sendBeacon", "message": "No telemetry." },
+      { "object": "React", "property": "forwardRef", "message": "React 19: `ref` is a plain prop." }
+    ],
+    "eslint/no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "react",
+            "importNames": ["forwardRef", "FC", "FunctionComponent"],
+            "message": "React 19: `ref` is a plain prop (no forwardRef); type props as `XProps`, no FC (docs/guidelines/frontend/react.md)."
+          }
+        ]
+      }
+    ],
+    "eslint/require-await": "off",
+
+    "typescript/no-explicit-any": "error",
+    "typescript/no-non-null-assertion": "error",
+    "typescript/no-namespace": "error",
+    "typescript/no-require-imports": "error",
+    "typescript/no-dynamic-delete": "error",
+    "typescript/no-empty-object-type": "error",
+    "typescript/no-invalid-void-type": "error",
+    "typescript/no-non-null-asserted-nullish-coalescing": "error",
+    "typescript/no-unnecessary-condition": "error",
+    "typescript/no-import-type-side-effects": "error",
+    "typescript/prefer-literal-enum-member": "error",
+    "typescript/prefer-reduce-type-parameter": "error",
+    "typescript/prefer-return-this-type": "error",
+    "typescript/unified-signatures": "error",
+    "typescript/use-unknown-in-catch-callback-variable": "error",
+    "typescript/adjacent-overload-signatures": "error",
+    "typescript/array-type": "error",
+    "typescript/ban-tslint-comment": "error",
+    "typescript/class-literal-property-style": "error",
+    "typescript/consistent-generic-constructors": "error",
+    "typescript/consistent-indexed-object-style": "error",
+    "typescript/consistent-type-assertions": ["error", { "assertionStyle": "never" }],
+    "typescript/consistent-type-definitions": ["error", "type"],
+    "typescript/consistent-type-imports": "error",
+    "typescript/consistent-type-exports": "error",
+    "typescript/dot-notation": "error",
+    "typescript/no-inferrable-types": "error",
+    "typescript/no-restricted-types": [
+      "error",
+      {
+        "types": {
+          "FC": "Type props as `XProps` in the signature; no FC.",
+          "React.FC": "Type props as `XProps` in the signature; no FC.",
+          "FunctionComponent": "Type props as `XProps` in the signature; no FC.",
+          "React.FunctionComponent": "Type props as `XProps` in the signature; no FC."
+        }
+      }
+    ],
+    "typescript/prefer-find": "error",
+    "typescript/prefer-for-of": "error",
+    "typescript/prefer-function-type": "error",
+    "typescript/prefer-optional-chain": "error",
+    "typescript/prefer-regexp-exec": "error",
+    "typescript/prefer-string-starts-ends-with": "error",
+    // Off: non-nullable-type-assertion-style suggests `!`, banned by no-non-null-assertion; prefer-readonly-parameter-types is too noisy for React props/DOM types.
+    "typescript/non-nullable-type-assertion-style": "off",
+    "typescript/prefer-readonly-parameter-types": "off",
+
+    "import/no-default-export": "error",
+    "import/no-cycle": "error",
+    "import/no-duplicates": "error",
+    "import/first": "error",
+    "import/newline-after-import": "error",
+    "import/no-mutable-exports": "error",
+    "import/no-amd": "error",
+    "import/no-commonjs": "error",
+    "import/no-webpack-loader-syntax": "error",
+    "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
+    "import/no-unassigned-import": ["error", { "allow": ["**/*.css"] }],
+
+    "react/self-closing-comp": "error",
+    "react/jsx-boolean-value": "error",
+    "react/jsx-curly-brace-presence": "error",
+    "react/jsx-fragments": "error",
+    "react/jsx-pascal-case": "error",
+    "react/jsx-filename-extension": ["error", { "extensions": [".tsx"], "allow": "as-needed" }],
+    "react/jsx-handler-names": ["error", { "checkLocalVariables": true }],
+    "react/hook-use-state": "error",
+    "react/button-has-type": "error",
+    "react/no-danger": "error",
+    "react/no-unknown-property": "error",
+    "react/unsupported-syntax": "error",
+    "react/only-export-components": [
+      "error",
+      { "allowExportNames": ["usePreferences", "useProject"] }
+    ],
+    "react/prefer-function-component": "error",
+    "react/forbid-dom-props": [
+      "error",
+      {
+        "forbid": [
+          {
+            "propName": "style",
+            "message": "CSP forbids inline styles (style-src-attr). Use Tailwind classes or SVG presentation attributes."
+          }
+        ]
+      }
+    ],
+    "react/forbid-elements": [
+      "error",
+      {
+        "forbid": [
+          {
+            "element": "ProjectContext.Provider",
+            "message": "React 19: render <ProjectContext value={...}>, not .Provider."
+          }
+        ]
+      }
+    ],
+    // Off: react-in-jsx-scope (automatic JSX runtime).
+    "react/react-in-jsx-scope": "off",
+
+    "jsx-a11y/no-noninteractive-tabindex": [
+      "error",
+      { "tags": ["pre"], "roles": ["tabpanel", "application"] }
+    ],
+
+    "unicorn/filename-case": ["error", { "case": "kebabCase" }],
+    // False positive on zod's schema `.catch(default)`; the app has no top-level promise chains.
+    "unicorn/prefer-top-level-await": "off",
+    "unicorn/no-array-for-each": "error",
+    "unicorn/no-array-reduce": ["error", { "allowSimpleOperations": true }],
+    "unicorn/throw-new-error": "error",
+    "unicorn/prefer-node-protocol": "error",
+    "unicorn/switch-case-braces": "error",
+    "unicorn/switch-case-break-position": "error",
+    "unicorn/catch-error-name": "error",
+    "unicorn/consistent-date-clone": "error",
+    "unicorn/consistent-existence-index-check": "error",
+    "unicorn/consistent-template-literal-escape": "error",
+    "unicorn/error-message": "error",
+    "unicorn/import-style": "error",
+    "unicorn/no-abusive-eslint-disable": "error",
+    "unicorn/no-anonymous-default-export": "error",
+    "unicorn/no-array-method-this-argument": "error",
+    "unicorn/no-await-expression-member": "error",
+    "unicorn/no-console-spaces": "error",
+    "unicorn/no-document-cookie": "error",
+    "unicorn/no-magic-array-flat-depth": "error",
+    "unicorn/no-process-exit": "error",
+    "unicorn/no-unreadable-array-destructuring": "error",
+    "unicorn/no-useless-collection-argument": "error",
+    "unicorn/no-useless-error-capture-stack-trace": "error",
+    "unicorn/no-useless-iterator-to-array": "error",
+    "unicorn/no-zero-fractions": "error",
+    "unicorn/numeric-separators-style": "error",
+    "unicorn/prefer-array-index-of": "error",
+    "unicorn/prefer-bigint-literals": "error",
+    "unicorn/prefer-class-fields": "error",
+    "unicorn/prefer-classlist-toggle": "error",
+    "unicorn/prefer-default-parameters": "error",
+    "unicorn/prefer-dom-node-text-content": "error",
+    "unicorn/prefer-export-from": "error",
+    "unicorn/prefer-global-this": "error",
+    "unicorn/prefer-includes": "error",
+    "unicorn/prefer-keyboard-event-key": "error",
+    "unicorn/prefer-logical-operator-over-ternary": "error",
+    "unicorn/prefer-modern-dom-apis": "error",
+    "unicorn/prefer-modern-math-apis": "error",
+    "unicorn/prefer-module": "error",
+    "unicorn/prefer-negative-index": "error",
+    "unicorn/prefer-number-properties": "error",
+    "unicorn/prefer-object-from-entries": "error",
+    "unicorn/prefer-optional-catch-binding": "error",
+    "unicorn/prefer-reflect-apply": "error",
+    "unicorn/prefer-response-static-json": "error",
+    "unicorn/prefer-spread": "error",
+    "unicorn/prefer-string-raw": "error",
+    "unicorn/prefer-string-trim-start-end": "error",
+    "unicorn/prefer-structured-clone": "error",
+    "unicorn/prefer-ternary": "error",
+    "unicorn/relative-url-style": "error",
+    "unicorn/require-array-join-separator": "error",
+    "unicorn/require-module-attributes": "error",
+    "unicorn/text-encoding-identifier-case": "error",
+    // Off (from unicorn recommended): empty-brace-spaces + number-literal-case are formatter territory (eslint-config-prettier disables them); no-nested-ternary is covered by the stricter eslint/no-nested-ternary; no-null only in pure layers (React renders null, DOM APIs return null).
+
+    "promise/no-return-wrap": "error",
+    "promise/param-names": "error",
+    "promise/catch-or-return": "error",
+    "promise/no-nesting": "error",
+    "promise/no-return-in-finally": "error",
+
+    "vitest/no-identical-title": "error",
+    "vitest/no-import-node-test": "error"
+  },
+  "overrides": [
+    {
+      "files": ["vite.config.ts"],
+      "rules": {
+        "import/no-default-export": "off"
+      }
+    },
+    {
+      "files": ["**/*.test.ts", "**/*.test.tsx"],
+      "rules": {
+        "eslint/max-lines-per-function": "off",
+        "eslint/max-lines": "off"
+      }
+    },
+    {
+      "files": ["src/domain/**", "src/generators/**", "src/catalog/**"],
+      "rules": {
+        "unicorn/no-null": ["error", { "checkStrictEquality": true }]
+      }
+    },
+    {
+      "files": ["src/domain/**"],
+      "rules": {
+        "eslint/no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "(^|/)(ui|storage|generators|catalog)(/|$)",
+                "message": "domain/ is pure: it must not import ui/, storage/, generators/ or catalog/; catalog data is passed in as arguments (AGENTS.md 3.1)."
+              },
+              {
+                "regex": "^react(-dom)?(/|$)",
+                "message": "domain/ is pure TS: no React (AGENTS.md 3.1)."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/generators/**"],
+      "rules": {
+        "eslint/no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "(^|/)(ui|storage)(/|$)",
+                "message": "generators/ are pure: they must not import ui/ or storage/ (AGENTS.md 3.1)."
+              },
+              {
+                "regex": "^react(-dom)?(/|$)",
+                "message": "generators/ are pure TS: no React (AGENTS.md 3.1)."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/catalog/**"],
+      "rules": {
+        "eslint/no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "(^|/)(ui|storage|generators)(/|$)",
+                "message": "catalog/ is static data: it may import only domain types (AGENTS.md 3.1)."
+              },
+              {
+                "regex": "(^|/)domain(/|$)",
+                "allowTypeImports": true,
+                "message": "catalog/ may import domain types only (`import type`)."
+              },
+              {
+                "regex": "^react(-dom)?(/|$)",
+                "message": "catalog/ is static data: no React (AGENTS.md 3.1)."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/ui/*/**/*.ts", "src/ui/*/**/*.tsx"],
+      "rules": {
+        "eslint/no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "react",
+                "importNames": ["forwardRef", "FC", "FunctionComponent"],
+                "message": "React 19: `ref` is a plain prop (no forwardRef); type props as `XProps`, no FC (docs/guidelines/frontend/react.md)."
+              }
+            ],
+            "patterns": [
+              {
+                "regex": "(^|/)(schematic|bindings|firmware|export)/",
+                "message": "ui/components/ must not import a workspace folder, and a workspace folder must not import another workspace folder; move shared pieces to ui/shell/ or ui/canvas/ (docs/guidelines/frontend/react.md)."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/ui/components/**"],
+      "rules": {
+        "eslint/no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "react",
+                "importNames": ["forwardRef", "FC", "FunctionComponent"],
+                "message": "React 19: `ref` is a plain prop (no forwardRef); type props as `XProps`, no FC (docs/guidelines/frontend/react.md)."
+              }
+            ],
+            "patterns": [
+              {
+                "regex": "(^|/)(schematic|bindings|firmware|export)/",
+                "message": "ui/components/ must not import a workspace folder, and a workspace folder must not import another workspace folder; move shared pieces to ui/shell/ or ui/canvas/ (docs/guidelines/frontend/react.md)."
+              },
+              {
+                "regex": "(^|/)domain(/|$)",
+                "message": "ui/components/ primitives know nothing about Project: take strings, numbers and callbacks (docs/guidelines/frontend/react.md)."
+              },
+              {
+                "regex": "(^|/)(storage|canvas|shell)(/|$)|preferences-context",
+                "message": "ui/components/ primitives take strings, numbers and callbacks; they do not read preferences or import workspace folders (docs/guidelines/frontend/react.md)."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/ui/components/floating-panel.tsx"],
+      "rules": {
+        // Dynamic px position; React sets style via CSSOM, which CSP style-src allows (spec 001 R7).
+        "react/forbid-dom-props": "off"
+      }
+    },
+    {
+      "files": ["src/ui/**/*dialog.tsx"],
+      "rules": {
+        // A modal <dialog> may set initial focus with autoFocus (accessibility.md).
+        "jsx-a11y/no-autofocus": "off"
+      }
+    },
+    {
+      "files": ["src/**/*.tsx"],
+      "jsPlugins": ["eslint-plugin-better-tailwindcss"],
+      "rules": {
+        "better-tailwindcss/no-unknown-classes": "error",
+        "better-tailwindcss/no-conflicting-classes": "error",
+        "better-tailwindcss/no-duplicate-classes": "error",
+        "better-tailwindcss/no-deprecated-classes": "error",
+        "better-tailwindcss/no-concatenated-classes": "error",
+        "better-tailwindcss/enforce-canonical-classes": "error",
+        "better-tailwindcss/enforce-shorthand-classes": "error",
+        "better-tailwindcss/no-restricted-classes": [
+          "error",
+          {
+            "restrict": [
+              {
+                "pattern": "^(.*:)?(dark|(max-)?sm|(max-)?md):",
+                "message": "No dark:/sm:/md: variants (\"$0\"): dark mode comes from tokens; layout is unprefixed or lg:/xl: (tailwind.md)."
+              },
+              {
+                "pattern": "^(.*:)?outline-(none|hidden)$",
+                "message": "Never remove the outline (\"$0\"): use focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus."
+              },
+              {
+                "pattern": "\\]!?$",
+                "message": "No arbitrary values/properties (\"$0\"): use a semantic token from src/styles.css or add one."
+              },
+              {
+                "pattern": "\\(--.*\\)!?$",
+                "message": "No raw CSS variables in classes (\"$0\"): use the token's utility (bg-surface, text-accent)."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
