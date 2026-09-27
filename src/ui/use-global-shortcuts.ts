@@ -1,8 +1,11 @@
 import { useEffect, useEffectEvent } from 'react';
-import type { CanvasWorkspaceId } from '../storage/preferences';
+import type { CanvasWorkspaceId, Preferences } from '../storage/preferences';
 import { surfaceCenter } from './canvas/surface-center';
 import { usePreferences } from './preferences-context';
+import { assertNever } from '../domain/assert-never';
+import { useProject } from './project-context';
 import { getShortcutAction } from './shortcut-actions';
+import type { ShortcutAction } from './shortcut-actions';
 import { isRepeatableShortcut, matchShortcut } from './shortcuts';
 import type { ShortcutInput } from './shortcuts';
 import { isCanvasWorkspaceId } from './workspaces';
@@ -10,6 +13,7 @@ import { isCanvasWorkspaceId } from './workspaces';
 type ShortcutDialogs = {
   readonly handleSettingsOpen: () => void;
   readonly handleHelpOpen: () => void;
+  readonly handleOpenDialogOpen: () => void;
 };
 
 // Radios, checkboxes and buttons keep shortcuts working; only text entry blocks them (FR-039).
@@ -63,9 +67,57 @@ function shortcutInputFrom(
   };
 }
 
+type ShortcutHandlers = {
+  readonly changePreferences: (changes: Partial<Preferences>) => void;
+  readonly dialogs: ShortcutDialogs;
+  readonly project: {
+    readonly undo: () => void;
+    readonly redo: () => void;
+    readonly saveProjectFile: () => void;
+  };
+};
+
+function runShortcutAction(action: ShortcutAction, handlers: ShortcutHandlers) {
+  const { changePreferences, dialogs, project } = handlers;
+  switch (action.kind) {
+    case 'change-preferences': {
+      changePreferences(action.changes);
+      return;
+    }
+    case 'open-settings': {
+      dialogs.handleSettingsOpen();
+      return;
+    }
+    case 'open-help': {
+      dialogs.handleHelpOpen();
+      return;
+    }
+    case 'undo': {
+      project.undo();
+      return;
+    }
+    case 'redo': {
+      project.redo();
+      return;
+    }
+    case 'save-project': {
+      project.saveProjectFile();
+      return;
+    }
+    case 'open-project': {
+      dialogs.handleOpenDialogOpen();
+      return;
+    }
+    default: {
+      assertNever(action);
+    }
+  }
+}
+
 // One keydown listener for Alt+Shift globals and canvas-scoped single keys (research R9).
 export function useGlobalShortcuts(dialogs: ShortcutDialogs) {
   const { preferences, changePreferences } = usePreferences();
+  const project = useProject();
   const handleKeyDown = useEffectEvent((event: KeyboardEvent) => {
     const canvas = findCanvas(event.target);
     const focusedCanvas = canvasIdOf(canvas);
@@ -86,13 +138,7 @@ export function useGlobalShortcuts(dialogs: ShortcutDialogs) {
       return;
     }
     event.preventDefault();
-    if (action.kind === 'change-preferences') {
-      changePreferences(action.changes);
-    } else if (action.kind === 'open-settings') {
-      dialogs.handleSettingsOpen();
-    } else {
-      dialogs.handleHelpOpen();
-    }
+    runShortcutAction(action, { changePreferences, dialogs, project });
   });
 
   useEffect(() => {

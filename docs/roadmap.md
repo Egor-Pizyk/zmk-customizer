@@ -67,6 +67,10 @@ Workspaces (from 001): **Schematic** holds the layout editor (006) and matrix/wi
 
 ## 002 — project-foundation
 
+**Specified:** [`specs/002-project-foundation/spec.md`](../specs/002-project-foundation/spec.md).
+
+**Deviations (spec 002).** There is no "saving" status, because `localStorage` writes are synchronous. A damaged stored value is copied to a backup key, after which the main key may be overwritten; the main key does not stay untouched until confirmation.
+
 **Goal.** A project exists, survives reloads, can be saved to and loaded from a file, and every change can be undone. The project config is owned by the Schematic workspace; its file actions become the working New/Open/Save/Undo/Redo in the 001 project bar.
 
 **In scope**
@@ -122,6 +126,7 @@ Workspaces (from 001): **Schematic** holds the layout editor (006) and matrix/wi
 - Golden comparison: upstream files contain parts we do not generate (e.g. corne's display nodes, alternate 5-column layout) and upstream formatting. Proposed default: keep upstream files verbatim as reference and store our expected output beside them with a short `DIFFERENCES.md` listing each intentional deviation; tests compare against the expected output.
 - Whether presets are bundled data or built by test helpers only.
 - Whether `.zmk.yml` is generated at all (only used by ZMK's own repo tooling).
+- Kconfig string escaping of the keyboard name (`"`, `\`, non-ASCII) in `Kconfig.defconfig`: read the Kconfig rules first (002 research R3).
 
 **Relevant docs.** `docs/zmk/README.md`, `shield-files.md`, `kscan.md`, `matrix-transform.md`, `physical-layout.md`, `boards.md`, `keymap.md`.
 
@@ -387,8 +392,8 @@ Parsing existing ZMK shield files back into a project (Devicetree parsing), cust
 
 ## Open decisions (AGENTS.md is silent)
 
-- Schema versioning before first release: does every pre-release schema change need a migration, or does v1 freeze at first deploy?
-- Undo history: bounded size, and whether it persists across reloads.
+- ~~Schema versioning before first release~~ — resolved: v1 frozen at merge of 002; every later change adds a migration.
+- ~~Undo history~~ — resolved: session only, 100 steps (spec 002).
 - Hosting target for `dist/` and app CI provider (GitHub Actions assumed by the repo layout, not stated).
 - Canvas arrow keys (006 layout-editor): spec 001 makes plain arrows pan the canvas; accessibility.md wants arrows to move focus between keys once keys exist. Decide in 006: e.g. arrows move key focus/selection when a key is focused and pan otherwise, or pan moves to Alt+Shift+arrows.
 - Charlieplex kscan: own feature or part of 007.

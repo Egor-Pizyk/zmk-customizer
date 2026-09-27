@@ -1,9 +1,11 @@
 import { Button } from '../components/button';
 import { usePreferences } from '../preferences-context';
-import { ISSUES_PANEL_ID, NO_ISSUES } from './workspace-issue';
+import { useProject } from '../project-context';
+import { ISSUES_PANEL_ID } from './workspace-issue';
 
 export function IssuesToggle() {
   const { preferences, changePreferences } = usePreferences();
+  const { issues } = useProject();
 
   function handleClick() {
     changePreferences({ isIssuesPanelOpen: !preferences.isIssuesPanelOpen });
@@ -17,7 +19,7 @@ export function IssuesToggle() {
       onClick={handleClick}
       size="sm"
     >
-      {`Problems (${NO_ISSUES.length})`}
+      {`Problems (${issues.length})`}
     </Button>
   );
 }

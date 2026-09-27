@@ -1,21 +1,144 @@
+import { renameProject } from '../../domain/rename-project';
+import { setShieldName } from '../../domain/set-shield-name';
+import { toShieldName } from '../../domain/to-shield-name';
 import { Button } from '../components/button';
+import { useProject } from '../project-context';
+import type { SaveStatus } from '../project-state';
+import { DraftTextField } from './draft-text-field';
 
-const PROJECT_ACTIONS = ['New', 'Open', 'Save', 'Undo', 'Redo'] as const;
+const SAVE_STATUS_TEXT: Record<SaveStatus, string> = {
+  saved: 'Saved in this browser',
+  unavailable: 'Not saved: browser storage is blocked',
+  'quota-exceeded': 'Not saved: browser storage is full',
+  'backup-blocked': 'Not saved: damaged data from an earlier visit is still kept',
+};
 
-// Actions become available with the project feature (roadmap 002); until then they stay
-// focusable with a hint (research R11).
-export function ProjectBar() {
+type ProjectBarProps = {
+  readonly onNewClick: () => void;
+  readonly onOpenClick: () => void;
+};
+
+// Wraps instead of a fixed height, so issue text and 200% zoom never clip (accessibility.md).
+export function ProjectBar({ onNewClick, onOpenClick }: ProjectBarProps) {
+  const { saveStatus } = useProject();
+
+  function handleNewClick() {
+    onNewClick();
+  }
+
+  function handleOpenClick() {
+    onOpenClick();
+  }
+
   return (
-    <header className="flex h-12 shrink-0 items-center gap-3 border-b border-border bg-surface-raised px-4">
-      <span className="font-semibold">Untitled keyboard</span>
-      <span className="text-text-muted">Nothing to save</span>
-      <div className="ml-auto flex gap-1">
-        {PROJECT_ACTIONS.map((action) => (
-          <Button hint="Not available yet" isDisabled key={action} size="sm">
-            {action}
-          </Button>
-        ))}
-      </div>
+    <header className="flex min-h-12 shrink-0 flex-wrap items-end gap-3 border-b border-border bg-surface-raised px-4 py-2">
+      <ProjectNameFields />
+      <span className="self-center text-text-muted">{SAVE_STATUS_TEXT[saveStatus]}</span>
+      <ProjectActions onNewClick={handleNewClick} onOpenClick={handleOpenClick} />
     </header>
+  );
+}
+
+function ProjectNameFields() {
+  const { project, issues, commit } = useProject();
+
+  function issueTextAt(field: 'name' | 'shieldName'): string | undefined {
+    const messages = issues
+      .filter((issue) => issue.path[0] === field)
+      .map((issue) => issue.message);
+    return messages.length === 0 ? undefined : messages.join(' ');
+  }
+
+  function handleNameCommit(name: string) {
+    commit((current) => renameProject(current, { name }));
+  }
+
+  // An empty technical name clears the override: derive it from the name again (FR-012a).
+  function handleShieldNameCommit(text: string) {
+    commit((current) => setShieldName(current, { shieldName: text === '' ? undefined : text }));
+  }
+
+  return (
+    <>
+      <DraftTextField
+        error={issueTextAt('name')}
+        issuePath="name"
+        label="Name"
+        onCommit={handleNameCommit}
+        value={project.name}
+      />
+      <DraftTextField
+        error={issueTextAt('shieldName')}
+        issuePath="shieldName"
+        label="Technical name"
+        onCommit={handleShieldNameCommit}
+        placeholder={toShieldName(project.name)}
+        value={project.shieldName ?? ''}
+      />
+    </>
+  );
+}
+
+function ProjectActions({ onNewClick, onOpenClick }: ProjectBarProps) {
+  const { saveProjectFile } = useProject();
+
+  function handleNewClick() {
+    onNewClick();
+  }
+
+  function handleOpenClick() {
+    onOpenClick();
+  }
+
+  function handleSaveClick() {
+    saveProjectFile();
+  }
+
+  return (
+    <div className="ml-auto flex gap-1 self-center">
+      <Button onClick={handleNewClick} size="sm">
+        New
+      </Button>
+      <Button onClick={handleOpenClick} size="sm">
+        Open
+      </Button>
+      <Button onClick={handleSaveClick} size="sm">
+        Save
+      </Button>
+      <HistoryButtons />
+    </div>
+  );
+}
+
+function HistoryButtons() {
+  const { canUndo, canRedo, undo, redo } = useProject();
+
+  function handleUndoClick() {
+    undo();
+  }
+
+  function handleRedoClick() {
+    redo();
+  }
+
+  return (
+    <>
+      <Button
+        hint={canUndo ? undefined : 'Nothing to undo'}
+        isDisabled={!canUndo}
+        onClick={handleUndoClick}
+        size="sm"
+      >
+        Undo
+      </Button>
+      <Button
+        hint={canRedo ? undefined : 'Nothing to redo'}
+        isDisabled={!canRedo}
+        onClick={handleRedoClick}
+        size="sm"
+      >
+        Redo
+      </Button>
+    </>
   );
 }

@@ -19,6 +19,7 @@ The browser `localStorage` is the only persisted interface in this feature. Two 
   "isMinimapVisible": true,
   "activeWorkspaceId": "schematic",
   "isIssuesPanelOpen": false,
+  "isPartsListOpen": true,
   "toolWindow": { "xPx": 28, "yPx": 28, "isCollapsed": false },
   "viewByWorkspace": {
     "schematic": { "zoom": 1, "panXPx": 0, "panYPx": 0 },
@@ -27,7 +28,7 @@ The browser `localStorage` is the only persisted interface in this feature. Two 
 }
 ```
 
-Field rules: `data-model.md`.
+Field rules: `data-model.md`. `isPartsListOpen` (added by spec 003, optional, default `true`): whether the Schematic parts list is expanded; a stored value without it reads the default, so the version stays 1.
 
 ## Read behavior
 

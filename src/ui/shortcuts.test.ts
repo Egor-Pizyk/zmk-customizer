@@ -127,3 +127,41 @@ describe('isRepeatableShortcut', () => {
     expect(isRepeatableShortcut('open-settings')).toBe(false);
   });
 });
+
+describe('matchShortcut: project shortcuts (primary modifier)', () => {
+  it.each([
+    [{ metaKey: true, code: 'KeyZ', key: 'я' }, 'undo'],
+    [{ ctrlKey: true, code: 'KeyZ', key: 'z' }, 'undo'],
+    [{ ctrlKey: true, shiftKey: true, code: 'KeyZ', key: 'Z' }, 'redo'],
+    [{ metaKey: true, code: 'KeyS', key: 's' }, 'save-project'],
+    [{ metaKey: true, code: 'KeyO', key: 'o' }, 'open-project'],
+  ])('matches %o by code', (overrides, id) => {
+    expect(matchShortcut(input(overrides))).toBe(id);
+  });
+
+  it('does not match with Alt, in text fields or while a dialog is open', () => {
+    expect(matchShortcut(input({ metaKey: true, altKey: true, code: 'KeyZ' }))).toBeUndefined();
+    expect(
+      matchShortcut(input({ metaKey: true, code: 'KeyZ', isTypingTarget: true })),
+    ).toBeUndefined();
+    expect(
+      matchShortcut(input({ metaKey: true, code: 'KeyS', isDialogOpen: true })),
+    ).toBeUndefined();
+  });
+
+  it('needs the primary modifier', () => {
+    expect(matchShortcut(input({ ...ON_CANVAS, code: 'KeyZ', key: 'z' }))).toBeUndefined();
+  });
+
+  it('keeps other Ctrl combinations for the browser', () => {
+    expect(matchShortcut(input({ ctrlKey: true, code: 'KeyP', key: 'p' }))).toBeUndefined();
+    expect(matchShortcut(input({ metaKey: true, shiftKey: true, code: 'KeyS' }))).toBeUndefined();
+  });
+
+  it('repeats undo and redo only', () => {
+    expect(isRepeatableShortcut('undo')).toBe(true);
+    expect(isRepeatableShortcut('redo')).toBe(true);
+    expect(isRepeatableShortcut('save-project')).toBe(false);
+    expect(isRepeatableShortcut('open-project')).toBe(false);
+  });
+});

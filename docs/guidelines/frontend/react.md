@@ -47,7 +47,7 @@ dispatch({ type: 'resize-key', keyIndex, widthU });
 ## Derived data
 
 - Compute during render: `const keyByCell = getKeyByCell(project)`. No `useState` + `useEffect` copy of anything derivable from `project`, `issues` or props.
-- `useMemo` / `useCallback` / `memo` only after the React profiler shows a problem, with a one-line comment naming it. Exception: the provider's `issues` above.
+- `useMemo` / `useCallback` / `memo` only after the React profiler shows a problem, with a one-line comment naming it. Exceptions: the provider's `issues` above, and a context provider's `value` (plus the stable callback it closes over), which `react/jsx-no-constructed-context-values` requires.
 
 ## Effects
 
@@ -55,14 +55,14 @@ Effects sync with systems outside React. The complete list so far:
 
 | Effect | Where |
 |---|---|
-| Autosave `saveProject(project)` on change; failure → storage banner | `project-context.tsx` |
 | `document.documentElement.dataset.theme` sync with the theme preference | `preferences-context.tsx` |
 | `ResizeObserver`: panel and container sizes into state from the observer callback (clamp derived in render) | `components/floating-panel.tsx` |
 | `ResizeObserver`: surface size for the zoom center, reported by `onSizeChange` | `canvas/work-surface.tsx` |
 | Non-passive `wheel` listener: Ctrl/Cmd zoom with `preventDefault`, wheel pan; 200 ms commit timer cleared in cleanup | `canvas/work-surface.tsx` |
 | `showModal()` / `close()` to match `Dialog`'s `open` prop; `close` event → `onClose`; backdrop `click` listener added with `addEventListener` in the same effect and removed in its cleanup (no JSX `onClick` on `<dialog>`, which fails jsx-a11y) | `components/dialog.tsx` |
-| Global `keydown` on `globalThis` for all shortcuts: Alt+Shift globals and canvas-scoped single keys (`shortcuts.ts`); undo/redo join it when the project feature lands | `app.tsx` |
+| Global `keydown` on `globalThis` for all shortcuts: Alt+Shift globals and canvas-scoped single keys (`shortcuts.ts`) | `app.tsx` |
 
+- Autosave is not an effect: `saveProject` runs in the project provider's dispatch, the handler that changes the project (spec 002 research R6), so loading never writes and no effect stores the save result.
 - Page title is `<title>` rendered by the workspace screen (React 19 hoists it), not an effect on `document.title`.
 - Canvas-scoped single keys are matched by the one `globalThis` `keydown` listener in `app.tsx` when `event.target` is inside `[data-canvas-workspace]` (`onKeyDown` on `role="application"` fails jsx-a11y `no-noninteractive-element-interactions`). Keys of interactive elements (a `<button>` drag handle, a table selection column) use `onKeyDown` on that element.
 - Every listener added in an effect is removed in its cleanup. Dependency arrays are complete (`code-quality/typescript.md`).

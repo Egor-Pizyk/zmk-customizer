@@ -5,7 +5,8 @@ import { SettingsIcon } from '../components/icons/settings-icon';
 import { usePreferences } from '../preferences-context';
 import { Badge } from '../components/badge';
 import { WORKSPACES } from '../workspaces';
-import { NO_ISSUES, formatIssueCount } from './workspace-issue';
+import { useProject } from '../project-context';
+import { formatIssueCount } from './workspace-issue';
 import { WorkspaceTab } from './workspace-tab';
 
 type TabBarProps = {
@@ -15,6 +16,7 @@ type TabBarProps = {
 
 export function TabBar({ onSettingsClick, onHelpClick }: TabBarProps) {
   const { preferences, changePreferences } = usePreferences();
+  const { issues } = useProject();
 
   function handleTabSelect(activeWorkspaceId: WorkspaceId) {
     changePreferences({ activeWorkspaceId });
@@ -34,7 +36,7 @@ export function TabBar({ onSettingsClick, onHelpClick }: TabBarProps) {
       className="flex w-12 shrink-0 flex-col gap-1 border-r border-border bg-surface-muted p-2 lg:w-44"
     >
       {WORKSPACES.map((workspace) => {
-        const issueCount = NO_ISSUES.filter((issue) => issue.workspaceId === workspace.id).length;
+        const issueCount = issues.filter((issue) => issue.workspaceId === workspace.id).length;
         return (
           <WorkspaceTab
             accessibleName={tabAccessibleName(workspace.label, issueCount)}

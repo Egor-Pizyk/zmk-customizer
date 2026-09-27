@@ -1,0 +1,30 @@
+import { expect, it } from 'vitest';
+import { setShieldName } from './set-shield-name';
+import type { Project } from './types';
+
+const PROJECT: Project = { schemaVersion: 1, name: 'Corne' };
+
+it('stores the override exactly as typed', () => {
+  expect(setShieldName(PROJECT, { shieldName: '2Bad' })).toEqual({
+    ...PROJECT,
+    shieldName: '2Bad',
+  });
+});
+
+it('removes the key when the override is cleared', () => {
+  const cleared = setShieldName({ ...PROJECT, shieldName: 'corne' }, { shieldName: undefined });
+  expect(cleared).toEqual(PROJECT);
+  expect('shieldName' in cleared).toBe(false);
+});
+
+it('returns the same reference when unchanged', () => {
+  const project = { ...PROJECT, shieldName: 'corne' };
+  expect(setShieldName(project, { shieldName: 'corne' })).toBe(project);
+  expect(setShieldName(PROJECT, { shieldName: undefined })).toBe(PROJECT);
+});
+
+it('does not mutate the input', () => {
+  const project = { ...PROJECT, shieldName: 'corne' };
+  setShieldName(project, { shieldName: undefined });
+  expect(project.shieldName).toBe('corne');
+});

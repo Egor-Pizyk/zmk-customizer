@@ -6,7 +6,8 @@ import type { ShortcutId } from './shortcuts';
 export type ShortcutAction =
   | { readonly kind: 'change-preferences'; readonly changes: Partial<Preferences> }
   | { readonly kind: 'open-settings' }
-  | { readonly kind: 'open-help' };
+  | { readonly kind: 'open-help' }
+  | { readonly kind: 'undo' | 'redo' | 'save-project' | 'open-project' };
 
 export type ShortcutContext = {
   readonly preferences: Preferences;
@@ -59,7 +60,14 @@ export function getShortcutAction(
   context: ShortcutContext,
 ): ShortcutAction | undefined {
   const { preferences, focusedCanvas } = context;
-  if (shortcutId === 'open-settings' || shortcutId === 'open-help') {
+  if (
+    shortcutId === 'open-settings' ||
+    shortcutId === 'open-help' ||
+    shortcutId === 'undo' ||
+    shortcutId === 'redo' ||
+    shortcutId === 'save-project' ||
+    shortcutId === 'open-project'
+  ) {
     return { kind: shortcutId };
   }
   const workspaceId = WORKSPACE_BY_SHORTCUT[shortcutId];
