@@ -1,0 +1,60 @@
+/* Scan only src/: docs and specs contain example class names that must not reach the bundle. */
+@import 'tailwindcss' source('.');
+
+/*
+ * Semantic design tokens. Default palette, radii and fonts are cleared so only these exist;
+ * src/ui uses bg-surface / text-text-muted / rounded-md, never raw colors or arbitrary values.
+ * Each color holds light-dark(<light>, <dark>); color-scheme on <html> picks the half:
+ * System by default, forced by data-theme="light" | "dark" (spec 001 research R1).
+ * Components therefore need no dark: variants.
+ * border is decorative (dividers); border-strong is for edges that alone mark a control (>= 3:1).
+ * Contrast: text/text-muted/accent/danger/warning/success >= 4.5:1 on every surface, focus and
+ * border-strong >= 3:1, in both themes. Recheck when a value changes (docs/guidelines/frontend).
+ *
+ * Measured 2026-09-27 (light / dark, worst surface of surface | surface-muted | surface-raised):
+ *   text 15.31 / 11.71          text-muted 5.70 / 5.53     accent 5.25 / 5.78
+ *   danger 5.15 / 5.73          warning 4.76 / 7.73        success 4.92 / 7.59
+ *   accent-contrast on accent 5.72 / 7.37, on danger 5.62 / 7.31; surface on text 16.70 / 14.48
+ *   focus 5.25 / 5.78 (>= 3)    border-strong 3.14 / 3.15 (>= 3)
+ */
+@theme {
+  --color-*: initial;
+  --color-surface: light-dark(#ffffff, #16181d);
+  --color-surface-muted: light-dark(#f4f5f7, #1e2128);
+  --color-surface-raised: light-dark(#ffffff, #262a33);
+  --color-border: light-dark(#d5d8de, #3a3f4b);
+  --color-border-strong: light-dark(#858b96, #6f7684);
+  --color-text: light-dark(#1b1e24, #e6e8ec);
+  --color-text-muted: light-dark(#5b616e, #9aa1ae);
+  --color-accent: light-dark(#2f5fd0, #7aa2ff);
+  --color-accent-contrast: light-dark(#ffffff, #0d1426);
+  --color-danger: light-dark(#c62828, #ff7b7b);
+  --color-warning: light-dark(#a15c00, #f0b35a);
+  --color-success: light-dark(#1f7a3d, #6fd08f);
+  --color-focus: light-dark(#2f5fd0, #7aa2ff);
+
+  --radius-*: initial;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+
+  --font-*: initial;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+}
+
+:root {
+  color-scheme: light dark;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-surface font-sans text-sm text-text;
+}
