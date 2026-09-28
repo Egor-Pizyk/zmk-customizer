@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { SHORTCUTS, formatModifier, isRepeatableShortcut, matchShortcut } from './shortcuts';
+import {
+  SHORTCUTS,
+  formatModifier,
+  isRepeatableShortcut,
+  matchKeyShortcut,
+  matchShortcut,
+} from './shortcuts';
 import type { ShortcutInput } from './shortcuts';
 
 const BASE: ShortcutInput = {
@@ -163,5 +169,42 @@ describe('matchShortcut: project shortcuts (primary modifier)', () => {
     expect(isRepeatableShortcut('redo')).toBe(true);
     expect(isRepeatableShortcut('save-project')).toBe(false);
     expect(isRepeatableShortcut('open-project')).toBe(false);
+  });
+});
+
+describe('matchShortcut: Schematic tools and editing (spec 003)', () => {
+  it.each([
+    ['v', 'select-tool'],
+    ['k', 'add-key-tool'],
+    ['W', 'wire-tool'],
+    ['Enter', 'place-key'],
+    ['Delete', 'delete-selection'],
+    ['Backspace', 'delete-selection'],
+    ['Escape', 'cancel'],
+  ])('matches %s on a focused canvas', (key, id) => {
+    expect(matchShortcut(input({ ...ON_CANVAS, key }))).toBe(id);
+  });
+});
+
+describe('matchKeyShortcut: while a key has focus', () => {
+  it.each([
+    [{ key: 'ArrowLeft' }, 'focus-key-left'],
+    [{ key: 'ArrowDown' }, 'focus-key-down'],
+    [{ key: 'ArrowRight', shiftKey: true }, 'nudge-key-right'],
+    [{ key: 'ArrowUp', shiftKey: true }, 'nudge-key-up'],
+    [{ key: 'Home' }, 'focus-first-key'],
+    [{ key: 'End' }, 'focus-last-key'],
+  ])('matches %o', (overrides, id) => {
+    expect(matchKeyShortcut(input({ ...ON_CANVAS, ...overrides }))).toBe(id);
+  });
+
+  it('leaves everything else to the canvas', () => {
+    expect(matchKeyShortcut(input({ ...ON_CANVAS, key: 'Delete' }))).toBeUndefined();
+    expect(
+      matchKeyShortcut(input({ ...ON_CANVAS, key: 'ArrowLeft', altKey: true })),
+    ).toBeUndefined();
+    expect(
+      matchKeyShortcut(input({ ...ON_CANVAS, key: 'Home', isTypingTarget: true })),
+    ).toBeUndefined();
   });
 });

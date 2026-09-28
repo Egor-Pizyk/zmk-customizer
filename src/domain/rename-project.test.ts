@@ -2,11 +2,21 @@ import { expect, it } from 'vitest';
 import type { Project } from './types';
 import { renameProject } from './rename-project';
 
-const PROJECT: Project = { schemaVersion: 1, name: 'Old', shieldName: 'corne' };
+const PROJECT: Project = {
+  schemaVersion: 2,
+  keys: [],
+  wires: [],
+  insulatedCrossings: [],
+  name: 'Old',
+  shieldName: 'corne',
+};
 
 it('sets the name exactly as typed and keeps the override', () => {
   expect(renameProject(PROJECT, { name: '  New  ' })).toEqual({
-    schemaVersion: 1,
+    schemaVersion: 2,
+    keys: [],
+    wires: [],
+    insulatedCrossings: [],
     name: '  New  ',
     shieldName: 'corne',
   });

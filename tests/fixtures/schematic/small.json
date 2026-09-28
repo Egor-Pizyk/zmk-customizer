@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 2,
+  "name": "Two keys",
+  "keys": [
+    {
+      "id": "k1",
+      "xU": 0,
+      "yU": 0
+    },
+    {
+      "id": "k2",
+      "xU": 2,
+      "yU": 0
+    }
+  ],
+  "wires": [
+    {
+      "id": "w1",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k1",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k2",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w2",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k1",
+        "pin": 2
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 0.75,
+          "yU": 2
+        },
+        "boardPin": 3
+      },
+      "bends": [
+        {
+          "xU": 0.75,
+          "yU": 1
+        }
+      ]
+    },
+    {
+      "id": "w3",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k2",
+        "pin": 2
+      },
+      "end": {
+        "kind": "junction",
+        "wireId": "w2",
+        "at": {
+          "xU": 0.75,
+          "yU": 1.5
+        }
+      },
+      "bends": [
+        {
+          "xU": 2.75,
+          "yU": 1.5
+        }
+      ]
+    }
+  ],
+  "insulatedCrossings": [
+    {
+      "wireIds": [
+        "w1",
+        "w2"
+      ],
+      "ordinal": 0
+    }
+  ]
+}

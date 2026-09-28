@@ -61,7 +61,7 @@ Decisions for `plan.md`. Each: Decision / Rationale / Alternatives.
 ## R10. Accessibility
 
 - **Decision**:
-  - **Canvas**: `role="listbox"` of key options (roving tabindex, arrows between keys, Shift+arrows nudge, Delete, Enter with the Key tool places a key at `findFreeKeyPosition`, i.e. to the right of the last key).
+  - **Canvas** (after the T003 lint spike: `role="application"` with keys as `role="graphics-symbol"` focus stops; `listbox`/`option` fail lint): keys with roving tabindex ( arrows between keys, Shift+arrows nudge, Delete, Enter with the Key tool places a key at `findFreeKeyPosition`, i.e. to the right of the last key).
   - **Parts list**: the complete non-canvas alternative (FR-029, ADR 0008) is a `PartsList` below the surface. It has tables for keys (x/y fields, what each pin connects to, delete), wires (from/to, bend fields, board-pin `Select` for free ends, delete) and crossings (a `Switch` "Insulated" per crossing), plus "Add key" and "Add wire" forms.
   - **Other canvas elements**: wires, crossing buttons and free ends are pointer targets with `tabIndex={-1}` and accessible names. Their keyboard path is the parts list.
   - **Small targets**: pins are closer together than 24 px at 100% zoom. They rely on the WCAG 2.5.8 "equivalent" exception (the parts list) plus the 12 px snap radius.
@@ -71,7 +71,7 @@ Decisions for `plan.md`. Each: Decision / Rationale / Alternatives.
 ## R11. Board pins
 
 - **Decision**: The generic board is the constant `BOARD_PIN_COUNT = 32` in `domain/board-pin.ts`. `boardPin` is an integer 0–31, shown as `P<n>` by `formatBoardPin`. There is no GND or power (clarification 3). A pin shared by free ends that sit on different nets is a `board-pin-conflict`.
-- **Rationale**: the placeholder is replaced by the controller-boards feature (roadmap 005). This is not ZMK data, so it lives outside `catalog/` and needs no `docsUrl`.
+- **Rationale**: the placeholder is replaced by the controller-boards feature (roadmap 006). This is not ZMK data, so it lives outside `catalog/` and needs no `docsUrl`.
 
 ## R12. Performance
 

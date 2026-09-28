@@ -43,7 +43,7 @@ Make the Key and Wire tools real in the Schematic workspace. Keys are drawn as s
 | V. ZMK options explain themselves | Pass (n/a) | No ZMK option added. The generic board is a placeholder, not catalog data (R11). |
 | VI. Minimal code | Pass | Only insulated crossings are stored. Path, pins and nets are derived. One `content` prop added to `WorkSurface`. |
 | VII. Deterministic | Pass | Ids from the highest existing number; issues sorted; no unordered iteration. |
-| VIII. Accessible | Pass | Canvas listbox of keys plus a parts list as the complete alternative (R10, ADR 0008). |
+| VIII. Accessible | Pass | Canvas keys as focusable `graphics-symbol`s (T003) plus a parts list as the complete alternative (R10, ADR 0008). |
 | Constraints: layers, deps, `make check` | Pass | `ui → storage → domain`; no new deps. |
 | Workflow: roadmap order | **Deviation** | The feature is not in `docs/roadmap.md` and the number 003 collides with shield-generators. Fix: update the roadmap in the first task (add this feature after 002, renumber the later ones). |
 
@@ -84,7 +84,7 @@ src/domain/
   toggle-crossing-insulation.ts
   prune-insulated-crossings.ts
   get-nets.ts                      union-find (R7)
-  validate-schematic.ts            4 codes (contracts/validation-issues.md)
+  validate-schematic.ts            6 codes (contracts/validation-issues.md)
   *.test.ts next to each
 
 src/storage/

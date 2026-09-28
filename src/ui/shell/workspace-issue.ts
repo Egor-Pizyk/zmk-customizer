@@ -9,6 +9,12 @@ const WORKSPACE_BY_ISSUE_CODE: Record<ValidationCode, WorkspaceId> = {
   'shield-name-empty': 'schematic',
   'shield-name-invalid': 'schematic',
   'keyboard-name-too-long': 'schematic',
+  'key-overlap': 'schematic',
+  'key-pin-unconnected': 'schematic',
+  'wire-end-unconnected': 'schematic',
+  'board-pin-conflict': 'schematic',
+  'board-pins-shorted': 'schematic',
+  'key-shorted': 'schematic',
 };
 
 export function toWorkspaceIssues(issues: readonly ValidationIssue[]): readonly WorkspaceIssue[] {

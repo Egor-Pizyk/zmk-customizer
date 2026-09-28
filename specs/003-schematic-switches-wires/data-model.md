@@ -31,7 +31,7 @@ type KeyPin = 1 | 2;
 - Key index = position in `project.keys`; shown as "Key N" / "Key N".
 - Occupies a 1u × 1u cell; no two keys' cells overlap Canvas and Enter paths refuse to place onto an occupied cell (`isKeyPositionFree`); operations stay total, so an overlap made through the parts-list X/Y fields or an imported file is reported by `key-overlap`.
 - Pin positions derived: `getKeyPinPosition(key, pin)` [R2].
-- Later: layout editor (006) adds `widthU`, `heightU`, `rotationDeg`, … to the same type.
+- Later: layout editor (007) adds `widthU`, `heightU`, `rotationDeg`, … to the same type.
 
 ## Wire
 
@@ -50,7 +50,7 @@ type Wire = {
 ```
 
 Rules:
-- At least one of `start` / `end` is `key-pin` (FR-009). `canAddWire(project, draft)` guards creation; schema enforces on import [R15].
+- At least one of `start` / `end` is `key-pin` (FR-009). `canAddWire(project, { start, end })` → `'ok' | 'no-key-pin' | 'same-pin' | 'missing-reference'` guards creation (references must resolve, 003 review M1); schema enforces on import [R15].
 - `start` and `end` are not the same key pin.
 - `junction.wireId` ≠ own id and references an existing wire.
 - `boardPin` integer `0..BOARD_PIN_COUNT-1` (32), label `P<n>` [R11]; only on `free` ends.
@@ -86,7 +86,7 @@ type CrossingRef = {
 | `addWire` | `{ start, end, bends }` | appends wire with `createEntityId('w')`; no prune needed (adding a wire cannot invalidate stored crossings) |
 | `removeWire` | `{ wireId }` | removes wire; junctions onto it → `free` at their drawn point; cascade as in `removeKey`; prune |
 | `setWireBends` | `{ wireId, bends }` | replaces bends; prune |
-| `setWireEndBoardPin` | `{ wireId, end: 'start' \| 'end', boardPin: number \| undefined }` | on `free` end only; `undefined` omits the field |
+| `setWireEndBoardPin` | `{ wireId, side: 'start' \| 'end', boardPin: number \| undefined }` | on `free` end only; `undefined` omits the field |
 | `toggleCrossingInsulation` | `{ ref: CrossingRef }` | adds or removes the ref |
 
 Internal helper (exported for tests, one file): `pruneInsulatedCrossings(project)`.

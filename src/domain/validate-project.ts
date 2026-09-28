@@ -1,4 +1,5 @@
 import { toShieldName } from './to-shield-name';
+import { validateSchematic } from './validate-schematic';
 import type { Project, ValidationIssue } from './types';
 
 const SHIELD_NAME_PATTERN = /^[a-z_][a-z0-9_]*$/u;
@@ -46,5 +47,9 @@ function validateKeyboardName(project: Project): readonly ValidationIssue[] {
 }
 
 export function validateProject(project: Project): readonly ValidationIssue[] {
-  return [...validateShieldName(project), ...validateKeyboardName(project)];
+  return [
+    ...validateShieldName(project),
+    ...validateKeyboardName(project),
+    ...validateSchematic(project),
+  ];
 }

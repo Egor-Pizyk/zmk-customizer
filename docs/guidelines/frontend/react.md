@@ -61,6 +61,7 @@ Effects sync with systems outside React. The complete list so far:
 | Non-passive `wheel` listener: Ctrl/Cmd zoom with `preventDefault`, wheel pan; 200 ms commit timer cleared in cleanup | `canvas/work-surface.tsx` |
 | `showModal()` / `close()` to match `Dialog`'s `open` prop; `close` event → `onClose`; backdrop `click` listener added with `addEventListener` in the same effect and removed in its cleanup (no JSX `onClick` on `<dialog>`, which fails jsx-a11y) | `components/dialog.tsx` |
 | Global `keydown` on `globalThis` for all shortcuts: Alt+Shift globals and canvas-scoped single keys (`shortcuts.ts`) | `app.tsx` |
+| Schematic `keydown` on `globalThis` for the Schematic canvas ids (tools, Enter, Delete, Escape) that need workspace state; the app listener has no action for them | `schematic/use-schematic-shortcuts.ts` |
 
 - Autosave is not an effect: `saveProject` runs in the project provider's dispatch, the handler that changes the project (spec 002 research R6), so loading never writes and no effect stores the save result.
 - Page title is `<title>` rendered by the workspace screen (React 19 hoists it), not an effect on `document.title`.

@@ -1,0 +1,262 @@
+import type { PointerEvent } from 'react';
+import { isKeyPositionFree } from '../../domain/is-key-position-free';
+import { moveKey } from '../../domain/move-key';
+import { setWireBends } from '../../domain/set-wire-bends';
+import type { Wire, WireEnd, WirePoint } from '../../domain/types';
+import type { PointerState } from './pointer-types';
+import type { CanvasHit } from './read-canvas-hit';
+import { snapPoint } from './snap-point';
+
+type Press = {
+  readonly hit: CanvasHit;
+  readonly world: WirePoint;
+  readonly event: PointerEvent<SVGSVGElement>;
+};
+
+// Below this the marquee is treated as a click on empty space, not a drag.
+const MARQUEE_MIN_SIZE_U = 0.05;
+
+function focusBoardPinSelect(input: { readonly wireId: string; readonly side: string }) {
+  // The board pin select in the Parts list is where a free end is edited (003 T059).
+  requestAnimationFrame(() => {
+    document
+      .querySelector<HTMLElement>(`[data-board-pin-select="${input.wireId}:${input.side}"]`)
+      ?.focus();
+  });
+}
+
+function isKeyInMarquee(
+  key: { xU: number; yU: number },
+  marquee: { start: WirePoint; end: WirePoint },
+): boolean {
+  const minX = Math.min(marquee.start.xU, marquee.end.xU);
+  const maxX = Math.max(marquee.start.xU, marquee.end.xU);
+  const minY = Math.min(marquee.start.yU, marquee.end.yU);
+  const maxY = Math.max(marquee.start.yU, marquee.end.yU);
+  return key.xU >= minX && key.xU <= maxX && key.yU >= minY && key.yU <= maxY;
+}
+
+function isWireInMarquee(
+  wire: Wire,
+  marquee: { start: WirePoint; end: WirePoint },
+  project: { keys: readonly { id: string; xU: number; yU: number }[] },
+): boolean {
+  const points: WirePoint[] = [];
+  const start: WireEnd = wire.start;
+  const end: WireEnd = wire.end;
+  if (start.kind === 'key-pin') {
+    const key = project.keys.find((candidate) => candidate.id === start.keyId);
+    if (key) {
+      points.push({ xU: key.xU, yU: key.yU });
+    }
+  } else if (start.kind === 'free') {
+    points.push(start.at);
+  }
+  if (end.kind === 'key-pin') {
+    const key = project.keys.find((candidate) => candidate.id === end.keyId);
+    if (key) {
+      points.push({ xU: key.xU, yU: key.yU });
+    }
+  } else if (end.kind === 'free') {
+    points.push(end.at);
+  }
+  points.push(...wire.bends);
+  return points.some((point) => isKeyInMarquee(point, marquee));
+}
+
+function startMultiKeyDrag(state: PointerState, world: WirePoint, event: PointerEvent<SVGSVGElement>) {
+  if (state.selection?.kind !== 'multi') {
+    return;
+  }
+  event.currentTarget.setPointerCapture(event.pointerId);
+  const keyStarts = state.selection.keyIds.map((keyId) => {
+    const key = state.project.keys.find((candidate) => candidate.id === keyId);
+    return { keyId, start: key ? { xU: key.xU, yU: key.yU } : { xU: 0, yU: 0 } };
+  });
+  const first = keyStarts[0];
+  if (first === undefined) {
+    return;
+  }
+  state.onDragChange({
+    kind: 'multi-key',
+    keyIds: state.selection.keyIds,
+    origin: world,
+    keyStarts,
+    position: first.start,
+  });
+}
+
+function startSingleKeyDrag(
+  state: PointerState,
+  world: WirePoint,
+  event: PointerEvent<SVGSVGElement> & { keyId: string },
+) {
+  const key = state.project.keys.find((candidate) => candidate.id === event.keyId);
+  state.onSelectionChange({ kind: 'key', keyId: event.keyId });
+  if (key !== undefined) {
+    event.currentTarget.setPointerCapture(event.pointerId);
+    const keyStart = { xU: key.xU, yU: key.yU };
+    state.onDragChange({
+      kind: 'key',
+      keyId: key.id,
+      origin: world,
+      keyStart,
+      position: keyStart,
+    });
+  }
+}
+
+export function pressSelectTool(state: PointerState, { hit, world, event }: Press) {
+  if (hit.kind === 'key' || hit.kind === 'pin') {
+    if (state.selection?.kind === 'multi' && state.selection.keyIds.includes(hit.keyId)) {
+      startMultiKeyDrag(state, world, event);
+      return;
+    }
+    startSingleKeyDrag(state, world, { ...event, keyId: hit.keyId });
+    return;
+  }
+  if (hit.kind === 'bend') {
+    event.currentTarget.setPointerCapture(event.pointerId);
+    state.onDragChange({
+      kind: 'bend',
+      wireId: hit.wireId,
+      bendIndex: hit.bendIndex,
+      point: world,
+    });
+    return;
+  }
+  if (hit.kind === 'wire') {
+    state.onSelectionChange({ kind: 'wire', wireId: hit.wireId });
+    return;
+  }
+  if (hit.kind === 'wire-end') {
+    state.onSelectionChange({ kind: 'wire-end', wireId: hit.wireId, side: hit.side });
+    focusBoardPinSelect(hit);
+    return;
+  }
+  // Empty space: start marquee selection
+  event.currentTarget.setPointerCapture(event.pointerId);
+  state.onDragChange({ kind: 'marquee', start: world, end: world });
+}
+
+export function moveSelectDrag(state: PointerState, world: WirePoint) {
+  const { drag } = state;
+  if (drag?.kind === 'key') {
+    const moved = {
+      xU: drag.keyStart.xU + world.xU - drag.origin.xU,
+      yU: drag.keyStart.yU + world.yU - drag.origin.yU,
+    };
+    state.onDragChange({ ...drag, position: snapPoint(moved, state.snapGridU) });
+  }
+  if (drag?.kind === 'multi-key') {
+    const first = drag.keyStarts[0];
+    if (first === undefined) {
+      return;
+    }
+    const moved = {
+      xU: first.start.xU + world.xU - drag.origin.xU,
+      yU: first.start.yU + world.yU - drag.origin.yU,
+    };
+    state.onDragChange({ ...drag, position: snapPoint(moved, state.snapGridU) });
+  }
+  if (drag?.kind === 'bend') {
+    state.onDragChange({ ...drag, point: snapPoint(world, state.snapGridU) });
+  }
+  if (drag?.kind === 'marquee') {
+    state.onDragChange({ ...drag, end: world });
+  }
+}
+
+function endMarqueeDrag(state: PointerState, project: PointerState['project']) {
+  const { drag } = state;
+  if (drag?.kind !== 'marquee') {
+    return;
+  }
+  const width = Math.abs(drag.end.xU - drag.start.xU);
+  const height = Math.abs(drag.end.yU - drag.start.yU);
+  if (width < MARQUEE_MIN_SIZE_U && height < MARQUEE_MIN_SIZE_U) {
+    state.onSelectionChange();
+    return;
+  }
+  const keyIds = project.keys
+    .filter((key) => isKeyInMarquee(key, drag))
+    .map((key) => key.id);
+  const wireIds = project.wires
+    .filter((wire) => isWireInMarquee(wire, drag, project))
+    .map((wire) => wire.id);
+  if (keyIds.length === 0 && wireIds.length === 0) {
+    state.onSelectionChange();
+  } else {
+    state.onSelectionChange({ kind: 'multi', keyIds, wireIds });
+  }
+}
+
+function endMultiKeyDrag(state: PointerState, project: PointerState['project']) {
+  const { drag } = state;
+  if (drag?.kind !== 'multi-key') {
+    return;
+  }
+  const first = drag.keyStarts[0];
+  if (first === undefined) {
+    return;
+  }
+  const dx = drag.position.xU - first.start.xU;
+  const dy = drag.position.yU - first.start.yU;
+  if (dx === 0 && dy === 0) {
+    return;
+  }
+  const targetPositions = drag.keyStarts.map((ks) => ({
+    keyId: ks.keyId,
+    position: { xU: ks.start.xU + dx, yU: ks.start.yU + dy },
+  }));
+  const allFree = targetPositions.every((tp) =>
+    isKeyPositionFree(project, { position: tp.position, ignoreKeyId: tp.keyId }),
+  );
+  if (!allFree) {
+    state.onHint('There is already a key here.');
+    return;
+  }
+  state.commit((current) => {
+    let next = current;
+    for (const tp of targetPositions) {
+      next = moveKey(next, { keyId: tp.keyId, position: tp.position });
+    }
+    return next;
+  });
+}
+
+function endSingleKeyDrag(state: PointerState, project: PointerState['project']) {
+  const { drag } = state;
+  if (drag?.kind !== 'key') {
+    return;
+  }
+  const { keyId, position, keyStart } = drag;
+  if (position.xU === keyStart.xU && position.yU === keyStart.yU) {
+    return;
+  }
+  if (!isKeyPositionFree(project, { position, ignoreKeyId: keyId })) {
+    state.onHint('There is already a key here.');
+    return;
+  }
+  state.commit((current) => moveKey(current, { keyId, position }));
+}
+
+export function endSelectDrag(state: PointerState) {
+  const { drag, project } = state;
+  state.onDragChange();
+  if (drag?.kind === 'bend') {
+    const bends = project.wires.find((wire) => wire.id === drag.wireId)?.bends ?? [];
+    const next = bends.with(drag.bendIndex, drag.point);
+    state.commit((current) => setWireBends(current, { wireId: drag.wireId, bends: next }));
+    return;
+  }
+  if (drag?.kind === 'marquee') {
+    endMarqueeDrag(state, project);
+    return;
+  }
+  if (drag?.kind === 'multi-key') {
+    endMultiKeyDrag(state, project);
+    return;
+  }
+  endSingleKeyDrag(state, project);
+}

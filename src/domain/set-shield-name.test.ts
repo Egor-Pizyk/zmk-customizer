@@ -2,7 +2,13 @@ import { expect, it } from 'vitest';
 import { setShieldName } from './set-shield-name';
 import type { Project } from './types';
 
-const PROJECT: Project = { schemaVersion: 1, name: 'Corne' };
+const PROJECT: Project = {
+  schemaVersion: 2,
+  keys: [],
+  wires: [],
+  insulatedCrossings: [],
+  name: 'Corne',
+};
 
 it('stores the override exactly as typed', () => {
   expect(setShieldName(PROJECT, { shieldName: '2Bad' })).toEqual({

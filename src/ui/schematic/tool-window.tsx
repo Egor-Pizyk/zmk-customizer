@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { FloatingPanel } from '../components/floating-panel';
 import type { PanelPosition } from '../components/panel-position';
@@ -8,6 +7,8 @@ import { WireIcon } from '../components/icons/wire-icon';
 import { RadioGroup } from '../components/radio-group';
 import type { RadioOption } from '../components/radio-group';
 import { usePreferences } from '../preferences-context';
+import { SHORTCUTS } from '../shortcuts';
+import type { ShortcutId } from '../shortcuts';
 import { TOOLS } from './tools';
 import type { ToolId } from './tools';
 
@@ -17,18 +18,36 @@ const ICON_BY_TOOL: Record<ToolId, ReactNode> = {
   wire: <WireIcon />,
 };
 
+const SHORTCUT_BY_TOOL: Record<ToolId, ShortcutId> = {
+  select: 'select-tool',
+  'add-key': 'add-key-tool',
+  wire: 'wire-tool',
+};
+
+// The hint names the key from SHORTCUTS, so it cannot drift from the handler.
+function formatToolHint(tool: (typeof TOOLS)[number]): string {
+  const shortcut = SHORTCUTS.find((candidate) => candidate.id === SHORTCUT_BY_TOOL[tool.id]);
+  const key = shortcut !== undefined && 'keys' in shortcut ? shortcut.keys[0] : undefined;
+  return key === undefined ? tool.label : `${tool.label} (${key.toUpperCase()})`;
+}
+
 const TOOL_OPTIONS: readonly RadioOption<ToolId>[] = TOOLS.map((tool) => ({
   value: tool.id,
   label: tool.label,
   icon: ICON_BY_TOOL[tool.id],
-  isDisabled: !tool.isAvailable,
-  hint: tool.isAvailable ? tool.label : 'Not available yet',
+  hint: formatToolHint(tool),
 }));
 
-export function ToolWindow() {
+type ToolWindowProps = {
+  readonly activeToolId: ToolId;
+  /** Last canvas hint ("There is already a key here."); also announced by StatusMessage. */
+  readonly hint: string | undefined;
+  readonly onToolChange: (toolId: ToolId) => void;
+};
+
+export function ToolWindow({ activeToolId, hint, onToolChange }: ToolWindowProps) {
   const { preferences, changePreferences } = usePreferences();
   const { toolWindow } = preferences;
-  const [activeToolId, setActiveToolId] = useState<ToolId>('select');
 
   function handleMoveEnd(position: PanelPosition) {
     changePreferences({ toolWindow: { ...toolWindow, ...position } });
@@ -39,7 +58,11 @@ export function ToolWindow() {
   }
 
   function handleToolChange(toolId: ToolId) {
-    setActiveToolId(toolId);
+    onToolChange(toolId);
+    // Return focus to the canvas so canvas shortcuts (Escape, Delete, …) work immediately.
+    requestAnimationFrame(() => {
+      document.querySelector<SVGSVGElement>('[data-canvas-workspace="schematic"]')?.focus();
+    });
   }
 
   return (
@@ -57,6 +80,7 @@ export function ToolWindow() {
         options={TOOL_OPTIONS}
         value={activeToolId}
       />
+      {hint === undefined ? undefined : <p className="max-w-40 text-xs text-warning">{hint}</p>}
     </FloatingPanel>
   );
 }

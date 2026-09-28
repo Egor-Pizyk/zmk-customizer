@@ -9,8 +9,8 @@ function codesAndPaths(project: Project) {
 
 function named(name: string, shieldName?: string): Project {
   return shieldName === undefined
-    ? { schemaVersion: 1, name }
-    : { schemaVersion: 1, name, shieldName };
+    ? { schemaVersion: 2, keys: [], wires: [], insulatedCrossings: [], name }
+    : { schemaVersion: 2, keys: [], wires: [], insulatedCrossings: [], name, shieldName };
 }
 
 it('accepts a new project', () => {

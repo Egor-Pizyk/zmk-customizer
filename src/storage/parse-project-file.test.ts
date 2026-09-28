@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import fixtureV1 from '../../tests/fixtures/project/v1.json?raw';
+import fixtureSmall from '../../tests/fixtures/schematic/small.json?raw';
 import { parseProjectFile } from './parse-project-file';
 
 function issuePathsOf(raw: string): readonly string[] {
@@ -37,15 +38,27 @@ describe('parseProjectFile', () => {
   it('drops unknown keys', () => {
     expect(parseProjectFile('{"schemaVersion":1,"name":"x","extra":true}')).toEqual({
       ok: true,
-      value: { schemaVersion: 1, name: 'x' },
+      value: { schemaVersion: 2, name: 'x', keys: [], wires: [], insulatedCrossings: [] },
     });
   });
 
-  it('loads the v1 fixture', () => {
+  it('loads the v1 fixture as v2 with an empty schematic', () => {
     expect(parseProjectFile(fixtureV1)).toEqual({
       ok: true,
-      value: { schemaVersion: 1, name: 'My Corne v2!', shieldName: 'corne' },
+      value: {
+        schemaVersion: 2,
+        name: 'My Corne v2!',
+        shieldName: 'corne',
+        keys: [],
+        wires: [],
+        insulatedCrossings: [],
+      },
     });
+  });
+
+  it('round-trips the v2 schematic fixture', () => {
+    const expected: unknown = JSON.parse(fixtureSmall);
+    expect(parseProjectFile(fixtureSmall)).toEqual({ ok: true, value: expected });
   });
 
   it('accepts a name that breaks project rules but is valid in shape', () => {

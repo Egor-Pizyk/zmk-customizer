@@ -58,3 +58,10 @@
 body {
   @apply bg-surface font-sans text-sm text-text;
 }
+
+/* Schematic keys are drawn inside the canvas zoom transform (about 48× at 100%), which scales the
+   browser's focus outline to ~100 px. Their focus ring is the key's own thicker focus-colored
+   stroke instead (key-art.tsx, spec 003). */
+[data-canvas-workspace] [role='graphics-symbol'] {
+  outline: none;
+}

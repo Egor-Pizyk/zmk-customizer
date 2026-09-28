@@ -1,11 +1,61 @@
 export type Project = {
-  readonly schemaVersion: 1;
+  readonly schemaVersion: 2;
   readonly name: string;
   /** User override of the technical name; absent = derived from `name` (spec 002 FR-012a). */
   readonly shieldName?: string;
+  /** Array order is the key index (0..n-1) used by the keymap. */
+  readonly keys: readonly Key[];
+  readonly wires: readonly Wire[];
+  /** Crossings are connected by default; only the insulated exceptions are stored (003 R6). */
+  readonly insulatedCrossings: readonly CrossingRef[];
 };
 
-export type ValidationCode = 'shield-name-empty' | 'shield-name-invalid' | 'keyboard-name-too-long';
+/** A key, drawn on the Schematic as a switch seen from above; position is its top-left corner. */
+export type Key = {
+  readonly id: string;
+  readonly xU: number;
+  readonly yU: number;
+};
+
+export type KeyPin = 1 | 2;
+
+export type WirePoint = {
+  readonly xU: number;
+  readonly yU: number;
+};
+
+export type WireEnd =
+  | { readonly kind: 'key-pin'; readonly keyId: string; readonly pin: KeyPin }
+  | { readonly kind: 'junction'; readonly wireId: string; readonly at: WirePoint }
+  | { readonly kind: 'free'; readonly at: WirePoint; readonly boardPin?: number };
+
+export type WireEndSide = 'start' | 'end';
+
+export type Wire = {
+  readonly id: string;
+  readonly start: WireEnd;
+  readonly end: WireEnd;
+  /** The user's clicks; the drawn path is derived and always orthogonal (003 R4). */
+  readonly bends: readonly WirePoint[];
+};
+
+export type CrossingRef = {
+  /** Sorted ascending. */
+  readonly wireIds: readonly [string, string];
+  /** 0-based order along the path of `wireIds[0]`. */
+  readonly ordinal: number;
+};
+
+export type ValidationCode =
+  | 'shield-name-empty'
+  | 'shield-name-invalid'
+  | 'keyboard-name-too-long'
+  | 'key-overlap'
+  | 'key-pin-unconnected'
+  | 'wire-end-unconnected'
+  | 'board-pin-conflict'
+  | 'board-pins-shorted'
+  | 'key-shorted';
 
 export type ValidationIssue = {
   readonly code: ValidationCode;

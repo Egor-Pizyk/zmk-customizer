@@ -33,4 +33,4 @@
 
 - 3 clarifications resolved with the user (switch = key; kscan derivation later; depends on 002 project-foundation).
 - Crossings connected by default (user's explicit choice, opposite of schematic convention) — recorded in Assumptions; revisit in `/speckit-clarify` if wanted.
-- Deviates from `docs/roadmap.md` (not a listed feature; overlaps 006/007 input model). Roadmap update needed before `/speckit-plan`.
+- Deviates from `docs/roadmap.md` (not a listed feature; overlaps 007/007 input model). Roadmap update needed before `/speckit-plan`.

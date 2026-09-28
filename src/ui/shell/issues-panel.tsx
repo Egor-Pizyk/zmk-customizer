@@ -51,9 +51,22 @@ type IssueButtonProps = {
 
 // Activating an issue focuses the control that owns its path (admin-ui.md "Validation display").
 function IssueButton({ issue }: IssueButtonProps) {
+  const { changePreferences } = usePreferences();
+
+  // `~=` because one control may own several paths (a board pin select: the end and its pin).
+  // The target may not be rendered yet: switch to its workspace and open the Schematic parts
+  // list first, then focus on the next frame (spec 003 FR-025).
   function handleClick() {
-    const selector = `[data-issue-path="${issue.path.join('.')}"]`;
-    document.querySelector<HTMLElement>(selector)?.focus();
+    const selector = `[data-issue-path~="${issue.path.join('.')}"]`;
+    const target = document.querySelector<HTMLElement>(selector);
+    if (target !== null) {
+      target.focus();
+      return;
+    }
+    changePreferences({ activeWorkspaceId: issue.workspaceId, isPartsListOpen: true });
+    requestAnimationFrame(() => {
+      document.querySelector<HTMLElement>(selector)?.focus();
+    });
   }
 
   return (

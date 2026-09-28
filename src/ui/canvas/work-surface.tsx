@@ -1,12 +1,13 @@
 import { useRef, useState } from 'react';
-import type { PointerEvent, ReactNode, RefObject } from 'react';
+import type { PointerEvent, ReactNode } from 'react';
 import type { CanvasWorkspaceId, Viewport } from '../../storage/preferences';
 import { usePreferences } from '../preferences-context';
-import { getWorkspaceLabel } from '../workspaces';
-import { GridPattern } from './grid-pattern';
 import { SurfaceOverlays } from './surface-overlays';
 import { snapToGrid } from './snap';
 import { StatusBar } from './status-bar';
+import { toWorldPoint } from './surface-content';
+import type { SurfaceContent } from './surface-content';
+import { SurfaceSvg } from './surface-svg';
 import { useSurfaceViewport } from './use-surface-viewport';
 import { screenToWorld } from './viewport';
 import type { ScreenPoint } from './viewport';
@@ -15,9 +16,11 @@ type WorkSurfaceProps = {
   readonly workspaceId: CanvasWorkspaceId;
   /** Overlays inside the surface: tool window, minimap. */
   readonly children?: ReactNode;
+  /** World-space content in key units, drawn above the grid. */
+  readonly content?: SurfaceContent;
 };
 
-export function WorkSurface({ workspaceId, children }: WorkSurfaceProps) {
+export function WorkSurface({ workspaceId, children, content }: WorkSurfaceProps) {
   const { gridSizeU, isSnapEnabled } = usePreferences().preferences;
   const svgRef = useRef<SVGSVGElement>(null);
   const surface = useSurfaceViewport(workspaceId, svgRef);
@@ -27,12 +30,14 @@ export function WorkSurface({ workspaceId, children }: WorkSurfaceProps) {
   function handlePointerMove(event: PointerEvent<SVGSVGElement>) {
     surface.drag.handlePointerMove(event);
     pointer.handlePointerMove(event);
+    content?.onPointerMove?.(toWorldPoint(event, viewport), event);
   }
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <div className="relative min-h-0 flex-1 overflow-hidden">
         <SurfaceSvg
+          content={content}
           drag={surface.drag}
           onPointerLeave={pointer.handlePointerLeave}
           onPointerMove={handlePointerMove}
@@ -50,48 +55,6 @@ export function WorkSurface({ workspaceId, children }: WorkSurfaceProps) {
         zoom={viewport.zoom}
       />
     </div>
-  );
-}
-
-type SurfaceSvgProps = {
-  readonly workspaceId: CanvasWorkspaceId;
-  readonly svgRef: RefObject<SVGSVGElement | null>;
-  readonly viewport: Viewport;
-  readonly drag: ReturnType<typeof useSurfaceViewport>['drag'];
-  readonly onPointerMove: (event: PointerEvent<SVGSVGElement>) => void;
-  readonly onPointerLeave: () => void;
-};
-
-// The canvas itself is the tab stop; canvas shortcuts apply while it has focus (R9).
-function SurfaceSvg(props: SurfaceSvgProps) {
-  const { workspaceId, svgRef, viewport, drag, onPointerMove, onPointerLeave } = props;
-  const { gridSizeU, isGridVisible } = usePreferences().preferences;
-
-  function handlePointerMove(event: PointerEvent<SVGSVGElement>) {
-    onPointerMove(event);
-  }
-
-  function handlePointerLeave() {
-    onPointerLeave();
-  }
-
-  return (
-    <svg
-      aria-label={`${getWorkspaceLabel(workspaceId)} canvas`}
-      className="size-full touch-none bg-surface focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus"
-      data-canvas-workspace={workspaceId}
-      onPointerDown={drag.handlePointerDown}
-      onPointerLeave={handlePointerLeave}
-      onPointerMove={handlePointerMove}
-      onLostPointerCapture={drag.handlePointerEnd}
-      onPointerCancel={drag.handlePointerEnd}
-      onPointerUp={drag.handlePointerEnd}
-      ref={svgRef}
-      role="application"
-      tabIndex={0}
-    >
-      <GridPattern gridSizeU={gridSizeU} isVisible={isGridVisible} viewport={viewport} />
-    </svg>
   );
 }
 
