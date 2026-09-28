@@ -50,6 +50,10 @@ function canvasIdOf(canvas: SVGElement | undefined): CanvasWorkspaceId | undefin
   return isCanvasWorkspaceId(id) ? id : undefined;
 }
 
+export function readShortcutInput(event: KeyboardEvent): ShortcutInput {
+  return shortcutInputFrom(event, canvasIdOf(findCanvas(event.target)));
+}
+
 function shortcutInputFrom(
   event: KeyboardEvent,
   focusedCanvas: CanvasWorkspaceId | undefined,

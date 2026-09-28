@@ -35,7 +35,13 @@ describe('loadProject', () => {
   });
 
   it('returns the stored project', () => {
-    const project = { schemaVersion: 1, name: 'Corne' } as const;
+    const project = {
+      schemaVersion: 2,
+      keys: [],
+      wires: [],
+      insulatedCrossings: [],
+      name: 'Corne',
+    } as const;
     vi.stubGlobal(
       'localStorage',
       storageStub({ [PROJECT_STORAGE_KEY]: serializeProject(project) }),

@@ -4,7 +4,7 @@ import { UNDO_LIMIT, reduceProjectHistory } from './project-history';
 import type { ProjectHistory } from './project-history';
 
 function named(name: string): Project {
-  return { schemaVersion: 1, name };
+  return { schemaVersion: 2, keys: [], wires: [], insulatedCrossings: [], name };
 }
 
 function rename(name: string) {

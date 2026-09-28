@@ -33,39 +33,44 @@ export function ShortcutHelpDialog({ isOpen, onClose }: ShortcutHelpDialogProps)
         <HelpTable caption="Anywhere" rows={rows.global} />
         <HelpTable caption="Project" rows={rows.project} />
         <HelpTable caption="While a canvas has focus" rows={rows.canvas} />
+        <HelpTable caption="While a Schematic key has focus" rows={rows.key} />
         <HelpTable caption="Pointer" rows={gestureRows} />
       </div>
     </Dialog>
   );
 }
 
-function getHelpRows({ altLabel, primaryLabel }: ModifierLabels) {
-  const rows: Record<Shortcut['scope'], HelpRow[]> = { global: [], project: [], canvas: [] };
-  for (const shortcut of SHORTCUTS) {
-    switch (shortcut.scope) {
-      case 'global': {
-        rows.global.push({
-          keys: `${altLabel}+Shift+${shortcut.keyLabel}`,
-          action: shortcut.label,
-        });
-        break;
-      }
-      case 'project': {
-        const shiftPrefix = shortcut.shift ? 'Shift+' : '';
-        const keys = `${primaryLabel}+${shiftPrefix}${shortcut.keyLabel}`;
-        rows.project.push({ keys, action: shortcut.label });
-        break;
-      }
-      case 'canvas': {
-        const shiftPrefix = 'shift' in shortcut && shortcut.shift ? 'Shift+' : '';
-        const keys = `${shiftPrefix}${shortcut.keys.join(' / ')}`;
-        rows.canvas.push({ keys, action: shortcut.label });
-        break;
-      }
-      default: {
-        assertNever(shortcut);
-      }
+function formatShortcutKeys(shortcut: Shortcut, { altLabel, primaryLabel }: ModifierLabels) {
+  switch (shortcut.scope) {
+    case 'global': {
+      return `${altLabel}+Shift+${shortcut.keyLabel}`;
     }
+    case 'project': {
+      return `${primaryLabel}+${shortcut.shift ? 'Shift+' : ''}${shortcut.keyLabel}`;
+    }
+    case 'canvas':
+    case 'key': {
+      const shiftPrefix = 'shift' in shortcut && shortcut.shift ? 'Shift+' : '';
+      return `${shiftPrefix}${shortcut.keys.join(' / ')}`;
+    }
+    default: {
+      return assertNever(shortcut);
+    }
+  }
+}
+
+function getHelpRows(modifiers: ModifierLabels) {
+  const rows: Record<Shortcut['scope'], HelpRow[]> = {
+    global: [],
+    project: [],
+    canvas: [],
+    key: [],
+  };
+  for (const shortcut of SHORTCUTS) {
+    rows[shortcut.scope].push({
+      keys: formatShortcutKeys(shortcut, modifiers),
+      action: shortcut.label,
+    });
   }
   return rows;
 }

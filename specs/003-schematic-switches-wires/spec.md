@@ -18,7 +18,8 @@
 - Q: Crossing wires connected or insulated by default? → A: Connected by default; the button insulates (user's choice, kept despite schematic convention).
 - Q: Wire segments free-angle or horizontal/vertical only? → A: Horizontal/vertical only; an L-bend is inserted automatically between clicks.
 - Q: Include GND (or power) in the board pin list? → A: No. Numbered pins P0–P31 only.
-- Q: Is the switch position on the schematic the key's physical position? → A: Yes, one position per key; the layout editor (006) adds size and rotation to the same key.
+- Q (2026-09-28): Does a wire that runs over a key pin connect it? → A: Yes, automatically. Also: while drawing, the wire end snaps visibly to the pin under the cursor before the click, and the Key tool shows a dashed preview of the key it would place.
+- Q: Is the switch position on the schematic the key's physical position? → A: Yes, one position per key; the layout editor (007) adds size and rotation to the same key.
 
 ## Context
 
@@ -123,7 +124,7 @@ Keys, their positions and numbers, wires with their bend points and end attachme
 - Two wires overlap along a stretch (collinear) rather than crossing at a point → treated as joined; no insulation button (insulation is only for point crossings).
 - More than two wires cross at the same point → one button per pair of wires crossing there, offset so they do not overlap.
 - A wire crosses itself → no insulation button (a wire is always connected to itself).
-- A wire passes over a key pin without ending there → not connected to that pin.
+- A wire passes over a key pin without ending there → connected to that pin (clarified 2026-09-28: a row wire drawn through a row of keys connects every pin it runs over).
 - Deleting a key leaves wires whose both ends are now free → those wires are removed with the key, since a wire needs a key pin on at least one end.
 - Moving a key creates or removes crossings → crossing buttons appear and disappear accordingly; stored insulation for a crossing that no longer exists is dropped.
 - Zoomed far out → crossing buttons and pin markers keep a fixed screen size (at least 24×24 px target); below 50% zoom crossing buttons are hidden and crossings are toggled from the parts list.
@@ -150,7 +151,8 @@ Keys, their positions and numbers, wires with their bend points and end attachme
 
 - **FR-008**: With the Wire tool the user MUST be able to draw a wire that starts on a key pin, a point on an existing wire, or an empty spot, has zero or more bend points, and ends on any of those. Every wire segment MUST be horizontal or vertical; when the next point is not in line with the previous one, an L-bend MUST be inserted automatically.
 - **FR-009**: A wire MUST have a key pin at one end or both; a wire with no key pin at either end MUST NOT be created. A wire's two ends MUST NOT be the same pin.
-- **FR-010**: A wire end placed on another wire MUST join them at that point, drawn with a junction dot.
+- **FR-010**: A wire end placed on another wire MUST join them at that point, drawn with a junction dot. A wire whose path runs over a key pin MUST connect to that pin.
+- **FR-010a**: Before a click, the canvas MUST preview its result: the Wire tool draws the wire being drawn up to the point a click would attach to (pin or wire under the cursor, marked with a ring, else the grid point); the Key tool draws a dashed outline of the key it would place, in the danger color when the cell is taken.
 - **FR-011**: The user MUST be able to select and delete a wire, and move its bend points; segments stay horizontal or vertical while moving.
 - **FR-012**: Deleting a key MUST turn wire ends on its pins into free ends, and MUST remove any wire that would then have no key pin at either end.
 
@@ -190,8 +192,8 @@ Keys, their positions and numbers, wires with their bend points and end attachme
 ### Out of scope
 
 - Deriving the ZMK matrix or direct wiring (rows, columns, key → matrix position, pin list) from the schematic, and generating files from it. A later feature derives kscan from the schematic's connections.
-- Choosing a real controller board and its named pins (roadmap 005); this feature uses a generic numbered board.
-- Diodes as schematic parts; key size, rotation and keycaps (layout editor, roadmap 006); bindings.
+- Choosing a real controller board and its named pins (roadmap 006); this feature uses a generic numbered board.
+- Diodes as schematic parts; key size, rotation and keycaps (layout editor, roadmap 007); bindings.
 - Automatic wire routing.
 
 ### Key Entities *(include if feature involves data)*
@@ -221,7 +223,7 @@ Keys, their positions and numbers, wires with their bend points and end attachme
 - The pin layout of the key follows a common mechanical (MX-style) key: two pins at fixed offsets from the center, drawn from above.
 - A key occupies one key unit on the grid; its position is the key's physical position (clarified). Size and rotation of keys are the layout editor's job and apply to the same key.
 - Wires consist of horizontal and vertical segments only (clarified); beyond the automatic L-bend there is no routing.
-- The generic board has a fixed list of numbered pins (P0–P31) and no GND or power pins (clarified). A key's second pin in direct wiring is wired to a shared connection with the other keys; how that maps to ground is decided by the later kscan derivation feature. The generic list stays until controller boards (roadmap 005) replace it; mapping generic pins to real board pins is that feature's job.
+- The generic board has a fixed list of numbered pins (P0–P31) and no GND or power pins (clarified). A key's second pin in direct wiring is wired to a shared connection with the other keys; how that maps to ground is decided by the later kscan derivation feature. The generic list stays until controller boards (roadmap 006) replace it; mapping generic pins to real board pins is that feature's job.
 - The last line of the request ("all pin connections by wires and wire ends bound to board pins") is read as: all of these are stored in the project config (FR-026).
 - Depends on project foundation (roadmap 002, built first): the project, autosave, project file Open/Save and undo/redo come from it; this feature only adds schematic data to the project and one project change per gesture.
 - The problems panel, tab badges, tool window, grid, snapping and shortcut help come from spec 001.

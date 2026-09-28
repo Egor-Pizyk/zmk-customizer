@@ -1,0 +1,5069 @@
+{
+  "schemaVersion": 2,
+  "name": "Large",
+  "keys": [
+    {
+      "id": "k1",
+      "xU": 0.0,
+      "yU": 0.0
+    },
+    {
+      "id": "k2",
+      "xU": 1.5,
+      "yU": 0.0
+    },
+    {
+      "id": "k3",
+      "xU": 3.0,
+      "yU": 0.0
+    },
+    {
+      "id": "k4",
+      "xU": 4.5,
+      "yU": 0.0
+    },
+    {
+      "id": "k5",
+      "xU": 6.0,
+      "yU": 0.0
+    },
+    {
+      "id": "k6",
+      "xU": 7.5,
+      "yU": 0.0
+    },
+    {
+      "id": "k7",
+      "xU": 9.0,
+      "yU": 0.0
+    },
+    {
+      "id": "k8",
+      "xU": 10.5,
+      "yU": 0.0
+    },
+    {
+      "id": "k9",
+      "xU": 12.0,
+      "yU": 0.0
+    },
+    {
+      "id": "k10",
+      "xU": 13.5,
+      "yU": 0.0
+    },
+    {
+      "id": "k11",
+      "xU": 0.0,
+      "yU": 1.5
+    },
+    {
+      "id": "k12",
+      "xU": 1.5,
+      "yU": 1.5
+    },
+    {
+      "id": "k13",
+      "xU": 3.0,
+      "yU": 1.5
+    },
+    {
+      "id": "k14",
+      "xU": 4.5,
+      "yU": 1.5
+    },
+    {
+      "id": "k15",
+      "xU": 6.0,
+      "yU": 1.5
+    },
+    {
+      "id": "k16",
+      "xU": 7.5,
+      "yU": 1.5
+    },
+    {
+      "id": "k17",
+      "xU": 9.0,
+      "yU": 1.5
+    },
+    {
+      "id": "k18",
+      "xU": 10.5,
+      "yU": 1.5
+    },
+    {
+      "id": "k19",
+      "xU": 12.0,
+      "yU": 1.5
+    },
+    {
+      "id": "k20",
+      "xU": 13.5,
+      "yU": 1.5
+    },
+    {
+      "id": "k21",
+      "xU": 0.0,
+      "yU": 3.0
+    },
+    {
+      "id": "k22",
+      "xU": 1.5,
+      "yU": 3.0
+    },
+    {
+      "id": "k23",
+      "xU": 3.0,
+      "yU": 3.0
+    },
+    {
+      "id": "k24",
+      "xU": 4.5,
+      "yU": 3.0
+    },
+    {
+      "id": "k25",
+      "xU": 6.0,
+      "yU": 3.0
+    },
+    {
+      "id": "k26",
+      "xU": 7.5,
+      "yU": 3.0
+    },
+    {
+      "id": "k27",
+      "xU": 9.0,
+      "yU": 3.0
+    },
+    {
+      "id": "k28",
+      "xU": 10.5,
+      "yU": 3.0
+    },
+    {
+      "id": "k29",
+      "xU": 12.0,
+      "yU": 3.0
+    },
+    {
+      "id": "k30",
+      "xU": 13.5,
+      "yU": 3.0
+    },
+    {
+      "id": "k31",
+      "xU": 0.0,
+      "yU": 4.5
+    },
+    {
+      "id": "k32",
+      "xU": 1.5,
+      "yU": 4.5
+    },
+    {
+      "id": "k33",
+      "xU": 3.0,
+      "yU": 4.5
+    },
+    {
+      "id": "k34",
+      "xU": 4.5,
+      "yU": 4.5
+    },
+    {
+      "id": "k35",
+      "xU": 6.0,
+      "yU": 4.5
+    },
+    {
+      "id": "k36",
+      "xU": 7.5,
+      "yU": 4.5
+    },
+    {
+      "id": "k37",
+      "xU": 9.0,
+      "yU": 4.5
+    },
+    {
+      "id": "k38",
+      "xU": 10.5,
+      "yU": 4.5
+    },
+    {
+      "id": "k39",
+      "xU": 12.0,
+      "yU": 4.5
+    },
+    {
+      "id": "k40",
+      "xU": 13.5,
+      "yU": 4.5
+    },
+    {
+      "id": "k41",
+      "xU": 0.0,
+      "yU": 6.0
+    },
+    {
+      "id": "k42",
+      "xU": 1.5,
+      "yU": 6.0
+    },
+    {
+      "id": "k43",
+      "xU": 3.0,
+      "yU": 6.0
+    },
+    {
+      "id": "k44",
+      "xU": 4.5,
+      "yU": 6.0
+    },
+    {
+      "id": "k45",
+      "xU": 6.0,
+      "yU": 6.0
+    },
+    {
+      "id": "k46",
+      "xU": 7.5,
+      "yU": 6.0
+    },
+    {
+      "id": "k47",
+      "xU": 9.0,
+      "yU": 6.0
+    },
+    {
+      "id": "k48",
+      "xU": 10.5,
+      "yU": 6.0
+    },
+    {
+      "id": "k49",
+      "xU": 12.0,
+      "yU": 6.0
+    },
+    {
+      "id": "k50",
+      "xU": 13.5,
+      "yU": 6.0
+    },
+    {
+      "id": "k51",
+      "xU": 0.0,
+      "yU": 7.5
+    },
+    {
+      "id": "k52",
+      "xU": 1.5,
+      "yU": 7.5
+    },
+    {
+      "id": "k53",
+      "xU": 3.0,
+      "yU": 7.5
+    },
+    {
+      "id": "k54",
+      "xU": 4.5,
+      "yU": 7.5
+    },
+    {
+      "id": "k55",
+      "xU": 6.0,
+      "yU": 7.5
+    },
+    {
+      "id": "k56",
+      "xU": 7.5,
+      "yU": 7.5
+    },
+    {
+      "id": "k57",
+      "xU": 9.0,
+      "yU": 7.5
+    },
+    {
+      "id": "k58",
+      "xU": 10.5,
+      "yU": 7.5
+    },
+    {
+      "id": "k59",
+      "xU": 12.0,
+      "yU": 7.5
+    },
+    {
+      "id": "k60",
+      "xU": 13.5,
+      "yU": 7.5
+    },
+    {
+      "id": "k61",
+      "xU": 0.0,
+      "yU": 9.0
+    },
+    {
+      "id": "k62",
+      "xU": 1.5,
+      "yU": 9.0
+    },
+    {
+      "id": "k63",
+      "xU": 3.0,
+      "yU": 9.0
+    },
+    {
+      "id": "k64",
+      "xU": 4.5,
+      "yU": 9.0
+    },
+    {
+      "id": "k65",
+      "xU": 6.0,
+      "yU": 9.0
+    },
+    {
+      "id": "k66",
+      "xU": 7.5,
+      "yU": 9.0
+    },
+    {
+      "id": "k67",
+      "xU": 9.0,
+      "yU": 9.0
+    },
+    {
+      "id": "k68",
+      "xU": 10.5,
+      "yU": 9.0
+    },
+    {
+      "id": "k69",
+      "xU": 12.0,
+      "yU": 9.0
+    },
+    {
+      "id": "k70",
+      "xU": 13.5,
+      "yU": 9.0
+    },
+    {
+      "id": "k71",
+      "xU": 0.0,
+      "yU": 10.5
+    },
+    {
+      "id": "k72",
+      "xU": 1.5,
+      "yU": 10.5
+    },
+    {
+      "id": "k73",
+      "xU": 3.0,
+      "yU": 10.5
+    },
+    {
+      "id": "k74",
+      "xU": 4.5,
+      "yU": 10.5
+    },
+    {
+      "id": "k75",
+      "xU": 6.0,
+      "yU": 10.5
+    },
+    {
+      "id": "k76",
+      "xU": 7.5,
+      "yU": 10.5
+    },
+    {
+      "id": "k77",
+      "xU": 9.0,
+      "yU": 10.5
+    },
+    {
+      "id": "k78",
+      "xU": 10.5,
+      "yU": 10.5
+    },
+    {
+      "id": "k79",
+      "xU": 12.0,
+      "yU": 10.5
+    },
+    {
+      "id": "k80",
+      "xU": 13.5,
+      "yU": 10.5
+    },
+    {
+      "id": "k81",
+      "xU": 0.0,
+      "yU": 12.0
+    },
+    {
+      "id": "k82",
+      "xU": 1.5,
+      "yU": 12.0
+    },
+    {
+      "id": "k83",
+      "xU": 3.0,
+      "yU": 12.0
+    },
+    {
+      "id": "k84",
+      "xU": 4.5,
+      "yU": 12.0
+    },
+    {
+      "id": "k85",
+      "xU": 6.0,
+      "yU": 12.0
+    },
+    {
+      "id": "k86",
+      "xU": 7.5,
+      "yU": 12.0
+    },
+    {
+      "id": "k87",
+      "xU": 9.0,
+      "yU": 12.0
+    },
+    {
+      "id": "k88",
+      "xU": 10.5,
+      "yU": 12.0
+    },
+    {
+      "id": "k89",
+      "xU": 12.0,
+      "yU": 12.0
+    },
+    {
+      "id": "k90",
+      "xU": 13.5,
+      "yU": 12.0
+    },
+    {
+      "id": "k91",
+      "xU": 0.0,
+      "yU": 13.5
+    },
+    {
+      "id": "k92",
+      "xU": 1.5,
+      "yU": 13.5
+    },
+    {
+      "id": "k93",
+      "xU": 3.0,
+      "yU": 13.5
+    },
+    {
+      "id": "k94",
+      "xU": 4.5,
+      "yU": 13.5
+    },
+    {
+      "id": "k95",
+      "xU": 6.0,
+      "yU": 13.5
+    },
+    {
+      "id": "k96",
+      "xU": 7.5,
+      "yU": 13.5
+    },
+    {
+      "id": "k97",
+      "xU": 9.0,
+      "yU": 13.5
+    },
+    {
+      "id": "k98",
+      "xU": 10.5,
+      "yU": 13.5
+    },
+    {
+      "id": "k99",
+      "xU": 12.0,
+      "yU": 13.5
+    },
+    {
+      "id": "k100",
+      "xU": 13.5,
+      "yU": 13.5
+    }
+  ],
+  "wires": [
+    {
+      "id": "w1",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k1",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k2",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w2",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k2",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k3",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w3",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k3",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k4",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w4",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k4",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k5",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w5",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k5",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k6",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w6",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k6",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k7",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w7",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k7",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k8",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w8",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k8",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k9",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w9",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k9",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k10",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w10",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k11",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k12",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w11",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k12",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k13",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w12",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k13",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k14",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w13",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k14",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k15",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w14",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k15",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k16",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w15",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k16",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k17",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w16",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k17",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k18",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w17",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k18",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k19",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w18",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k19",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k20",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w19",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k21",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k22",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w20",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k22",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k23",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w21",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k23",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k24",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w22",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k24",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k25",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w23",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k25",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k26",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w24",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k26",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k27",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w25",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k27",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k28",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w26",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k28",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k29",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w27",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k29",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k30",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w28",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k31",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k32",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w29",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k32",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k33",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w30",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k33",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k34",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w31",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k34",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k35",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w32",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k35",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k36",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w33",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k36",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k37",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w34",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k37",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k38",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w35",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k38",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k39",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w36",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k39",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k40",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w37",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k41",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k42",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w38",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k42",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k43",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w39",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k43",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k44",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w40",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k44",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k45",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w41",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k45",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k46",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w42",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k46",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k47",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w43",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k47",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k48",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w44",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k48",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k49",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w45",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k49",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k50",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w46",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k51",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k52",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w47",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k52",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k53",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w48",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k53",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k54",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w49",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k54",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k55",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w50",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k55",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k56",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w51",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k56",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k57",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w52",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k57",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k58",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w53",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k58",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k59",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w54",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k59",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k60",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w55",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k61",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k62",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w56",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k62",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k63",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w57",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k63",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k64",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w58",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k64",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k65",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w59",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k65",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k66",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w60",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k66",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k67",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w61",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k67",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k68",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w62",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k68",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k69",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w63",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k69",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k70",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w64",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k71",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k72",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w65",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k72",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k73",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w66",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k73",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k74",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w67",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k74",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k75",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w68",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k75",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k76",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w69",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k76",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k77",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w70",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k77",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k78",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w71",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k78",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k79",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w72",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k79",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k80",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w73",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k81",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k82",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w74",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k82",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k83",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w75",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k83",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k84",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w76",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k84",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k85",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w77",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k85",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k86",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w78",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k86",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k87",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w79",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k87",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k88",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w80",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k88",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k89",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w81",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k89",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k90",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w82",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k91",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k92",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w83",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k92",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k93",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w84",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k93",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k94",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w85",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k94",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k95",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w86",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k95",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k96",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w87",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k96",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k97",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w88",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k97",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k98",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w89",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k98",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k99",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w90",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k99",
+        "pin": 1
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k100",
+        "pin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w91",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k1",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k11",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w92",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k11",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k21",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w93",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k21",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k31",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w94",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k31",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k41",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w95",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k41",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k51",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w96",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k51",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k61",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w97",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k61",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k71",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w98",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k71",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k81",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w99",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k81",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k91",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w100",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k2",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k12",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w101",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k12",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k22",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w102",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k22",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k32",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w103",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k32",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k42",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w104",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k42",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k52",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w105",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k52",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k62",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w106",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k62",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k72",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w107",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k72",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k82",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w108",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k82",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k92",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w109",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k3",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k13",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w110",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k13",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k23",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w111",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k23",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k33",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w112",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k33",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k43",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w113",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k43",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k53",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w114",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k53",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k63",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w115",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k63",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k73",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w116",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k73",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k83",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w117",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k83",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k93",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w118",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k4",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k14",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w119",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k14",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k24",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w120",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k24",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k34",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w121",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k34",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k44",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w122",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k44",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k54",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w123",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k54",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k64",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w124",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k64",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k74",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w125",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k74",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k84",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w126",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k84",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k94",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w127",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k5",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k15",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w128",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k15",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k25",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w129",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k25",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k35",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w130",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k35",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k45",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w131",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k45",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k55",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w132",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k55",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k65",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w133",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k65",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k75",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w134",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k75",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k85",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w135",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k85",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k95",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w136",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k6",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k16",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w137",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k16",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k26",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w138",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k26",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k36",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w139",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k36",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k46",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w140",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k46",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k56",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w141",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k56",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k66",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w142",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k66",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k76",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w143",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k76",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k86",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w144",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k86",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k96",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w145",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k7",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k17",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w146",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k17",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k27",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w147",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k27",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k37",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w148",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k37",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k47",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w149",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k47",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k57",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w150",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k57",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k67",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w151",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k67",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k77",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w152",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k77",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k87",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w153",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k87",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k97",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w154",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k8",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k18",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w155",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k18",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k28",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w156",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k28",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k38",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w157",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k38",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k48",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w158",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k48",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k58",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w159",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k58",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k68",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w160",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k68",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k78",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w161",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k78",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k88",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w162",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k88",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k98",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w163",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k9",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k19",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w164",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k19",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k29",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w165",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k29",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k39",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w166",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k39",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k49",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w167",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k49",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k59",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w168",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k59",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k69",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w169",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k69",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k79",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w170",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k79",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k89",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w171",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k89",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k99",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w172",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k10",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k20",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w173",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k20",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k30",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w174",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k30",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k40",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w175",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k40",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k50",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w176",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k50",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k60",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w177",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k60",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k70",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w178",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k70",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k80",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w179",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k80",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k90",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w180",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k90",
+        "pin": 2
+      },
+      "end": {
+        "kind": "key-pin",
+        "keyId": "k100",
+        "pin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w181",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k1",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 0.75,
+          "yU": 1.25
+        },
+        "boardPin": 0
+      },
+      "bends": []
+    },
+    {
+      "id": "w182",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k2",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 2.25,
+          "yU": 1.25
+        },
+        "boardPin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w183",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k3",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 3.75,
+          "yU": 1.25
+        },
+        "boardPin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w184",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k4",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 5.25,
+          "yU": 1.25
+        },
+        "boardPin": 3
+      },
+      "bends": []
+    },
+    {
+      "id": "w185",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k5",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 6.75,
+          "yU": 1.25
+        },
+        "boardPin": 4
+      },
+      "bends": []
+    },
+    {
+      "id": "w186",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k6",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 8.25,
+          "yU": 1.25
+        },
+        "boardPin": 5
+      },
+      "bends": []
+    },
+    {
+      "id": "w187",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k7",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 9.75,
+          "yU": 1.25
+        },
+        "boardPin": 6
+      },
+      "bends": []
+    },
+    {
+      "id": "w188",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k8",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 11.25,
+          "yU": 1.25
+        },
+        "boardPin": 7
+      },
+      "bends": []
+    },
+    {
+      "id": "w189",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k9",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 12.75,
+          "yU": 1.25
+        },
+        "boardPin": 8
+      },
+      "bends": []
+    },
+    {
+      "id": "w190",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k10",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 14.25,
+          "yU": 1.25
+        },
+        "boardPin": 9
+      },
+      "bends": []
+    },
+    {
+      "id": "w191",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k11",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 0.75,
+          "yU": 2.75
+        },
+        "boardPin": 10
+      },
+      "bends": []
+    },
+    {
+      "id": "w192",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k12",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 2.25,
+          "yU": 2.75
+        },
+        "boardPin": 11
+      },
+      "bends": []
+    },
+    {
+      "id": "w193",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k13",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 3.75,
+          "yU": 2.75
+        },
+        "boardPin": 12
+      },
+      "bends": []
+    },
+    {
+      "id": "w194",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k14",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 5.25,
+          "yU": 2.75
+        },
+        "boardPin": 13
+      },
+      "bends": []
+    },
+    {
+      "id": "w195",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k15",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 6.75,
+          "yU": 2.75
+        },
+        "boardPin": 14
+      },
+      "bends": []
+    },
+    {
+      "id": "w196",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k16",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 8.25,
+          "yU": 2.75
+        },
+        "boardPin": 15
+      },
+      "bends": []
+    },
+    {
+      "id": "w197",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k17",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 9.75,
+          "yU": 2.75
+        },
+        "boardPin": 16
+      },
+      "bends": []
+    },
+    {
+      "id": "w198",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k18",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 11.25,
+          "yU": 2.75
+        },
+        "boardPin": 17
+      },
+      "bends": []
+    },
+    {
+      "id": "w199",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k19",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 12.75,
+          "yU": 2.75
+        },
+        "boardPin": 18
+      },
+      "bends": []
+    },
+    {
+      "id": "w200",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k20",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 14.25,
+          "yU": 2.75
+        },
+        "boardPin": 19
+      },
+      "bends": []
+    },
+    {
+      "id": "w201",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k21",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 0.75,
+          "yU": 4.25
+        },
+        "boardPin": 20
+      },
+      "bends": []
+    },
+    {
+      "id": "w202",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k22",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 2.25,
+          "yU": 4.25
+        },
+        "boardPin": 21
+      },
+      "bends": []
+    },
+    {
+      "id": "w203",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k23",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 3.75,
+          "yU": 4.25
+        },
+        "boardPin": 22
+      },
+      "bends": []
+    },
+    {
+      "id": "w204",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k24",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 5.25,
+          "yU": 4.25
+        },
+        "boardPin": 23
+      },
+      "bends": []
+    },
+    {
+      "id": "w205",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k25",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 6.75,
+          "yU": 4.25
+        },
+        "boardPin": 24
+      },
+      "bends": []
+    },
+    {
+      "id": "w206",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k26",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 8.25,
+          "yU": 4.25
+        },
+        "boardPin": 25
+      },
+      "bends": []
+    },
+    {
+      "id": "w207",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k27",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 9.75,
+          "yU": 4.25
+        },
+        "boardPin": 26
+      },
+      "bends": []
+    },
+    {
+      "id": "w208",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k28",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 11.25,
+          "yU": 4.25
+        },
+        "boardPin": 27
+      },
+      "bends": []
+    },
+    {
+      "id": "w209",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k29",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 12.75,
+          "yU": 4.25
+        },
+        "boardPin": 28
+      },
+      "bends": []
+    },
+    {
+      "id": "w210",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k30",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 14.25,
+          "yU": 4.25
+        },
+        "boardPin": 29
+      },
+      "bends": []
+    },
+    {
+      "id": "w211",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k31",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 0.75,
+          "yU": 5.75
+        },
+        "boardPin": 30
+      },
+      "bends": []
+    },
+    {
+      "id": "w212",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k32",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 2.25,
+          "yU": 5.75
+        },
+        "boardPin": 31
+      },
+      "bends": []
+    },
+    {
+      "id": "w213",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k33",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 3.75,
+          "yU": 5.75
+        },
+        "boardPin": 0
+      },
+      "bends": []
+    },
+    {
+      "id": "w214",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k34",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 5.25,
+          "yU": 5.75
+        },
+        "boardPin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w215",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k35",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 6.75,
+          "yU": 5.75
+        },
+        "boardPin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w216",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k36",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 8.25,
+          "yU": 5.75
+        },
+        "boardPin": 3
+      },
+      "bends": []
+    },
+    {
+      "id": "w217",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k37",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 9.75,
+          "yU": 5.75
+        },
+        "boardPin": 4
+      },
+      "bends": []
+    },
+    {
+      "id": "w218",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k38",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 11.25,
+          "yU": 5.75
+        },
+        "boardPin": 5
+      },
+      "bends": []
+    },
+    {
+      "id": "w219",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k39",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 12.75,
+          "yU": 5.75
+        },
+        "boardPin": 6
+      },
+      "bends": []
+    },
+    {
+      "id": "w220",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k40",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 14.25,
+          "yU": 5.75
+        },
+        "boardPin": 7
+      },
+      "bends": []
+    },
+    {
+      "id": "w221",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k41",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 0.75,
+          "yU": 7.25
+        },
+        "boardPin": 8
+      },
+      "bends": []
+    },
+    {
+      "id": "w222",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k42",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 2.25,
+          "yU": 7.25
+        },
+        "boardPin": 9
+      },
+      "bends": []
+    },
+    {
+      "id": "w223",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k43",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 3.75,
+          "yU": 7.25
+        },
+        "boardPin": 10
+      },
+      "bends": []
+    },
+    {
+      "id": "w224",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k44",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 5.25,
+          "yU": 7.25
+        },
+        "boardPin": 11
+      },
+      "bends": []
+    },
+    {
+      "id": "w225",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k45",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 6.75,
+          "yU": 7.25
+        },
+        "boardPin": 12
+      },
+      "bends": []
+    },
+    {
+      "id": "w226",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k46",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 8.25,
+          "yU": 7.25
+        },
+        "boardPin": 13
+      },
+      "bends": []
+    },
+    {
+      "id": "w227",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k47",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 9.75,
+          "yU": 7.25
+        },
+        "boardPin": 14
+      },
+      "bends": []
+    },
+    {
+      "id": "w228",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k48",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 11.25,
+          "yU": 7.25
+        },
+        "boardPin": 15
+      },
+      "bends": []
+    },
+    {
+      "id": "w229",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k49",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 12.75,
+          "yU": 7.25
+        },
+        "boardPin": 16
+      },
+      "bends": []
+    },
+    {
+      "id": "w230",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k50",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 14.25,
+          "yU": 7.25
+        },
+        "boardPin": 17
+      },
+      "bends": []
+    },
+    {
+      "id": "w231",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k51",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 0.75,
+          "yU": 8.75
+        },
+        "boardPin": 18
+      },
+      "bends": []
+    },
+    {
+      "id": "w232",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k52",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 2.25,
+          "yU": 8.75
+        },
+        "boardPin": 19
+      },
+      "bends": []
+    },
+    {
+      "id": "w233",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k53",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 3.75,
+          "yU": 8.75
+        },
+        "boardPin": 20
+      },
+      "bends": []
+    },
+    {
+      "id": "w234",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k54",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 5.25,
+          "yU": 8.75
+        },
+        "boardPin": 21
+      },
+      "bends": []
+    },
+    {
+      "id": "w235",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k55",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 6.75,
+          "yU": 8.75
+        },
+        "boardPin": 22
+      },
+      "bends": []
+    },
+    {
+      "id": "w236",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k56",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 8.25,
+          "yU": 8.75
+        },
+        "boardPin": 23
+      },
+      "bends": []
+    },
+    {
+      "id": "w237",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k57",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 9.75,
+          "yU": 8.75
+        },
+        "boardPin": 24
+      },
+      "bends": []
+    },
+    {
+      "id": "w238",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k58",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 11.25,
+          "yU": 8.75
+        },
+        "boardPin": 25
+      },
+      "bends": []
+    },
+    {
+      "id": "w239",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k59",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 12.75,
+          "yU": 8.75
+        },
+        "boardPin": 26
+      },
+      "bends": []
+    },
+    {
+      "id": "w240",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k60",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 14.25,
+          "yU": 8.75
+        },
+        "boardPin": 27
+      },
+      "bends": []
+    },
+    {
+      "id": "w241",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k61",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 0.75,
+          "yU": 10.25
+        },
+        "boardPin": 28
+      },
+      "bends": []
+    },
+    {
+      "id": "w242",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k62",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 2.25,
+          "yU": 10.25
+        },
+        "boardPin": 29
+      },
+      "bends": []
+    },
+    {
+      "id": "w243",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k63",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 3.75,
+          "yU": 10.25
+        },
+        "boardPin": 30
+      },
+      "bends": []
+    },
+    {
+      "id": "w244",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k64",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 5.25,
+          "yU": 10.25
+        },
+        "boardPin": 31
+      },
+      "bends": []
+    },
+    {
+      "id": "w245",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k65",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 6.75,
+          "yU": 10.25
+        },
+        "boardPin": 0
+      },
+      "bends": []
+    },
+    {
+      "id": "w246",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k66",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 8.25,
+          "yU": 10.25
+        },
+        "boardPin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w247",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k67",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 9.75,
+          "yU": 10.25
+        },
+        "boardPin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w248",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k68",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 11.25,
+          "yU": 10.25
+        },
+        "boardPin": 3
+      },
+      "bends": []
+    },
+    {
+      "id": "w249",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k69",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 12.75,
+          "yU": 10.25
+        },
+        "boardPin": 4
+      },
+      "bends": []
+    },
+    {
+      "id": "w250",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k70",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 14.25,
+          "yU": 10.25
+        },
+        "boardPin": 5
+      },
+      "bends": []
+    },
+    {
+      "id": "w251",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k71",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 0.75,
+          "yU": 11.75
+        },
+        "boardPin": 6
+      },
+      "bends": []
+    },
+    {
+      "id": "w252",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k72",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 2.25,
+          "yU": 11.75
+        },
+        "boardPin": 7
+      },
+      "bends": []
+    },
+    {
+      "id": "w253",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k73",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 3.75,
+          "yU": 11.75
+        },
+        "boardPin": 8
+      },
+      "bends": []
+    },
+    {
+      "id": "w254",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k74",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 5.25,
+          "yU": 11.75
+        },
+        "boardPin": 9
+      },
+      "bends": []
+    },
+    {
+      "id": "w255",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k75",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 6.75,
+          "yU": 11.75
+        },
+        "boardPin": 10
+      },
+      "bends": []
+    },
+    {
+      "id": "w256",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k76",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 8.25,
+          "yU": 11.75
+        },
+        "boardPin": 11
+      },
+      "bends": []
+    },
+    {
+      "id": "w257",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k77",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 9.75,
+          "yU": 11.75
+        },
+        "boardPin": 12
+      },
+      "bends": []
+    },
+    {
+      "id": "w258",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k78",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 11.25,
+          "yU": 11.75
+        },
+        "boardPin": 13
+      },
+      "bends": []
+    },
+    {
+      "id": "w259",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k79",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 12.75,
+          "yU": 11.75
+        },
+        "boardPin": 14
+      },
+      "bends": []
+    },
+    {
+      "id": "w260",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k80",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 14.25,
+          "yU": 11.75
+        },
+        "boardPin": 15
+      },
+      "bends": []
+    },
+    {
+      "id": "w261",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k81",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 0.75,
+          "yU": 13.25
+        },
+        "boardPin": 16
+      },
+      "bends": []
+    },
+    {
+      "id": "w262",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k82",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 2.25,
+          "yU": 13.25
+        },
+        "boardPin": 17
+      },
+      "bends": []
+    },
+    {
+      "id": "w263",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k83",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 3.75,
+          "yU": 13.25
+        },
+        "boardPin": 18
+      },
+      "bends": []
+    },
+    {
+      "id": "w264",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k84",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 5.25,
+          "yU": 13.25
+        },
+        "boardPin": 19
+      },
+      "bends": []
+    },
+    {
+      "id": "w265",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k85",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 6.75,
+          "yU": 13.25
+        },
+        "boardPin": 20
+      },
+      "bends": []
+    },
+    {
+      "id": "w266",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k86",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 8.25,
+          "yU": 13.25
+        },
+        "boardPin": 21
+      },
+      "bends": []
+    },
+    {
+      "id": "w267",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k87",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 9.75,
+          "yU": 13.25
+        },
+        "boardPin": 22
+      },
+      "bends": []
+    },
+    {
+      "id": "w268",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k88",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 11.25,
+          "yU": 13.25
+        },
+        "boardPin": 23
+      },
+      "bends": []
+    },
+    {
+      "id": "w269",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k89",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 12.75,
+          "yU": 13.25
+        },
+        "boardPin": 24
+      },
+      "bends": []
+    },
+    {
+      "id": "w270",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k90",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 14.25,
+          "yU": 13.25
+        },
+        "boardPin": 25
+      },
+      "bends": []
+    },
+    {
+      "id": "w271",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k91",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 0.75,
+          "yU": 14.75
+        },
+        "boardPin": 26
+      },
+      "bends": []
+    },
+    {
+      "id": "w272",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k92",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 2.25,
+          "yU": 14.75
+        },
+        "boardPin": 27
+      },
+      "bends": []
+    },
+    {
+      "id": "w273",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k93",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 3.75,
+          "yU": 14.75
+        },
+        "boardPin": 28
+      },
+      "bends": []
+    },
+    {
+      "id": "w274",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k94",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 5.25,
+          "yU": 14.75
+        },
+        "boardPin": 29
+      },
+      "bends": []
+    },
+    {
+      "id": "w275",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k95",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 6.75,
+          "yU": 14.75
+        },
+        "boardPin": 30
+      },
+      "bends": []
+    },
+    {
+      "id": "w276",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k96",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 8.25,
+          "yU": 14.75
+        },
+        "boardPin": 31
+      },
+      "bends": []
+    },
+    {
+      "id": "w277",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k97",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 9.75,
+          "yU": 14.75
+        },
+        "boardPin": 0
+      },
+      "bends": []
+    },
+    {
+      "id": "w278",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k98",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 11.25,
+          "yU": 14.75
+        },
+        "boardPin": 1
+      },
+      "bends": []
+    },
+    {
+      "id": "w279",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k99",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 12.75,
+          "yU": 14.75
+        },
+        "boardPin": 2
+      },
+      "bends": []
+    },
+    {
+      "id": "w280",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k100",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 14.25,
+          "yU": 14.75
+        },
+        "boardPin": 3
+      },
+      "bends": []
+    },
+    {
+      "id": "w281",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k1",
+        "pin": 2
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 0.75,
+          "yU": 1.25
+        },
+        "boardPin": 4
+      },
+      "bends": []
+    },
+    {
+      "id": "w282",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k2",
+        "pin": 2
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 2.25,
+          "yU": 1.25
+        },
+        "boardPin": 5
+      },
+      "bends": []
+    },
+    {
+      "id": "w283",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k3",
+        "pin": 2
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 3.75,
+          "yU": 1.25
+        },
+        "boardPin": 6
+      },
+      "bends": []
+    },
+    {
+      "id": "w284",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k4",
+        "pin": 2
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 5.25,
+          "yU": 1.25
+        },
+        "boardPin": 7
+      },
+      "bends": []
+    },
+    {
+      "id": "w285",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k5",
+        "pin": 2
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 6.75,
+          "yU": 1.25
+        },
+        "boardPin": 8
+      },
+      "bends": []
+    },
+    {
+      "id": "w286",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k6",
+        "pin": 2
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 8.25,
+          "yU": 1.25
+        },
+        "boardPin": 9
+      },
+      "bends": []
+    },
+    {
+      "id": "w287",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k7",
+        "pin": 2
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 9.75,
+          "yU": 1.25
+        },
+        "boardPin": 10
+      },
+      "bends": []
+    },
+    {
+      "id": "w288",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k8",
+        "pin": 2
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 11.25,
+          "yU": 1.25
+        },
+        "boardPin": 11
+      },
+      "bends": []
+    },
+    {
+      "id": "w289",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k9",
+        "pin": 2
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 12.75,
+          "yU": 1.25
+        },
+        "boardPin": 12
+      },
+      "bends": []
+    },
+    {
+      "id": "w290",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k10",
+        "pin": 2
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 14.25,
+          "yU": 1.25
+        },
+        "boardPin": 13
+      },
+      "bends": []
+    },
+    {
+      "id": "w291",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k11",
+        "pin": 2
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 0.75,
+          "yU": 2.75
+        },
+        "boardPin": 14
+      },
+      "bends": []
+    },
+    {
+      "id": "w292",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k12",
+        "pin": 2
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 2.25,
+          "yU": 2.75
+        },
+        "boardPin": 15
+      },
+      "bends": []
+    },
+    {
+      "id": "w293",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k13",
+        "pin": 2
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 3.75,
+          "yU": 2.75
+        },
+        "boardPin": 16
+      },
+      "bends": []
+    },
+    {
+      "id": "w294",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k14",
+        "pin": 2
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 5.25,
+          "yU": 2.75
+        },
+        "boardPin": 17
+      },
+      "bends": []
+    },
+    {
+      "id": "w295",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k15",
+        "pin": 2
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 6.75,
+          "yU": 2.75
+        },
+        "boardPin": 18
+      },
+      "bends": []
+    },
+    {
+      "id": "w296",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k16",
+        "pin": 2
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 8.25,
+          "yU": 2.75
+        },
+        "boardPin": 19
+      },
+      "bends": []
+    },
+    {
+      "id": "w297",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k17",
+        "pin": 2
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 9.75,
+          "yU": 2.75
+        },
+        "boardPin": 20
+      },
+      "bends": []
+    },
+    {
+      "id": "w298",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k18",
+        "pin": 2
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 11.25,
+          "yU": 2.75
+        },
+        "boardPin": 21
+      },
+      "bends": []
+    },
+    {
+      "id": "w299",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k19",
+        "pin": 2
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 12.75,
+          "yU": 2.75
+        },
+        "boardPin": 22
+      },
+      "bends": []
+    },
+    {
+      "id": "w300",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k20",
+        "pin": 2
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 14.25,
+          "yU": 2.75
+        },
+        "boardPin": 23
+      },
+      "bends": []
+    }
+  ],
+  "insulatedCrossings": []
+}

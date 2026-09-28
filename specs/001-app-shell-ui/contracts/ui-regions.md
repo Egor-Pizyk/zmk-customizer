@@ -25,11 +25,12 @@ Later features rely on these regions being stable: they add content to slots, no
 | Help button | `<button>` in the tab bar footer | "Keyboard shortcuts" | Opens the help dialog |
 | Project bar | `<header>` | — | Name, save status (plain text), New/Open/Save/Undo/Redo (`aria-disabled="true"` + tooltip "Not available yet") |
 | Main | `<main id="main">` | — | Contains `<h1>` = workspace name. Focus moves to the `<h1>` (`tabIndex={-1}`) on workspace change; `<title>` is "<Workspace> — ZMK Customizer" |
-| Work surface | `<svg role="application" tabIndex={0} data-canvas-workspace="<id>">` | "<Workspace> canvas" | Canvas workspaces only. The `<svg>` itself is the tab stop; canvas-scoped shortcuts (`contracts/shortcuts.md`) apply while it has focus, including arrow-key pan |
+| Work surface | `<svg role="application" tabIndex={0} data-canvas-workspace="<id>">` | "<Workspace> canvas" | Canvas workspaces only. The `<svg>` itself is the tab stop; canvas-scoped shortcuts (`contracts/shortcuts.md`) apply while it has focus, including arrow-key pan. Schematic (spec 003): name "Schematic canvas, N keys. …"; keys inside are `role="graphics-symbol"` focus stops with roving tabindex; see `specs/003-schematic-switches-wires/contracts/ui.md` |
+| Parts list (Schematic, spec 003) | `<section>` below the work surface, `<details>` open state = preference `isPartsListOpen` | `<h2>` "Parts" | Keys, Wires, Crossings tables: the keyboard and screen-reader path for the schematic |
 | Rulers | `<svg aria-hidden="true">` | — | Decorative; the position is in the status bar |
 | Minimap | `<svg aria-hidden="true">` | — (pointer-only; jsx-a11y rejects `role="img"` on `<svg>`) | Dragging is the pointer path; the keyboard path is arrow-key pan, zoom and reset on the canvas |
 | Surface controls | `<button aria-pressed>` + zoom in / zoom out / reset view buttons, top-right | "Snap to grid", "Zoom in", "Zoom out", "Reset view" | Snap is the same setting as the settings dialog |
-| Tool window | `<section>` | "Tools" | Title bar is a `<button>` handle ("Move tools window, use arrow keys"); collapse button `aria-expanded`; tools are a `role="radiogroup"` of `role="radio"` buttons, unavailable ones `aria-disabled` with hint |
+| Tool window | `<section>` | "Tools" | Title bar is a `<button>` handle ("Move tools window, use arrow keys"); collapse button `aria-expanded`; tools are a `role="radiogroup"` of `role="radio"` buttons, unavailable ones `aria-disabled` with hint. From spec 003: Select, Key, Wire, all available, hints show their shortcut |
 | Status bar | `<footer>` rendered by the work surface | — | Position, zoom, snap, grid size; `IssuesToggle` "Problems (N)" (`aria-expanded`, `aria-controls="issues-panel"`) |
 | Placeholder footer | `<footer>` in Firmware / Export | — | `IssuesToggle` only |
 | Problems panel | `<section id="issues-panel">` | `<h2>` "Problems" | List, or "No problems" |

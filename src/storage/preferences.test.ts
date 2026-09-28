@@ -17,6 +17,7 @@ const VALID_V1 = {
   isMinimapVisible: true,
   activeWorkspaceId: 'bindings',
   isIssuesPanelOpen: true,
+  isPartsListOpen: false,
   toolWindow: { xPx: 40, yPx: 80, isCollapsed: true },
   viewByWorkspace: {
     schematic: { zoom: 2, panXPx: 10, panYPx: -5 },
@@ -53,6 +54,14 @@ describe('parsePreferences', () => {
     expect(result.status).toBe('ok');
     expect(result.preferences.theme).toBe('dark');
     expect(result.preferences.gridSizeU).toBe(0.25);
+  });
+
+  it('opens the parts list for a stored v1 value that predates it (spec 003)', () => {
+    const result = parsePreferences('{"version":1,"theme":"dark"}');
+    expect(result.preferences.isPartsListOpen).toBe(true);
+    expect(
+      parsePreferences('{"version":1,"isPartsListOpen":false}').preferences.isPartsListOpen,
+    ).toBe(false);
   });
 
   it('defaults a grid size outside 0.05..2', () => {

@@ -49,6 +49,25 @@ matchShortcut(input: { code: string; key: string; altKey: boolean; shiftKey: boo
 - On a match the handler calls `preventDefault()`.
 - `event.repeat` (key held down) repeats only pan and zoom (`isRepeatableShortcut`); toggles and dialog opens fire once per press.
 
+## Schematic (spec 003)
+
+Canvas scope, only while the Schematic canvas (or an element in it) has focus. Matched by the same `matchShortcut`; the app-wide listener has no action for them, so `schematic/use-schematic-shortcuts.ts` (a second `globalThis` `keydown` listener owned by the workspace) runs them.
+
+| Key | Id | Action |
+|---|---|---|
+| `v` / `k` / `w` | `select-tool` / `add-key-tool` / `wire-tool` | Select / Key / Wire tool |
+| Enter | `place-key` | Key tool: add a key at the next free spot |
+| Delete, Backspace | `delete-selection` | Delete the selected key or wire |
+| Escape | `cancel` | Cancel the wire being drawn, else clear the selection |
+
+Key scope (`scope: 'key'`), matched by `matchKeyShortcut` in the focused key's own `onKeyDown`, which stops propagation so canvas pan does not also run:
+
+| Key | Action |
+|---|---|
+| Arrows | Focus the nearest key in that direction |
+| Shift+arrows | Nudge the key one grid step |
+| Home / End | First / last key by key index |
+
 ## Why these combos
 
 - Plain single keys as globals violate WCAG 2.1.4; they are canvas-scoped instead.
@@ -66,3 +85,8 @@ matchShortcut(input: { code: string; key: string; altKey: boolean; shiftKey: boo
 | Middle-button drag | Pan |
 | Drag tool window title bar | Move tool window |
 | Arrow keys on focused tool window title bar | Move tool window 16 px (Shift: 64 px) |
+| Schematic, Key tool: click | Place a key |
+| Schematic, Select tool: drag a key / a bend handle | Move the key / the bend |
+| Schematic, Wire tool: click, click…, click a pin or wire | Draw a wire |
+| Schematic, Wire tool: double-click | End the wire with a free end |
+| Schematic: click a crossing button | Insulate or connect the crossing |

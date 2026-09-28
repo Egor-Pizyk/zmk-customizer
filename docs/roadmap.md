@@ -2,7 +2,7 @@
 
 Features in implementation order. One feature = one Spec Kit branch `NNN-short-name` = one `specs/NNN-short-name/` directory (AGENTS.md §6). Spec Kit numbers specs by counting existing `specs/` directories, so run `/speckit-specify` in this order to keep numbers aligned with this file.
 
-Ordering rule: every feature ends with something a user can load, see and download. Generators come before editors: feature 003 generates real files from preset keyboards, so each later editor changes a project whose output is already visible in the export preview and covered by golden tests.
+Ordering rule: every feature ends with something a user can load, see and download. Generators come before editors: feature 004 generates real files from preset keyboards, so each later editor changes a project whose output is already visible in the export preview and covered by golden tests.
 
 Each `/speckit-specify` prompt below describes what and why only. Technology choices go into `/speckit-plan`, which reads AGENTS.md §3–§4.
 
@@ -34,24 +34,25 @@ Each `/speckit-specify` prompt below describes what and why only. Technology cho
 |---|---|---|
 | 001 | app-shell-ui | — |
 | 002 | project-foundation | 001 |
-| 003 | shield-generators | 002 |
-| 004 | export-download | 003 |
-| 005 | controller-boards | 003 |
-| 006 | layout-editor | 002, 003 |
-| 007 | matrix-wiring-editor | 005, 006 |
-| 008 | keymap-editor | 003, 006 |
+| 003 | schematic-switches-wires | 002 |
+| 004 | shield-generators | 002 |
+| 005 | export-download | 004 |
+| 006 | controller-boards | 004 |
+| 007 | layout-editor | 002, 004 |
+| 008 | matrix-wiring-editor | 006, 007 |
+| 009 | keymap-editor | 004, 007 |
 | **MVP** | custom keyboard from scratch → buildable zmk-config zip | |
-| 009 | kconfig-settings | 004 |
-| 010 | custom-behaviors | 008 |
-| 011 | combos-macros-conditional-layers | 008, 010 |
-| 012 | kle-import | 006 |
-| 013 | encoders | 007, 008 |
-| 014 | zmk-studio-support | 008, 009 |
-| 015 | lighting-displays | 007, 009 |
-| 016 | zmk-version-selection | all catalog features |
-| 017 | build-verification | 004 |
+| 010 | kconfig-settings | 005 |
+| 011 | custom-behaviors | 009 |
+| 012 | combos-macros-conditional-layers | 009, 011 |
+| 013 | kle-import | 007 |
+| 014 | encoders | 008, 009 |
+| 015 | zmk-studio-support | 009, 010 |
+| 016 | lighting-displays | 008, 010 |
+| 017 | zmk-version-selection | all catalog features |
+| 018 | build-verification | 005 |
 
-Workspaces (from 001): **Schematic** holds the layout editor (006) and matrix/wiring editor (007) and owns the project JSON config (002); **Bindings** holds the keymap editor (008), custom behaviors (010) and combos/macros/conditional layers (011); **Firmware** holds kconfig-settings (009); **Export** holds the file preview (003) and download (004). Every feature reports its validation issues in the 001 problems panel, counted in the tab badge of the workspace that fixes them.
+Workspaces (from 001): **Schematic** holds the schematic of keys and wires (003), the layout editor (007) and matrix/wiring editor (008) and owns the project JSON config (002); **Bindings** holds the keymap editor (009), custom behaviors (011) and combos/macros/conditional layers (012); **Firmware** holds kconfig-settings (010); **Export** holds the file preview (004) and download (005). Every feature reports its validation issues in the 001 problems panel, counted in the tab badge of the workspace that fixes them.
 
 ---
 
@@ -102,7 +103,17 @@ Workspaces (from 001): **Schematic** holds the layout editor (006) and matrix/wi
 
 ---
 
-## 003 — shield-generators
+## 003 — schematic-switches-wires
+
+**Specified:** [`specs/003-schematic-switches-wires/spec.md`](../specs/003-schematic-switches-wires/spec.md). Added 2026-09-27 on user request; every later feature was renumbered +1 (specs 001 and 002 still use the old numbers: their "roadmap N" for N ≥ 003 is N+1 here).
+
+**Goal.** Draw the keyboard as an electrical schematic in the Schematic workspace: keys drawn as MX switches seen from above (two pins each), orthogonal wires between pins, crossings that are connected by default and can be insulated, and free wire ends attached to a generic board pin (P0–P31). Everything is part of the project.
+
+**Scope (summary).** Key and Wire tools; parts list as the keyboard/screen-reader path; checks for unconnected pins, free ends, board-pin conflicts, shorts and overlaps. A key here is the same `Key` the layout editor (007) later extends with size and rotation; the matrix/wiring editor (008) derives kscan from the schematic's nets. Out of scope: generating ZMK files, real controller boards (006), diodes.
+
+---
+
+## 004 — shield-generators
 
 **Goal.** Given a complete project, produce the ZMK shield files that upstream ZMK builds unchanged. Ship with preset projects equivalent to the upstream fixtures so output is real and golden-tested before any editor exists.
 
@@ -114,7 +125,7 @@ Workspaces (from 001): **Schematic** holds the layout editor (006) and matrix/wi
 - Golden tests comparing generator output with `tests/fixtures/upstream/`.
 - Read-only preview of all generated files in the Export workspace.
 
-**Out of scope.** Editing anything (features 005–008), zip download (004), charlieplex kscan, `behaviors {}` / `combos {}` / `macros {}` sections, encoders, displays, RGB.
+**Out of scope.** Editing anything (features 006–009), zip download (005), charlieplex kscan, `behaviors {}` / `combos {}` / `macros {}` sections, encoders, displays, RGB.
 
 **Acceptance criteria**
 - For each preset, every generated file matches its golden file byte for byte.
@@ -136,7 +147,7 @@ Workspaces (from 001): **Schematic** holds the layout editor (006) and matrix/wi
 
 ---
 
-## 004 — export-download
+## 005 — export-download
 
 **Goal.** Download the generated files as a `.zip` that can be committed as a `zmk-config` repository and built by GitHub Actions.
 
@@ -163,7 +174,7 @@ Workspaces (from 001): **Schematic** holds the layout editor (006) and matrix/wi
 
 ---
 
-## 005 — controller-boards
+## 006 — controller-boards
 
 **Goal.** Pick the controller board and see its pins by the names printed on the board; pins in the project reference the board's connector so the overlay uses the right syntax.
 
@@ -174,7 +185,7 @@ Workspaces (from 001): **Schematic** holds the layout editor (006) and matrix/wi
 - Pin picker showing board labels.
 - Board selection in the Schematic workspace; dropped pins listed in the problems panel.
 
-**Out of scope.** Custom boards (AGENTS.md §1.4 non-goal), editing pin assignments (007).
+**Out of scope.** Custom boards (AGENTS.md §1.4 non-goal), editing pin assignments (008).
 
 **Acceptance criteria**
 - Every catalog entry has a `docsUrl`; a test fails if one is missing.
@@ -191,7 +202,7 @@ Workspaces (from 001): **Schematic** holds the layout editor (006) and matrix/wi
 
 ---
 
-## 006 — layout-editor
+## 007 — layout-editor
 
 **Goal.** Build any physical key layout visually in the Schematic workspace, with a table view that exposes every key property for keyboard and screen-reader users.
 
@@ -203,7 +214,7 @@ Workspaces (from 001): **Schematic** holds the layout editor (006) and matrix/wi
 - Start from blank or a preset.
 - Deleting a key removes its binding from every layer and its matrix assignment; indices stay contiguous.
 
-**Out of scope.** KLE import (012), wiring (007), bindings (008).
+**Out of scope.** KLE import (013), wiring (008), bindings (009).
 
 **Acceptance criteria**
 - Every canvas operation has a keyboard or table equivalent (verified by a UI test for move and rotate).
@@ -221,7 +232,7 @@ Workspaces (from 001): **Schematic** holds the layout editor (006) and matrix/wi
 
 ---
 
-## 007 — matrix-wiring-editor
+## 008 — matrix-wiring-editor
 
 **Goal.** In the Schematic workspace, describe how the switches are wired so the generated kscan node and matrix transform match the real hardware, with conflicts visible before export.
 
@@ -230,11 +241,11 @@ Workspaces (from 001): **Schematic** holds the layout editor (006) and matrix/wi
 - Kscan type: matrix or direct; diode direction `col2row` / `row2col`.
 - Matrix grid view: rows × columns, key placed per cell; assign key → (row, col) by click or table.
 - Auto-assign rows/cols by physical position, per half.
-- Pin assignment per row/column (matrix) or per key (direct), per half, using the 005 pin picker.
+- Pin assignment per row/column (matrix) or per key (direct), per half, using the 006 pin picker.
 - Conflict highlighting on the canvas and in the problems panel (Schematic badge): two keys in one cell, unassigned key/row/col/pin, pin used twice on one half, pin reserved by board.
 - Right half column offset derived for split.
 
-**Out of scope.** Charlieplex (later), encoders (013).
+**Out of scope.** Charlieplex (later), encoders (014).
 
 **Acceptance criteria**
 - Auto-assign on each preset layout reproduces the preset's matrix (or a documented equivalent), tested.
@@ -252,7 +263,7 @@ Workspaces (from 001): **Schematic** holds the layout editor (006) and matrix/wi
 
 ---
 
-## 008 — keymap-editor
+## 009 — keymap-editor
 
 **Goal.** In the Bindings workspace, edit layers and per-key bindings with built-in ZMK behaviors, using a searchable keycode picker instead of typed codes.
 
@@ -263,7 +274,7 @@ Workspaces (from 001): **Schematic** holds the layout editor (006) and matrix/wi
 - Keymap view on the physical layout plus a list alternative.
 - Validation: parameter count/type per behavior, layer references exist; issues go to the problems panel (Bindings badge).
 
-**Out of scope.** User-defined behaviors (010), combos/macros/conditional layers (011).
+**Out of scope.** User-defined behaviors (011), combos/macros/conditional layers (012).
 
 **Acceptance criteria**
 - Keymap generated for each preset after round-tripping through the editor (no edits) is byte-identical to its golden file.
@@ -281,11 +292,11 @@ Workspaces (from 001): **Schematic** holds the layout editor (006) and matrix/wi
 
 ## — MVP line —
 
-After 008 a user can design a non-standard keyboard from nothing, wire it, map it, and download a zmk-config that builds. Everything below adds reach, not the core promise.
+After 009 a user can design a non-standard keyboard from nothing, wire it, map it, and download a zmk-config that builds. Everything below adds reach, not the core promise.
 
 ---
 
-## 009 — kconfig-settings
+## 010 — kconfig-settings
 
 **Goal.** In the Firmware workspace, set common ZMK Kconfig options through typed controls, each explained and linked.
 
@@ -305,13 +316,13 @@ After 008 a user can design a non-standard keyboard from nothing, wire it, map i
 
 ---
 
-## 010 — custom-behaviors
+## 011 — custom-behaviors
 
 **Goal.** In the Bindings workspace, define user behaviors (hold-tap, tap-dance, mod-morph, sticky key/layer tuning) and bind them to keys.
 
-**In scope.** Create/edit/delete behaviors with typed properties per `docs/zmk/behaviors.md`; generated `behaviors {}` section; behaviors appear in the 008 picker; deleting a used behavior is a validation error in the problems panel listing the keys.
+**In scope.** Create/edit/delete behaviors with typed properties per `docs/zmk/behaviors.md`; generated `behaviors {}` section; behaviors appear in the 009 picker; deleting a used behavior is a validation error in the problems panel listing the keys.
 
-**Out of scope.** Macros, combos (011).
+**Out of scope.** Macros, combos (012).
 
 **Acceptance criteria.** Golden test per behavior type; label names sanitized and unique; timing properties validated; every property has `docsUrl`.
 
@@ -323,7 +334,7 @@ After 008 a user can design a non-standard keyboard from nothing, wire it, map i
 
 ---
 
-## 011 — combos-macros-conditional-layers
+## 012 — combos-macros-conditional-layers
 
 **Goal.** Combos, macros and conditional layers, the remaining keymap sections, in the Bindings workspace.
 
@@ -343,43 +354,43 @@ After 008 a user can design a non-standard keyboard from nothing, wire it, map i
 
 Order among these is flexible; pick by user demand.
 
-### 012 — kle-import
+### 013 — kle-import
 Import a Keyboard Layout Editor JSON into the Schematic physical layout (positions, sizes, rotations). Out: KLE colors/legends beyond a label. Acceptance: fixture KLE files for the presets import to layouts equal to the preset layouts. Open: whether KLE parsing needs a dependency (ADR required). Docs: `docs/zmk/physical-layout.md`.
 
 ```
 /speckit-specify Import a keyboard layout created in the popular Keyboard Layout Editor website into the Schematic workspace so users do not have to redraw keys they already designed. Key positions, sizes and rotations are taken over; anything the tool cannot represent is listed after import. A file that cannot be read is rejected with a clear message and the current project stays unchanged.
 ```
 
-### 013 — encoders
+### 014 — encoders
 Rotary encoders: pins per half and steps (Schematic), sensor bindings per layer (Bindings). Requires a new `docs/zmk/encoders.md` page first. Acceptance: golden test against an upstream shield with encoders.
 
 ```
 /speckit-specify Support rotary encoders: in the Schematic workspace the user adds encoders to the layout, assigns their pins and sets their resolution; in the Bindings workspace they choose per layer what turning left and right does. Each option links to the ZMK documentation.
 ```
 
-### 014 — zmk-studio-support
-Enable ZMK Studio for the generated shield (Kconfig, build snippet, unlock binding). Settings in the Firmware workspace. Requires a new `docs/zmk/studio.md` page. Physical layout from 003 is already a prerequisite Studio needs.
+### 015 — zmk-studio-support
+Enable ZMK Studio for the generated shield (Kconfig, build snippet, unlock binding). Settings in the Firmware workspace. Requires a new `docs/zmk/studio.md` page. Physical layout from 004 is already a prerequisite Studio needs.
 
 ```
 /speckit-specify Let users make their keyboard work with ZMK Studio so they can change the keymap later without rebuilding firmware. The user turns it on in the Firmware workspace, sees what it requires (for example a key that unlocks editing), and the generated configuration includes everything Studio needs.
 ```
 
-### 015 — lighting-displays
+### 016 — lighting-displays
 RGB underglow, backlight, OLED / nice!view: pins in Schematic, options in Firmware. Large surface; split into separate specs when started. Requires new `docs/zmk/` pages.
 
 ```
 /speckit-specify Support keyboard lighting and small displays: RGB underglow, single-color backlight and common display modules, with their pins in the Schematic workspace and their settings in the Firmware workspace, each linked to the ZMK documentation.
 ```
 
-### 016 — zmk-version-selection
-Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixtures per version. Depends on catalog structure proven by 005–011. Open: how many versions to support at once.
+### 017 — zmk-version-selection
+Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixtures per version. Depends on catalog structure proven by 006–012. Open: how many versions to support at once.
 
 ```
 /speckit-specify Let users choose, in the Firmware workspace, which ZMK release their configuration targets, so keyboards stay buildable when ZMK changes. Options and behaviors not available in the chosen release are hidden or reported in the problems panel.
 ```
 
-### 017 — build-verification
-`make zmk-build` target: compile the generated shield for each preset inside the `zmkfirmware/zmk-build-arm` Docker image, as a developer/CI check (not a product feature, the app stays static). Could be pulled forward to right after 004 if golden tests prove insufficient. Owned by Makefile/CI, not `src/`.
+### 018 — build-verification
+`make zmk-build` target: compile the generated shield for each preset inside the `zmkfirmware/zmk-build-arm` Docker image, as a developer/CI check (not a product feature, the app stays static). Could be pulled forward to right after 005 if golden tests prove insufficient. Owned by Makefile/CI, not `src/`.
 
 ```
 /speckit-specify A developer check that proves the generated files really build: for every preset keyboard, generate the configuration and compile the firmware with the official ZMK build environment, failing when any build fails. It runs locally and in continuous integration, never inside the app.
@@ -395,7 +406,7 @@ Parsing existing ZMK shield files back into a project (Devicetree parsing), cust
 - ~~Schema versioning before first release~~ — resolved: v1 frozen at merge of 002; every later change adds a migration.
 - ~~Undo history~~ — resolved: session only, 100 steps (spec 002).
 - Hosting target for `dist/` and app CI provider (GitHub Actions assumed by the repo layout, not stated).
-- Canvas arrow keys (006 layout-editor): spec 001 makes plain arrows pan the canvas; accessibility.md wants arrows to move focus between keys once keys exist. Decide in 006: e.g. arrows move key focus/selection when a key is focused and pan otherwise, or pan moves to Alt+Shift+arrows.
-- Charlieplex kscan: own feature or part of 007.
+- Canvas arrow keys (007 layout-editor): spec 001 makes plain arrows pan the canvas; accessibility.md wants arrows to move focus between keys once keys exist. Decide in 007: e.g. arrows move key focus/selection when a key is focused and pan otherwise, or pan moves to Alt+Shift+arrows.
+- Charlieplex kscan: own feature or part of 008.
 - Split halves on different boards.
-- Raw "extra Kconfig lines" escape hatch (009).
+- Raw "extra Kconfig lines" escape hatch (010).

@@ -28,6 +28,8 @@ export type Preferences = {
   readonly isMinimapVisible: boolean;
   readonly activeWorkspaceId: WorkspaceId;
   readonly isIssuesPanelOpen: boolean;
+  /** Schematic parts list expanded (spec 003); missing in older stored values → default. */
+  readonly isPartsListOpen: boolean;
   readonly toolWindow: ToolWindowState;
   readonly viewByWorkspace: Readonly<Record<CanvasWorkspaceId, Viewport>>;
 };
@@ -51,6 +53,7 @@ export const DEFAULT_PREFERENCES: Preferences = {
   isMinimapVisible: true,
   activeWorkspaceId: 'schematic',
   isIssuesPanelOpen: false,
+  isPartsListOpen: true,
   // Clear of the 20 px rulers.
   toolWindow: { xPx: 28, yPx: 28, isCollapsed: false },
   viewByWorkspace: { schematic: DEFAULT_VIEWPORT, bindings: DEFAULT_VIEWPORT },
@@ -77,6 +80,7 @@ const preferencesSchema = z.object({
     .enum(['schematic', 'bindings', 'firmware', 'export'])
     .catch(DEFAULT_PREFERENCES.activeWorkspaceId),
   isIssuesPanelOpen: z.boolean().catch(DEFAULT_PREFERENCES.isIssuesPanelOpen),
+  isPartsListOpen: z.boolean().catch(DEFAULT_PREFERENCES.isPartsListOpen),
   toolWindow: z
     .object({ xPx: z.number(), yPx: z.number(), isCollapsed: z.boolean() })
     .catch(DEFAULT_PREFERENCES.toolWindow),

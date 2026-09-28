@@ -1,5 +1,5 @@
 import type { Project } from './types';
 
 export function createProject(): Project {
-  return { schemaVersion: 1, name: 'My keyboard' };
+  return { schemaVersion: 2, name: 'My keyboard', keys: [], wires: [], insulatedCrossings: [] };
 }

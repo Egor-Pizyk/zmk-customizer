@@ -67,6 +67,82 @@ export const SHORTCUTS = [
   { scope: 'canvas', id: 'pan-up-1u', keys: ['ArrowUp'], shift: true, label: 'Pan up 1u' },
   { scope: 'canvas', id: 'pan-down-1u', keys: ['ArrowDown'], shift: true, label: 'Pan down 1u' },
   { scope: 'canvas', id: 'open-help', keys: ['?'], label: 'Keyboard shortcuts' },
+  // Schematic canvas (spec 003); handled by schematic/use-schematic-shortcuts.ts.
+  { scope: 'canvas', id: 'select-tool', keys: ['v'], label: 'Schematic: Select tool' },
+  { scope: 'canvas', id: 'add-key-tool', keys: ['k'], label: 'Schematic: Key tool' },
+  { scope: 'canvas', id: 'wire-tool', keys: ['w'], label: 'Schematic: Wire tool' },
+  {
+    scope: 'canvas',
+    id: 'place-key',
+    keys: ['Enter'],
+    label: 'Schematic, Key tool: add a key at the next free spot',
+  },
+  {
+    scope: 'canvas',
+    id: 'delete-selection',
+    keys: ['Delete', 'Backspace'],
+    label: 'Schematic: delete the selected key or wire',
+  },
+  {
+    scope: 'canvas',
+    id: 'cancel',
+    keys: ['Escape'],
+    label:
+      'Schematic: cancel the wire being drawn, else clear the selection and switch to the Select tool',
+  },
+  // While a key on the Schematic has focus; matched by the key itself (matchKeyShortcut).
+  {
+    scope: 'key',
+    id: 'focus-key-left',
+    keys: ['ArrowLeft'],
+    shift: false,
+    label: 'Nearest key left',
+  },
+  {
+    scope: 'key',
+    id: 'focus-key-right',
+    keys: ['ArrowRight'],
+    shift: false,
+    label: 'Nearest key right',
+  },
+  { scope: 'key', id: 'focus-key-up', keys: ['ArrowUp'], shift: false, label: 'Nearest key up' },
+  {
+    scope: 'key',
+    id: 'focus-key-down',
+    keys: ['ArrowDown'],
+    shift: false,
+    label: 'Nearest key down',
+  },
+  {
+    scope: 'key',
+    id: 'nudge-key-left',
+    keys: ['ArrowLeft'],
+    shift: true,
+    label: 'Nudge the key left one grid step',
+  },
+  {
+    scope: 'key',
+    id: 'nudge-key-right',
+    keys: ['ArrowRight'],
+    shift: true,
+    label: 'Nudge the key right one grid step',
+  },
+  {
+    scope: 'key',
+    id: 'nudge-key-up',
+    keys: ['ArrowUp'],
+    shift: true,
+    label: 'Nudge the key up one grid step',
+  },
+  {
+    scope: 'key',
+    id: 'nudge-key-down',
+    keys: ['ArrowDown'],
+    shift: true,
+    label: 'Nudge the key down one grid step',
+  },
+  { scope: 'key', id: 'focus-first-key', keys: ['Home'], label: 'First key (key 0)' },
+  { scope: 'key', id: 'focus-last-key', keys: ['End'], label: 'Last key' },
   // Cmd on macOS, Ctrl elsewhere; matched by `code` so non-Latin layouts work (002 research R12).
   { scope: 'project', id: 'undo', code: 'KeyZ', keyLabel: 'Z', shift: false, label: 'Undo' },
   { scope: 'project', id: 'redo', code: 'KeyZ', keyLabel: 'Z', shift: true, label: 'Redo' },
@@ -103,8 +179,11 @@ export type ShortcutInput = {
   readonly focusedCanvas: CanvasWorkspaceId | undefined;
 };
 
-function matchesCanvasKey(shortcut: Shortcut, input: ShortcutInput): boolean {
-  if (shortcut.scope !== 'canvas') {
+function matchesSingleKey(
+  shortcut: Shortcut,
+  input: ShortcutInput & { readonly scope: 'canvas' | 'key' },
+): boolean {
+  if (shortcut.scope !== input.scope) {
     return false;
   }
   const isShiftMatched = !('shift' in shortcut) || shortcut.shift === input.shiftKey;
@@ -135,7 +214,21 @@ export function matchShortcut(input: ShortcutInput): ShortcutId | undefined {
   if (input.focusedCanvas === undefined || input.altKey) {
     return undefined;
   }
-  return SHORTCUTS.find((shortcut) => matchesCanvasKey(shortcut, input))?.id;
+  return SHORTCUTS.find((shortcut) => matchesSingleKey(shortcut, { ...input, scope: 'canvas' }))
+    ?.id;
+}
+
+export function matchKeyShortcut(input: ShortcutInput): ShortcutId | undefined {
+  if (
+    input.isTypingTarget ||
+    input.isDialogOpen ||
+    input.ctrlKey ||
+    input.metaKey ||
+    input.altKey
+  ) {
+    return undefined;
+  }
+  return SHORTCUTS.find((shortcut) => matchesSingleKey(shortcut, { ...input, scope: 'key' }))?.id;
 }
 
 export type ModifierLabels = {
@@ -157,6 +250,12 @@ export const POINTER_GESTURES = [
   { gesture: 'Middle-button drag', action: 'Pan' },
   { gesture: 'Drag the tools window title', action: 'Move the tools window' },
   { gesture: 'Arrow keys on the tools window title', action: 'Move it 16 px (Shift: 64 px)' },
+  { gesture: 'Schematic, Key tool: click', action: 'Place a key' },
+  { gesture: 'Schematic, Select tool: drag a key', action: 'Move the key' },
+  { gesture: 'Schematic, Wire tool: click, click…, click a pin or wire', action: 'Draw a wire' },
+  { gesture: 'Schematic, Wire tool: double-click', action: 'End the wire with a free end' },
+  { gesture: 'Schematic, Select tool: drag a bend handle', action: 'Move a wire bend' },
+  { gesture: 'Schematic: click a crossing button', action: 'Insulate or connect the crossing' },
 ] as const;
 
 const REPEATABLE_SHORTCUT_IDS: ReadonlySet<ShortcutId> = new Set([
@@ -172,6 +271,14 @@ const REPEATABLE_SHORTCUT_IDS: ReadonlySet<ShortcutId> = new Set([
   'pan-right-1u',
   'pan-up-1u',
   'pan-down-1u',
+  'nudge-key-left',
+  'nudge-key-right',
+  'nudge-key-up',
+  'nudge-key-down',
+  'focus-key-left',
+  'focus-key-right',
+  'focus-key-up',
+  'focus-key-down',
 ]);
 
 // Holding a key repeats pan and zoom; toggles and dialog opens fire once per press.

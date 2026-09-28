@@ -123,8 +123,9 @@ export function createHistoryActions(update: ProjectStateChange) {
     );
   }
   return {
-    commit: (change: (project: Project) => Project) => {
-      dispatch({ kind: 'commit', update: change });
+    /** `announcementText` is spoken with the issue count, e.g. "Deleted key 3. Undo" (admin-ui.md). */
+    commit: (change: (project: Project) => Project, announcementText?: string) => {
+      dispatch({ kind: 'commit', update: change }, announcementText);
     },
     undo: () => {
       dispatch({ kind: 'undo' }, 'Undone');
