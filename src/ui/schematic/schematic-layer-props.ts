@@ -1,14 +1,10 @@
 import type { KeyboardEvent } from 'react';
 import type { Crossing } from '../../domain/find-crossings';
 import type { Project, WirePoint } from '../../domain/types';
+import type { Marquee } from '../canvas/marquee-layer';
 import type { ContentView } from '../canvas/surface-content';
 import type { SchematicMarks } from './schematic-marks';
 import type { SchematicSelection } from './schematic-selection';
-
-export type Marquee = {
-  readonly start: WirePoint;
-  readonly end: WirePoint;
-};
 
 export type SchematicLayerProps = {
   readonly project: Project;

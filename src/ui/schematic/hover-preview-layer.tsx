@@ -1,6 +1,6 @@
 import type { ContentView } from '../canvas/surface-content';
 import type { HoverPreview } from './get-hover-preview';
-import { toPathData } from './to-path-data';
+import { toPathData } from '../canvas/to-path-data';
 
 type HoverPreviewLayerProps = {
   readonly preview: HoverPreview;

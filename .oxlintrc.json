@@ -427,6 +427,13 @@
       }
     },
     {
+      "files": ["src/ui/bindings/action-panel.tsx"],
+      "rules": {
+        // Dynamic px width from the resize drag; React sets style via CSSOM, which CSP style-src allows (same as floating-panel).
+        "react/forbid-dom-props": "off"
+      }
+    },
+    {
       "files": ["src/ui/**/*dialog.tsx"],
       "rules": {
         // A modal <dialog> may set initial focus with autoFocus (accessibility.md).

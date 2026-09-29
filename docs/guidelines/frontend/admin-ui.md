@@ -1,3 +1,9 @@
+---
+description: App shell layout, design-system primitives, validation display and copy tone for screens.
+globs:
+  - src/ui/**/*.tsx
+---
+
 # Admin UI patterns
 
 What screens look like and which primitives exist. Component and state rules: `react.md`. Classes and tokens: `tailwind.md`. Keyboard/ARIA details: `accessibility.md`.

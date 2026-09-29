@@ -1,5 +1,6 @@
 import { createContext, use, useCallback, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
+import { BINDINGS_CATALOG } from '../catalog/bindings-catalog';
 import type { Project } from '../domain/types';
 import type { ProjectLoadResult } from '../storage/project-storage';
 import {
@@ -53,7 +54,10 @@ export function ProjectProvider({ initialLoad, children }: ProjectProviderProps)
   const { state, change } = useProjectState(initialLoad);
   const { present } = state.history;
   // Validation runs once per project change for every consumer (react.md "Project state").
-  const issues = useMemo(() => toWorkspaceIssues(validateProject(present)), [present]);
+  const issues = useMemo(
+    () => toWorkspaceIssues(validateProject(present, BINDINGS_CATALOG)),
+    [present],
+  );
 
   // Memoized as react/jsx-no-constructed-context-values requires, like preferences-context.
   const value = useMemo<ProjectContextValue>(

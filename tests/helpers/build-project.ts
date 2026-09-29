@@ -5,13 +5,15 @@ export function buildProject(input: {
   readonly keys?: readonly Key[];
   readonly wires?: readonly Wire[];
   readonly insulatedCrossings?: Project['insulatedCrossings'];
+  readonly bindings?: Project['layers'][number]['bindings'];
 }): Project {
   return {
-    schemaVersion: 2,
+    schemaVersion: 3,
     name: 'Test',
     keys: input.keys ?? [],
     wires: input.wires ?? [],
     insulatedCrossings: input.insulatedCrossings ?? [],
+    layers: [{ id: 'l0', name: 'Base', bindings: input.bindings ?? {} }],
   };
 }
 

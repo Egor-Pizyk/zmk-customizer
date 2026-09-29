@@ -1,18 +1,12 @@
 import { formatBoardPin } from '../../domain/board-pin';
 import type { Crossing } from '../../domain/find-crossings';
 import { toggleCrossingInsulation } from '../../domain/toggle-crossing-insulation';
-import type { Project, WirePoint } from '../../domain/types';
+import type { Project } from '../../domain/types';
 import type { ContentView } from '../canvas/surface-content';
 import { toScreenPoint } from '../canvas/to-screen-point';
 import { CrossingButton } from './crossing-button';
 import { formatCrossingLabel } from './format-schematic-labels';
-import { getBoardPinLabels } from './get-board-pin-labels';
-
-export type BoardPinLabel = {
-  readonly id: string;
-  readonly at: WirePoint;
-  readonly boardPin: number;
-};
+import { getBoardPinLabels } from '../canvas/get-board-pin-labels';
 
 type SchematicScreenLayerProps = {
   readonly project: Project;

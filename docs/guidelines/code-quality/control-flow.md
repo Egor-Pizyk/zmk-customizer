@@ -1,3 +1,10 @@
+---
+description: Function shape for src — guard clauses, max depth 3, no nested ternaries, small functions, options objects.
+globs:
+  - src/**/*.ts
+  - src/**/*.tsx
+---
+
 # Control flow
 
 How functions are shaped. Types and exhaustiveness: `typescript.md`. Error surfacing: `observability.md`.

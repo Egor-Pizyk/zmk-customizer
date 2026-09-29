@@ -17,7 +17,7 @@ type FloatingPanelProps = {
 // Stored position + a local drag draft; the clamp is derived in render, never written back on
 // resize (spec 001 R7, R15).
 export function FloatingPanel(props: FloatingPanelProps) {
-  const { title, position, isCollapsed, onMoveEnd, onCollapsedChange, children } = props;
+  const { title, position, isCollapsed, onMoveEnd } = props;
   const panelRef = useRef<HTMLElement>(null);
   const bodyId = useId();
   const sizes = usePanelSizes(panelRef);
@@ -26,10 +26,6 @@ export function FloatingPanel(props: FloatingPanelProps) {
     onMoveEnd,
   );
   const rendered = clampPanelPosition(drag.draft ?? position, sizes.panel, sizes.container);
-
-  function handleCollapseClick() {
-    onCollapsedChange(!isCollapsed);
-  }
 
   return (
     <section
@@ -40,18 +36,30 @@ export function FloatingPanel(props: FloatingPanelProps) {
     >
       <div className="flex items-center gap-1 border-b border-border p-1">
         <PanelHandle current={rendered} drag={drag} title={title} />
-        <IconButton
-          aria-controls={bodyId}
-          aria-expanded={!isCollapsed}
-          icon={<ChevronIcon />}
-          label={isCollapsed ? `Expand ${title}` : `Collapse ${title}`}
-          onClick={handleCollapseClick}
-        />
+        <CollapseButton {...props} bodyId={bodyId} />
       </div>
       <div className="p-2" hidden={isCollapsed} id={bodyId}>
-        {children}
+        {props.children}
       </div>
     </section>
+  );
+}
+
+function CollapseButton(props: FloatingPanelProps & { readonly bodyId: string }) {
+  const { title, isCollapsed, onCollapsedChange, bodyId } = props;
+
+  function handleCollapseClick() {
+    onCollapsedChange(!isCollapsed);
+  }
+
+  return (
+    <IconButton
+      aria-controls={bodyId}
+      aria-expanded={!isCollapsed}
+      icon={<ChevronIcon />}
+      label={isCollapsed ? `Expand ${title}` : `Collapse ${title}`}
+      onClick={handleCollapseClick}
+    />
   );
 }
 

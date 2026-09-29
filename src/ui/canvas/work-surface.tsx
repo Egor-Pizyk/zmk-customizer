@@ -9,10 +9,11 @@ import { toWorldPoint } from './surface-content';
 import type { SurfaceContent } from './surface-content';
 import { SurfaceSvg } from './surface-svg';
 import { useSurfaceViewport } from './use-surface-viewport';
-import { screenToWorld } from './viewport';
+import { SHARED_VIEW_WORKSPACE_ID, screenToWorld } from './viewport';
 import type { ScreenPoint } from './viewport';
 
 type WorkSurfaceProps = {
+  /** Canvas identity for labels and data attributes; the viewport is shared across canvases. */
   readonly workspaceId: CanvasWorkspaceId;
   /** Overlays inside the surface: tool window, minimap. */
   readonly children?: ReactNode;
@@ -23,7 +24,7 @@ type WorkSurfaceProps = {
 export function WorkSurface({ workspaceId, children, content }: WorkSurfaceProps) {
   const { gridSizeU, isSnapEnabled } = usePreferences().preferences;
   const svgRef = useRef<SVGSVGElement>(null);
-  const surface = useSurfaceViewport(workspaceId, svgRef);
+  const surface = useSurfaceViewport(SHARED_VIEW_WORKSPACE_ID, svgRef);
   const { viewport } = surface;
   const pointer = usePointerReadout(viewport, isSnapEnabled ? gridSizeU : undefined);
 

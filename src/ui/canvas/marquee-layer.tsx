@@ -1,4 +1,9 @@
-import type { Marquee } from './schematic-layer-props';
+import type { WirePoint } from '../../domain/types';
+
+export type Marquee = {
+  readonly start: WirePoint;
+  readonly end: WirePoint;
+};
 
 type MarqueeLayerProps = {
   readonly marquee: Marquee | undefined;

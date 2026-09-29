@@ -1,3 +1,10 @@
+---
+description: Tailwind v4 tokens only — no arbitrary values, no style prop; token source is src/styles.css.
+globs:
+  - src/**/*.tsx
+  - src/styles.css
+---
+
 # Tailwind
 
 Tailwind CSS v4 is the design system (ADR 0011). Tokens live only in `src/styles.css` (`@theme`); that file is the source of truth for token names. Screen patterns: `admin-ui.md`. Contrast and focus requirements: `accessibility.md`.

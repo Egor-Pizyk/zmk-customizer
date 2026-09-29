@@ -4,7 +4,14 @@ import { UNDO_LIMIT, reduceProjectHistory } from './project-history';
 import type { ProjectHistory } from './project-history';
 
 function named(name: string): Project {
-  return { schemaVersion: 2, keys: [], wires: [], insulatedCrossings: [], name };
+  return {
+    schemaVersion: 3,
+    keys: [],
+    wires: [],
+    insulatedCrossings: [],
+    layers: [{ id: 'l0', name: 'Base', bindings: {} }],
+    name,
+  };
 }
 
 function rename(name: string) {

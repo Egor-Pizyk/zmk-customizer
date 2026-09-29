@@ -97,12 +97,16 @@ function KeyRowDeleteButton({
   keyIndex: number;
   onDeleteClick: () => void;
 }) {
+  function handleDeleteClick() {
+    onDeleteClick();
+  }
+
   return (
     <td>
       <Button
         aria-label={`Delete key ${keyIndex}`}
         data-parts-delete={`key:${keyIndex}`}
-        onClick={onDeleteClick}
+        onClick={handleDeleteClick}
         size="sm"
       >
         Delete

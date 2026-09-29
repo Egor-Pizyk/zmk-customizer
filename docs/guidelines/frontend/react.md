@@ -1,3 +1,10 @@
+---
+description: src/ui architecture — workspaces, providers, commit/undo, derived data, effects allowlist, inputs, React 19.
+globs:
+  - src/ui/**/*.ts
+  - src/ui/**/*.tsx
+---
+
 # React
 
 How `src/ui/` is written. Base rules (function components, `type XProps`, no logic in components, no effects for derived state, stable list keys) are in `code-quality/typescript.md` → "React"; handler and component names in `code-quality/naming/functions.md`. This file adds the rest. Styling: `tailwind.md`. Screens and primitives: `admin-ui.md`. Keyboard and ARIA: `accessibility.md`.

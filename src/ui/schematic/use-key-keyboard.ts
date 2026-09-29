@@ -4,8 +4,8 @@ import { moveKey } from '../../domain/move-key';
 import type { Project } from '../../domain/types';
 import { matchKeyShortcut } from '../shortcuts';
 import type { ShortcutId } from '../shortcuts';
-import { findNearestKey } from './find-nearest-key';
-import type { Direction } from './find-nearest-key';
+import { findNearestKey } from '../canvas/find-nearest-key';
+import type { Direction } from '../canvas/find-nearest-key';
 
 type KeyKeyboardOptions = {
   readonly project: Project;

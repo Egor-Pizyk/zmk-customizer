@@ -1,3 +1,10 @@
+---
+description: Error surfacing for src — ValidationIssue values vs throw, Result for parsing, logging, single error boundary.
+globs:
+  - src/**/*.ts
+  - src/**/*.tsx
+---
+
 # Observability
 
 No backend, no telemetry, no network. Observability here means: every failure is visible to the user in words that say what to fix, and every bug is reproducible from the project JSON alone.

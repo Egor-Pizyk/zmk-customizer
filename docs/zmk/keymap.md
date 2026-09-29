@@ -95,6 +95,9 @@ Sources: https://zmk.dev/docs/keymaps#behavior-bindings , https://zmk.dev/docs/k
 ## 4. Keycodes and modifiers
 
 ### Canonical sources (generate the catalog from these; do not hand-copy)
+
+In this repo (spec 004 research R2): `src/catalog/zmk/keys.h` is the verbatim v0.3.0 header, parsed at load by `src/catalog/parse-keys-header.ts`; categories and legends are our own (no `hid.js` / `groups.js`, CC-BY-NC-SA).
+
 1. `app/include/dt-bindings/zmk/keys.h` — every keycode `#define`, aliases, deprecated markers. ~644 `#define`s, ~63 marked `// WARNING: DEPRECATED (DO NOT USE)`.
 2. `docs/src/data/hid.js` (zmk repo, CC-BY-NC-SA-4.0; v0.3.0 and main differ only in a few descriptions and macOS support flags/footnotes) — the data behind https://zmk.dev/docs/keymaps/list-of-keycodes: per keycode `names[]` (all aliases, first = canonical), `description`, `context`, `usages[{application, item: usage(page,id)}]`, `documentation` (HID spec link), `os` support matrix `{windows, linux, android, macos, ios}` (true/false/null), `footnotes`. ~368 entries. Best source for a UI catalog (descriptions + OS compatibility). **License differs from firmware (MIT); check before bundling.**
 3. `docs/src/data/groups.js` — maps doc table groups (`keyboard-letters`, `keyboard-numbers`, `keyboard-symbols`, `keyboard-control-whitespace`, `keyboard-navigation`, `keyboard-locks`, `keyboard-fkeys`, `keyboard-international`, `keyboard-language`, `keyboard-misc`, `modifiers`, `keypad-*`, `editing-*`, `media-*`, `consumer-*`, `application-*`, `input-assist`, `power-lock` …) to keycode names. Use for picker categories.

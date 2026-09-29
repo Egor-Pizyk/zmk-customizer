@@ -31,6 +31,13 @@ export type Preferences = {
   /** Schematic parts list expanded (spec 003); missing in older stored values → default. */
   readonly isPartsListOpen: boolean;
   readonly toolWindow: ToolWindowState;
+  /** Bindings: docked key picker expanded, Keys table expanded, move to the next key after a
+   * pick (spec 004 R14); missing in older stored values → default. */
+  readonly isBindingsPanelOpen: boolean;
+  readonly isBindingsTableOpen: boolean;
+  readonly isAutoAdvanceEnabled: boolean;
+  /** Bindings Action panel width in px; clamped to the resize limits, missing → default. */
+  readonly actionPanelWidthPx: number;
   readonly viewByWorkspace: Readonly<Record<CanvasWorkspaceId, Viewport>>;
 };
 
@@ -56,6 +63,10 @@ export const DEFAULT_PREFERENCES: Preferences = {
   isPartsListOpen: true,
   // Clear of the 20 px rulers.
   toolWindow: { xPx: 28, yPx: 28, isCollapsed: false },
+  isBindingsPanelOpen: true,
+  isBindingsTableOpen: false,
+  isAutoAdvanceEnabled: true,
+  actionPanelWidthPx: 384,
   viewByWorkspace: { schematic: DEFAULT_VIEWPORT, bindings: DEFAULT_VIEWPORT },
 };
 
@@ -84,8 +95,15 @@ const preferencesSchema = z.object({
   toolWindow: z
     .object({ xPx: z.number(), yPx: z.number(), isCollapsed: z.boolean() })
     .catch(DEFAULT_PREFERENCES.toolWindow),
+  isBindingsPanelOpen: z.boolean().catch(DEFAULT_PREFERENCES.isBindingsPanelOpen),
+  isBindingsTableOpen: z.boolean().catch(DEFAULT_PREFERENCES.isBindingsTableOpen),
+  isAutoAdvanceEnabled: z.boolean().catch(DEFAULT_PREFERENCES.isAutoAdvanceEnabled),
+  actionPanelWidthPx: z.number().min(240).max(640).catch(DEFAULT_PREFERENCES.actionPanelWidthPx),
   viewByWorkspace: z
-    .object({ schematic: viewportSchema, bindings: viewportSchema })
+    .object({
+      schematic: viewportSchema.catch(DEFAULT_VIEWPORT),
+      bindings: viewportSchema.catch(DEFAULT_VIEWPORT),
+    })
     .catch(DEFAULT_PREFERENCES.viewByWorkspace),
 }) satisfies z.ZodType<Preferences>;
 
