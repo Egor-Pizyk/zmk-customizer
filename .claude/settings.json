@@ -19,6 +19,7 @@
       "Bash(git log *)",
       "Bash(.specify/scripts/bash/*)",
       "WebFetch(domain:zmk.dev)",
+      "WebFetch(domain:v0-3-branch.zmk.dev)",
       "WebFetch(domain:github.com)",
       "WebFetch(domain:raw.githubusercontent.com)"
     ],

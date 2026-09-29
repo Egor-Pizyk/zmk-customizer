@@ -27,16 +27,20 @@ Devicetree (overlay/.dtsi/.keymap):
 - Every layer's `bindings` count equals key count; parameter count per behavior matches `behaviors.md`; required `#include`s present.
 - Labels and node names sanitized (`[a-z0-9_]`), unique, no collision with built-in behavior labels.
 - Balanced braces, `;` after every property and node, `< >` around cell arrays.
+
 Kconfig:
 - `Kconfig.shield`: `config SHIELD_<NAME>` + `def_bool $(shields_list_contains,<name>)` form as in the fixtures; split has `_LEFT`/`_RIGHT`.
 - `Kconfig.defconfig`: `if SHIELD_...` guards, `ZMK_KEYBOARD_NAME` length limit, split central only on the left half, `ZMK_SPLIT` settings as in `shield-files.md`.
 - `.conf`: `CONFIG_` prefix, valid value types, only non-default options, sorted.
+
 Determinism and structure (AGENTS.md §3.3, §7.7):
 - No `Math.random`, `Date`, `Date.now`, locale-dependent formatting, iteration over object keys/Map/Set without explicit sort.
 - `\n` endings, single trailing newline, fixed indentation.
 - Generators do not validate and do not import from `ui/` or `storage/`; one exported concept per file.
+
 Catalog (AGENTS.md §3.4):
 - Every user-facing entry has a `docsUrl` to an exact section (anchor where one exists) on https://v0-3-branch.zmk.dev/docs/, not zmk.dev (ADR 0010); data is `as const`, not inline in components.
+
 Tests (AGENTS.md §7.1):
 - Every generator change has a golden-file change or new golden test; fixture edits are explained (link to upstream commit or `DIFFERENCES.md` entry). A golden file edited only to make a test pass is a blocker.
 
