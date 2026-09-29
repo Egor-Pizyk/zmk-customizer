@@ -20,10 +20,11 @@ The user selects a key and sees the list of behaviors the key can have: sending 
 
 **Acceptance Scenarios**:
 
-1. **Given** a key is selected, **When** the user opens the behavior list, **Then** every self-contained behavior (pass-through, do nothing, caps word, key repeat, grave/escape, Bluetooth, output, reset, bootloader, plus the already available key press, modifier-on-hold, sticky and toggle) is offered with a one-line description and a link to the ZMK v0.3 documentation.
+1. **Given** a key is selected, **When** the user opens the behavior control, **Then** every self-contained behavior (pass-through, do nothing, caps word, key repeat, grave/escape, Bluetooth, output, reset, bootloader, plus the already available key press, modifier-on-hold, sticky and toggle) is offered in one compact control showing the current behavior, each with a one-line description and a link to the ZMK v0.3 documentation shown in the details line; the control collapses after choosing.
 2. **Given** a key with any action, **When** the user picks "Do nothing" or "Pass-through", **Then** no further parameters are asked and the keycap shows the corresponding symbol (✕ / ▽).
 3. **Given** a key with any action, **When** the user picks "Bluetooth" or "Output", **Then** the existing command/profile choices are offered (profiles 0–4, next/previous/clear/clear-all, toggle/USB/Bluetooth) and applied in one step.
 4. **Given** a key sending a key, **When** the user picks a modifier as "When held" or sticky/toggle press mode, **Then** it becomes modifier-on-hold, sticky or toggle with the same key, as before.
+5. **Given** the behavior control, **When** it lists modifier-on-hold, sticky and toggle, **Then** those entries are shown disabled with a note that they are configured with the "When held" and "Press mode" controls below (they cannot be created from the list alone).
 
 ---
 
@@ -90,7 +91,7 @@ The user does not see momentary/toggle/switch-to/sticky-layer/layer-tap behavior
 
 **Behavior list (phase 0 — existing kinds)**
 
-- **FR-001**: The behavior list MUST offer every self-contained behavior the project already stores: key press, modifier-on-hold, sticky key, key toggle, pass-through, do nothing, caps word, key repeat, grave/escape, Bluetooth, output, reset, bootloader — each with a one-line description and a link to the exact ZMK v0.3 documentation section.
+- **FR-001**: The behavior control MUST offer every self-contained behavior the project already stores: key press, modifier-on-hold, sticky key, key toggle, pass-through, do nothing, caps word, key repeat, grave/escape, Bluetooth, output, reset, bootloader — each with a one-line description and a link to the exact ZMK v0.3 documentation section. The control MUST be compact (one line showing the current behavior, expanding on demand and collapsing after choosing); descriptions, hints and docs links live in the details line, not in the control itself.
 - **FR-002**: Behaviors that need no parameters (pass-through, do nothing, caps word, key repeat, grave/escape, reset, bootloader) MUST apply in one step with no further questions.
 - **FR-003**: Bluetooth and output behaviors MUST reuse the existing command/profile choices (profiles limited to the default five, 0–4); a profile outside 0–4 in an imported file MUST be reported under Bindings, one issue per key.
 - **FR-004**: Sticky key, key toggle and modifier-on-hold MUST stay reachable through the existing press-mode and "When held" controls; the behavior list MUST NOT duplicate them as separate parameter flows.
