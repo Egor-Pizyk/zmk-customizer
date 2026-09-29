@@ -179,6 +179,20 @@ describe('projectSchema v3 bindings', () => {
       { kind: 'out', command: 'OUT_USB' },
       { kind: 'sys_reset' },
       { kind: 'bootloader' },
+      {
+        kind: 'tap_dance',
+        taps: [
+          { keycode: 'A', modifiers: [] },
+          { keycode: 'B', modifiers: ['LS'] },
+        ],
+        tappingTermMs: 250,
+      },
+      {
+        kind: 'mod_morph',
+        normal: { keycode: 'ESCAPE', modifiers: [] },
+        morphed: { keycode: 'GRAVE', modifiers: [] },
+        mods: ['LS', 'RS'],
+      },
     ];
     for (const binding of bindings) {
       expect(issuePathsOf(withBindings({ k1: binding }))).toEqual([]);

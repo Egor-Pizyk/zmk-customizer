@@ -24,7 +24,9 @@ export function getPressMode(binding: Binding | undefined): PressMode | undefine
     case 'bt':
     case 'out':
     case 'sys_reset':
-    case 'bootloader': {
+    case 'bootloader':
+    case 'tap_dance':
+    case 'mod_morph': {
       return undefined;
     }
     default: {

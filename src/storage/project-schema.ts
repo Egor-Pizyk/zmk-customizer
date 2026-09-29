@@ -72,6 +72,28 @@ const bindingSchema = z.union([
     profile: z.int().min(0),
   }),
   z.strictObject({ kind: z.literal('out'), command: z.enum(['OUT_TOG', 'OUT_USB', 'OUT_BLE']) }),
+  z.strictObject({
+    kind: z.literal('tap_dance'),
+    taps: z.array(keyStrokeSchema).min(1),
+    tappingTermMs: z.int(),
+  }),
+  z.strictObject({
+    kind: z.literal('mod_morph'),
+    normal: keyStrokeSchema,
+    morphed: keyStrokeSchema,
+    mods: z
+      .array(modifierSchema)
+      .min(1)
+      .refine(
+        (mods) =>
+          mods.every(
+            (modifier, index) =>
+              index === 0 ||
+              MODIFIERS.indexOf(modifier) > MODIFIERS.indexOf(mods[index - 1] ?? modifier),
+          ),
+        { message: 'Expected unique modifiers in the order LC LS LA LG RC RS RA RG' },
+      ),
+  }),
 ]);
 
 const layerSchema = z.strictObject({

@@ -49,13 +49,16 @@ export function formatBindingName(binding: Binding | undefined): string {
     case 'out': {
       return formatCommandBinding(binding);
     }
+    // New kinds read their catalog label until their story names their params (spec 005).
     case 'trans':
     case 'none':
     case 'caps_word':
     case 'key_repeat':
     case 'gresc':
     case 'sys_reset':
-    case 'bootloader': {
+    case 'bootloader':
+    case 'tap_dance':
+    case 'mod_morph': {
       const { kind } = binding;
       return BEHAVIORS.find((behavior) => behavior.id === kind)?.label ?? kind;
     }

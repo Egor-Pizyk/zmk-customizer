@@ -27,7 +27,9 @@ function cornerForBinding(binding: Binding): string | undefined {
     case 'key_repeat':
     case 'gresc':
     case 'sys_reset':
-    case 'bootloader': {
+    case 'bootloader':
+    case 'tap_dance':
+    case 'mod_morph': {
       return undefined;
     }
     default: {

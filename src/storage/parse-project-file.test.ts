@@ -15,6 +15,17 @@ function issuePathsOf(raw: string): readonly string[] {
   return result.error.issues.map((issue) => issue.path);
 }
 
+function projectJson(binding: unknown) {
+  return JSON.stringify({
+    schemaVersion: 3,
+    name: 'x',
+    keys: [{ id: 'k1', xU: 0, yU: 0 }],
+    wires: [],
+    insulatedCrossings: [],
+    layers: [{ id: 'l0', name: 'Base', bindings: { k1: binding } }],
+  });
+}
+
 describe('parseProjectFile', () => {
   it('rejects text that is not JSON', () => {
     expect(parseProjectFile('hello')).toEqual({ ok: false, error: { kind: 'not-json' } });
@@ -117,5 +128,53 @@ describe('bindings round trip (spec 004 FR-023, FR-024, SC-003)', () => {
       ok: true,
       value: { layers: [{ id: 'l0', name: 'Base', bindings: {} }] },
     });
+  });
+});
+
+describe('tap-dance and mod-morph round trip (spec 005 contracts/binding-json.md)', () => {
+  const TAP_DANCE = {
+    kind: 'tap_dance',
+    taps: [
+      { keycode: 'A', modifiers: [] },
+      { keycode: 'B', modifiers: ['LS'] },
+    ],
+    tappingTermMs: 250,
+  } as const;
+  const MOD_MORPH = {
+    kind: 'mod_morph',
+    normal: { keycode: 'ESCAPE', modifiers: [] },
+    morphed: { keycode: 'GRAVE', modifiers: [] },
+    mods: ['LS', 'RS'],
+  } as const;
+
+  it('keeps tap-dance and mod-morph through save and open', () => {
+    const project: Project = {
+      ...createProject(),
+      keys: [
+        { id: 'k1', xU: 0, yU: 0 },
+        { id: 'k2', xU: 1, yU: 0 },
+      ],
+      layers: [{ id: 'l0', name: 'Base', bindings: { k1: TAP_DANCE, k2: MOD_MORPH } }],
+    };
+    expect(parseProjectFile(serializeProject(project))).toEqual({ ok: true, value: project });
+  });
+
+  it.each([
+    [{ kind: 'tap_dance', taps: [], tappingTermMs: 200 }],
+    [{ kind: 'tap_dance', taps: [{ keycode: 'A', modifiers: [] }] }],
+    [
+      {
+        kind: 'mod_morph',
+        normal: { keycode: 'A', modifiers: [] },
+        morphed: { keycode: 'B', modifiers: [] },
+        mods: [],
+      },
+    ],
+    [{ kind: 'mod_morph', normal: { keycode: 'A', modifiers: [] }, mods: ['LS'] }],
+  ])('rejects a malformed new binding %j at its own path', (binding) => {
+    // zod reports inside the union option that matched the kind (contracts/project-schema.md).
+    expect(
+      issuePathsOf(projectJson(binding)).some((path) => path.startsWith('layers.0.bindings.k1')),
+    ).toBe(true);
   });
 });

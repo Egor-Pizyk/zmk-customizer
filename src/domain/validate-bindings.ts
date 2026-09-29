@@ -17,6 +17,7 @@ function getKeyStrokes(binding: Binding): readonly KeyStroke[] {
     case 'mt': {
       return [binding.hold, binding.tap];
     }
+    // New kinds share the empty group until their story gives them real branches (spec 005).
     case 'trans':
     case 'none':
     case 'caps_word':
@@ -25,7 +26,9 @@ function getKeyStrokes(binding: Binding): readonly KeyStroke[] {
     case 'bt':
     case 'out':
     case 'sys_reset':
-    case 'bootloader': {
+    case 'bootloader':
+    case 'tap_dance':
+    case 'mod_morph': {
       return [];
     }
     default: {
