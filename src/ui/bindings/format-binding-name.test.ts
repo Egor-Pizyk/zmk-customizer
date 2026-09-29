@@ -33,6 +33,15 @@ it.each<[Binding | undefined, string]>([
     },
     'Tap dance Space, then Left Ctrl + A (250 ms)',
   ],
+  [
+    {
+      kind: 'mod_morph',
+      normal: SPACE,
+      morphed: { keycode: 'A', modifiers: [] },
+      mods: ['LS'],
+    },
+    'Mod-morph Space into A with Left Shift',
+  ],
 ])('names %j as %s', (binding, name) => {
   expect(formatBindingName(binding)).toBe(name);
 });

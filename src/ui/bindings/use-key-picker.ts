@@ -3,6 +3,7 @@ import { getSharedBinding } from '../../domain/get-shared-binding';
 import type { Modifier, Project } from '../../domain/types';
 import { findPickerTabId } from './picker-tabs';
 import type { PickerTabId } from './picker-tabs';
+import type { ModMorphSide } from './mod-morph-options';
 import type { PickerItem } from './to-picker-item';
 
 // Hovering a mini key shows its details after a short rest, so sweeping the pointer across
@@ -54,6 +55,7 @@ export function useKeyPicker(project: Project, selectedKeyIds: readonly string[]
   const [search, setSearch] = useState('');
   const [pendingModifiers, setPendingModifiers] = useState<readonly Modifier[]>([]);
   const [editingTap, setEditingTap] = useState<number | undefined>();
+  const [editingMorphSide, setEditingMorphSide] = useState<ModMorphSide | undefined>();
   const [detailsItem, setDetailsItem] = useState<PickerItem | undefined>();
   const hover = useHoverDetails(setDetailsItem);
 
@@ -62,10 +64,12 @@ export function useKeyPicker(project: Project, selectedKeyIds: readonly string[]
     search,
     pendingModifiers,
     editingTap,
+    editingMorphSide,
     detailsItem,
     shared: getSharedBinding(project, { layerIndex: 0, keyIds: selectedKeyIds }),
     setPendingModifiers,
     setEditingTap,
+    setEditingMorphSide,
     handleTabChange: setTabId,
     handleSearchChange: setSearch,
     handleHoverItem: hover.handleHoverItem,
@@ -84,6 +88,7 @@ export function useKeyPicker(project: Project, selectedKeyIds: readonly string[]
       setSearch('');
       setPendingModifiers([]);
       setEditingTap(undefined);
+      setEditingMorphSide(undefined);
     },
   };
 }

@@ -20,7 +20,9 @@ function getKeyStrokes(binding: Binding): readonly KeyStroke[] {
     case 'tap_dance': {
       return binding.taps;
     }
-    // mod_morph joins its story with a real branch (spec 005 Phase 5).
+    case 'mod_morph': {
+      return [binding.normal, binding.morphed];
+    }
     case 'trans':
     case 'none':
     case 'caps_word':
@@ -29,8 +31,7 @@ function getKeyStrokes(binding: Binding): readonly KeyStroke[] {
     case 'bt':
     case 'out':
     case 'sys_reset':
-    case 'bootloader':
-    case 'mod_morph': {
+    case 'bootloader': {
       return [];
     }
     default: {
@@ -71,7 +72,22 @@ function findBindingIssue(input: {
       message: `${keyLabel} waits ${binding.tappingTermMs} ms to count taps; use a pause of 0–5000 ms. Change the pause in Bindings.`,
     };
   }
+  if (binding.kind === 'mod_morph' && isSameStroke(binding.normal, binding.morphed)) {
+    return {
+      code: 'binding-mod-morph-same-action',
+      message: `${keyLabel} morphs ${binding.normal.keycode} into itself; pick different actions in Bindings.`,
+    };
+  }
   return undefined;
+}
+
+// Strokes from the editor and the schema keep modifiers unique and ordered (project-schema.ts).
+function isSameStroke(first: KeyStroke, second: KeyStroke): boolean {
+  return (
+    first.keycode === second.keycode &&
+    first.modifiers.length === second.modifiers.length &&
+    first.modifiers.every((modifier, index) => modifier === second.modifiers[index])
+  );
 }
 
 function validateLayer(

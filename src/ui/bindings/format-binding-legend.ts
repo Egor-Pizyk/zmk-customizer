@@ -103,8 +103,6 @@ const FIXED_LEGENDS = {
   gresc: '⎋`',
   sys_reset: 'RST',
   bootloader: 'BOOT',
-  // Placeholder until US3 defines the real legend (spec 005 Phase 5).
-  mod_morph: 'MM?',
 };
 
 function formatBluetoothLegend(binding: Extract<Binding, { kind: 'bt' }>): string {
@@ -118,15 +116,7 @@ function formatBluetoothLegend(binding: Extract<Binding, { kind: 'bt' }>): strin
 type SimpleBinding = Extract<
   Binding,
   {
-    kind:
-      | 'trans'
-      | 'none'
-      | 'caps_word'
-      | 'key_repeat'
-      | 'gresc'
-      | 'sys_reset'
-      | 'bootloader'
-      | 'mod_morph';
+    kind: 'trans' | 'none' | 'caps_word' | 'key_repeat' | 'gresc' | 'sys_reset' | 'bootloader';
   }
 >;
 
@@ -138,8 +128,7 @@ function isSimpleBinding(binding: Binding): binding is SimpleBinding {
     case 'key_repeat':
     case 'gresc':
     case 'sys_reset':
-    case 'bootloader':
-    case 'mod_morph': {
+    case 'bootloader': {
       return true;
     }
     case 'kp':
@@ -148,7 +137,8 @@ function isSimpleBinding(binding: Binding): binding is SimpleBinding {
     case 'kt':
     case 'bt':
     case 'out':
-    case 'tap_dance': {
+    case 'tap_dance':
+    case 'mod_morph': {
       return false;
     }
     default: {
@@ -199,14 +189,32 @@ function toBindingLegend(binding: Binding | undefined, isFull: boolean): Binding
     case 'tap_dance': {
       return formatTapDanceLegend(binding, isFull);
     }
+    case 'mod_morph': {
+      return formatModMorphLegend(binding, isFull);
+    }
     default: {
       return assertNever(binding);
     }
   }
 }
 
+// The morphed action with its triggers reads like the mod-tap hold part: one glance shows
+// both sides (spec 005 data-model.md).
+function formatModMorphLegend(
+  binding: Extract<Binding, { kind: 'mod_morph' }>,
+  isFull: boolean,
+): BindingLegend {
+  const triggered: KeyStroke = {
+    keycode: binding.morphed.keycode,
+    modifiers: [...binding.mods, ...binding.morphed.modifiers],
+  };
+  return {
+    tap: formatKeyStrokeLegend(binding.normal, isFull),
+    hold: formatKeyStrokeLegend(triggered, isFull),
+  };
+}
 // First tap large in the center; the rest small at the bottom: the second tap when there are
-// two, a count beyond that, and a tap-dance mark for a single tap (spec 005 data-model.md).
+// two, a count beyond that, and a tap-dance mark for a single tap.
 function formatTapDanceLegend(
   binding: Extract<Binding, { kind: 'tap_dance' }>,
   isFull: boolean,

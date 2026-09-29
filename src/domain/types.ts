@@ -115,7 +115,8 @@ export type ValidationCode =
   | 'key-shorted'
   | 'binding-keycode-unknown'
   | 'binding-profile-out-of-range'
-  | 'binding-tapping-term-out-of-range';
+  | 'binding-tapping-term-out-of-range'
+  | 'binding-mod-morph-same-action';
 
 export type ValidationIssue = {
   readonly code: ValidationCode;

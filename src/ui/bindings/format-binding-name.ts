@@ -32,10 +32,55 @@ function formatTapDanceName(binding: Extract<Binding, { kind: 'tap_dance' }>): s
   return `Tap dance ${taps} (${binding.tappingTermMs} ms)`;
 }
 
+function formatModMorphName(binding: Extract<Binding, { kind: 'mod_morph' }>): string {
+  const triggers = binding.mods.map((modifier) => MODIFIER_LABELS[modifier]).join(' + ');
+  const normal = formatKeyStroke(binding.normal);
+  const morphed = formatKeyStroke(binding.morphed);
+  return `Mod-morph ${normal} into ${morphed} with ${triggers}`;
+}
+
+/** Behaviors with no parameters to name: the catalog label (spec 004 FR-007). */
+type CatalogBinding = Extract<
+  Binding,
+  {
+    kind: 'trans' | 'none' | 'caps_word' | 'key_repeat' | 'gresc' | 'sys_reset' | 'bootloader';
+  }
+>;
+
+function isCatalogBinding(binding: Binding): binding is CatalogBinding {
+  switch (binding.kind) {
+    case 'trans':
+    case 'none':
+    case 'caps_word':
+    case 'key_repeat':
+    case 'gresc':
+    case 'sys_reset':
+    case 'bootloader': {
+      return true;
+    }
+    case 'kp':
+    case 'mt':
+    case 'sk':
+    case 'kt':
+    case 'bt':
+    case 'out':
+    case 'tap_dance':
+    case 'mod_morph': {
+      return false;
+    }
+    default: {
+      return assertNever(binding);
+    }
+  }
+}
+
 /** Full action name: keycap aria-label, tooltip, Bindings table, status messages (FR-007). */
 export function formatBindingName(binding: Binding | undefined): string {
   if (binding === undefined) {
     return 'Not assigned (does nothing)';
+  }
+  if (isCatalogBinding(binding)) {
+    return BEHAVIORS.find((behavior) => behavior.id === binding.kind)?.label ?? binding.kind;
   }
   switch (binding.kind) {
     case 'kp': {
@@ -57,17 +102,8 @@ export function formatBindingName(binding: Binding | undefined): string {
     case 'tap_dance': {
       return formatTapDanceName(binding);
     }
-    // mod_morph reads its catalog label until US3 names its params (spec 005 Phase 5).
-    case 'trans':
-    case 'none':
-    case 'caps_word':
-    case 'key_repeat':
-    case 'gresc':
-    case 'sys_reset':
-    case 'bootloader':
     case 'mod_morph': {
-      const { kind } = binding;
-      return BEHAVIORS.find((behavior) => behavior.id === kind)?.label ?? kind;
+      return formatModMorphName(binding);
     }
     default: {
       return assertNever(binding);
