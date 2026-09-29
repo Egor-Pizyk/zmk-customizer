@@ -1,12 +1,9 @@
-import { MODIFIER_KEYCODES } from '../../catalog/keycodes';
 import { setBindings } from '../../domain/set-bindings';
-import { setHoldKey } from '../../domain/set-hold-key';
 import { setKeycode } from '../../domain/set-keycode';
-import { setPressMode } from '../../domain/set-press-mode';
-import type { PressMode } from '../../domain/set-press-mode';
-import type { Modifier, Project } from '../../domain/types';
+import type { Project } from '../../domain/types';
+import { toBasicHandlers } from './basic-pick-handlers';
+import { handleModMorphPick, toModMorphControls } from './mod-morph-handlers';
 import { handleTapDancePick, toTapDanceControls } from './tap-dance-handlers';
-import { toggleKeyModifier } from './toggle-key-modifier';
 import type { PickerItem } from './to-picker-item';
 import type { KeyPickerState } from './use-key-picker';
 
@@ -27,20 +24,10 @@ export function createPickHandlers(options: PickHandlerOptions) {
 
   return {
     tapDance: toTapDanceControls({ picker, target, selectionName, commit }),
+    modMorph: toModMorphControls({ picker, target, selectionName, commit }),
+    ...toBasicHandlers(options),
     handlePick: (item: PickerItem) => {
       handleItemPick({ picker, target, selectionName, commit, onPicked: options.onPicked, item });
-    },
-    handleModifierToggle: (modifier: Modifier, isEnabled: boolean) => {
-      toggleKeyModifier(options, { modifier, isEnabled });
-    },
-    handleHoldChange: (holdKeycode: string | undefined) => {
-      const hold = MODIFIER_KEYCODES.find((keycode) => keycode.name === holdKeycode);
-      const change =
-        hold === undefined ? target : { ...target, hold: { keycode: hold.name, modifiers: [] } };
-      commit((current) => setHoldKey(current, change), `${selectionName}: hold changed`);
-    },
-    handleModeChange: (mode: PressMode) => {
-      commit((current) => setPressMode(current, { ...target, mode }), `${selectionName}: ${mode}`);
     },
   };
 }
@@ -56,8 +43,7 @@ type ItemPickInput = {
 
 function handleItemPick(input: ItemPickInput) {
   const { picker, target, selectionName, commit, item } = input;
-  const handled = handleTapDancePick({ ...input, item });
-  if (handled) {
+  if (handleTapDancePick({ ...input, item }) || handleModMorphPick({ ...input, item })) {
     return;
   }
   const { pick } = item;
@@ -73,6 +59,7 @@ function handleItemPick(input: ItemPickInput) {
   commit(change, `${selectionName}: ${item.name}`);
   picker.setPendingModifiers([]);
   picker.setEditingTap(undefined);
+  picker.setEditingMorphSide(undefined);
   input.onPicked();
 }
 

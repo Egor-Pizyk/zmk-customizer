@@ -103,3 +103,36 @@ it('reports unknown tap keycodes and out-of-range tapping terms per key, in key 
   expect(issues[0]?.message).toContain('NOPE');
   expect(issues[1]?.message).toContain('6000');
 });
+
+it('accepts mod-morph with known actions and reports unknown or equal ones per key', () => {
+  const project = buildProject({
+    keys: KEYS,
+    bindings: {
+      k1: {
+        kind: 'mod_morph',
+        normal: stroke('A'),
+        morphed: stroke('NOPE'),
+        mods: ['LS'],
+      },
+      k2: {
+        kind: 'mod_morph',
+        normal: stroke('SPACE'),
+        morphed: stroke('SPACE'),
+        mods: ['LS'],
+      },
+      k3: {
+        kind: 'mod_morph',
+        normal: stroke('A'),
+        morphed: stroke('SPACE'),
+        mods: ['LS', 'RS'],
+      },
+    },
+  });
+  const issues = validateBindings(project, CATALOG);
+  expect(issues.map(({ code, path }) => ({ code, path }))).toEqual([
+    { code: 'binding-keycode-unknown', path: ['layers', 0, 'bindings', 'k1'] },
+    { code: 'binding-mod-morph-same-action', path: ['layers', 0, 'bindings', 'k2'] },
+  ]);
+  expect(issues[0]?.message).toContain('NOPE');
+  expect(issues[1]?.message).toContain('SPACE');
+});

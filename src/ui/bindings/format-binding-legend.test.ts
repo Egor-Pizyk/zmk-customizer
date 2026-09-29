@@ -95,6 +95,26 @@ it.each<[string, Binding | undefined, ReturnType<typeof formatBindingLegend>]>([
     },
     { tap: 'A', hold: '+2' },
   ],
+  [
+    'mod-morph',
+    {
+      kind: 'mod_morph',
+      normal: { keycode: 'ESCAPE', modifiers: [] },
+      morphed: { keycode: 'GRAVE', modifiers: [] },
+      mods: ['LS'],
+    },
+    { tap: '⎋', hold: '~' },
+  ],
+  [
+    'mod-morph with several triggers',
+    {
+      kind: 'mod_morph',
+      normal: { keycode: 'A', modifiers: [] },
+      morphed: { keycode: 'B', modifiers: [] },
+      mods: ['LC', 'RS'],
+    },
+    { tap: 'A', hold: '⌃R⇧B' },
+  ],
 ])('formats %s', (_label, binding, legend) => {
   expect(formatBindingLegend(binding)).toEqual(legend);
 });

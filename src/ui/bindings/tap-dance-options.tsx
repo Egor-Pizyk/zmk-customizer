@@ -4,7 +4,6 @@ import { Button } from '../components/button';
 import { NumberInput } from '../components/number-input';
 import { formatBindingName } from './format-binding-name';
 import { ModifierToggles } from './modifier-toggles';
-import { Switch } from '../components/switch';
 
 /** Tap-dance parameter controls, present when the selection shares one tap-dance (US2). */
 export type TapDanceControls = {
@@ -19,8 +18,6 @@ export type TapDanceControls = {
 
 export type TapDanceSectionProps = {
   readonly controls: TapDanceControls;
-  readonly isAutoAdvanceEnabled: boolean;
-  readonly onAutoAdvanceChange: (isEnabled: boolean) => void;
 };
 
 const MIN_PAUSE_MS = 0;
@@ -35,11 +32,7 @@ function isSameTap(first: KeyStroke, second: KeyStroke): boolean {
 }
 
 // One tap action per row, the resolving pause below (spec 005 FR-007–FR-008).
-export function TapDanceSection({
-  controls,
-  isAutoAdvanceEnabled,
-  onAutoAdvanceChange: handleAutoAdvanceChange,
-}: TapDanceSectionProps) {
+export function TapDanceSection({ controls }: TapDanceSectionProps) {
   const { binding } = controls;
   return (
     <div className="flex flex-col gap-3">
@@ -58,11 +51,6 @@ export function TapDanceSection({
         Add tap
       </Button>
       <PauseInput controls={controls} />
-      <Switch
-        isChecked={isAutoAdvanceEnabled}
-        label="Next key after picking"
-        onChange={handleAutoAdvanceChange}
-      />
     </div>
   );
 }

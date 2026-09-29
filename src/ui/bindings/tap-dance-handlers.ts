@@ -37,6 +37,7 @@ export function handleTapDancePick(input: TapDancePickInput): boolean {
     commit((current) => setTapDanceBinding(current, target), `${selectionName}: Tap dance`);
     picker.setPendingModifiers([]);
     picker.setEditingTap(undefined);
+    picker.setEditingMorphSide(undefined);
     input.onPicked();
     return true;
   }
@@ -66,6 +67,7 @@ function handleTapKeyPick(
   );
   picker.setPendingModifiers([]);
   picker.setEditingTap(undefined);
+  picker.setEditingMorphSide(undefined);
   input.onPicked();
   return true;
 }

@@ -2,6 +2,7 @@ import { BLUETOOTH_PROFILE_COUNT } from '../../catalog/bluetooth-commands';
 import { KEYCODES, MODIFIER_KEYCODES, keycodeByName } from '../../catalog/keycodes';
 import type { KeycodeCategory } from '../../catalog/parse-keys-header';
 import { isSameBinding } from '../../domain/is-same-binding';
+import { MOD_MORPH_STARTER } from '../../domain/set-mod-morph-binding';
 import { TAP_DANCE_STARTER } from '../../domain/set-tap-dance-binding';
 import type { Binding } from '../../domain/types';
 import { toBindingItem, toKeycodeItem } from './to-picker-item';
@@ -142,6 +143,10 @@ const SYSTEM_ROWS: readonly PickerRow[] = [
     label: 'Tap dance',
     items: [toBindingItem(TAP_DANCE_STARTER)],
   },
+  {
+    label: 'Mod-morph',
+    items: [toBindingItem(MOD_MORPH_STARTER)],
+  },
 ];
 
 const MORE_LABELS: Record<KeycodeCategory, string> = {
@@ -206,6 +211,13 @@ export function isCurrentPickerItem(item: PickerItem, binding: Binding | undefin
     return false;
   }
   if (item.pick.kind === 'binding') {
+    // Configurable behaviors live in System as one starter row: any instance opens it (FR-009a).
+    if (
+      (item.pick.binding.kind === 'tap_dance' || item.pick.binding.kind === 'mod_morph') &&
+      item.pick.binding.kind === binding.kind
+    ) {
+      return true;
+    }
     return isSameBinding(item.pick.binding, binding);
   }
   const keycode = findTapKeycode(binding);

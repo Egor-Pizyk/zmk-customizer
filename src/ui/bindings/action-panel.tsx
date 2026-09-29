@@ -248,6 +248,7 @@ function ActionPanelBody(props: ActionPanelProps) {
         picker={picker}
       />
       <KeyOptions
+        behavior={{ modMorph: handlers.modMorph, tapDance: handlers.tapDance }}
         isAutoAdvanceEnabled={preferences.isAutoAdvanceEnabled}
         isKeyPress={props.isKeyPress}
         onAutoAdvanceChange={handleAutoAdvanceChange}
@@ -256,7 +257,6 @@ function ActionPanelBody(props: ActionPanelProps) {
         onModifierToggle={handlers.handleModifierToggle}
         pendingModifiers={picker.pendingModifiers}
         shared={picker.shared}
-        tapDance={handlers.tapDance}
       />
     </>
   );

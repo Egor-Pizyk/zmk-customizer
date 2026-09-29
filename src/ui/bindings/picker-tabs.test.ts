@@ -40,6 +40,7 @@ describe('PICKER_TABS', () => {
       'Output: 3',
       'Firmware: 2',
       'Tap dance: 1',
+      'Mod-morph: 1',
     ]);
   });
 
@@ -76,6 +77,14 @@ describe('current item and tab (FR-009a)', () => {
         kind: 'tap_dance',
         taps: [{ keycode: 'A', modifiers: [] }],
         tappingTermMs: 200,
+      }),
+    ).toBe('system');
+    expect(
+      findPickerTabId({
+        kind: 'mod_morph',
+        normal: { keycode: 'A', modifiers: [] },
+        morphed: { keycode: 'B', modifiers: [] },
+        mods: ['LS'],
       }),
     ).toBe('system');
   });

@@ -1,6 +1,7 @@
 import { BEHAVIORS } from '../../catalog/behaviors';
 import { assertNever } from '../../domain/assert-never';
 import type { SharedBinding } from '../../domain/get-shared-binding';
+import { MOD_MORPH_STARTER } from '../../domain/set-mod-morph-binding';
 import { TAP_DANCE_STARTER } from '../../domain/set-tap-dance-binding';
 import type { Binding } from '../../domain/types';
 import { DocsLink } from '../components/docs-link';
@@ -19,8 +20,7 @@ type BehaviorRow = (typeof BEHAVIORS)[number];
 type RowAction =
   | { readonly kind: 'pick'; readonly binding: Binding }
   | { readonly kind: 'tab'; readonly tabId: PickerTabId }
-  | { readonly kind: 'hint'; readonly text: string }
-  | { readonly kind: 'soon' };
+  | { readonly kind: 'hint'; readonly text: string };
 
 // Parameter-less behaviors apply at once; key behaviors are built with the controls below;
 // Bluetooth and output live in the System tab (spec 005 FR-002–FR-004).
@@ -45,7 +45,7 @@ function rowActionFor(entry: BehaviorRow): RowAction {
       return { kind: 'pick', binding: TAP_DANCE_STARTER };
     }
     case 'mod-morph': {
-      return { kind: 'soon' };
+      return { kind: 'pick', binding: MOD_MORPH_STARTER };
     }
     default: {
       return assertNever(entry);
@@ -127,9 +127,6 @@ function BehaviorRowItem({
       <span className="text-xs text-text-muted">{entry.description}</span>
       {action.kind === 'hint' ? (
         <span className="text-xs text-text-muted">{action.text}</span>
-      ) : undefined}
-      {action.kind === 'soon' ? (
-        <span className="text-xs text-text-muted">Coming soon.</span>
       ) : undefined}
     </li>
   );
