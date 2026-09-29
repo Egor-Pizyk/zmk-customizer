@@ -124,8 +124,8 @@
 
 **Purpose**: Full-feature validation and cleanup
 
-- [ ] T031 Full `specs/005-key-behaviors/quickstart.md` validation run (§1–§5) including both themes for tap-dance/mod-morph legends (spec SC-006) and keyboard-only pass (spec SC-005/FR-014 context)
-- [ ] T032 Final `make check` (typecheck + lint + format + tests) green; no drive-by refactors left in the diff; commits follow Conventional Commits, one behavior per change
+- [X] T031 Full `specs/005-key-behaviors/quickstart.md` validation run (§1–§5) including both themes for tap-dance/mod-morph legends (spec SC-006) and keyboard-only pass (spec SC-005/FR-014 context)
+- [X] T032 Final `make check` (typecheck + lint + format + tests) green; no drive-by refactors left in the diff; commits follow Conventional Commits, one behavior per change
 
 ---
 
