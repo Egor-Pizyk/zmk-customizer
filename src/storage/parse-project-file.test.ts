@@ -177,4 +177,17 @@ describe('tap-dance and mod-morph round trip (spec 005 contracts/binding-json.md
       issuePathsOf(projectJson(binding)).some((path) => path.startsWith('layers.0.bindings.k1')),
     ).toBe(true);
   });
+
+  it.each(['mo', 'lt', 'tog', 'to', 'sl'])(
+    'rejects the layer behavior %s until layers exist (spec 005 story 4)',
+    (kind) => {
+      const result = parseProjectFile(projectJson({ kind, layer: 0 }));
+      expect(result.ok).toBe(false);
+      if (!result.ok && result.error.kind === 'not-project') {
+        expect(
+          result.error.issues.some((issue) => issue.path.startsWith('layers.0.bindings.k1')),
+        ).toBe(true);
+      }
+    },
+  );
 });

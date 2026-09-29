@@ -44,9 +44,9 @@
 
 ### Implementation for User Story 1
 
-- [ ] T007 [US1] Replace the display-only `BehaviorSection` in `src/ui/bindings/behavior-section.tsx` with the behavior list driven by `BEHAVIORS` from `src/catalog/behaviors.ts` (all 13 entries; parameter-less kinds apply at once; `bt`/`out` reuse existing command/profile rows; `sk`/`kt`/`mt` stay on press-mode/hold controls per spec FR-004; design/flow unchanged per FR-019)
-- [ ] T008 [US1] Extend `behaviorName` in `src/ui/bindings/behavior-section.tsx` beyond `kp` so every stored kind shows its catalog label (mixed/unassigned states unchanged)
-- [ ] T009 [US1] Manual CDP verification per `specs/005-key-behaviors/quickstart.md` §2 and scope-guard walkthrough §5 (seed via `localStorage` key `zmk-customizer:project`, click `[data-keycap-id]`, screenshot; legends ≤7 chars, tooltips, multi-select + copy/paste, reload/round-trip/undo); `make check` green
+- [X] T007 [US1] Replace the display-only `BehaviorSection` in `src/ui/bindings/behavior-section.tsx` with the behavior list driven by `BEHAVIORS` from `src/catalog/behaviors.ts` (all 13 entries; parameter-less kinds apply at once; `bt`/`out` reuse existing command/profile rows; `sk`/`kt`/`mt` stay on press-mode/hold controls per spec FR-004; design/flow unchanged per FR-019)
+- [X] T008 [US1] Extend `behaviorName` in `src/ui/bindings/behavior-section.tsx` beyond `kp` so every stored kind shows its catalog label (mixed/unassigned states unchanged)
+- [X] T009 [US1] Manual CDP verification per `specs/005-key-behaviors/quickstart.md` §2 and scope-guard walkthrough §5 (seed via `localStorage` key `zmk-customizer:project`, click `[data-keycap-id]`, screenshot; legends ≤7 chars, tooltips, multi-select + copy/paste, reload/round-trip/undo); `make check` green
 
 **Checkpoint**: US1 fully functional and independently testable — all 13 behaviors assignable, persisted, undoable
 
@@ -62,19 +62,19 @@
 
 > NOTE: Write these FIRST, watch them FAIL, then implement.
 
-- [ ] T010 [P] [US2] Failing validation tests in `src/domain/validate-bindings.test.ts` for `tap_dance` (unknown tap keycode → `binding-keycode-unknown`; `tappingTermMs` <0 or >5000 → per-key range issue naming the key and `0–5000`)
-- [ ] T011 [P] [US2] Failing op tests in `src/domain/set-tap-dance-binding.test.ts` (starter seeded from current tap stroke, else plain `A`, `tappingTermMs: 200`; one commit for all selected keys)
-- [ ] T012 [P] [US2] Failing op tests in `src/domain/set-tap-dance-taps.test.ts` (replace tap list; modifiers normalized to unique `MODIFIERS` order) and `src/domain/set-tapping-term.test.ts` (in-place pause update)
-- [ ] T013 [P] [US2] Failing formatter tests in `src/ui/bindings/format-binding-legend.test.ts` and `src/ui/bindings/format-binding-name.test.ts` for `tap_dance` (legend ≤7 chars incl. truncation; full name lists all taps + pause; global legend-uniqueness tests stay green)
+- [X] T010 [P] [US2] Failing validation tests in `src/domain/validate-bindings.test.ts` for `tap_dance` (unknown tap keycode → `binding-keycode-unknown`; `tappingTermMs` <0 or >5000 → per-key range issue naming the key and `0–5000`)
+- [X] T011 [P] [US2] Failing op tests in `src/domain/set-tap-dance-binding.test.ts` (starter seeded from current tap stroke, else plain `A`, `tappingTermMs: 200`; one commit for all selected keys)
+- [X] T012 [P] [US2] Failing op tests in `src/domain/set-tap-dance-taps.test.ts` (replace tap list; modifiers normalized to unique `MODIFIERS` order) and `src/domain/set-tapping-term.test.ts` (in-place pause update)
+- [X] T013 [P] [US2] Failing formatter tests in `src/ui/bindings/format-binding-legend.test.ts` and `src/ui/bindings/format-binding-name.test.ts` for `tap_dance` (legend ≤7 chars incl. truncation; full name lists all taps + pause; global legend-uniqueness tests stay green)
 
 ### Implementation for User Story 2
 
-- [ ] T014 [US2] Add `tap_dance` branches in `src/domain/validate-bindings.ts` (`getKeyStrokes` returns `taps`; `findBindingIssue` checks the pause range) and extend `ValidationCode` in `src/domain/types.ts` with the range-issue code
-- [ ] T015 [P] [US2] Implement `src/domain/set-tap-dance-binding.ts`, `src/domain/set-tap-dance-taps.ts`, `src/domain/set-tapping-term.ts` (one exported concept per file; pattern: `src/domain/set-keycode.ts`)
-- [ ] T016 [US2] Wire the `tap_dance` catalog entry (added in T006) into the behavior list (confirm panel order + docs-link tests green; entry needs no changes, only consumption)
-- [ ] T017 [US2] Add `tap_dance` legends/names in `src/ui/bindings/format-binding-legend.ts` and `src/ui/bindings/format-binding-name.ts` (≤7 chars, uniqueness preserved)
-- [ ] T018 [US2] Add the "Tap dance…" starter row to the System tab in `src/ui/bindings/picker-tabs.ts` and render the tap-list + pause parameter section in the `KeyOptions` slot (new `src/ui/bindings/tap-dance-options.tsx` only if it does not fit `KeyOptions`; keyboard-reachable, labeled, pause range shown, out-of-range rejected where entered)
-- [ ] T019 [US2] Manual CDP verification per `specs/005-key-behaviors/quickstart.md` §3 (create two-tap key, edit taps/pause, reload, file round trip, import out-of-range pause, undo granularity); `make check` green
+- [X] T014 [US2] Add `tap_dance` branches in `src/domain/validate-bindings.ts` (`getKeyStrokes` returns `taps`; `findBindingIssue` checks the pause range) and extend `ValidationCode` in `src/domain/types.ts` with the range-issue code
+- [X] T015 [P] [US2] Implement `src/domain/set-tap-dance-binding.ts`, `src/domain/set-tap-dance-taps.ts`, `src/domain/set-tapping-term.ts` (one exported concept per file; pattern: `src/domain/set-keycode.ts`)
+- [X] T016 [US2] Wire the `tap_dance` catalog entry (added in T006) into the behavior list (confirm panel order + docs-link tests green; entry needs no changes, only consumption)
+- [X] T017 [US2] Add `tap_dance` legends/names in `src/ui/bindings/format-binding-legend.ts` and `src/ui/bindings/format-binding-name.ts` (≤7 chars, uniqueness preserved)
+- [X] T018 [US2] Add the "Tap dance…" starter row to the System tab in `src/ui/bindings/picker-tabs.ts` and render the tap-list + pause parameter section in the `KeyOptions` slot (new `src/ui/bindings/tap-dance-options.tsx` only if it does not fit `KeyOptions`; keyboard-reachable, labeled, pause range shown, out-of-range rejected where entered)
+- [X] T019 [US2] Manual CDP verification per `specs/005-key-behaviors/quickstart.md` §3 (create two-tap key, edit taps/pause, reload, file round trip, import out-of-range pause, undo granularity); `make check` green
 
 **Checkpoint**: US1 + US2 work independently; tap-dance keys persist, validate, display, and edit end-to-end
 
@@ -90,18 +90,18 @@
 
 > NOTE: Write these FIRST, watch them FAIL, then implement.
 
-- [ ] T020 [P] [US3] Failing validation tests in `src/domain/validate-bindings.test.ts` for `mod_morph` (unknown keycode in `normal`/`morphed` → `binding-keycode-unknown`; `normal` deep-equal to `morphed` → attention note under Bindings, still loads)
-- [ ] T021 [P] [US3] Failing op tests in `src/domain/set-mod-morph-binding.test.ts` (starter: normal = morphed = current stroke, `mods: ['LS']`), `src/domain/set-mod-morph-keys.test.ts` (normal/morphed update, modifiers normalized) and `src/domain/set-mod-morph-mods.test.ts` (trigger-set update; clearing the last modifier never writes empty `mods`)
-- [ ] T022 [P] [US3] Failing formatter tests in `src/ui/bindings/format-binding-legend.test.ts` and `src/ui/bindings/format-binding-name.test.ts` for `mod_morph` (legend ≤7 chars with morph mark; full name states normal, morphed and triggers; uniqueness tests stay green)
+- [X] T020 [P] [US3] Failing validation tests in `src/domain/validate-bindings.test.ts` for `mod_morph` (unknown keycode in `normal`/`morphed` → `binding-keycode-unknown`; `normal` deep-equal to `morphed` → attention note under Bindings, still loads)
+- [X] T021 [P] [US3] Failing op tests in `src/domain/set-mod-morph-binding.test.ts` (starter: normal = morphed = current stroke, `mods: ['LS']`), `src/domain/set-mod-morph-keys.test.ts` (normal/morphed update, modifiers normalized) and `src/domain/set-mod-morph-mods.test.ts` (trigger-set update; clearing the last modifier never writes empty `mods`)
+- [X] T022 [P] [US3] Failing formatter tests in `src/ui/bindings/format-binding-legend.test.ts` and `src/ui/bindings/format-binding-name.test.ts` for `mod_morph` (legend ≤7 chars with morph mark; full name states normal, morphed and triggers; uniqueness tests stay green)
 
 ### Implementation for User Story 3
 
-- [ ] T023 [US3] Add `mod_morph` branches in `src/domain/validate-bindings.ts` (`getKeyStrokes` returns `normal` + `morphed`; equal-actions attention note) and extend `ValidationCode` in `src/domain/types.ts` with the note code
-- [ ] T024 [P] [US3] Implement `src/domain/set-mod-morph-binding.ts`, `src/domain/set-mod-morph-keys.ts`, `src/domain/set-mod-morph-mods.ts` (pattern: `src/domain/set-keycode.ts`)
-- [ ] T025 [US3] Wire the `mod_morph` catalog entry (added in T006) into the behavior list (confirm panel order + docs-link tests green; entry needs no changes, only consumption)
-- [ ] T026 [US3] Add `mod_morph` legends/names in `src/ui/bindings/format-binding-legend.ts` and `src/ui/bindings/format-binding-name.ts` (normal legend + morph mark; `gresc` legend/name untouched)
-- [ ] T027 [US3] Add the "Mod-morph…" starter row to the System tab in `src/ui/bindings/picker-tabs.ts` and render the normal/morphed + trigger-modifier parameter section in the `KeyOptions` slot (new `src/ui/bindings/mod-morph-options.tsx` only if it does not fit `KeyOptions`; keyboard-reachable, labeled)
-- [ ] T028 [US3] Manual CDP verification per `specs/005-key-behaviors/quickstart.md` §4 (create morph key, equal-actions note appears then clears, `gresc` preset one click, reload, round trip, undo); `make check` green
+- [X] T023 [US3] Add `mod_morph` branches in `src/domain/validate-bindings.ts` (`getKeyStrokes` returns `normal` + `morphed`; equal-actions attention note) and extend `ValidationCode` in `src/domain/types.ts` with the note code
+- [X] T024 [P] [US3] Implement `src/domain/set-mod-morph-binding.ts`, `src/domain/set-mod-morph-keys.ts`, `src/domain/set-mod-morph-mods.ts` (pattern: `src/domain/set-keycode.ts`)
+- [X] T025 [US3] Wire the `mod_morph` catalog entry (added in T006) into the behavior list (confirm panel order + docs-link tests green; entry needs no changes, only consumption)
+- [X] T026 [US3] Add `mod_morph` legends/names in `src/ui/bindings/format-binding-legend.ts` and `src/ui/bindings/format-binding-name.ts` (normal legend + morph mark; `gresc` legend/name untouched)
+- [X] T027 [US3] Add the "Mod-morph…" starter row to the System tab in `src/ui/bindings/picker-tabs.ts` and render the normal/morphed + trigger-modifier parameter section in the `KeyOptions` slot (new `src/ui/bindings/mod-morph-options.tsx` only if it does not fit `KeyOptions`; keyboard-reachable, labeled)
+- [X] T028 [US3] Manual CDP verification per `specs/005-key-behaviors/quickstart.md` §4 (create morph key, equal-actions note appears then clears, `gresc` preset one click, reload, round trip, undo); `make check` green
 
 **Checkpoint**: All three stories independently functional; every self-contained v0.3 behavior assignable
 
@@ -113,8 +113,8 @@
 
 **Independent Test**: Behavior list walkthrough shows no `mo`/`lt`/`tog`/`to`/`sl`; importing a file with `"kind": "mo"` is rejected with a named problem and the current project is unchanged
 
-- [ ] T029 [P] [US4] Rejection test in `src/storage/parse-project-file.test.ts` for layer kinds (`mo`, `lt`, `tog`, `to`, `sl` rejected with a message naming the problem; current project deep-equal to before)
-- [ ] T030 [US4] Manual walkthrough per `specs/005-key-behaviors/quickstart.md` §5 confirming no layer/combo/macro/lighting/mouse/Studio entry is reachable; `make check` green
+- [X] T029 [P] [US4] Rejection test in `src/storage/parse-project-file.test.ts` for layer kinds (`mo`, `lt`, `tog`, `to`, `sl` rejected with a message naming the problem; current project deep-equal to before)
+- [X] T030 [US4] Manual walkthrough per `specs/005-key-behaviors/quickstart.md` §5 confirming no layer/combo/macro/lighting/mouse/Studio entry is reachable; `make check` green
 
 **Checkpoint**: Scope boundary enforced in UI and at the trust boundary
 
