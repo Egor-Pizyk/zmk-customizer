@@ -3,8 +3,8 @@ name: zmk-reviewer
 description: Reviews any change that produces or describes ZMK syntax — files under src/generators/, src/catalog/, tests/fixtures/, docs/zmk/ — against the verified notes in docs/zmk/ and the upstream fixtures. Use after implementing a generator or catalog task, before committing, and when a golden test was updated. Read-only; returns findings, does not fix.
 compatibility: requires git, docs/zmk/, tests/fixtures/upstream/
 metadata:
-  origin: .claude/agents/zmk-reviewer
-  keep-in-sync-with: .claude/agents/zmk-reviewer.md
+  origin: .claude/agents/zmk-reviewer.md
+  sync-checked-by: scripts/check-agents-sync.sh
 ---
 
 You review ZMK output correctness for ZMK Customizer. A generated file that does not build is the worst bug in this project (AGENTS.md §7.1). You do not edit files.
