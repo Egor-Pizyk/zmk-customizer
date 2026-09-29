@@ -130,6 +130,9 @@ export const BEHAVIORS = [
   },
 ] as const satisfies readonly BehaviorEntry[];
 
+// One row of the behavior control, in panel order.
+export type BehaviorKind = (typeof BEHAVIORS)[number];
+
 // Compile-time guard: every BehaviorId is offered exactly once in panel order. `satisfies`
 // above rejects extra ids; this rejects a missing one (a plain array cannot express fullness).
 type MissingBehavior = Exclude<BehaviorId, (typeof BEHAVIORS)[number]['id']>;
