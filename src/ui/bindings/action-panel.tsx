@@ -236,7 +236,11 @@ function ActionPanelBody(props: ActionPanelProps) {
   }
   return (
     <>
-      <BehaviorSection shared={picker.shared} />
+      <BehaviorSection
+        onPick={handlers.handlePick}
+        onShowTab={picker.handleTabChange}
+        shared={picker.shared}
+      />
       <PickerPreview {...props} shared={picker.shared} />
       <KeyPicker
         onEscapeToCanvas={props.onEscapeToCanvas}
