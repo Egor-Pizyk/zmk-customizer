@@ -103,6 +103,9 @@ const FIXED_LEGENDS = {
   gresc: '⎋`',
   sys_reset: 'RST',
   bootloader: 'BOOT',
+  // Placeholders until US2/US3 define real legends (spec 005 Phases 4–5).
+  tap_dance: 'TD?',
+  mod_morph: 'MM?',
 };
 
 function formatBluetoothLegend(binding: Extract<Binding, { kind: 'bt' }>): string {
@@ -110,6 +113,50 @@ function formatBluetoothLegend(binding: Extract<Binding, { kind: 'bt' }>): strin
     return binding.command === 'BT_SEL' ? `BT ${binding.profile}` : `BT✕${binding.profile}`;
   }
   return BLUETOOTH_LEGENDS[binding.command];
+}
+
+/** One-face legends: no parameters to format (spec 004 FR-006). */
+type SimpleBinding = Extract<
+  Binding,
+  {
+    kind:
+      | 'trans'
+      | 'none'
+      | 'caps_word'
+      | 'key_repeat'
+      | 'gresc'
+      | 'sys_reset'
+      | 'bootloader'
+      | 'tap_dance'
+      | 'mod_morph';
+  }
+>;
+
+function isSimpleBinding(binding: Binding): binding is SimpleBinding {
+  switch (binding.kind) {
+    case 'trans':
+    case 'none':
+    case 'caps_word':
+    case 'key_repeat':
+    case 'gresc':
+    case 'sys_reset':
+    case 'bootloader':
+    case 'tap_dance':
+    case 'mod_morph': {
+      return true;
+    }
+    case 'kp':
+    case 'mt':
+    case 'sk':
+    case 'kt':
+    case 'bt':
+    case 'out': {
+      return false;
+    }
+    default: {
+      return assertNever(binding);
+    }
+  }
 }
 
 /** Undefined = unassigned: an empty keycap (FR-006). */
@@ -125,6 +172,9 @@ export function formatFullBindingLegend(binding: Binding | undefined): BindingLe
 function toBindingLegend(binding: Binding | undefined, isFull: boolean): BindingLegend | undefined {
   if (binding === undefined) {
     return undefined;
+  }
+  if (isSimpleBinding(binding)) {
+    return { tap: FIXED_LEGENDS[binding.kind] };
   }
   switch (binding.kind) {
     case 'kp': {
@@ -147,15 +197,6 @@ function toBindingLegend(binding: Binding | undefined, isFull: boolean): Binding
     }
     case 'out': {
       return { tap: OUTPUT_LEGENDS[binding.command] };
-    }
-    case 'trans':
-    case 'none':
-    case 'caps_word':
-    case 'key_repeat':
-    case 'gresc':
-    case 'sys_reset':
-    case 'bootloader': {
-      return { tap: FIXED_LEGENDS[binding.kind] };
     }
     default: {
       return assertNever(binding);

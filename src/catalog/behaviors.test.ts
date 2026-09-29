@@ -6,7 +6,7 @@ import { OUTPUT_COMMANDS } from './output-commands';
 const V0_3_DOCS = 'https://v0-3-branch.zmk.dev/docs/';
 
 describe('binding catalog tables', () => {
-  it('lists the 13 built-in behaviors of spec 004 in panel order', () => {
+  it('lists the 13 built-in behaviors of spec 004 plus tap-dance and mod-morph in panel order', () => {
     expect(BEHAVIORS.map((behavior) => behavior.id)).toEqual([
       'kp',
       'mt',
@@ -21,6 +21,8 @@ describe('binding catalog tables', () => {
       'out',
       'sys_reset',
       'bootloader',
+      'tap_dance',
+      'mod_morph',
     ]);
   });
 

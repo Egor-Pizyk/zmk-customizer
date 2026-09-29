@@ -49,7 +49,21 @@ export type Binding =
   | { readonly kind: 'bt'; readonly command: BluetoothProfileCommand; readonly profile: number }
   | { readonly kind: 'out'; readonly command: OutputCommand }
   | { readonly kind: 'sys_reset' }
-  | { readonly kind: 'bootloader' };
+  | { readonly kind: 'bootloader' }
+  | {
+      readonly kind: 'tap_dance';
+      /** Ordered tap actions, first tap first; never empty (spec 005 data-model.md). */
+      readonly taps: readonly KeyStroke[];
+      /** Resolving pause in ms (spec 005 data-model.md: int, 0–5000, default 200). */
+      readonly tappingTermMs: number;
+    }
+  | {
+      readonly kind: 'mod_morph';
+      readonly normal: KeyStroke;
+      readonly morphed: KeyStroke;
+      /** Trigger modifiers, unique and in MODIFIERS order; never empty. */
+      readonly mods: readonly Modifier[];
+    };
 
 export type BehaviorId = Binding['kind'];
 

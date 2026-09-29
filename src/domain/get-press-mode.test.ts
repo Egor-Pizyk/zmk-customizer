@@ -17,6 +17,8 @@ it.each([
   [{ kind: 'out', command: 'OUT_USB' }, undefined],
   [{ kind: 'sys_reset' }, undefined],
   [{ kind: 'bootloader' }, undefined],
+  [{ kind: 'tap_dance', taps: [KEY_A], tappingTermMs: 200 }, undefined],
+  [{ kind: 'mod_morph', normal: KEY_A, morphed: KEY_A, mods: ['LS'] }, undefined],
   [undefined, undefined],
 ] as const)('%j is %s', (binding, mode) => {
   expect(getPressMode(binding)).toBe(mode);

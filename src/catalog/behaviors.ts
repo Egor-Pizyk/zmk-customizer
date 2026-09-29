@@ -1,7 +1,14 @@
 import type { BehaviorId } from '../domain/types';
 
 /** What step 2 of the Action panel asks for; 'none' = applied from step 1 (spec 004 FR-009). */
-export type BehaviorChoices = 'none' | 'key' | 'hold-tap' | 'bluetooth' | 'output';
+export type BehaviorChoices =
+  | 'none'
+  | 'key'
+  | 'hold-tap'
+  | 'bluetooth'
+  | 'output'
+  | 'tap-dance'
+  | 'mod-morph';
 
 export type BehaviorEntry = {
   readonly id: BehaviorId;
@@ -106,6 +113,20 @@ export const BEHAVIORS = [
     description: 'Restarts into the bootloader so new firmware can be flashed.',
     choices: 'none',
     docsUrl: `${DOCS}/reset#bootloader-reset`,
+  },
+  {
+    id: 'tap_dance',
+    label: 'Tap dance',
+    description: 'Sends one action on a single tap, another on a double tap, and so on.',
+    choices: 'tap-dance',
+    docsUrl: `${DOCS}/tap-dance`,
+  },
+  {
+    id: 'mod_morph',
+    label: 'Mod-morph',
+    description: 'Sends one key normally and another while a chosen modifier is held.',
+    choices: 'mod-morph',
+    docsUrl: `${DOCS}/mod-morph`,
   },
 ] as const satisfies readonly BehaviorEntry[];
 
