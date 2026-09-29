@@ -24,6 +24,15 @@ it.each<[Binding | undefined, string]>([
   [{ kind: 'bt', command: 'BT_CLR_ALL' }, 'Bluetooth: clear all profiles'],
   [{ kind: 'out', command: 'OUT_USB' }, 'Output: USB'],
   [{ kind: 'bootloader' }, 'Bootloader'],
+  [{ kind: 'tap_dance', taps: [SPACE], tappingTermMs: 200 }, 'Tap dance Space (200 ms)'],
+  [
+    {
+      kind: 'tap_dance',
+      taps: [SPACE, { keycode: 'A', modifiers: ['LC'] }],
+      tappingTermMs: 250,
+    },
+    'Tap dance Space, then Left Ctrl + A (250 ms)',
+  ],
 ])('names %j as %s', (binding, name) => {
   expect(formatBindingName(binding)).toBe(name);
 });

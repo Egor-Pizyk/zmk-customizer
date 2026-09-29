@@ -27,6 +27,11 @@ function formatCommandBinding(binding: Extract<Binding, { kind: 'bt' | 'out' }>)
   return 'profile' in binding ? `${text} ${binding.profile}` : text;
 }
 
+function formatTapDanceName(binding: Extract<Binding, { kind: 'tap_dance' }>): string {
+  const taps = binding.taps.map((tap) => formatKeyStroke(tap)).join(', then ');
+  return `Tap dance ${taps} (${binding.tappingTermMs} ms)`;
+}
+
 /** Full action name: keycap aria-label, tooltip, Bindings table, status messages (FR-007). */
 export function formatBindingName(binding: Binding | undefined): string {
   if (binding === undefined) {
@@ -49,7 +54,10 @@ export function formatBindingName(binding: Binding | undefined): string {
     case 'out': {
       return formatCommandBinding(binding);
     }
-    // New kinds read their catalog label until their story names their params (spec 005).
+    case 'tap_dance': {
+      return formatTapDanceName(binding);
+    }
+    // mod_morph reads its catalog label until US3 names its params (spec 005 Phase 5).
     case 'trans':
     case 'none':
     case 'caps_word':
@@ -57,7 +65,6 @@ export function formatBindingName(binding: Binding | undefined): string {
     case 'gresc':
     case 'sys_reset':
     case 'bootloader':
-    case 'tap_dance':
     case 'mod_morph': {
       const { kind } = binding;
       return BEHAVIORS.find((behavior) => behavior.id === kind)?.label ?? kind;

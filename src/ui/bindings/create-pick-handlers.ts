@@ -5,6 +5,7 @@ import { setKeycode } from '../../domain/set-keycode';
 import { setPressMode } from '../../domain/set-press-mode';
 import type { PressMode } from '../../domain/set-press-mode';
 import type { Modifier, Project } from '../../domain/types';
+import { handleTapDancePick, toTapDanceControls } from './tap-dance-handlers';
 import { toggleKeyModifier } from './toggle-key-modifier';
 import type { PickerItem } from './to-picker-item';
 import type { KeyPickerState } from './use-key-picker';
@@ -25,20 +26,9 @@ export function createPickHandlers(options: PickHandlerOptions) {
   const target = { layerIndex: 0, keyIds };
 
   return {
+    tapDance: toTapDanceControls({ picker, target, selectionName, commit }),
     handlePick: (item: PickerItem) => {
-      const { pick } = item;
-      const change =
-        pick.kind === 'keycode'
-          ? (current: Project) =>
-              setKeycode(current, {
-                ...target,
-                keycode: pick.keycode,
-                modifiers: picker.pendingModifiers,
-              })
-          : (current: Project) => setBindings(current, { ...target, binding: pick.binding });
-      commit(change, `${selectionName}: ${item.name}`);
-      picker.setPendingModifiers([]);
-      options.onPicked();
+      handleItemPick({ picker, target, selectionName, commit, onPicked: options.onPicked, item });
     },
     handleModifierToggle: (modifier: Modifier, isEnabled: boolean) => {
       toggleKeyModifier(options, { modifier, isEnabled });
@@ -53,6 +43,37 @@ export function createPickHandlers(options: PickHandlerOptions) {
       commit((current) => setPressMode(current, { ...target, mode }), `${selectionName}: ${mode}`);
     },
   };
+}
+
+type ItemPickInput = {
+  readonly picker: KeyPickerState;
+  readonly target: { readonly layerIndex: number; readonly keyIds: readonly string[] };
+  readonly selectionName: string;
+  readonly commit: PickHandlerOptions['commit'];
+  readonly onPicked: () => void;
+  readonly item: PickerItem;
+};
+
+function handleItemPick(input: ItemPickInput) {
+  const { picker, target, selectionName, commit, item } = input;
+  const handled = handleTapDancePick({ ...input, item });
+  if (handled) {
+    return;
+  }
+  const { pick } = item;
+  const change =
+    pick.kind === 'keycode'
+      ? (current: Project) =>
+          setKeycode(current, {
+            ...target,
+            keycode: pick.keycode,
+            modifiers: picker.pendingModifiers,
+          })
+      : (current: Project) => setBindings(current, { ...target, binding: pick.binding });
+  commit(change, `${selectionName}: ${item.name}`);
+  picker.setPendingModifiers([]);
+  picker.setEditingTap(undefined);
+  input.onPicked();
 }
 
 export type PickHandlers = ReturnType<typeof createPickHandlers>;

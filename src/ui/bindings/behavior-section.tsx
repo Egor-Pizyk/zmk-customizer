@@ -1,6 +1,7 @@
 import { BEHAVIORS } from '../../catalog/behaviors';
 import { assertNever } from '../../domain/assert-never';
 import type { SharedBinding } from '../../domain/get-shared-binding';
+import { TAP_DANCE_STARTER } from '../../domain/set-tap-dance-binding';
 import type { Binding } from '../../domain/types';
 import { DocsLink } from '../components/docs-link';
 import type { PickHandlers } from './create-pick-handlers';
@@ -40,7 +41,9 @@ function rowActionFor(entry: BehaviorRow): RowAction {
     case 'output': {
       return { kind: 'tab', tabId: 'system' };
     }
-    case 'tap-dance':
+    case 'tap-dance': {
+      return { kind: 'pick', binding: TAP_DANCE_STARTER };
+    }
     case 'mod-morph': {
       return { kind: 'soon' };
     }

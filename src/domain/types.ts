@@ -114,7 +114,8 @@ export type ValidationCode =
   | 'board-pins-shorted'
   | 'key-shorted'
   | 'binding-keycode-unknown'
-  | 'binding-profile-out-of-range';
+  | 'binding-profile-out-of-range'
+  | 'binding-tapping-term-out-of-range';
 
 export type ValidationIssue = {
   readonly code: ValidationCode;

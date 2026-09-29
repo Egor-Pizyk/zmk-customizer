@@ -17,6 +17,7 @@ const WORKSPACE_BY_ISSUE_CODE: Record<ValidationCode, WorkspaceId> = {
   'key-shorted': 'schematic',
   'binding-keycode-unknown': 'bindings',
   'binding-profile-out-of-range': 'bindings',
+  'binding-tapping-term-out-of-range': 'bindings',
 };
 
 export function toWorkspaceIssues(issues: readonly ValidationIssue[]): readonly WorkspaceIssue[] {
