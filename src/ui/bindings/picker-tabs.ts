@@ -2,6 +2,7 @@ import { BLUETOOTH_PROFILE_COUNT } from '../../catalog/bluetooth-commands';
 import { KEYCODES, MODIFIER_KEYCODES, keycodeByName } from '../../catalog/keycodes';
 import type { KeycodeCategory } from '../../catalog/parse-keys-header';
 import { isSameBinding } from '../../domain/is-same-binding';
+import { TAP_DANCE_STARTER } from '../../domain/set-tap-dance-binding';
 import type { Binding } from '../../domain/types';
 import { toBindingItem, toKeycodeItem } from './to-picker-item';
 import type { PickerItem } from './to-picker-item';
@@ -136,6 +137,10 @@ const SYSTEM_ROWS: readonly PickerRow[] = [
   {
     label: 'Firmware',
     items: (['sys_reset', 'bootloader'] as const).map((kind) => toBindingItem({ kind })),
+  },
+  {
+    label: 'Tap dance',
+    items: [toBindingItem(TAP_DANCE_STARTER)],
   },
 ];
 

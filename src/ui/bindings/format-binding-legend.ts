@@ -103,8 +103,7 @@ const FIXED_LEGENDS = {
   gresc: '⎋`',
   sys_reset: 'RST',
   bootloader: 'BOOT',
-  // Placeholders until US2/US3 define real legends (spec 005 Phases 4–5).
-  tap_dance: 'TD?',
+  // Placeholder until US3 defines the real legend (spec 005 Phase 5).
   mod_morph: 'MM?',
 };
 
@@ -127,7 +126,6 @@ type SimpleBinding = Extract<
       | 'gresc'
       | 'sys_reset'
       | 'bootloader'
-      | 'tap_dance'
       | 'mod_morph';
   }
 >;
@@ -141,7 +139,6 @@ function isSimpleBinding(binding: Binding): binding is SimpleBinding {
     case 'gresc':
     case 'sys_reset':
     case 'bootloader':
-    case 'tap_dance':
     case 'mod_morph': {
       return true;
     }
@@ -150,7 +147,8 @@ function isSimpleBinding(binding: Binding): binding is SimpleBinding {
     case 'sk':
     case 'kt':
     case 'bt':
-    case 'out': {
+    case 'out':
+    case 'tap_dance': {
       return false;
     }
     default: {
@@ -198,8 +196,28 @@ function toBindingLegend(binding: Binding | undefined, isFull: boolean): Binding
     case 'out': {
       return { tap: OUTPUT_LEGENDS[binding.command] };
     }
+    case 'tap_dance': {
+      return formatTapDanceLegend(binding, isFull);
+    }
     default: {
       return assertNever(binding);
     }
   }
+}
+
+// First tap large in the center; the rest small at the bottom: the second tap when there are
+// two, a count beyond that, and a tap-dance mark for a single tap (spec 005 data-model.md).
+function formatTapDanceLegend(
+  binding: Extract<Binding, { kind: 'tap_dance' }>,
+  isFull: boolean,
+): BindingLegend {
+  const [first, ...rest] = binding.taps;
+  const tap = first === undefined ? '?' : formatKeyStrokeLegend(first, isFull);
+  if (rest.length === 0) {
+    return { tap, hold: 'TD' };
+  }
+  if (!isFull && rest.length > 1) {
+    return { tap, hold: `+${rest.length}` };
+  }
+  return { tap, hold: rest.map((stroke) => formatKeyStrokeLegend(stroke, isFull)).join('/') };
 }

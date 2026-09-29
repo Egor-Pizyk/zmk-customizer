@@ -65,6 +65,36 @@ it.each<[string, Binding | undefined, ReturnType<typeof formatBindingLegend>]>([
   ['eject', kp('C_EJECT'), { tap: '⏏' }],
   ['output usb', { kind: 'out', command: 'OUT_USB' }, { tap: 'USB' }],
   ['bootloader', { kind: 'bootloader' }, { tap: 'BOOT' }],
+  [
+    'tap dance with one tap',
+    { kind: 'tap_dance', taps: [{ keycode: 'A', modifiers: [] }], tappingTermMs: 200 },
+    { tap: 'A', hold: 'TD' },
+  ],
+  [
+    'tap dance with two taps',
+    {
+      kind: 'tap_dance',
+      taps: [
+        { keycode: 'A', modifiers: [] },
+        { keycode: 'SPACE', modifiers: [] },
+      ],
+      tappingTermMs: 250,
+    },
+    { tap: 'A', hold: '␣' },
+  ],
+  [
+    'tap dance with three taps',
+    {
+      kind: 'tap_dance',
+      taps: [
+        { keycode: 'A', modifiers: [] },
+        { keycode: 'B', modifiers: [] },
+        { keycode: 'C', modifiers: [] },
+      ],
+      tappingTermMs: 200,
+    },
+    { tap: 'A', hold: '+2' },
+  ],
 ])('formats %s', (_label, binding, legend) => {
   expect(formatBindingLegend(binding)).toEqual(legend);
 });
@@ -79,6 +109,19 @@ it.each<[string, Binding | undefined, ReturnType<typeof formatFullBindingLegend>
     { tap: '⌃⇧⌥⌘R⌃R⇧R⌥R⌘A' },
   ],
   ['modifiers with a word legend in full', kp('PRINTSCREEN', ['LC', 'LS']), { tap: '⌃⇧PrtSc' }],
+  [
+    'tap dance in full lists every tap',
+    {
+      kind: 'tap_dance',
+      taps: [
+        { keycode: 'A', modifiers: [] },
+        { keycode: 'B', modifiers: [] },
+        { keycode: 'C', modifiers: [] },
+      ],
+      tappingTermMs: 200,
+    },
+    { tap: 'A', hold: 'B/C' },
+  ],
 ])('formats the full %s', (_label, binding, legend) => {
   expect(formatFullBindingLegend(binding)).toEqual(legend);
 });

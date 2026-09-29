@@ -39,6 +39,7 @@ describe('PICKER_TABS', () => {
       'Bluetooth: 4',
       'Output: 3',
       'Firmware: 2',
+      'Tap dance: 1',
     ]);
   });
 
@@ -70,5 +71,12 @@ describe('current item and tab (FR-009a)', () => {
     expect(findPickerTabId({ kind: 'kp', key: { keycode: 'F13', modifiers: [] } })).toBe(
       'function',
     );
+    expect(
+      findPickerTabId({
+        kind: 'tap_dance',
+        taps: [{ keycode: 'A', modifiers: [] }],
+        tappingTermMs: 200,
+      }),
+    ).toBe('system');
   });
 });

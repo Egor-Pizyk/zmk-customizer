@@ -256,6 +256,7 @@ function ActionPanelBody(props: ActionPanelProps) {
         onModifierToggle={handlers.handleModifierToggle}
         pendingModifiers={picker.pendingModifiers}
         shared={picker.shared}
+        tapDance={handlers.tapDance}
       />
     </>
   );

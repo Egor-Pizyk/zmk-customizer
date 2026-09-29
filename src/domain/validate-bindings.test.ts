@@ -73,3 +73,33 @@ it('orders issues by layer, then key', () => {
     ['layers', 1, 'bindings', 'k1'],
   ]);
 });
+
+it('accepts tap-dance with known taps and a pause in range', () => {
+  const project = buildProject({
+    keys: KEYS,
+    bindings: {
+      k1: { kind: 'tap_dance', taps: [stroke('A'), stroke('SPACE')], tappingTermMs: 250 },
+    },
+  });
+  expect(validateBindings(project, CATALOG)).toEqual([]);
+});
+
+it('reports unknown tap keycodes and out-of-range tapping terms per key, in key order', () => {
+  const project = buildProject({
+    keys: KEYS,
+    bindings: {
+      k3: { kind: 'tap_dance', taps: [stroke('A')], tappingTermMs: 6000 },
+      k2: { kind: 'tap_dance', taps: [stroke('A'), stroke('NOPE')], tappingTermMs: 200 },
+      k4: { kind: 'tap_dance', taps: [stroke('SPACE')], tappingTermMs: -5 },
+      k1: { kind: 'kp', key: stroke('A') },
+    },
+  });
+  const issues = validateBindings(project, CATALOG);
+  expect(issues.map(({ code, path }) => ({ code, path }))).toEqual([
+    { code: 'binding-keycode-unknown', path: ['layers', 0, 'bindings', 'k2'] },
+    { code: 'binding-tapping-term-out-of-range', path: ['layers', 0, 'bindings', 'k3'] },
+    { code: 'binding-tapping-term-out-of-range', path: ['layers', 0, 'bindings', 'k4'] },
+  ]);
+  expect(issues[0]?.message).toContain('NOPE');
+  expect(issues[1]?.message).toContain('6000');
+});

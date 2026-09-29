@@ -47,12 +47,13 @@ function useHoverDetails(onShowDetails: (item: PickerItem) => void) {
   return { handleHoverItem, handleFocusItem, handleDetailsFreeze, handleDetailsUnfreeze };
 }
 
-// Open tab, search text, modifiers chosen before a key, and the item shown in the details line:
-// UI state, never saved or undone (spec 004 R14).
+// Open tab, search text, modifiers chosen before a key, the tap being re-picked, and the
+// item shown in the details line: UI state, never saved or undone (spec 004 R14).
 export function useKeyPicker(project: Project, selectedKeyIds: readonly string[]) {
   const [tabId, setTabId] = useState<PickerTabId>('basic');
   const [search, setSearch] = useState('');
   const [pendingModifiers, setPendingModifiers] = useState<readonly Modifier[]>([]);
+  const [editingTap, setEditingTap] = useState<number | undefined>();
   const [detailsItem, setDetailsItem] = useState<PickerItem | undefined>();
   const hover = useHoverDetails(setDetailsItem);
 
@@ -60,9 +61,11 @@ export function useKeyPicker(project: Project, selectedKeyIds: readonly string[]
     tabId,
     search,
     pendingModifiers,
+    editingTap,
     detailsItem,
     shared: getSharedBinding(project, { layerIndex: 0, keyIds: selectedKeyIds }),
     setPendingModifiers,
+    setEditingTap,
     handleTabChange: setTabId,
     handleSearchChange: setSearch,
     handleHoverItem: hover.handleHoverItem,
@@ -80,6 +83,7 @@ export function useKeyPicker(project: Project, selectedKeyIds: readonly string[]
       }
       setSearch('');
       setPendingModifiers([]);
+      setEditingTap(undefined);
     },
   };
 }

@@ -17,7 +17,10 @@ function getKeyStrokes(binding: Binding): readonly KeyStroke[] {
     case 'mt': {
       return [binding.hold, binding.tap];
     }
-    // New kinds share the empty group until their story gives them real branches (spec 005).
+    case 'tap_dance': {
+      return binding.taps;
+    }
+    // mod_morph joins its story with a real branch (spec 005 Phase 5).
     case 'trans':
     case 'none':
     case 'caps_word':
@@ -27,7 +30,6 @@ function getKeyStrokes(binding: Binding): readonly KeyStroke[] {
     case 'out':
     case 'sys_reset':
     case 'bootloader':
-    case 'tap_dance':
     case 'mod_morph': {
       return [];
     }
@@ -61,6 +63,12 @@ function findBindingIssue(input: {
     return {
       code: 'binding-profile-out-of-range',
       message: `${keyLabel} uses Bluetooth profile ${binding.profile}; only profiles 0–${lastProfile} exist. Pick another profile in Bindings.`,
+    };
+  }
+  if (binding.kind === 'tap_dance' && (binding.tappingTermMs < 0 || binding.tappingTermMs > 5000)) {
+    return {
+      code: 'binding-tapping-term-out-of-range',
+      message: `${keyLabel} waits ${binding.tappingTermMs} ms to count taps; use a pause of 0–5000 ms. Change the pause in Bindings.`,
     };
   }
   return undefined;

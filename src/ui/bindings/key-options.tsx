@@ -8,12 +8,16 @@ import type { RadioOption } from '../components/radio-group';
 import { Switch } from '../components/switch';
 import { HoldSelect } from './hold-select';
 import { ModifierToggles } from './modifier-toggles';
+import { TapDanceSection } from './tap-dance-options';
+import type { TapDanceControls } from './tap-dance-options';
 
 type KeyOptionsProps = {
   readonly shared: SharedBinding;
   readonly pendingModifiers: readonly Modifier[];
   /** Every selected key is a key press or mod-tap, so chips and hold apply now (FR-011, FR-012). */
   readonly isKeyPress: boolean;
+  /** Tap-dance parameter controls, present when the selection shares one (spec 005 US2). */
+  readonly tapDance: TapDanceControls | undefined;
   readonly isAutoAdvanceEnabled: boolean;
   readonly onModifierToggle: (modifier: Modifier, isEnabled: boolean) => void;
   readonly onHoldChange: (holdKeycode: string | undefined) => void;
@@ -43,6 +47,15 @@ const DISABLED_MODE_OPTIONS: readonly RadioOption<PressMode>[] = [
 
 // Chips, "When held", press mode and automatic next key (spec 004 FR-011–FR-014a).
 export function KeyOptions(props: KeyOptionsProps) {
+  if (props.tapDance !== undefined) {
+    return (
+      <TapDanceSection
+        controls={props.tapDance}
+        isAutoAdvanceEnabled={props.isAutoAdvanceEnabled}
+        onAutoAdvanceChange={props.onAutoAdvanceChange}
+      />
+    );
+  }
   if (props.isKeyPress) {
     return <KeyPressOptions {...props} />;
   }

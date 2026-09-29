@@ -1,10 +1,6 @@
 import { mapLayerBindings } from './map-layer-bindings';
-import { MODIFIERS } from './types';
+import { normalizeModifiers } from './normalize-modifiers';
 import type { Binding, Modifier, Project } from './types';
-
-function normalizeModifiers(modifiers: readonly Modifier[]): readonly Modifier[] {
-  return MODIFIERS.filter((modifier) => modifiers.includes(modifier));
-}
 
 function withKeycode(
   binding: Binding | undefined,
