@@ -1,6 +1,6 @@
 import type { WirePoint } from '../../domain/types';
 import { BendHandles } from './bend-handles';
-import { toPathData } from './to-path-data';
+import { toPathData } from '../canvas/to-path-data';
 
 type WireShapeProps = {
   readonly wireId: string;

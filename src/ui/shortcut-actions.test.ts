@@ -9,8 +9,9 @@ const CONTEXT: ShortcutContext = {
   surfaceCenter: { xPx: 200, yPx: 100 },
 };
 
-function bindingsPan(panXPx: number) {
-  return { changes: { viewByWorkspace: { bindings: { panXPx } } } };
+// Schematic and Bindings share one view (spec 004 FR-001): the Bindings canvas moves it too.
+function sharedPan(panXPx: number) {
+  return { changes: { viewByWorkspace: { schematic: { panXPx } } } };
 }
 
 describe('getShortcutAction', () => {
@@ -32,13 +33,13 @@ describe('getShortcutAction', () => {
     });
   });
 
-  it('zooms only the focused canvas, around its center', () => {
+  it('zooms the shared canvas view around the focused canvas center', () => {
     expect(getShortcutAction('zoom-in', CONTEXT)).toMatchObject({
       kind: 'change-preferences',
       changes: {
         viewByWorkspace: {
-          schematic: DEFAULT_VIEWPORT,
-          bindings: { zoom: 1.25, panXPx: 200 - 200 * 1.25, panYPx: 100 - 100 * 1.25 },
+          schematic: { zoom: 1.25, panXPx: 200 - 200 * 1.25, panYPx: 100 - 100 * 1.25 },
+          bindings: DEFAULT_VIEWPORT,
         },
       },
     });
@@ -46,9 +47,9 @@ describe('getShortcutAction', () => {
 
   it('pans by the grid step, or by 1u with Shift', () => {
     expect(getShortcutAction('pan-right', CONTEXT)).toMatchObject(
-      bindingsPan(-48 * DEFAULT_PREFERENCES.gridSizeU),
+      sharedPan(-48 * DEFAULT_PREFERENCES.gridSizeU),
     );
-    expect(getShortcutAction('pan-right-1u', CONTEXT)).toMatchObject(bindingsPan(-48));
+    expect(getShortcutAction('pan-right-1u', CONTEXT)).toMatchObject(sharedPan(-48));
   });
 
   it('ignores canvas actions without a focused canvas', () => {

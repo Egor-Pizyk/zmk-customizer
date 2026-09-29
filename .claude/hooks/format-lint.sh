@@ -3,8 +3,10 @@
 # `make check` stays the gate: this hook is fast feedback only, never a substitute.
 # Exit 2 = lint errors, shown to Claude. Missing jq/binaries warn on stderr, exit 0.
 #
-# OpenCode parity: opencode agents have no hook runner here; they must run
-# `npm run check` before reporting done (see .opencode/agents/verify-before-done.md).
+# OpenCode parity: .opencode/plugins/format-lint.ts runs the same oxfmt+oxlint
+# pair via tool.execute.after. Keep the two in sync: format then lint one
+# .ts/.tsx file, warn-and-skip when binaries are not host-runnable, surface
+# lint errors to the agent (here: exit 2; there: thrown Error).
 
 warn() { printf 'format-lint hook: %s\n' "$1" >&2; }
 

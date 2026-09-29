@@ -3,10 +3,11 @@ import { setShieldName } from './set-shield-name';
 import type { Project } from './types';
 
 const PROJECT: Project = {
-  schemaVersion: 2,
+  schemaVersion: 3,
   keys: [],
   wires: [],
   insulatedCrossings: [],
+  layers: [{ id: 'l0', name: 'Base', bindings: {} }],
   name: 'Corne',
 };
 

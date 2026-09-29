@@ -21,6 +21,9 @@ The browser `localStorage` is the only persisted interface in this feature. Two 
   "isIssuesPanelOpen": false,
   "isPartsListOpen": true,
   "toolWindow": { "xPx": 28, "yPx": 28, "isCollapsed": false },
+  "isBindingsPanelOpen": true,
+  "isBindingsTableOpen": false,
+  "isAutoAdvanceEnabled": true,
   "viewByWorkspace": {
     "schematic": { "zoom": 1, "panXPx": 0, "panYPx": 0 },
     "bindings": { "zoom": 1, "panXPx": 0, "panYPx": 0 }
@@ -28,7 +31,7 @@ The browser `localStorage` is the only persisted interface in this feature. Two 
 }
 ```
 
-Field rules: `data-model.md`. `isPartsListOpen` (added by spec 003, optional, default `true`): whether the Schematic parts list is expanded; a stored value without it reads the default, so the version stays 1.
+Field rules: `data-model.md`. `isPartsListOpen` (added by spec 003, optional, default `true`): whether the Schematic parts list is expanded; a stored value without it reads the default, so the version stays 1. `isBindingsPanelOpen`, `isBindingsTableOpen` and `isAutoAdvanceEnabled` (added by spec 004, same rule): the docked key picker is expanded (default on), the Bindings Keys table is expanded (default off), and a pick moves the selection to the next key (default on).
 
 ## Read behavior
 

@@ -1,3 +1,9 @@
+---
+description: WCAG 2.2 AA baseline — landmarks, keyboard, ARIA, focus, feature checklist.
+globs:
+  - src/ui/**/*.tsx
+---
+
 # Accessibility
 
 Baseline: WCAG 2.2 AA (AGENTS §7.8, ADR 0008). A feature is not done until its checklist at the bottom passes. Primitives and copy: `admin-ui.md`. Focus-ring and state classes: `tailwind.md`.

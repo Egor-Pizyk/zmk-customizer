@@ -1,5 +1,11 @@
 import type { CanvasWorkspaceId, Preferences, Viewport, WorkspaceId } from '../storage/preferences';
-import { ZOOM_STEP, panViewportByU, resetViewport, zoomAt } from './canvas/viewport';
+import {
+  SHARED_VIEW_WORKSPACE_ID,
+  ZOOM_STEP,
+  panViewportByU,
+  resetViewport,
+  zoomAt,
+} from './canvas/viewport';
 import type { PanDelta, ScreenPoint } from './canvas/viewport';
 import type { ShortcutId } from './shortcuts';
 
@@ -82,7 +88,7 @@ export function getShortcutAction(
   if (viewChange === undefined || focusedCanvas === undefined) {
     return undefined;
   }
-  const viewport = viewChange(preferences.viewByWorkspace[focusedCanvas], context);
-  const viewByWorkspace = { ...preferences.viewByWorkspace, [focusedCanvas]: viewport };
+  const viewport = viewChange(preferences.viewByWorkspace[SHARED_VIEW_WORKSPACE_ID], context);
+  const viewByWorkspace = { ...preferences.viewByWorkspace, [SHARED_VIEW_WORKSPACE_ID]: viewport };
   return { kind: 'change-preferences', changes: { viewByWorkspace } };
 }

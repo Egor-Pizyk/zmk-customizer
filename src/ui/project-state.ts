@@ -1,3 +1,4 @@
+import { BINDINGS_CATALOG } from '../catalog/bindings-catalog';
 import type { Project } from '../domain/types';
 import { validateProject } from '../domain/validate-project';
 import type { ProjectFileError } from '../storage/parse-project-file';
@@ -74,8 +75,8 @@ function describeChange(input: {
   readonly after: Project;
   readonly announcementText: string | undefined;
 }): string | undefined {
-  const countBefore = validateProject(input.before).length;
-  const countAfter = validateProject(input.after).length;
+  const countBefore = validateProject(input.before, BINDINGS_CATALOG).length;
+  const countAfter = validateProject(input.after, BINDINGS_CATALOG).length;
   if (countBefore === countAfter) {
     return input.announcementText;
   }

@@ -19,6 +19,10 @@ const VALID_V1 = {
   isIssuesPanelOpen: true,
   isPartsListOpen: false,
   toolWindow: { xPx: 40, yPx: 80, isCollapsed: true },
+  isBindingsPanelOpen: false,
+  isBindingsTableOpen: true,
+  isAutoAdvanceEnabled: false,
+  actionPanelWidthPx: 400,
   viewByWorkspace: {
     schematic: { zoom: 2, panXPx: 10, panYPx: -5 },
     bindings: { zoom: 0.5, panXPx: 0, panYPx: 0 },
@@ -64,6 +68,20 @@ describe('parsePreferences', () => {
     ).toBe(false);
   });
 
+  it('opens the key picker, collapses the Keys table and auto-advances for older values (spec 004)', () => {
+    const result = parsePreferences('{"version":1,"theme":"dark"}');
+    expect(result.preferences.isBindingsPanelOpen).toBe(true);
+    expect(result.preferences.isBindingsTableOpen).toBe(false);
+    expect(result.preferences.isAutoAdvanceEnabled).toBe(true);
+    expect(result.preferences.actionPanelWidthPx).toBe(384);
+    expect(result.preferences.theme).toBe('dark');
+  });
+
+  it.each([100, 900])('defaults an action panel width outside 240..640 (%s)', (widthPx) => {
+    const result = parsePreferences(JSON.stringify({ version: 1, actionPanelWidthPx: widthPx }));
+    expect(result.preferences.actionPanelWidthPx).toBe(384);
+  });
+
   it('defaults a grid size outside 0.05..2', () => {
     const result = parsePreferences('{"version":1,"gridSizeU":3}');
     expect(result.preferences.gridSizeU).toBe(0.25);
@@ -91,6 +109,14 @@ describe('parsePreferences', () => {
     });
     const result = parsePreferences(raw);
     expect(result.preferences.viewByWorkspace.schematic).toEqual(DEFAULT_VIEWPORT);
+  });
+
+  it('keeps a saved schematic viewport when the stored value predates bindings', () => {
+    const schematic = { zoom: 2, panXPx: 10, panYPx: -5 };
+    const result = parsePreferences(JSON.stringify({ version: 1, viewByWorkspace: { schematic } }));
+    expect(result.status).toBe('ok');
+    expect(result.preferences.viewByWorkspace.schematic).toEqual(schematic);
+    expect(result.preferences.viewByWorkspace.bindings).toEqual(DEFAULT_VIEWPORT);
   });
 });
 

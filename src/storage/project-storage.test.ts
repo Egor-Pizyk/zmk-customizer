@@ -36,10 +36,11 @@ describe('loadProject', () => {
 
   it('returns the stored project', () => {
     const project = {
-      schemaVersion: 2,
+      schemaVersion: 3,
       keys: [],
       wires: [],
       insulatedCrossings: [],
+      layers: [{ id: 'l0', name: 'Base', bindings: {} }],
       name: 'Corne',
     } as const;
     vi.stubGlobal(

@@ -5,7 +5,14 @@ it('reads a valid project file', async () => {
   const file = new File(['{"schemaVersion":1,"name":"Corne"}'], 'corne.json');
   await expect(readImportFile(file)).resolves.toEqual({
     ok: true,
-    value: { schemaVersion: 2, name: 'Corne', keys: [], wires: [], insulatedCrossings: [] },
+    value: {
+      schemaVersion: 3,
+      name: 'Corne',
+      keys: [],
+      wires: [],
+      insulatedCrossings: [],
+      layers: [{ id: 'l0', name: 'Base', bindings: {} }],
+    },
   });
 });
 

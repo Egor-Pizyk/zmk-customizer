@@ -1,6 +1,11 @@
 import { getWirePath } from '../../domain/get-wire-path';
-import type { Project } from '../../domain/types';
-import type { BoardPinLabel } from './schematic-screen-layer';
+import type { Project, WirePoint } from '../../domain/types';
+
+export type BoardPinLabel = {
+  readonly id: string;
+  readonly at: WirePoint;
+  readonly boardPin: number;
+};
 
 export function getBoardPinLabels(project: Project): readonly BoardPinLabel[] {
   return project.wires.flatMap((wire) => {

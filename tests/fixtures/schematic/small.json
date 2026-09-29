@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "name": "Two keys",
   "keys": [
     {
@@ -80,6 +80,32 @@
         "w2"
       ],
       "ordinal": 0
+    }
+  ],
+  "layers": [
+    {
+      "id": "l0",
+      "name": "Base",
+      "bindings": {
+        "k1": {
+          "kind": "mt",
+          "hold": {
+            "keycode": "LSHIFT",
+            "modifiers": []
+          },
+          "tap": {
+            "keycode": "SPACE",
+            "modifiers": [
+              "LC"
+            ]
+          }
+        },
+        "k2": {
+          "kind": "bt",
+          "command": "BT_SEL",
+          "profile": 1
+        }
+      }
     }
   ]
 }

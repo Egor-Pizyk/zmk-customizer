@@ -5,7 +5,7 @@ import { PinsLayer } from './pins-layer';
 import type { SchematicLayerProps } from './schematic-layer-props';
 import { WireEndsLayer } from './wire-ends-layer';
 import { WiresLayer } from './wires-layer';
-import { MarqueeLayer } from './marquee-layer';
+import { MarqueeLayer } from '../canvas/marquee-layer';
 
 type SchematicContentProps = SchematicLayerProps & {
   readonly hoverPreview: HoverPreview;

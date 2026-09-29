@@ -180,7 +180,7 @@ Features are built through GitHub Spec Kit. Do not write feature code without a 
 6. `/speckit-analyze` — consistency check spec ↔ plan ↔ tasks.
 7. `/speckit-implement` — execute tasks.
 
-Feature order and scope: `docs/roadmap.md`. One feature = one branch `NNN-short-name` = one `specs/NNN-short-name/` directory.
+Feature order and scope: `docs/roadmap.md`. One feature = one branch `NNN-short-name` = one `specs/NNN-short-name/` directory. Numbers are immutable: once a `specs/NNN-*` directory exists, its number is never reused or reassigned.
 
 ---
 
@@ -222,7 +222,9 @@ docs/
   decisions/           ADRs (index in docs/decisions/README.md)
 specs/                 Spec Kit feature specs (created by /speckit-specify)
 .specify/              Spec Kit templates, scripts, constitution
-.claude/               Claude Code settings, hooks/, agents/ (zmk-reviewer, domain-test-writer, spec-reviewer)
+.claude/               Claude Code settings, hooks/format-lint.sh (PostToolUse on Edit|Write), agents/ (zmk-reviewer, domain-test-writer, spec-reviewer)
+.opencode/              OpenCode agents/ and skills/ (mirrors .claude/agents/; bodies must stay identical, checked by scripts/check-agents-sync.sh), plugins/format-lint.ts (parity with the Claude hook via tool.execute.after)
+opencode.json           OpenCode config: instructions + permissions (skills are auto-discovered from .opencode/skills/ and .claude/skills/, no paths needed)
 src/                   application code (§3.1)
 tests/fixtures/        upstream ZMK shields + expected generator output
 Dockerfile, compose.yaml, Makefile, nginx.conf
@@ -232,14 +234,21 @@ package.json, tsconfig.json, vite.config.ts, index.html, .oxlintrc.json, .oxfmtr
 
 ---
 
-## 10. Imported guidelines
+## 10. Coding rules (lazy-loaded)
 
-@docs/guidelines/code-quality/typescript.md
-@docs/guidelines/code-quality/observability.md
-@docs/guidelines/code-quality/control-flow.md
-@docs/guidelines/code-quality/naming/functions.md
-@docs/guidelines/code-quality/naming/variables.md
-@docs/guidelines/frontend/react.md
-@docs/guidelines/frontend/tailwind.md
-@docs/guidelines/frontend/admin-ui.md
-@docs/guidelines/frontend/accessibility.md
+`AGENTS.md` states what to build; the files below state how to write it. Each file has
+`description` + `globs` frontmatter. Load the ones whose globs match the files you touch —
+do not load all nine up front. OpenCode loads them via `opencode.json` → `instructions`;
+Claude Code resolves the `@` references below on demand.
+
+| Rule file | Load when touching |
+|---|---|
+| @docs/guidelines/code-quality/typescript.md | any `src/**/*.ts(x)` — types, casts, modules, exhaustiveness |
+| @docs/guidelines/code-quality/observability.md | error paths, validation, logging in `src/` |
+| @docs/guidelines/code-quality/control-flow.md | function shape in `src/` |
+| @docs/guidelines/code-quality/naming/functions.md | naming a function, component or handler |
+| @docs/guidelines/code-quality/naming/variables.md | naming anything (code, tests, UI copy, docs) |
+| @docs/guidelines/frontend/react.md | `src/ui/**` structure, state, effects, inputs |
+| @docs/guidelines/frontend/tailwind.md | classes, tokens, `src/styles.css` |
+| @docs/guidelines/frontend/admin-ui.md | screens, primitives, validation display |
+| @docs/guidelines/frontend/accessibility.md | keyboard, ARIA, focus, feature checklist |

@@ -1,3 +1,12 @@
+---
+description: Domain glossary, casing and file naming — one term per concept across code, tests, UI copy and docs.
+globs:
+  - src/**/*
+  - tests/**/*
+  - docs/**/*
+  - specs/**/*
+---
+
 # Naming: variables, types, files
 
 Names are nouns from the glossary below; one term per concept across code, tests, UI copy and docs. Function names: `functions.md`.
@@ -32,6 +41,11 @@ Names are nouns from the glossary below; one term per concept across code, tests
 | `kconfigOption` | A `CONFIG_*` build setting | `setting`, `flag`, `option` (alone) |
 | `issue` (`ValidationIssue`) | One validation problem | `error`, `problem`, `warning` |
 | `file` (`GeneratedFile`) | Generator output `{ path, content }` | `output`, `artifact` |
+| `keycap` | A key drawn in the Bindings workspace (spec 004) | `cap`, `button` |
+| `legend` | Text printed on a keycap: tap part, optional hold part | `label` (for this meaning) |
+| `modifier` (`Modifier`) | ZMK modifier function `LC`…`RG` added to a keystroke | `mod`, `meta` |
+| `keyStroke` (`KeyStroke`) | A keycode plus modifiers, one binding parameter | `chord`, `combo` |
+| action (UI copy only) | What the UI calls a binding; code says `binding` | `action` in code |
 
 UI copy may say "keyboard" and "controller" for readability; code and types use the table.
 

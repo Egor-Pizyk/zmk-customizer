@@ -65,3 +65,10 @@ it('drops insulation of crossings that disappear with the key', () => {
   });
   expect(removeKey(before, { keyId: 'k2' }).insulatedCrossings).toEqual([]);
 });
+
+it('drops the removed key binding and keeps every other key binding (spec 004 FR-020)', () => {
+  const space = { kind: 'kp', key: { keycode: 'SPACE', modifiers: [] } } as const;
+  const bindings = { k1: space, k2: { kind: 'none' }, k3: { kind: 'trans' } } as const;
+  const project = removeKey(buildProject({ keys: KEYS, bindings }), { keyId: 'k2' });
+  expect(project.layers[0]?.bindings).toEqual({ k1: space, k3: { kind: 'trans' } });
+});

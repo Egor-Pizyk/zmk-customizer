@@ -3,6 +3,7 @@ import { isKeyPositionFree } from '../../domain/is-key-position-free';
 import { moveKey } from '../../domain/move-key';
 import { setWireBends } from '../../domain/set-wire-bends';
 import type { Wire, WireEnd, WirePoint } from '../../domain/types';
+import { isKeyCellInMarquee, isPointInMarquee } from '../canvas/marquee-select';
 import type { PointerState } from './pointer-types';
 import type { CanvasHit } from './read-canvas-hit';
 import { snapPoint } from './snap-point';
@@ -29,11 +30,7 @@ function isKeyInMarquee(
   key: { xU: number; yU: number },
   marquee: { start: WirePoint; end: WirePoint },
 ): boolean {
-  const minX = Math.min(marquee.start.xU, marquee.end.xU);
-  const maxX = Math.max(marquee.start.xU, marquee.end.xU);
-  const minY = Math.min(marquee.start.yU, marquee.end.yU);
-  const maxY = Math.max(marquee.start.yU, marquee.end.yU);
-  return key.xU >= minX && key.xU <= maxX && key.yU >= minY && key.yU <= maxY;
+  return isKeyCellInMarquee(key, marquee);
 }
 
 function isWireInMarquee(
@@ -61,10 +58,14 @@ function isWireInMarquee(
     points.push(end.at);
   }
   points.push(...wire.bends);
-  return points.some((point) => isKeyInMarquee(point, marquee));
+  return points.some((point) => isPointInMarquee(point, marquee));
 }
 
-function startMultiKeyDrag(state: PointerState, world: WirePoint, event: PointerEvent<SVGSVGElement>) {
+function startMultiKeyDrag(
+  state: PointerState,
+  world: WirePoint,
+  event: PointerEvent<SVGSVGElement>,
+) {
   if (state.selection?.kind !== 'multi') {
     return;
   }
@@ -178,9 +179,7 @@ function endMarqueeDrag(state: PointerState, project: PointerState['project']) {
     state.onSelectionChange();
     return;
   }
-  const keyIds = project.keys
-    .filter((key) => isKeyInMarquee(key, drag))
-    .map((key) => key.id);
+  const keyIds = project.keys.filter((key) => isKeyInMarquee(key, drag)).map((key) => key.id);
   const wireIds = project.wires
     .filter((wire) => isWireInMarquee(wire, drag, project))
     .map((wire) => wire.id);

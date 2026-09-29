@@ -5,7 +5,11 @@ export type SchematicSelection =
   | { readonly kind: 'key'; readonly keyId: string }
   | { readonly kind: 'wire'; readonly wireId: string }
   | { readonly kind: 'wire-end'; readonly wireId: string; readonly side: WireEndSide }
-  | { readonly kind: 'multi'; readonly keyIds: readonly string[]; readonly wireIds: readonly string[] }
+  | {
+      readonly kind: 'multi';
+      readonly keyIds: readonly string[];
+      readonly wireIds: readonly string[];
+    }
   | undefined;
 
 /** Omit the argument to clear the selection. */

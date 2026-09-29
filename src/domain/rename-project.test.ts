@@ -3,20 +3,22 @@ import type { Project } from './types';
 import { renameProject } from './rename-project';
 
 const PROJECT: Project = {
-  schemaVersion: 2,
+  schemaVersion: 3,
   keys: [],
   wires: [],
   insulatedCrossings: [],
+  layers: [{ id: 'l0', name: 'Base', bindings: {} }],
   name: 'Old',
   shieldName: 'corne',
 };
 
 it('sets the name exactly as typed and keeps the override', () => {
   expect(renameProject(PROJECT, { name: '  New  ' })).toEqual({
-    schemaVersion: 2,
+    schemaVersion: 3,
     keys: [],
     wires: [],
     insulatedCrossings: [],
+    layers: [{ id: 'l0', name: 'Base', bindings: {} }],
     name: '  New  ',
     shieldName: 'corne',
   });

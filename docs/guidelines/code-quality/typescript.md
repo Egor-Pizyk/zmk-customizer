@@ -1,3 +1,10 @@
+---
+description: TypeScript data modeling for src — discriminated unions on kind, readonly data, no casts, named exports, exhaustiveness.
+globs:
+  - src/**/*.ts
+  - src/**/*.tsx
+---
+
 # TypeScript
 
 How types are designed in this codebase. Naming lives in `naming/`; error surfacing in `observability.md`.

@@ -14,7 +14,7 @@ export function SchematicWorkspace() {
   }
 
   const selectedKeyId = selection?.kind === 'key' ? selection.keyId : undefined;
-  const marquee = pointer.drag?.kind === 'marquee' ? { start: pointer.drag.start, end: pointer.drag.end } : undefined;
+  const marquee = toMarquee(pointer.drag);
   return (
     <>
       <SchematicCanvas
@@ -44,4 +44,8 @@ export function SchematicWorkspace() {
       />
     </>
   );
+}
+
+function toMarquee(drag: ReturnType<typeof useSchematicWorkspace>['pointer']['drag']) {
+  return drag?.kind === 'marquee' ? { start: drag.start, end: drag.end } : undefined;
 }

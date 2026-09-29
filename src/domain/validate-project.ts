@@ -1,4 +1,6 @@
 import { toShieldName } from './to-shield-name';
+import { validateBindings } from './validate-bindings';
+import type { BindingsCatalog } from './validate-bindings';
 import { validateSchematic } from './validate-schematic';
 import type { Project, ValidationIssue } from './types';
 
@@ -46,10 +48,14 @@ function validateKeyboardName(project: Project): readonly ValidationIssue[] {
   ];
 }
 
-export function validateProject(project: Project): readonly ValidationIssue[] {
+export function validateProject(
+  project: Project,
+  catalog: BindingsCatalog,
+): readonly ValidationIssue[] {
   return [
     ...validateShieldName(project),
     ...validateKeyboardName(project),
     ...validateSchematic(project),
+    ...validateBindings(project, catalog),
   ];
 }

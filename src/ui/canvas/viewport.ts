@@ -1,4 +1,4 @@
-import type { Viewport } from '../../storage/preferences';
+import type { CanvasWorkspaceId, Viewport } from '../../storage/preferences';
 
 /** Screen px per key unit at zoom 1. */
 export const PX_PER_U = 48;
@@ -68,3 +68,7 @@ export function panViewportByU(viewport: Viewport, delta: PanDelta): Viewport {
     panYPx: viewport.panYPx - delta.dyU * pxPerU,
   };
 }
+
+// Bindings mirrors the Schematic layout (spec 004 FR-001), so both canvases pan and zoom one
+// stored view; the `bindings` entry in preferences stays for stored-value compatibility.
+export const SHARED_VIEW_WORKSPACE_ID = 'schematic' satisfies CanvasWorkspaceId;

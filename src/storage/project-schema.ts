@@ -1,13 +1,14 @@
 import * as z from 'zod';
 import { BOARD_PIN_COUNT } from '../domain/board-pin';
+import { MODIFIERS } from '../domain/types';
 import type { Project, Wire, WireEnd, WireEndSide } from '../domain/types';
 
-const pointSchema = z.object({ xU: z.number(), yU: z.number() });
+const pointSchema = z.strictObject({ xU: z.number(), yU: z.number() });
 
 const wireEndSchema = z.discriminatedUnion('kind', [
-  z.object({ kind: z.literal('key-pin'), keyId: z.string(), pin: z.literal([1, 2]) }),
-  z.object({ kind: z.literal('junction'), wireId: z.string(), at: pointSchema }),
-  z.object({
+  z.strictObject({ kind: z.literal('key-pin'), keyId: z.string(), pin: z.literal([1, 2]) }),
+  z.strictObject({ kind: z.literal('junction'), wireId: z.string(), at: pointSchema }),
+  z.strictObject({
     kind: z.literal('free'),
     at: pointSchema,
     boardPin: z
@@ -18,11 +19,65 @@ const wireEndSchema = z.discriminatedUnion('kind', [
   }),
 ]);
 
-const wireSchema = z.object({
+const wireSchema = z.strictObject({
   id: z.string().regex(/^w\d+$/u),
   start: wireEndSchema,
   end: wireEndSchema,
   bends: z.array(pointSchema),
+});
+
+const modifierSchema = z.enum(MODIFIERS);
+
+// Unique and in MODIFIERS order, so equal bindings are deep-equal (spec 004 contracts/project-schema.md).
+const keyStrokeSchema = z.strictObject({
+  keycode: z.string().min(1),
+  modifiers: z
+    .array(modifierSchema)
+    .refine(
+      (modifiers) =>
+        modifiers.every(
+          (modifier, index) =>
+            index === 0 ||
+            MODIFIERS.indexOf(modifier) > MODIFIERS.indexOf(modifiers[index - 1] ?? modifier),
+        ),
+      { message: 'Expected unique modifiers in the order LC LS LA LG RC RS RA RG' },
+    ),
+});
+
+// Unknown keycodes and profiles beyond the profile count are validation issues, not schema
+// errors, so such a file still opens (spec 004 research R7).
+// z.union, not discriminatedUnion: `bt` has two shapes under one kind. A failing binding is
+// reported at its own path (layers.L.bindings.keyId).
+const bindingSchema = z.union([
+  z.strictObject({ kind: z.literal(['kp', 'sk', 'kt']), key: keyStrokeSchema }),
+  z.strictObject({ kind: z.literal('mt'), hold: keyStrokeSchema, tap: keyStrokeSchema }),
+  z.strictObject({
+    kind: z.literal([
+      'trans',
+      'none',
+      'caps_word',
+      'key_repeat',
+      'gresc',
+      'sys_reset',
+      'bootloader',
+    ]),
+  }),
+  z.strictObject({
+    kind: z.literal('bt'),
+    command: z.enum(['BT_CLR', 'BT_CLR_ALL', 'BT_NXT', 'BT_PRV']),
+  }),
+  z.strictObject({
+    kind: z.literal('bt'),
+    command: z.enum(['BT_SEL', 'BT_DISC']),
+    profile: z.int().min(0),
+  }),
+  z.strictObject({ kind: z.literal('out'), command: z.enum(['OUT_TOG', 'OUT_USB', 'OUT_BLE']) }),
+]);
+
+const layerSchema = z.strictObject({
+  id: z.string().regex(/^l\d+$/u),
+  name: z.string(),
+  bindings: z.record(z.string(), bindingSchema),
 });
 
 type Issue = { readonly message: string; readonly path: readonly (string | number)[] };
@@ -86,6 +141,18 @@ function findWireIssues(project: Project): Issue[] {
   return issues;
 }
 
+function findLayerIssues(project: Project): Issue[] {
+  const keyIds = new Set(project.keys.map((key) => key.id));
+  return project.layers.flatMap((layer, index) =>
+    Object.keys(layer.bindings)
+      .filter((keyId) => !keyIds.has(keyId))
+      .map((keyId) => ({
+        message: `No key with id ${keyId}`,
+        path: ['layers', index, 'bindings', keyId],
+      })),
+  );
+}
+
 function findCrossingIssues(project: Project): Issue[] {
   const wireIds = new Set(project.wires.map((wire) => wire.id));
   return project.insulatedCrossings.flatMap((crossing, index) => {
@@ -103,16 +170,21 @@ function findCrossingIssues(project: Project): Issue[] {
 
 // Describes only the current schemaVersion; older files are migrated before parsing (research R8).
 // References must resolve so domain operations never meet a dangling id (003 R15).
+// The top level strips unknown keys (forward compat, tested in parse-project-file.test.ts);
+// every nested node is strict so a malformed binding, wire or key is rejected at its own path.
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(2),
+    schemaVersion: z.literal(3),
     name: z.string(),
     shieldName: z.string().exactOptional(),
-    keys: z.array(z.object({ id: z.string().regex(/^k\d+$/u), xU: z.number(), yU: z.number() })),
+    keys: z.array(
+      z.strictObject({ id: z.string().regex(/^k\d+$/u), xU: z.number(), yU: z.number() }),
+    ),
     wires: z.array(wireSchema),
     insulatedCrossings: z.array(
-      z.object({ wireIds: z.tuple([z.string(), z.string()]), ordinal: z.int().min(0) }),
+      z.strictObject({ wireIds: z.tuple([z.string(), z.string()]), ordinal: z.int().min(0) }),
     ),
+    layers: z.array(layerSchema).min(1),
   })
   .superRefine((project, context) => {
     const issues = [
@@ -120,6 +192,8 @@ export const projectSchema = z
       ...findDuplicateIds(project.wires, 'wires'),
       ...findWireIssues(project),
       ...findCrossingIssues(project),
+      ...findDuplicateIds(project.layers, 'layers'),
+      ...findLayerIssues(project),
     ];
     for (const issue of issues) {
       context.addIssue({ code: 'custom', message: issue.message, path: [...issue.path] });

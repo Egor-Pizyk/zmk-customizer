@@ -26,6 +26,12 @@ export function removeKey(project: Project, input: { readonly keyId: string }): 
     ...project,
     keys: project.keys.filter((candidate) => candidate.id !== input.keyId),
     wires,
+    layers: project.layers.map((layer) => ({
+      ...layer,
+      bindings: Object.fromEntries(
+        Object.entries(layer.bindings).filter(([keyId]) => keyId !== input.keyId),
+      ),
+    })),
   };
   return pruneInsulatedCrossings(removeOrphanWires(withoutKey, { removedWireIds: orphanIds }));
 }

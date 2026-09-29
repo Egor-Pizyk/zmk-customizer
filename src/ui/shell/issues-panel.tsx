@@ -33,7 +33,7 @@ export function IssuesPanel() {
       {issues.length === 0 ? (
         <p className="px-3 pb-3 text-text-muted">No problems</p>
       ) : (
-        <ul className="overflow-auto px-3 pb-3">
+        <ul className="overflow-auto overscroll-contain px-3 pb-3">
           {issues.map((issue) => (
             <li key={`${issue.workspaceId}:${issue.code}:${issue.path.join('.')}`}>
               <IssueButton issue={issue} />
@@ -63,7 +63,12 @@ function IssueButton({ issue }: IssueButtonProps) {
       target.focus();
       return;
     }
-    changePreferences({ activeWorkspaceId: issue.workspaceId, isPartsListOpen: true });
+    // The Schematic target lives in the parts list; Bindings keycaps are always rendered.
+    changePreferences(
+      issue.workspaceId === 'schematic'
+        ? { activeWorkspaceId: issue.workspaceId, isPartsListOpen: true }
+        : { activeWorkspaceId: issue.workspaceId },
+    );
     requestAnimationFrame(() => {
       document.querySelector<HTMLElement>(selector)?.focus();
     });

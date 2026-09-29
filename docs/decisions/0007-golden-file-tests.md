@@ -13,4 +13,4 @@ Every generator has golden-file tests: a project equivalent to an upstream shiel
 - Generators must be deterministic (stable ordering, `\n`, trailing newline).
 - Updating the pinned ZMK version means updating fixtures and catalog in one change.
 - Upstream files contain parts we do not generate; how expected files relate to verbatim upstream files is settled in feature 003 (`docs/roadmap.md`).
-- Golden tests prove equivalence with upstream, not that the build passes; a real build check is roadmap feature 017.
+- Golden tests prove equivalence with upstream, not that the build passes; a real build check is roadmap feature 020 (017 before the 2026-09-28 renumbering).

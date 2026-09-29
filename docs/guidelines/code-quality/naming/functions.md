@@ -1,3 +1,10 @@
+---
+description: Function, component and handler naming — get/find/is/validate/commit/render/format/map verb prefixes.
+globs:
+  - src/**/*.ts
+  - src/**/*.tsx
+---
+
 # Naming: functions
 
 Functions start with a verb that tells the reader what kind of function it is. Domain vocabulary and casing: `variables.md`.

@@ -143,6 +143,9 @@ export const SHORTCUTS = [
   },
   { scope: 'key', id: 'focus-first-key', keys: ['Home'], label: 'First key (key 0)' },
   { scope: 'key', id: 'focus-last-key', keys: ['End'], label: 'Last key' },
+  // Bindings (spec 004 FR-018); handled by bindings/use-bindings-shortcuts.ts.
+  { scope: 'bindings', id: 'copy-binding', code: 'KeyC', keyLabel: 'C', label: 'Copy action' },
+  { scope: 'bindings', id: 'paste-binding', code: 'KeyV', keyLabel: 'V', label: 'Paste action' },
   // Cmd on macOS, Ctrl elsewhere; matched by `code` so non-Latin layouts work (002 research R12).
   { scope: 'project', id: 'undo', code: 'KeyZ', keyLabel: 'Z', shift: false, label: 'Undo' },
   { scope: 'project', id: 'redo', code: 'KeyZ', keyLabel: 'Z', shift: true, label: 'Redo' },

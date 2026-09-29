@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import fixtureV1 from '../../tests/fixtures/project/v1.json?raw';
+import fixtureV2 from '../../tests/fixtures/project/v2.json?raw';
 import fixtureSmall from '../../tests/fixtures/schematic/small.json?raw';
+import { createProject } from '../domain/create-project';
+import type { Binding, Project } from '../domain/types';
 import { parseProjectFile } from './parse-project-file';
+import { serializeProject } from './serialize-project';
 
 function issuePathsOf(raw: string): readonly string[] {
   const result = parseProjectFile(raw);
@@ -38,25 +42,33 @@ describe('parseProjectFile', () => {
   it('drops unknown keys', () => {
     expect(parseProjectFile('{"schemaVersion":1,"name":"x","extra":true}')).toEqual({
       ok: true,
-      value: { schemaVersion: 2, name: 'x', keys: [], wires: [], insulatedCrossings: [] },
+      value: {
+        schemaVersion: 3,
+        name: 'x',
+        keys: [],
+        wires: [],
+        insulatedCrossings: [],
+        layers: [{ id: 'l0', name: 'Base', bindings: {} }],
+      },
     });
   });
 
-  it('loads the v1 fixture as v2 with an empty schematic', () => {
+  it('loads the v1 fixture as v3 with an empty schematic', () => {
     expect(parseProjectFile(fixtureV1)).toEqual({
       ok: true,
       value: {
-        schemaVersion: 2,
+        schemaVersion: 3,
         name: 'My Corne v2!',
         shieldName: 'corne',
         keys: [],
         wires: [],
         insulatedCrossings: [],
+        layers: [{ id: 'l0', name: 'Base', bindings: {} }],
       },
     });
   });
 
-  it('round-trips the v2 schematic fixture', () => {
+  it('round-trips the v3 schematic fixture', () => {
     const expected: unknown = JSON.parse(fixtureSmall);
     expect(parseProjectFile(fixtureSmall)).toEqual({ ok: true, value: expected });
   });
@@ -65,5 +77,45 @@ describe('parseProjectFile', () => {
     expect(parseProjectFile(JSON.stringify({ schemaVersion: 1, name: 'x'.repeat(500) })).ok).toBe(
       true,
     );
+  });
+});
+
+describe('bindings round trip (spec 004 FR-023, FR-024, SC-003)', () => {
+  const STROKE = { keycode: 'A', modifiers: ['LC', 'RS'] } as const;
+  const BINDINGS: readonly Binding[] = [
+    { kind: 'kp', key: STROKE },
+    { kind: 'mt', hold: { keycode: 'LSHIFT', modifiers: [] }, tap: STROKE },
+    { kind: 'sk', key: STROKE },
+    { kind: 'kt', key: STROKE },
+    { kind: 'trans' },
+    { kind: 'none' },
+    { kind: 'caps_word' },
+    { kind: 'key_repeat' },
+    { kind: 'gresc' },
+    { kind: 'bt', command: 'BT_CLR_ALL' },
+    { kind: 'bt', command: 'BT_SEL', profile: 4 },
+    { kind: 'out', command: 'OUT_TOG' },
+    { kind: 'sys_reset' },
+    { kind: 'bootloader' },
+  ];
+
+  it('keeps every binding kind through save and open', () => {
+    const keys = BINDINGS.map((_, index) => ({ id: `k${index + 1}`, xU: index, yU: 0 }));
+    const bindings = Object.fromEntries(
+      BINDINGS.map((binding, index) => [`k${index + 1}`, binding]),
+    );
+    const project: Project = {
+      ...createProject(),
+      keys,
+      layers: [{ id: 'l0', name: 'Base', bindings }],
+    };
+    expect(parseProjectFile(serializeProject(project))).toEqual({ ok: true, value: project });
+  });
+
+  it('opens a v2 file with every key unassigned', () => {
+    expect(parseProjectFile(fixtureV2)).toMatchObject({
+      ok: true,
+      value: { layers: [{ id: 'l0', name: 'Base', bindings: {} }] },
+    });
   });
 });
