@@ -9,7 +9,11 @@ import type { ProjectState, ProjectStateChange } from './project-state';
 function saveToFile(state: ProjectState): ProjectState {
   const project = state.history.present;
   const fileName = `${getShieldName(project) || 'keyboard'}.json`;
-  const downloaded = downloadTextFile({ fileName, text: serializeProject(project) });
+  const serialized = serializeProject(project);
+  if (!serialized.ok) {
+    return withAnnouncement(state, `Could not save the file: ${serialized.error}.`);
+  }
+  const downloaded = downloadTextFile({ fileName, text: serialized.value });
   return downloaded.ok ? state : withAnnouncement(state, 'Could not save the file.');
 }
 

@@ -1,6 +1,6 @@
 ---
 description: TypeScript data modeling for src — discriminated unions on kind, readonly data, no casts, named exports, exhaustiveness.
-globs:
+paths:
   - src/**/*.ts
   - src/**/*.tsx
 ---

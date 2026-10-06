@@ -113,6 +113,8 @@ export type ValidationCode =
   | 'board-pin-conflict'
   | 'board-pins-shorted'
   | 'key-shorted'
+  | 'keys-in-parallel'
+  | 'net-without-board-pin'
   | 'binding-keycode-unknown'
   | 'binding-profile-out-of-range'
   | 'binding-tapping-term-out-of-range'

@@ -9,6 +9,8 @@ type BindingsPointerOptions = {
   readonly project: Project;
   readonly selectedKeyIds: readonly string[];
   readonly onSelectionChange: (keyIds: readonly string[]) => void;
+  /** A press on a keycap's behavior tag: open its behavior slot (spec 006 FR-013). */
+  readonly onTagPress: () => void;
 };
 
 // A drag shorter than this is a click on empty space, which clears the selection.
@@ -18,6 +20,10 @@ function findKeycapId(event: PointerEvent<SVGSVGElement>): string | undefined {
   return event.target instanceof Element
     ? (event.target.closest<SVGGElement>('[data-keycap-id]')?.dataset['keycapId'] ?? undefined)
     : undefined;
+}
+
+function isTagPress(event: PointerEvent<SVGSVGElement>): boolean {
+  return event.target instanceof Element && event.target.closest('[data-keycap-tag]') !== null;
 }
 
 function toggleKeyId(keyIds: readonly string[], keyId: string): readonly string[] {
@@ -31,11 +37,31 @@ function isClick(marquee: Marquee): boolean {
   );
 }
 
+// Ctrl/Cmd toggles the key in the selection; a plain press selects it, and on its behavior tag
+// also opens the behavior slot.
+function pressKeycap(
+  input: Pick<BindingsPointerOptions, 'selectedKeyIds' | 'onSelectionChange' | 'onTagPress'> & {
+    readonly keyId: string;
+    readonly event: PointerEvent<SVGSVGElement>;
+  },
+) {
+  const { keyId, event } = input;
+  if (event.ctrlKey || event.metaKey) {
+    input.onSelectionChange(toggleKeyId(input.selectedKeyIds, keyId));
+    return;
+  }
+  input.onSelectionChange([keyId]);
+  if (isTagPress(event)) {
+    input.onTagPress();
+  }
+}
+
 // Selection only: nothing on the Bindings canvas moves or commits (spec 004 FR-002, FR-005).
 export function useBindingsPointer({
   project,
   selectedKeyIds,
   onSelectionChange,
+  onTagPress,
 }: BindingsPointerOptions) {
   const [marquee, setMarquee] = useState<Marquee | undefined>();
 
@@ -45,8 +71,7 @@ export function useBindingsPointer({
       setMarquee({ start: world, end: world });
       return;
     }
-    const isToggle = event.ctrlKey || event.metaKey;
-    onSelectionChange(isToggle ? toggleKeyId(selectedKeyIds, keyId) : [keyId]);
+    pressKeycap({ keyId, event, selectedKeyIds, onSelectionChange, onTagPress });
   }
 
   function handlePointerMove(world: WorldPoint) {

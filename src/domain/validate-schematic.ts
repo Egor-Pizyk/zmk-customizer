@@ -124,6 +124,70 @@ function validateShortedKeys(project: Project, nets: readonly Net[]): Validation
   });
 }
 
+function findNetIndex(nets: readonly Net[], keyId: string, pin: KeyPin): number {
+  return nets.findIndex((net) =>
+    net.pins.some((entry) => entry.keyId === keyId && entry.pin === pin),
+  );
+}
+
+function validateParallelKeys(project: Project, nets: readonly Net[]): ValidationIssue[] {
+  const pairByKeyId = new Map<string, string>();
+  for (const key of project.keys) {
+    const first = findNetIndex(nets, key.id, 1);
+    const second = findNetIndex(nets, key.id, 2);
+    if (first === -1 || second === -1 || first === second) {
+      continue;
+    }
+    const pair = first < second ? `${first}:${second}` : `${second}:${first}`;
+    pairByKeyId.set(key.id, pair);
+  }
+  const keyCountByPair = new Map<string, number>();
+  for (const pair of pairByKeyId.values()) {
+    keyCountByPair.set(pair, (keyCountByPair.get(pair) ?? 0) + 1);
+  }
+  return project.keys.flatMap((key, keyIndex) => {
+    const pair = pairByKeyId.get(key.id);
+    if (pair === undefined || (keyCountByPair.get(pair) ?? 0) < 2) {
+      return [];
+    }
+    const otherIndex = project.keys.findIndex(
+      (other, index) => index !== keyIndex && pairByKeyId.get(other.id) === pair,
+    );
+    return [
+      {
+        code: 'keys-in-parallel',
+        message: `Key ${keyIndex} is in parallel with key ${otherIndex}: both share the same two connections, so the matrix cannot tell them apart. Rewire one of them.`,
+        path: ['keys', keyIndex],
+      },
+    ];
+  });
+}
+
+function validateNetsWithoutBoardPin(project: Project, nets: readonly Net[]): ValidationIssue[] {
+  return nets.flatMap((net) => {
+    if (net.pins.length === 0 || net.boardPins.length > 0 || net.wireIds.length === 0) {
+      return [];
+    }
+    const firstPin = net.pins.toSorted((left, right) => {
+      if (left.keyId !== right.keyId) {
+        return left.keyId < right.keyId ? -1 : 1;
+      }
+      return left.pin - right.pin;
+    })[0];
+    if (firstPin === undefined) {
+      return [];
+    }
+    const keyIndex = project.keys.findIndex((key) => key.id === firstPin.keyId);
+    return [
+      {
+        code: 'net-without-board-pin',
+        message: `Key ${keyIndex}, pin ${firstPin.pin} is on a connection with no board pin. Connect a free end to a board pin.`,
+        path: ['keys', keyIndex, 'pins', firstPin.pin],
+      },
+    ];
+  });
+}
+
 // Issue order: by code as in contracts/validation-issues.md, then by path (deterministic).
 export function validateSchematic(project: Project): readonly ValidationIssue[] {
   const nets = getNets(project);
@@ -135,5 +199,7 @@ export function validateSchematic(project: Project): readonly ValidationIssue[] 
     ...validateBoardPinConflicts(located),
     ...validateShortedBoardPins(located),
     ...validateShortedKeys(project, nets),
+    ...validateParallelKeys(project, nets),
+    ...validateNetsWithoutBoardPin(project, nets),
   ];
 }

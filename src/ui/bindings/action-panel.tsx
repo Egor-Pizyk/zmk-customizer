@@ -7,11 +7,8 @@ import {
   actionPanelWidthForKey,
   clampActionPanelWidth,
 } from './action-panel-width';
-import { BehaviorSection } from './behavior-section';
-import { KeyOptions } from './key-options';
-import { KeyPicker } from './key-picker';
+import { ActionPanelBody } from './action-panel-body';
 import { PanelHeader } from './panel-header';
-import { PickerPreview } from './picker-preview';
 import type { KeyPickerState } from './use-key-picker';
 
 type ActionPanelProps = {
@@ -19,7 +16,6 @@ type ActionPanelProps = {
   readonly handlers: PickHandlers;
   readonly selectionName: string;
   readonly selectedCount: number;
-  readonly isKeyPress: boolean;
   readonly canPaste: boolean;
   readonly onCopy: () => void;
   readonly onPaste: () => void;
@@ -35,6 +31,7 @@ const COLLAPSED_PANEL_CLASSES =
 // (spec 004 FR-008, R14).
 export function ActionPanel(props: ActionPanelProps) {
   const { preferences, changePreferences } = usePreferences();
+  usePanelEscape(props.onEscapeToCanvas);
   const { isBindingsPanelOpen: isOpen, actionPanelWidthPx: storedWidthPx } = preferences;
   const headingId = useId();
   const bodyId = useId();
@@ -72,6 +69,23 @@ export function ActionPanel(props: ActionPanelProps) {
       </div>
     </aside>
   );
+}
+
+// Escape anywhere in the panel (list, chips, hold, mode) returns focus to the active keycap
+// (FR-025). The search field focuses it directly too; focusing twice is harmless.
+function usePanelEscape(onEscapeToCanvas: () => void) {
+  useEffect(() => {
+    function handleKeyDown(event: globalThis.KeyboardEvent) {
+      const target = event.target instanceof Element ? event.target : undefined;
+      if (event.key === 'Escape' && target?.closest('[data-action-panel]') !== null) {
+        onEscapeToCanvas();
+      }
+    }
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [onEscapeToCanvas]);
 }
 
 // Stored width + a local drag draft; the clamp is derived in render and committed once the
@@ -202,62 +216,4 @@ function useResizePointer({
   }
 
   return { handlePointerDown, handlePointerMove, handlePointerUp, handlePointerCancel };
-}
-
-// Escape anywhere in the panel (mini keyboard, chips, hold, mode) returns focus
-// to the active keycap (FR-025). The search field focuses it directly too;
-// focusing twice is harmless.
-function usePanelEscape(onEscapeToCanvas: () => void) {
-  useEffect(() => {
-    function handleKeyDown(event: globalThis.KeyboardEvent) {
-      const target = event.target instanceof Element ? event.target : undefined;
-      if (event.key === 'Escape' && target?.closest('[data-action-panel]') !== null) {
-        onEscapeToCanvas();
-      }
-    }
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [onEscapeToCanvas]);
-}
-
-function ActionPanelBody(props: ActionPanelProps) {
-  const { picker, handlers, selectedCount, onEscapeToCanvas } = props;
-  const { preferences, changePreferences } = usePreferences();
-  usePanelEscape(onEscapeToCanvas);
-
-  function handleAutoAdvanceChange(isAutoAdvanceEnabled: boolean) {
-    changePreferences({ isAutoAdvanceEnabled });
-  }
-
-  if (selectedCount === 0) {
-    return <p className="text-text-muted">Select a keycap to choose what it does.</p>;
-  }
-  return (
-    <>
-      <BehaviorSection
-        onPick={handlers.handlePick}
-        onShowTab={picker.handleTabChange}
-        shared={picker.shared}
-      />
-      <PickerPreview {...props} shared={picker.shared} />
-      <KeyPicker
-        onEscapeToCanvas={props.onEscapeToCanvas}
-        onPick={handlers.handlePick}
-        picker={picker}
-      />
-      <KeyOptions
-        behavior={{ modMorph: handlers.modMorph, tapDance: handlers.tapDance }}
-        isAutoAdvanceEnabled={preferences.isAutoAdvanceEnabled}
-        isKeyPress={props.isKeyPress}
-        onAutoAdvanceChange={handleAutoAdvanceChange}
-        onHoldChange={handlers.handleHoldChange}
-        onModeChange={handlers.handleModeChange}
-        onModifierToggle={handlers.handleModifierToggle}
-        pendingModifiers={picker.pendingModifiers}
-        shared={picker.shared}
-      />
-    </>
-  );
 }

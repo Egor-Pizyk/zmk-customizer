@@ -1,66 +1,73 @@
-import { setBindings } from '../../domain/set-bindings';
-import { setKeycode } from '../../domain/set-keycode';
+import { isEveryKeySendingKey } from '../../domain/is-every-key-sending-key';
 import type { Project } from '../../domain/types';
-import { toBasicHandlers } from './basic-pick-handlers';
-import { handleModMorphPick, toModMorphControls } from './mod-morph-handlers';
-import { handleTapDancePick, toTapDanceControls } from './tap-dance-handlers';
+import { createOptionHandlers } from './create-option-handlers';
+import { createDraft } from './draft-state';
+import type { DraftState } from './draft-state';
+import type { PickResult } from './pick-result';
+import { toPickResult } from './pick-slot';
 import type { PickerItem } from './to-picker-item';
 import type { KeyPickerState } from './use-key-picker';
 
-type PickHandlerOptions = {
+export type PickHandlerOptions = {
   readonly project: Project;
   readonly selectedKeyIds: readonly string[];
   readonly selectionName: string;
   readonly picker: KeyPickerState;
   readonly commit: (change: (project: Project) => Project, announcementText?: string) => void;
-  /** Called after a pick from the picker (auto-advance, FR-014a). */
+  /** Called once a binding is done (auto-advance, spec 004 FR-014a). */
   readonly onPicked: () => void;
 };
 
-// Every pick, chip, hold or mode change is one commit for all selected keys (FR-015).
-export function createPickHandlers(options: PickHandlerOptions) {
-  const { selectedKeyIds: keyIds, selectionName, picker, commit } = options;
-  const target = { layerIndex: 0, keyIds };
-
-  return {
-    tapDance: toTapDanceControls({ picker, target, selectionName, commit }),
-    modMorph: toModMorphControls({ picker, target, selectionName, commit }),
-    ...toBasicHandlers(options),
-    handlePick: (item: PickerItem) => {
-      handleItemPick({ picker, target, selectionName, commit, onPicked: options.onPicked, item });
-    },
-  };
+// After storing: a behavior pick ends any draft; a completed draft leaves a blank one of the
+// same behavior for the next empty key (spec 006 US1 AS6); other picks keep the draft as is.
+function findDraftStateAfterStore(
+  picker: KeyPickerState,
+  item: PickerItem,
+): DraftState | undefined {
+  if (item.pick.kind === 'behavior') {
+    return undefined;
+  }
+  const { source, draftState } = picker;
+  if (source.kind === 'draft' && draftState !== undefined) {
+    return { draft: createDraft(source.draft.behaviorId), over: draftState.over };
+  }
+  return draftState;
 }
 
-type ItemPickInput = {
-  readonly picker: KeyPickerState;
-  readonly target: { readonly layerIndex: number; readonly keyIds: readonly string[] };
-  readonly selectionName: string;
-  readonly commit: PickHandlerOptions['commit'];
-  readonly onPicked: () => void;
-  readonly item: PickerItem;
-};
-
-function handleItemPick(input: ItemPickInput) {
-  const { picker, target, selectionName, commit, item } = input;
-  if (handleTapDancePick({ ...input, item }) || handleModMorphPick({ ...input, item })) {
+function applyPickResult(options: PickHandlerOptions, item: PickerItem, result: PickResult) {
+  const { picker } = options;
+  if (result.kind === 'draft') {
+    picker.setDraftState({ draft: result.draft, over: picker.shared });
+    picker.handleSlotOpen(result.next);
     return;
   }
-  const { pick } = item;
-  const change =
-    pick.kind === 'keycode'
-      ? (current: Project) =>
-          setKeycode(current, {
-            ...target,
-            keycode: pick.keycode,
-            modifiers: picker.pendingModifiers,
-          })
-      : (current: Project) => setBindings(current, { ...target, binding: pick.binding });
-  commit(change, `${selectionName}: ${item.name}`);
+  options.commit(result.change, `${options.selectionName}: ${item.name}`);
+  picker.setDraftState(findDraftStateAfterStore(picker, item));
   picker.setPendingModifiers([]);
-  picker.setEditingTap(undefined);
-  picker.setEditingMorphSide(undefined);
-  input.onPicked();
+  picker.handleSlotOpen(result.next);
+  if (result.next === undefined) {
+    options.onPicked();
+  }
+}
+
+// Every pick is one commit for all selected keys (spec 004 FR-015), or a draft step (spec 006).
+export function createPickHandlers(options: PickHandlerOptions) {
+  const { project, selectedKeyIds: keyIds, picker } = options;
+  const target = { layerIndex: 0, keyIds };
+  return {
+    ...createOptionHandlers({ ...options, target }),
+    handlePick: (item: PickerItem) => {
+      const result = toPickResult({
+        source: picker.source,
+        slot: picker.slot,
+        pick: item.pick,
+        target,
+        pendingModifiers: picker.pendingModifiers,
+        isEveryKeySendingKey: isEveryKeySendingKey(project, target),
+      });
+      applyPickResult(options, item, result);
+    },
+  };
 }
 
 export type PickHandlers = ReturnType<typeof createPickHandlers>;

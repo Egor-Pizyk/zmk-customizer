@@ -1,6 +1,6 @@
 ---
 description: Error surfacing for src — ValidationIssue values vs throw, Result for parsing, logging, single error boundary.
-globs:
+paths:
   - src/**/*.ts
   - src/**/*.tsx
 ---

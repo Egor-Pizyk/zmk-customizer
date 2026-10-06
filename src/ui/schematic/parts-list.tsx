@@ -1,5 +1,6 @@
 import { useId } from 'react';
 import type { SyntheticEvent } from 'react';
+import { getKeyPinWires } from '../../domain/get-key-pin-wires';
 import type { Project } from '../../domain/types';
 import { usePreferences } from '../preferences-context';
 import type { WorkspaceIssue } from '../shell/workspace-issue';
@@ -21,6 +22,8 @@ export type PartsTableProps = {
 export function PartsList(props: PartsTableProps) {
   const { preferences, changePreferences } = usePreferences();
   const headingId = useId();
+  // One lookup per render (perf: getKeyPinWires walks every wire for every pin).
+  const wiresOf = getKeyPinWires(props.project);
 
   function handleToggle(event: SyntheticEvent<HTMLDetailsElement>) {
     changePreferences({ isPartsListOpen: event.currentTarget.open });
@@ -38,7 +41,7 @@ export function PartsList(props: PartsTableProps) {
           </h2>
         </summary>
         <div className="flex max-h-72 flex-col gap-6 overflow-auto px-4 pb-4">
-          <PartsKeysTable {...props} />
+          <PartsKeysTable {...props} wiresOf={wiresOf} />
           <PartsWiresTable {...props} />
           <PartsCrossingsTable {...props} />
         </div>

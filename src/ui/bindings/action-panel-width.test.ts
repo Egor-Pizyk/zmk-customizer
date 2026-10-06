@@ -50,6 +50,6 @@ describe('actionPanelWidthForKey', () => {
   });
 
   it('defaults to the open panel width', () => {
-    expect(ACTION_PANEL_DEFAULT_WIDTH_PX).toBe(384);
+    expect(ACTION_PANEL_DEFAULT_WIDTH_PX).toBe(448);
   });
 });

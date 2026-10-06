@@ -15,6 +15,8 @@ const WORKSPACE_BY_ISSUE_CODE: Record<ValidationCode, WorkspaceId> = {
   'board-pin-conflict': 'schematic',
   'board-pins-shorted': 'schematic',
   'key-shorted': 'schematic',
+  'keys-in-parallel': 'schematic',
+  'net-without-board-pin': 'schematic',
   'binding-keycode-unknown': 'bindings',
   'binding-profile-out-of-range': 'bindings',
   'binding-tapping-term-out-of-range': 'bindings',

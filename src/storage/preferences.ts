@@ -66,7 +66,7 @@ export const DEFAULT_PREFERENCES: Preferences = {
   isBindingsPanelOpen: true,
   isBindingsTableOpen: false,
   isAutoAdvanceEnabled: true,
-  actionPanelWidthPx: 384,
+  actionPanelWidthPx: 448,
   viewByWorkspace: { schematic: DEFAULT_VIEWPORT, bindings: DEFAULT_VIEWPORT },
 };
 

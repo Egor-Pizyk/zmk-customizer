@@ -1,83 +1,114 @@
-import { BEHAVIORS } from '../../catalog/behaviors';
-import { BLUETOOTH_COMMANDS } from '../../catalog/bluetooth-commands';
+import type { BehaviorEntry } from '../../catalog/behaviors';
+import type { BluetoothCommandEntry } from '../../catalog/bluetooth-commands';
 import { keycodeByName } from '../../catalog/keycodes';
-import { OUTPUT_COMMANDS } from '../../catalog/output-commands';
-import type { Binding } from '../../domain/types';
-import { formatBindingLegend, formatFullBindingLegend } from './format-binding-legend';
-import { formatBindingName } from './format-binding-name';
-import { formatKeycapCorner } from './format-keycap-corner';
+import type { OutputCommandEntry } from '../../catalog/output-commands';
+import type {
+  BehaviorId,
+  Binding,
+  BluetoothCommand,
+  BluetoothProfileCommand,
+  OutputCommand,
+} from '../../domain/types';
+import {
+  formatBindingLegend,
+  formatBluetoothCommandLegend,
+  formatFullBindingLegend,
+} from './format-binding-legend';
 import { formatKeycodeName } from './format-keycode-name';
 
+/** The value a picker row sets in the open slot (spec 006 FR-004). */
 export type PickerPick =
+  | { readonly kind: 'behavior'; readonly behaviorId: BehaviorId }
   | { readonly kind: 'keycode'; readonly keycode: string }
-  | { readonly kind: 'binding'; readonly binding: Binding };
+  | { readonly kind: 'bt-command'; readonly command: BluetoothCommand | BluetoothProfileCommand }
+  | { readonly kind: 'profile'; readonly profile: number }
+  | { readonly kind: 'out-command'; readonly command: OutputCommand };
 
-/** One mini keycap of the key picker (spec 004 R14). */
+/** One row of the slot picker (spec 006 FR-005). */
 export type PickerItem = {
+  /** Unique among the slot's choices. */
   readonly id: string;
   readonly legend: string;
-  /** The legend never shortened with "…", for hover tooltips (FR-007). */
+  /** The legend never shortened with "…", for the tooltip (spec 004 FR-007). */
   readonly fullLegend: string;
-  /** Exact ZMK code under the symbol; hidden when it adds nothing (FR-007). */
-  readonly corner: string | undefined;
   readonly name: string;
-  readonly aliases: readonly string[];
   readonly description: string;
+  /** ZMK spelling to look up: the tag, command or canonical code first, then aliases. */
+  readonly codes: readonly string[];
   readonly docsUrl: string;
-  /** Width in key units on the Basic layout; 1 elsewhere. */
-  readonly widthU: number;
   readonly pick: PickerPick;
 };
 
-export function toKeycodeItem(name: string, widthU = 1): readonly PickerItem[] {
+export function toKeycodeItem(name: string): readonly PickerItem[] {
   const keycode = keycodeByName.get(name);
   if (keycode === undefined) {
     return [];
   }
   const binding: Binding = { kind: 'kp', key: { keycode: keycode.name, modifiers: [] } };
-  const legend = formatBindingLegend(binding)?.tap ?? keycode.name;
   return [
     {
       id: keycode.name,
-      legend,
+      legend: formatBindingLegend(binding)?.tap ?? keycode.name,
       fullLegend: formatFullBindingLegend(binding)?.tap ?? keycode.name,
-      corner: formatKeycapCorner(binding, legend),
       name: formatKeycodeName(keycode.name),
-      aliases: keycode.aliases,
       description: keycode.description,
+      codes: [keycode.name, ...keycode.aliases],
       docsUrl: keycode.docsUrl,
-      widthU,
       pick: { kind: 'keycode', keycode: keycode.name },
     },
   ];
 }
 
-function findExplanation(binding: Binding): {
-  readonly description: string;
-  readonly docsUrl: string;
-} {
-  const command =
-    binding.kind === 'bt'
-      ? BLUETOOTH_COMMANDS.find((entry) => entry.id === binding.command)
-      : OUTPUT_COMMANDS.find((entry) => binding.kind === 'out' && entry.id === binding.command);
-  const behavior = BEHAVIORS.find((entry) => entry.id === binding.kind);
-  return command ?? { description: behavior?.description ?? '', docsUrl: behavior?.docsUrl ?? '' };
+export function toBehaviorItem(entry: BehaviorEntry): PickerItem {
+  return {
+    id: entry.id,
+    legend: entry.tag,
+    fullLegend: entry.tag,
+    name: entry.label,
+    description: entry.description,
+    codes: [entry.tag],
+    docsUrl: entry.docsUrl,
+    pick: { kind: 'behavior', behaviorId: entry.id },
+  };
 }
 
-export function toBindingItem(binding: Binding): PickerItem {
-  const { description, docsUrl } = findExplanation(binding);
-  const name = formatBindingName(binding);
-  const legend = formatBindingLegend(binding)?.tap ?? name;
+export function toBluetoothCommandItem(entry: BluetoothCommandEntry): PickerItem {
+  const legend = formatBluetoothCommandLegend(entry.id);
   return {
-    id: name,
+    id: entry.id,
     legend,
-    fullLegend: formatFullBindingLegend(binding)?.tap ?? name,
-    corner: formatKeycapCorner(binding, legend),
-    name,
-    aliases: [],
-    description,
+    fullLegend: legend,
+    name: entry.label,
+    description: entry.description,
+    codes: [entry.id],
+    docsUrl: entry.docsUrl,
+    pick: { kind: 'bt-command', command: entry.id },
+  };
+}
+
+export function toProfileItem(profile: number, docsUrl: string): PickerItem {
+  return {
+    id: String(profile),
+    legend: String(profile),
+    fullLegend: String(profile),
+    name: `Profile ${profile}`,
+    description: `Bluetooth profile ${profile}; profiles are numbered from 0.`,
+    codes: [String(profile)],
     docsUrl,
-    widthU: 1,
-    pick: { kind: 'binding', binding },
+    pick: { kind: 'profile', profile },
+  };
+}
+
+export function toOutputCommandItem(entry: OutputCommandEntry): PickerItem {
+  const legend = formatBindingLegend({ kind: 'out', command: entry.id })?.tap ?? entry.id;
+  return {
+    id: entry.id,
+    legend,
+    fullLegend: legend,
+    name: entry.label,
+    description: entry.description,
+    codes: [entry.id],
+    docsUrl: entry.docsUrl,
+    pick: { kind: 'out-command', command: entry.id },
   };
 }

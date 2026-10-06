@@ -1,4 +1,3 @@
-import { isEveryKeyPress } from '../../domain/is-every-key-press';
 import { createPickHandlers } from './create-pick-handlers';
 import { createKeycapKeyboardHandler } from './create-keycap-keyboard-handler';
 import { focusKeycap } from './focus-keycap';
@@ -10,7 +9,8 @@ import type { BindingsWorkspaceState } from './use-bindings-workspace';
 export function useBindingsInteraction(workspace: BindingsWorkspaceState) {
   const { project, selectedKeyIds, activeKeyId, problemsByKeyId, copied } = workspace;
   const onSelectionChange = workspace.handleSelectionChange;
-  const pointer = useBindingsPointer({ project, selectedKeyIds, onSelectionChange });
+  const onTagPress = workspace.picker.handleBehaviorOpen;
+  const pointer = useBindingsPointer({ project, selectedKeyIds, onSelectionChange, onTagPress });
   useBindingsShortcuts({ onCopy: copied.handleCopy, onPaste: copied.handlePaste });
   const shared = { project, selectedKeyIds, activeKeyId, problemsByKeyId };
   return {
@@ -61,7 +61,6 @@ function toPanelProps(workspace: BindingsWorkspaceState) {
     }),
     selectionName: workspace.selectionName,
     selectedCount: workspace.selectedKeyIds.length,
-    isKeyPress: isEveryKeyPress(project, { layerIndex: 0, keyIds: selectedKeyIds }),
     canPaste: copied.canPaste,
     onCopy: copied.handleCopy,
     onPaste: copied.handlePaste,

@@ -1,18 +1,17 @@
 import { createContext, use, useCallback, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
-import { BINDINGS_CATALOG } from '../catalog/bindings-catalog';
 import type { Project } from '../domain/types';
 import type { ProjectLoadResult } from '../storage/project-storage';
 import {
   createHistoryActions,
   createInitialState,
   getSaveStatus,
+  getValidationIssues,
   withAnnouncement,
 } from './project-state';
 import type { Announcement, KeptBackup, ProjectState, SaveStatus } from './project-state';
 import { createFileActions } from './project-file-actions';
 import type { ProjectFileError } from '../storage/parse-project-file';
-import { validateProject } from '../domain/validate-project';
 import { toWorkspaceIssues } from './shell/workspace-issue';
 import type { WorkspaceIssue } from './shell/workspace-issue';
 
@@ -54,10 +53,9 @@ export function ProjectProvider({ initialLoad, children }: ProjectProviderProps)
   const { state, change } = useProjectState(initialLoad);
   const { present } = state.history;
   // Validation runs once per project change for every consumer (react.md "Project state").
-  const issues = useMemo(
-    () => toWorkspaceIssues(validateProject(present, BINDINGS_CATALOG)),
-    [present],
-  );
+  // getValidationIssues caches by project identity, so the run here is the only real one
+  // per commit (perf: describeChange in project-state.ts hits the same cache).
+  const issues = useMemo(() => toWorkspaceIssues(getValidationIssues(present)), [present]);
 
   // Memoized as react/jsx-no-constructed-context-values requires, like preferences-context.
   const value = useMemo<ProjectContextValue>(

@@ -133,5 +133,9 @@ export function readStoredProjectText(): string | undefined {
 }
 
 export function saveProject(project: Project): Result<void, StorageError> {
-  return writeItem(PROJECT_STORAGE_KEY, serializeProject(project));
+  const serialized = serializeProject(project);
+  if (!serialized.ok) {
+    return { ok: false, error: 'unavailable' };
+  }
+  return writeItem(PROJECT_STORAGE_KEY, serialized.value);
 }

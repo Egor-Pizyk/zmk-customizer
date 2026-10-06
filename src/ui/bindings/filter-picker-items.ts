@@ -9,7 +9,7 @@ function toWords(text: string): readonly string[] {
     .filter((word) => word !== '');
 }
 
-// Every query word must start a word of the id, name, legend, alias or description,
+// Every query word must start a word of the id, name, legend, code or description,
 // case-insensitive; order is kept (spec 004 FR-014). So "n" finds N and Number but not
 // Print, and "print screen" still finds Print Screen.
 export function filterPickerItems(
@@ -27,7 +27,7 @@ export function filterPickerItems(
     );
   }
   return items.filter((item) => {
-    const words = [item.id, item.name, item.legend, item.description, ...item.aliases].flatMap(
+    const words = [item.id, item.name, item.legend, item.description, ...item.codes].flatMap(
       (text) => toWords(text),
     );
     return queryWords.every((word) => words.some((candidate) => candidate.startsWith(word)));

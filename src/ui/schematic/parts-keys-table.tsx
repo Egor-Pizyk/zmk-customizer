@@ -1,18 +1,18 @@
 import { addKey } from '../../domain/add-key';
 import { findFreeKeyPosition } from '../../domain/find-free-key-position';
 import { removeKey } from '../../domain/remove-key';
-import type { Key } from '../../domain/types';
 import { Button } from '../components/button';
 import { focusAfterDelete } from './focus-after-delete';
-import { KeyPinCell } from './key-pin-cell';
+import type { WiresOfPin } from './format-schematic-labels';
+import { RowPinCells } from './key-pin-cell';
 import { KeyPositionCells } from './key-position-cells';
 import type { PartsTableProps } from './parts-list';
 import { PartsTableHead } from './parts-table-head';
 
 const COLUMNS = ['Key', 'X (u)', 'Y (u)', 'Pin 1', 'Pin 2'];
 
-export function PartsKeysTable(props: PartsTableProps) {
-  const { project, commit } = props;
+export function PartsKeysTable(props: PartsTableProps & { readonly wiresOf: WiresOfPin }) {
+  const { project, commit, wiresOf } = props;
 
   function handleAddClick() {
     commit(
@@ -32,9 +32,7 @@ export function PartsKeysTable(props: PartsTableProps) {
         <table className="w-full text-left">
           <PartsTableHead columns={COLUMNS} hasActions />
           <tbody>
-            {project.keys.map((key, keyIndex) => (
-              <KeyRow {...props} key={key.id} keyIndex={keyIndex} schematicKey={key} />
-            ))}
+            <KeysTableRows {...props} wiresOf={wiresOf} />
           </tbody>
         </table>
       )}
@@ -51,10 +49,21 @@ export function PartsKeysTable(props: PartsTableProps) {
   );
 }
 
-type KeyRowProps = PartsTableProps & { readonly schematicKey: Key; readonly keyIndex: number };
+function KeysTableRows(props: PartsTableProps & { readonly wiresOf: WiresOfPin }) {
+  const { project, wiresOf } = props;
+  return project.keys.map((key, keyIndex) => (
+    <KeyRow {...props} key={key.id} keyIndex={keyIndex} schematicKey={key} wiresOf={wiresOf} />
+  ));
+}
+
+type KeyRowProps = PartsTableProps & {
+  readonly schematicKey: PartsTableProps['project']['keys'][number];
+  readonly keyIndex: number;
+  readonly wiresOf: WiresOfPin;
+};
 
 function KeyRow(props: KeyRowProps) {
-  const { project, issues, selection, onSelectionChange, commit, schematicKey, keyIndex } = props;
+  const { issues, selection, onSelectionChange, commit, schematicKey, keyIndex, wiresOf } = props;
   const problems = issues.filter((issue) => issue.path.join('.') === `keys.${keyIndex}`);
   const isSelected =
     (selection?.kind === 'key' && selection.keyId === schematicKey.id) ||
@@ -83,8 +92,7 @@ function KeyRow(props: KeyRowProps) {
         keyIndex={keyIndex}
         schematicKey={schematicKey}
       />
-      <KeyPinCell keyId={schematicKey.id} keyIndex={keyIndex} pin={1} project={project} />
-      <KeyPinCell keyId={schematicKey.id} keyIndex={keyIndex} pin={2} project={project} />
+      <RowPinCells keyId={schematicKey.id} keyIndex={keyIndex} wiresOf={wiresOf} />
       <KeyRowDeleteButton keyIndex={keyIndex} onDeleteClick={handleDeleteClick} />
     </tr>
   );

@@ -4,15 +4,17 @@ import { Button } from '../components/button';
 import { MODIFIER_LABELS, MODIFIER_SYMBOLS } from './modifier-labels';
 
 type ModifierTogglesProps = {
+  readonly label: string;
   readonly enabledModifiers: readonly Modifier[];
   readonly onToggle: (modifier: Modifier, isEnabled: boolean) => void;
 };
 
-// Left and right Ctrl, Shift, Alt, GUI for "Send a key" (spec 004 FR-011).
-export function ModifierToggles({ enabledModifiers, onToggle }: ModifierTogglesProps) {
+// Left and right Ctrl, Shift, Alt, GUI with their ZMK function (LC…), as modifiers of a key or
+// mod-morph triggers (spec 004 FR-011, spec 006 FR-010).
+export function ModifierToggles({ label, enabledModifiers, onToggle }: ModifierTogglesProps) {
   return (
     <fieldset className="flex flex-col gap-1">
-      <legend className="mb-1 text-xs font-medium">Modifiers</legend>
+      <legend className="mb-1 text-xs font-medium">{label}</legend>
       <div className="grid grid-cols-4 gap-1">
         {MODIFIERS.map((modifier) => {
           const isEnabled = enabledModifiers.includes(modifier);
@@ -31,6 +33,9 @@ export function ModifierToggles({ enabledModifiers, onToggle }: ModifierTogglesP
               {MODIFIER_SYMBOLS[modifier].startsWith('R')
                 ? MODIFIER_SYMBOLS[modifier]
                 : `L${MODIFIER_SYMBOLS[modifier]}`}
+              <code aria-hidden="true" className="ml-1 font-mono text-xs text-text-muted">
+                {modifier}
+              </code>
             </Button>
           );
         })}

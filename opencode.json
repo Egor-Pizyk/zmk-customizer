@@ -42,12 +42,6 @@
       "**/.env": "deny",
       "**/.env.*": "deny"
     },
-    "webfetch": {
-      "*": "ask",
-      "https://v0-3-branch.zmk.dev/*": "allow",
-      "https://zmk.dev/*": "allow",
-      "https://github.com/*": "allow",
-      "https://raw.githubusercontent.com/*": "allow"
-    }
+    "webfetch": "allow"
   }
 }

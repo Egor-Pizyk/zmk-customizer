@@ -24,7 +24,7 @@ export function useBindingsWorkspace() {
 
   function handleSelectionChange(keyIds: readonly string[]) {
     setSelection(keyIds);
-    picker.syncSelection(keyIds);
+    picker.syncSelection();
   }
 
   function handlePicked() {

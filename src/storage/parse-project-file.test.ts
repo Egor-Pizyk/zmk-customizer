@@ -7,6 +7,14 @@ import type { Binding, Project } from '../domain/types';
 import { parseProjectFile } from './parse-project-file';
 import { serializeProject } from './serialize-project';
 
+function serializedText(project: Project): string {
+  const serialized = serializeProject(project);
+  if (!serialized.ok) {
+    throw new Error(`serialize failed: ${serialized.error}`);
+  }
+  return serialized.value;
+}
+
 function issuePathsOf(raw: string): readonly string[] {
   const result = parseProjectFile(raw);
   if (result.ok || result.error.kind !== 'not-project') {
@@ -120,7 +128,7 @@ describe('bindings round trip (spec 004 FR-023, FR-024, SC-003)', () => {
       keys,
       layers: [{ id: 'l0', name: 'Base', bindings }],
     };
-    expect(parseProjectFile(serializeProject(project))).toEqual({ ok: true, value: project });
+    expect(parseProjectFile(serializedText(project))).toEqual({ ok: true, value: project });
   });
 
   it('opens a v2 file with every key unassigned', () => {
@@ -156,7 +164,7 @@ describe('tap-dance and mod-morph round trip (spec 005 contracts/binding-json.md
       ],
       layers: [{ id: 'l0', name: 'Base', bindings: { k1: TAP_DANCE, k2: MOD_MORPH } }],
     };
-    expect(parseProjectFile(serializeProject(project))).toEqual({ ok: true, value: project });
+    expect(parseProjectFile(serializedText(project))).toEqual({ ok: true, value: project });
   });
 
   it.each([

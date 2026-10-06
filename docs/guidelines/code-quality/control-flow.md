@@ -1,6 +1,6 @@
 ---
 description: Function shape for src — guard clauses, max depth 3, no nested ternaries, small functions, options objects.
-globs:
+paths:
   - src/**/*.ts
   - src/**/*.tsx
 ---

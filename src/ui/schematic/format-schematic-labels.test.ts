@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildProject, freeEnd, keyPin } from '../../../tests/helpers/build-project';
+import { getKeyPinWires } from '../../domain/get-key-pin-wires';
 import { formatCrossingLabel, formatKeyLabel, formatWireLabel } from './format-schematic-labels';
 
 const PROJECT = buildProject({
@@ -22,19 +23,34 @@ const PROJECT = buildProject({
 
 describe('formatKeyLabel', () => {
   it('names the key, its position and what each pin connects to', () => {
-    expect(formatKeyLabel(PROJECT, { keyIndex: 1, isSelected: false, problems: [] })).toBe(
-      'Key 1 at 2, 1. Pin 1: wire 0. Pin 2: wire 1',
-    );
-    expect(formatKeyLabel(PROJECT, { keyIndex: 0, isSelected: true, problems: ['Problem.'] })).toBe(
-      'Key 0 at 0, 0. Pin 1: wire 0. Pin 2: wires 2, 3, selected. Problem.',
-    );
+    expect(
+      formatKeyLabel(PROJECT, {
+        keyIndex: 1,
+        isSelected: false,
+        problems: [],
+        wiresOf: getKeyPinWires(PROJECT),
+      }),
+    ).toBe('Key 1 at 2, 1. Pin 1: wire 0. Pin 2: wire 1');
+    expect(
+      formatKeyLabel(PROJECT, {
+        keyIndex: 0,
+        isSelected: true,
+        problems: ['Problem.'],
+        wiresOf: getKeyPinWires(PROJECT),
+      }),
+    ).toBe('Key 0 at 0, 0. Pin 1: wire 0. Pin 2: wires 2, 3, selected. Problem.');
   });
 
   it('says when a pin is not connected', () => {
     const project = buildProject({ keys: [{ id: 'k1', xU: 0, yU: 0 }] });
-    expect(formatKeyLabel(project, { keyIndex: 0, isSelected: false, problems: [] })).toBe(
-      'Key 0 at 0, 0. Pin 1: not connected. Pin 2: not connected',
-    );
+    expect(
+      formatKeyLabel(project, {
+        keyIndex: 0,
+        isSelected: false,
+        problems: [],
+        wiresOf: getKeyPinWires(project),
+      }),
+    ).toBe('Key 0 at 0, 0. Pin 1: not connected. Pin 2: not connected');
   });
 });
 
