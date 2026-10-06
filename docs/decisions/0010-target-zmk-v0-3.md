@@ -17,4 +17,4 @@ Users take our zip, push it to GitHub and expect the build to pass with the temp
 ## Consequences
 - Output builds with the official template as-is.
 - Newer ZMK features (e.g. layer `locking`, HWMv2 board ids) are unavailable until we move targets.
-- Moving to v0.4 = new ADR superseding this one + re-verified `docs/zmk/` + re-fetched fixtures + catalog update, in one change. Supporting several versions at once is roadmap feature 016.
+- Moving to v0.4 = new ADR superseding this one + re-verified `docs/zmk/` + re-fetched fixtures + catalog update, in one change. Supporting several versions at once is roadmap feature 021 zmk-version-selection.

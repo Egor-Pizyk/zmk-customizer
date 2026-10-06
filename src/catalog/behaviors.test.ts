@@ -6,7 +6,7 @@ import { OUTPUT_COMMANDS } from './output-commands';
 const V0_3_DOCS = 'https://v0-3-branch.zmk.dev/docs/';
 
 describe('binding catalog tables', () => {
-  it('lists the 13 built-in behaviors of spec 004 plus tap-dance and mod-morph in panel order', () => {
+  it('lists the 13 built-in behaviors of spec 004 plus tap-dance and mod-morph in picker order', () => {
     expect(BEHAVIORS.map((behavior) => behavior.id)).toEqual([
       'kp',
       'mt',
@@ -23,6 +23,26 @@ describe('binding catalog tables', () => {
       'bootloader',
       'tap_dance',
       'mod_morph',
+    ]);
+  });
+
+  it('tags built-ins with their keymap label and user-defined kinds without one (spec 006)', () => {
+    expect(BEHAVIORS.map((behavior) => `${behavior.group}: ${behavior.tag}`)).toEqual([
+      'Send a key: &kp',
+      'Send a key: &mt',
+      'Send a key: &sk',
+      'Send a key: &kt',
+      'Special: &trans',
+      'Special: &none',
+      'Special: &caps_word',
+      'Special: &key_repeat',
+      'Special: &gresc',
+      'Connection: &bt',
+      'Connection: &out',
+      'Firmware: &sys_reset',
+      'Firmware: &bootloader',
+      'Your behaviors: tap-dance',
+      'Your behaviors: mod-morph',
     ]);
   });
 

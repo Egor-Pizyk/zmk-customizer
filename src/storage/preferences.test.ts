@@ -73,13 +73,13 @@ describe('parsePreferences', () => {
     expect(result.preferences.isBindingsPanelOpen).toBe(true);
     expect(result.preferences.isBindingsTableOpen).toBe(false);
     expect(result.preferences.isAutoAdvanceEnabled).toBe(true);
-    expect(result.preferences.actionPanelWidthPx).toBe(384);
+    expect(result.preferences.actionPanelWidthPx).toBe(448);
     expect(result.preferences.theme).toBe('dark');
   });
 
   it.each([100, 900])('defaults an action panel width outside 240..640 (%s)', (widthPx) => {
     const result = parsePreferences(JSON.stringify({ version: 1, actionPanelWidthPx: widthPx }));
-    expect(result.preferences.actionPanelWidthPx).toBe(384);
+    expect(result.preferences.actionPanelWidthPx).toBe(448);
   });
 
   it('defaults a grid size outside 0.05..2', () => {

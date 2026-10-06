@@ -1,3 +1,4 @@
+import { BEHAVIORS } from '../../catalog/behaviors';
 import type { Binding } from '../../domain/types';
 import { formatBindingName } from './format-binding-name';
 import { formatFullBindingLegend } from './format-binding-legend';
@@ -24,4 +25,9 @@ export function formatKeycapLabel(input: {
 // SVG <title> hover tooltip: the full legend with the full action name (FR-007).
 export function formatKeycapTitle(binding: Binding | undefined): string {
   return formatLegendTitle(formatFullBindingLegend(binding)?.tap, formatBindingName(binding));
+}
+
+/** The behavior tag drawn on the keycap (spec 006 FR-013); none for an unassigned key. */
+export function formatKeycapTag(binding: Binding | undefined): string | undefined {
+  return BEHAVIORS.find((behavior) => behavior.id === binding?.kind)?.tag;
 }

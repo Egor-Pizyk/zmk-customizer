@@ -1,5 +1,5 @@
 import { BINDINGS_CATALOG } from '../catalog/bindings-catalog';
-import type { Project } from '../domain/types';
+import type { Project, ValidationIssue } from '../domain/types';
 import { validateProject } from '../domain/validate-project';
 import type { ProjectFileError } from '../storage/parse-project-file';
 import { backupDamagedProject, discardBackup, saveProject } from '../storage/project-storage';
@@ -69,14 +69,29 @@ function autosave(state: ProjectState, project: Project): StorageError | undefin
   return saved.ok ? undefined : saved.error;
 }
 
+// Validation cache (perf): one commit ran validateProject 3 times (before + after here,
+// plus the provider's useMemo on the same after object). Projects are immutable and shared
+// by reference through history, so a WeakMap keeps exactly one real run per new project.
+const issuesByProject = new WeakMap<Project, readonly ValidationIssue[]>();
+
+export function getValidationIssues(project: Project): readonly ValidationIssue[] {
+  const cached = issuesByProject.get(project);
+  if (cached !== undefined) {
+    return cached;
+  }
+  const issues = validateProject(project, BINDINGS_CATALOG);
+  issuesByProject.set(project, issues);
+  return issues;
+}
+
 // One text per change: the action's own text, plus the issue total when it changed (R15).
 function describeChange(input: {
   readonly before: Project;
   readonly after: Project;
   readonly announcementText: string | undefined;
 }): string | undefined {
-  const countBefore = validateProject(input.before, BINDINGS_CATALOG).length;
-  const countAfter = validateProject(input.after, BINDINGS_CATALOG).length;
+  const countBefore = getValidationIssues(input.before).length;
+  const countAfter = getValidationIssues(input.after).length;
   if (countBefore === countAfter) {
     return input.announcementText;
   }

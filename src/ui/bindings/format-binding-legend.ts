@@ -7,8 +7,15 @@ import type { Binding, KeyStroke, Modifier } from '../../domain/types';
 import { abbreviateKeycodeNames } from './abbreviate-keycode';
 import { MODIFIER_SYMBOLS } from './modifier-labels';
 
-/** Tap part large in the center, hold part small at the bottom (spec 004 FR-006). */
-export type BindingLegend = { readonly tap: string; readonly hold?: string };
+/**
+ * Tap part large in the center with its Shift symbol smaller beside it, as printed on a keycap
+ * (`]` and `}`), hold part small at the bottom (spec 004 FR-006).
+ */
+export type BindingLegend = {
+  readonly tap: string;
+  readonly shifted?: string;
+  readonly hold?: string;
+};
 
 const MAX_LEGEND_LENGTH = 7;
 const DESCRIPTION_SYMBOL_PATTERN = /^Keyboard (\S) /u;
@@ -93,7 +100,35 @@ function formatKeyStrokeLegend(stroke: KeyStroke, isFull: boolean): string {
   return isFull ? text : truncate(text);
 }
 
-const BLUETOOTH_LEGENDS = { BT_NXT: 'BT→', BT_PRV: 'BT←', BT_CLR: 'BT⌫', BT_CLR_ALL: 'BT⌫*' };
+// The symbol Shift gives an unmodified base key on a US layout; none for a key that already
+// carries modifiers, so the keycap never shows a symbol the key does not send.
+function findShiftedLegend(stroke: KeyStroke): string | undefined {
+  const keycode = keycodeByName.get(stroke.keycode);
+  if (
+    keycode === undefined ||
+    stroke.modifiers.length > 0 ||
+    keycode.implicitModifiers.length > 0
+  ) {
+    return undefined;
+  }
+  const shifted = shiftedByUsage.get(toUsageKey(keycode));
+  return shifted === undefined ? undefined : formatKeycodeLegend(shifted);
+}
+
+function toStrokeLegend(stroke: KeyStroke, isFull: boolean): BindingLegend {
+  const tap = formatKeyStrokeLegend(stroke, isFull);
+  const shifted = findShiftedLegend(stroke);
+  return shifted === undefined ? { tap } : { tap, shifted };
+}
+
+const BLUETOOTH_LEGENDS = {
+  BT_SEL: 'BT',
+  BT_DISC: 'BT✕',
+  BT_NXT: 'BT→',
+  BT_PRV: 'BT←',
+  BT_CLR: 'BT⌫',
+  BT_CLR_ALL: 'BT⌫*',
+};
 const OUTPUT_LEGENDS = { OUT_TOG: 'OUT', OUT_USB: 'USB', OUT_BLE: 'BLE' };
 const FIXED_LEGENDS = {
   trans: '▽',
@@ -104,6 +139,13 @@ const FIXED_LEGENDS = {
   sys_reset: 'RST',
   bootloader: 'BOOT',
 };
+
+/** The command without its profile, for the picker's command rows (spec 006). */
+export function formatBluetoothCommandLegend(
+  command: Extract<Binding, { kind: 'bt' }>['command'],
+): string {
+  return BLUETOOTH_LEGENDS[command];
+}
 
 function formatBluetoothLegend(binding: Extract<Binding, { kind: 'bt' }>): string {
   if ('profile' in binding) {
@@ -166,19 +208,19 @@ function toBindingLegend(binding: Binding | undefined, isFull: boolean): Binding
   }
   switch (binding.kind) {
     case 'kp': {
-      return { tap: formatKeyStrokeLegend(binding.key, isFull) };
+      return toStrokeLegend(binding.key, isFull);
     }
     case 'mt': {
       return {
-        tap: formatKeyStrokeLegend(binding.tap, isFull),
+        ...toStrokeLegend(binding.tap, isFull),
         hold: formatKeyStrokeLegend(binding.hold, isFull),
       };
     }
     case 'sk': {
-      return { tap: formatKeyStrokeLegend(binding.key, isFull), hold: 'STK' };
+      return { ...toStrokeLegend(binding.key, isFull), hold: 'STK' };
     }
     case 'kt': {
-      return { tap: formatKeyStrokeLegend(binding.key, isFull), hold: 'TOG' };
+      return { ...toStrokeLegend(binding.key, isFull), hold: 'TOG' };
     }
     case 'bt': {
       return { tap: formatBluetoothLegend(binding) };

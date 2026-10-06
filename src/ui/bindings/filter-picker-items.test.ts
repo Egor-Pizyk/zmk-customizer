@@ -1,8 +1,10 @@
 import { expect, it } from 'vitest';
 import { filterPickerItems } from './filter-picker-items';
-import { PICKER_TABS } from './picker-tabs';
+import { getSlotChoices } from './slot-choices';
 
-const ITEMS = PICKER_TABS.flatMap((tab) => tab.rows.flatMap((row) => row.items));
+const ITEMS = (['key', 'bt-command', 'out-command'] as const).flatMap((kind) =>
+  getSlotChoices({ kind }).flatMap((group) => group.items),
+);
 
 function findIds(query: string): readonly string[] {
   return filterPickerItems(ITEMS, query).map((item) => item.id);
@@ -20,8 +22,8 @@ it.each([
   ['f13', 'F13'],
   ['print screen', 'PRINTSCREEN'],
   ['n4', 'NUMBER_4'],
-  ['bootloader', 'Bootloader'],
-  ['select profile 1', 'Bluetooth: select profile 1'],
+  ['usb', 'OUT_USB'],
+  ['select profile', 'BT_SEL'],
 ])('finds %s → %s across every tab (SC-002)', (query, id) => {
   expect(findIds(query)).toContain(id);
 });
@@ -36,7 +38,7 @@ it.each([
 
 it.each([
   ['refresh', 'C_AC_REFRESH'],
-  ['restarts the keyboard', 'Reset'],
+  ['sends keys over usb', 'OUT_USB'],
   ['stop (k_stop2)', 'K_STOP2'],
 ])('finds %s by description or qualified name', (query, id) => {
   expect(findIds(query)).toContain(id);

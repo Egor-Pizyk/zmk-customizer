@@ -49,6 +49,7 @@ describe('validateSchematic', () => {
     });
     expect(issuesOf(buildProject({ keys: KEYS, wires }))).toEqual([
       ['wire-end-unconnected', 'wires.1.end'],
+      ['net-without-board-pin', 'keys.0.pins.2'],
     ]);
   });
 
@@ -77,6 +78,35 @@ describe('validateSchematic', () => {
       ['board-pins-shorted', 'wires.1.end.boardPin'],
       ['key-shorted', 'keys.0'],
     ]);
+  });
+
+  it('reports two keys on the same pair of nets', () => {
+    const project = buildProject({
+      keys: KEYS,
+      wires: [
+        { id: 'w1', start: keyPin('k1', 1), end: keyPin('k2', 1), bends: [] },
+        { id: 'w2', start: keyPin('k1', 2), end: keyPin('k2', 2), bends: [] },
+        { id: 'w3', start: keyPin('k1', 1), end: freeEnd(0, 3, 0), bends: [] },
+        { id: 'w4', start: keyPin('k1', 2), end: freeEnd(0, -3, 1), bends: [] },
+      ],
+    });
+    expect(issuesOf(project).filter(([code]) => code === 'keys-in-parallel')).toEqual([
+      ['keys-in-parallel', 'keys.0'],
+      ['keys-in-parallel', 'keys.1'],
+    ]);
+  });
+
+  it('reports a connection with key pins but no board pin', () => {
+    const project = buildProject({
+      keys: KEYS,
+      wires: [
+        { id: 'w1', start: keyPin('k1', 1), end: keyPin('k2', 1), bends: [] },
+        { id: 'w2', start: keyPin('k1', 2), end: freeEnd(0.6, -3, 1), bends: [] },
+        { id: 'w3', start: keyPin('k2', 2), end: freeEnd(2.6, -3, 2), bends: [] },
+      ],
+    });
+    const codes = issuesOf(project).filter(([code]) => code === 'net-without-board-pin');
+    expect(codes).toEqual([['net-without-board-pin', 'keys.0.pins.1']]);
   });
 
   it('says what to do, naming the entity by its number', () => {

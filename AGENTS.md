@@ -68,7 +68,7 @@ Invariants the domain layer must enforce (not the UI):
 - Every key has a unique key index; indices are contiguous `0..n-1`.
 - Every key is mapped to exactly one matrix cell; a matrix cell holds at most one key (except where kscan type allows otherwise).
 - A GPIO pin is used at most once per half (for charlieplex: once in the `gpios` list, and row ≠ col).
-- Every layer has exactly `n` bindings, where `n` is the largest transform `map` length across physical layouts.
+- Layer bindings are keyed by key id (`Layer.bindings: Record<Key.id, Binding>`); a missing entry means `&none`, so deleting or reordering keys never shifts a layer (spec 004 research R6). Generators emit exactly `n` bindings per layer in key-index order, where `n` is the largest transform `map` length across physical layouts.
 - Combo key positions reference existing key indices.
 - Names that become Devicetree labels / Kconfig symbols are sanitized and unique.
 
@@ -153,7 +153,7 @@ make down        # stop containers
 make logs        # follow dev server logs
 make sh          # shell inside the app container
 make install     # npm ci inside the container (run after dependency changes: node_modules is a Docker volume)
-make check       # typecheck + lint + format check + tests inside the container (same as CI)
+make check       # agents sync + typecheck + lint + format check + tests inside the container (same as CI)
 make image       # build production image (nginx serving dist/)
 make prod        # run production image locally (http://localhost:8080)
 make clean       # remove dist/, coverage, containers, volumes
@@ -216,17 +216,19 @@ Feature order and scope: `docs/roadmap.md`. One feature = one branch `NNN-short-
 AGENTS.md              this file
 CLAUDE.md              imports AGENTS.md for Claude Code
 docs/
-  guidelines/          code-quality rules (imported below)
+  guidelines/          code-quality rules (§10)
   zmk/                 verified ZMK reference notes with links
   roadmap.md           feature list in implementation order
   decisions/           ADRs (index in docs/decisions/README.md)
 specs/                 Spec Kit feature specs (created by /speckit-specify)
 .specify/              Spec Kit templates, scripts, constitution
-.claude/               Claude Code settings, hooks/format-lint.sh (PostToolUse on Edit|Write), agents/ (zmk-reviewer, domain-test-writer, spec-reviewer)
-.opencode/              OpenCode agents/ and skills/ (mirrors .claude/agents/; bodies must stay identical, checked by scripts/check-agents-sync.sh), plugins/format-lint.ts (parity with the Claude hook via tool.execute.after)
-opencode.json           OpenCode config: instructions + permissions (skills are auto-discovered from .opencode/skills/ and .claude/skills/, no paths needed)
+.claude/               Claude Code settings, hooks/format-lint.sh (PostToolUse on Edit|Write), agents/ (zmk-reviewer, domain-test-writer, spec-reviewer), skills/ (/speckit-* commands), rules/ (symlinks to docs/guidelines, §10)
+.opencode/             OpenCode skills/ (mirror .claude/agents/; bodies must stay identical, checked by scripts/check-agents-sync.sh), agents/verify-before-done.md (OpenCode only, no mirror), plugins/format-lint.ts (parity with the Claude hook via tool.execute.after)
+opencode.json          OpenCode config: instructions + permissions (skills are auto-discovered from .opencode/skills/ and .claude/skills/, no paths needed)
 src/                   application code (§3.1)
-tests/fixtures/        upstream ZMK shields + expected generator output
+tests/fixtures/        upstream/ (verbatim ZMK shields, SHA-pinned), project/ and schematic/ (project JSON); expected generator output lands here with the generators
+tests/helpers/         shared test builders
+scripts/               check-agents-sync.sh (run by npm run check)
 Dockerfile, compose.yaml, Makefile, nginx.conf
 .github/workflows/ci.yml
 package.json, tsconfig.json, vite.config.ts, index.html, .oxlintrc.json, .oxfmtrc.json
@@ -234,21 +236,22 @@ package.json, tsconfig.json, vite.config.ts, index.html, .oxlintrc.json, .oxfmtr
 
 ---
 
-## 10. Coding rules (lazy-loaded)
+## 10. Coding rules (path-scoped)
 
 `AGENTS.md` states what to build; the files below state how to write it. Each file has
-`description` + `globs` frontmatter. Load the ones whose globs match the files you touch —
-do not load all nine up front. OpenCode loads them via `opencode.json` → `instructions`;
-Claude Code resolves the `@` references below on demand.
+`description` + `paths` frontmatter (globs). Read the ones whose `paths` match the files you touch.
+Claude Code loads them automatically through the symlinks in `.claude/rules/` when a matching file
+is read; OpenCode loads all nine up front via `opencode.json` → `instructions`. Do not reference
+them with `@` here: Claude Code expands `@` imports eagerly.
 
 | Rule file | Load when touching |
 |---|---|
-| @docs/guidelines/code-quality/typescript.md | any `src/**/*.ts(x)` — types, casts, modules, exhaustiveness |
-| @docs/guidelines/code-quality/observability.md | error paths, validation, logging in `src/` |
-| @docs/guidelines/code-quality/control-flow.md | function shape in `src/` |
-| @docs/guidelines/code-quality/naming/functions.md | naming a function, component or handler |
-| @docs/guidelines/code-quality/naming/variables.md | naming anything (code, tests, UI copy, docs) |
-| @docs/guidelines/frontend/react.md | `src/ui/**` structure, state, effects, inputs |
-| @docs/guidelines/frontend/tailwind.md | classes, tokens, `src/styles.css` |
-| @docs/guidelines/frontend/admin-ui.md | screens, primitives, validation display |
-| @docs/guidelines/frontend/accessibility.md | keyboard, ARIA, focus, feature checklist |
+| docs/guidelines/code-quality/typescript.md | any `src/**/*.ts(x)` — types, casts, modules, exhaustiveness |
+| docs/guidelines/code-quality/observability.md | error paths, validation, logging in `src/` |
+| docs/guidelines/code-quality/control-flow.md | function shape in `src/` |
+| docs/guidelines/code-quality/naming/functions.md | naming a function, component or handler |
+| docs/guidelines/code-quality/naming/variables.md | naming anything (code, tests, UI copy, docs) |
+| docs/guidelines/frontend/react.md | `src/ui/**` structure, state, effects, inputs |
+| docs/guidelines/frontend/tailwind.md | classes, tokens, `src/styles.css` |
+| docs/guidelines/frontend/admin-ui.md | screens, primitives, validation display |
+| docs/guidelines/frontend/accessibility.md | keyboard, ARIA, focus, feature checklist |

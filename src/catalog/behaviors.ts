@@ -1,20 +1,19 @@
 import type { BehaviorId } from '../domain/types';
 
-/** What step 2 of the Action panel asks for; 'none' = applied from step 1 (spec 004 FR-009). */
-export type BehaviorChoices =
-  | 'none'
-  | 'key'
-  | 'hold-tap'
-  | 'bluetooth'
-  | 'output'
-  | 'tap-dance'
-  | 'mod-morph';
+/** Group of the behavior picker (spec 006 US2 AS4). */
+export type BehaviorGroup = 'Send a key' | 'Special' | 'Connection' | 'Firmware' | 'Your behaviors';
 
 export type BehaviorEntry = {
   readonly id: BehaviorId;
+  /**
+   * What the binding line shows: the built-in label the keymap uses (`&kp`), or the kind for
+   * behaviors the user defines, which have no built-in label (`&td` does not exist,
+   * docs/zmk/behaviors.md §3.2–3.3).
+   */
+  readonly tag: string;
   readonly label: string;
   readonly description: string;
-  readonly choices: BehaviorChoices;
+  readonly group: BehaviorGroup;
   readonly docsUrl: string;
 };
 
@@ -25,112 +24,127 @@ const DOCS = 'https://v0-3-branch.zmk.dev/docs/keymaps/behaviors';
 export const BEHAVIORS = [
   {
     id: 'kp',
-    label: 'Send a key',
+    tag: '&kp',
+    label: 'Key press',
     description: 'Sends a key, optionally with Ctrl, Shift, Alt or GUI held.',
-    choices: 'key',
+    group: 'Send a key',
     docsUrl: `${DOCS}/key-press`,
   },
   {
     id: 'mt',
+    tag: '&mt',
     label: 'Modifier on hold, key on tap',
     description: 'Acts as a modifier while held and sends a key when tapped (mod-tap).',
-    choices: 'hold-tap',
+    group: 'Send a key',
     docsUrl: `${DOCS}/hold-tap#mod-tap`,
   },
   {
     id: 'sk',
+    tag: '&sk',
     label: 'Sticky key',
     description: 'Keeps a key, usually a modifier, active for the next key press.',
-    choices: 'key',
+    group: 'Send a key',
     docsUrl: `${DOCS}/sticky-key`,
   },
   {
     id: 'kt',
+    tag: '&kt',
     label: 'Key toggle',
     description: 'Presses a key and keeps it pressed until the key is pressed again.',
-    choices: 'key',
+    group: 'Send a key',
     docsUrl: `${DOCS}/key-toggle`,
   },
   {
     id: 'trans',
+    tag: '&trans',
     label: 'Pass-through',
     description: 'Uses the action of the next active layer below.',
-    choices: 'none',
+    group: 'Special',
     docsUrl: `${DOCS}/misc#transparent`,
   },
   {
     id: 'none',
+    tag: '&none',
     label: 'Do nothing',
     description: 'Ignores the key press.',
-    choices: 'none',
+    group: 'Special',
     docsUrl: `${DOCS}/misc#none`,
   },
   {
     id: 'caps_word',
+    tag: '&caps_word',
     label: 'Caps word',
     description: 'Types capital letters until a space or other word-breaking key.',
-    choices: 'none',
+    group: 'Special',
     docsUrl: `${DOCS}/caps-word`,
   },
   {
     id: 'key_repeat',
+    tag: '&key_repeat',
     label: 'Key repeat',
     description: 'Sends the last key that was sent again.',
-    choices: 'none',
+    group: 'Special',
     docsUrl: `${DOCS}/key-repeat`,
   },
   {
     id: 'gresc',
+    tag: '&gresc',
     label: 'Grave/Escape',
     description: 'Sends Escape, or ` when Shift or GUI is held.',
-    choices: 'none',
+    group: 'Special',
     docsUrl: `${DOCS}/mod-morph#behavior-binding`,
   },
   {
     id: 'bt',
+    tag: '&bt',
     label: 'Bluetooth',
     description: 'Selects, switches, disconnects or clears Bluetooth profiles.',
-    choices: 'bluetooth',
+    group: 'Connection',
     docsUrl: `${DOCS}/bluetooth#bluetooth-command-defines`,
   },
   {
     id: 'out',
+    tag: '&out',
     label: 'Output',
     description: 'Chooses whether keys go over USB or Bluetooth.',
-    choices: 'output',
+    group: 'Connection',
     docsUrl: `${DOCS}/outputs#output-command-defines`,
   },
   {
     id: 'sys_reset',
+    tag: '&sys_reset',
     label: 'Reset',
     description: 'Restarts the keyboard.',
-    choices: 'none',
+    group: 'Firmware',
     docsUrl: `${DOCS}/reset#reset`,
   },
   {
     id: 'bootloader',
+    tag: '&bootloader',
     label: 'Bootloader',
     description: 'Restarts into the bootloader so new firmware can be flashed.',
-    choices: 'none',
+    group: 'Firmware',
     docsUrl: `${DOCS}/reset#bootloader-reset`,
   },
   {
     id: 'tap_dance',
+    tag: 'tap-dance',
     label: 'Tap dance',
     description: 'Sends one action on a single tap, another on a double tap, and so on.',
-    choices: 'tap-dance',
+    group: 'Your behaviors',
     docsUrl: `${DOCS}/tap-dance`,
   },
   {
     id: 'mod_morph',
+    tag: 'mod-morph',
     label: 'Mod-morph',
     description: 'Sends one key normally and another while a chosen modifier is held.',
-    choices: 'mod-morph',
+    group: 'Your behaviors',
     docsUrl: `${DOCS}/mod-morph`,
   },
 ] as const satisfies readonly BehaviorEntry[];
 
-// One row of the behavior control, in panel order.
+// One row of the behavior picker, in picker order.
 export type BehaviorKind = (typeof BEHAVIORS)[number];
 
 // Compile-time guard: every BehaviorId is offered exactly once in panel order. `satisfies`

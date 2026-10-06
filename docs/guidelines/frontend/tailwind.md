@@ -1,6 +1,6 @@
 ---
 description: Tailwind v4 tokens only — no arbitrary values, no style prop; token source is src/styles.css.
-globs:
+paths:
   - src/**/*.tsx
   - src/styles.css
 ---

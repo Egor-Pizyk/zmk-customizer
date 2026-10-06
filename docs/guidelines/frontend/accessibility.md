@@ -1,6 +1,6 @@
 ---
 description: WCAG 2.2 AA baseline — landmarks, keyboard, ARIA, focus, feature checklist.
-globs:
+paths:
   - src/ui/**/*.tsx
 ---
 

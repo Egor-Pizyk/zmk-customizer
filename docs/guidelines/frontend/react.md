@@ -1,6 +1,6 @@
 ---
 description: src/ui architecture — workspaces, providers, commit/undo, derived data, effects allowlist, inputs, React 19.
-globs:
+paths:
   - src/ui/**/*.ts
   - src/ui/**/*.tsx
 ---
@@ -13,7 +13,7 @@ How `src/ui/` is written. Base rules (function components, `type XProps`, no log
 
 ```
 src/ui/
-  app.tsx               shell: tab bar, project bar, main, problems panel, status region, global keydown
+  app.tsx               shell: tab bar, project bar, main, problems panel, status region; mounts use-global-shortcuts.ts
   project-context.tsx   ProjectProvider + useProject
   preferences-context.tsx  PreferencesProvider + usePreferences (theme, grid, active workspace)
   error-boundary.tsx    the only class component (observability.md)
@@ -58,21 +58,24 @@ dispatch({ type: 'resize-key', keyIndex, widthU });
 
 ## Effects
 
-Effects sync with systems outside React. The complete list so far:
+Effects sync with systems outside React. A change that adds, moves or removes an effect updates this table in the same commit; `grep -rln useEffect src/ui` must list exactly the files below.
 
 | Effect | Where |
 |---|---|
 | `document.documentElement.dataset.theme` sync with the theme preference | `preferences-context.tsx` |
+| Focus the workspace `<h1>` when the workspace changes (accessibility.md "Structure") | `workspace-view.tsx` |
 | `ResizeObserver`: panel and container sizes into state from the observer callback (clamp derived in render) | `components/floating-panel.tsx` |
-| `ResizeObserver`: surface size for the zoom center, reported by `onSizeChange` | `canvas/work-surface.tsx` |
-| Non-passive `wheel` listener: Ctrl/Cmd zoom with `preventDefault`, wheel pan; 200 ms commit timer cleared in cleanup | `canvas/work-surface.tsx` |
+| `ResizeObserver`: surface size into state for rulers and minimap | `canvas/use-element-size.ts` |
+| Non-passive `wheel` listener: Ctrl/Cmd zoom with `preventDefault`, wheel pan; 200 ms commit timer cleared in cleanup | `canvas/use-surface-viewport.ts` |
 | `showModal()` / `close()` to match `Dialog`'s `open` prop; `close` event → `onClose`; backdrop `click` listener added with `addEventListener` in the same effect and removed in its cleanup (no JSX `onClick` on `<dialog>`, which fails jsx-a11y) | `components/dialog.tsx` |
-| Global `keydown` on `globalThis` for all shortcuts: Alt+Shift globals and canvas-scoped single keys (`shortcuts.ts`) | `app.tsx` |
+| Global `keydown` on `globalThis` for all shortcuts: Alt+Shift globals and canvas-scoped single keys (`shortcuts.ts`) | `use-global-shortcuts.ts` (mounted by `app.tsx`) |
 | Schematic `keydown` on `globalThis` for the Schematic canvas ids (tools, Enter, Delete, Escape) that need workspace state; the app listener has no action for them | `schematic/use-schematic-shortcuts.ts` |
+| Bindings `keydown` on `globalThis`: Mod+C / Mod+V copy and paste a binding on the Bindings canvas or Keys table | `bindings/use-bindings-shortcuts.ts` |
+| `keydown` on `globalThis`: Escape inside `[data-action-panel]` returns focus to the canvas | `bindings/action-panel.tsx` |
 
 - Autosave is not an effect: `saveProject` runs in the project provider's dispatch, the handler that changes the project (spec 002 research R6), so loading never writes and no effect stores the save result.
 - Page title is `<title>` rendered by the workspace screen (React 19 hoists it), not an effect on `document.title`.
-- Canvas-scoped single keys are matched by the one `globalThis` `keydown` listener in `app.tsx` when `event.target` is inside `[data-canvas-workspace]` (`onKeyDown` on `role="application"` fails jsx-a11y `no-noninteractive-element-interactions`). Keys of interactive elements (a `<button>` drag handle, a table selection column) use `onKeyDown` on that element.
+- Canvas-scoped single keys are matched by the global `keydown` listener in `use-global-shortcuts.ts` when `event.target` is inside `[data-canvas-workspace]` (`onKeyDown` on `role="application"` fails jsx-a11y `no-noninteractive-element-interactions`). Keys of interactive elements (a `<button>` drag handle, a table selection column) use `onKeyDown` on that element.
 - Every listener added in an effect is removed in its cleanup. Dependency arrays are complete (`code-quality/typescript.md`).
 
 ## Inputs and forms

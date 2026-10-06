@@ -1,6 +1,8 @@
 <!--
 Sync Impact Report
-- Version change: 1.0.0 → 1.1.0 (added Constraints item: target ZMK v0.3, ADR 0010)
+- Version change: 1.1.0 → 1.1.1 (Development Workflow now points to AGENTS.md §6/§8 instead of
+  copying them; command names fixed to /speckit-*; Constraints cite all of docs/guidelines/)
+- Previous: 1.0.0 → 1.1.0 (added Constraints item: target ZMK v0.3, ADR 0010)
 - Previous: template (unversioned) → 1.0.0
 - Modified principles: all template placeholders replaced by AGENTS.md §7 items I–VIII
 - Added sections: Core Principles (8), Constraints, Development Workflow, Governance
@@ -105,30 +107,15 @@ Rationale: the tool must work without a mouse and with a screen reader.
   Catalog data: §3.4.
 - Tech stack and approved runtime dependencies: AGENTS.md §4. Any other dependency requires an
   ADR in `docs/decisions/`.
-- Code-quality rules: files imported in AGENTS.md §10 (`docs/guidelines/code-quality/`).
+- Code-quality and frontend rules: files listed in AGENTS.md §10 (`docs/guidelines/`).
 - `make check` (typecheck + lint + format check + tests) MUST pass before any task is done.
 - Generated output MUST target ZMK v0.3.0 ([ADR 0010](../../docs/decisions/0010-target-zmk-v0-3.md)).
   Anything marked "main only" in `docs/zmk/` MUST NOT be generated or offered in the UI.
 
 ## Development Workflow
 
-From AGENTS.md §6 and §8:
-
-- Features follow Spec Kit: specify → clarify → plan → tasks → analyze → implement. No feature
-  code without a spec. Order and scope: `docs/roadmap.md`.
-- Read the relevant `docs/zmk/*.md` page before touching anything that produces ZMK syntax. Do
-  not write Devicetree/Kconfig from memory.
-- Stay inside the task. No drive-by refactors, no renaming unrelated code, no new dependencies
-  without AGENTS.md §4 approval.
-- Tests first for domain logic and generators: write the test, watch it fail, then implement.
-  Tests sit next to the code as `*.test.ts(x)`.
-- One exported concept per file in `src/domain/` and `src/generators/`; files small and named
-  after what they contain.
-- No comments that repeat code. Comment only non-obvious "why" (ZMK quirks, links to docs).
-- Never commit `dist/`, `coverage/`, `node_modules/`.
-- Commits follow Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `test:`,
-  `refactor:`), one logical change each.
-- If a ZMK behavior is unclear, say so and link the doc page; do not guess.
+AGENTS.md §6 (Spec Kit flow, branch and spec numbering) and §8 (rules for agents) apply
+verbatim. They are not copied here, so they cannot drift.
 
 ## Governance
 
@@ -137,8 +124,8 @@ From AGENTS.md §6 and §8:
 - Amendments: edit `AGENTS.md` first (if the rule changes), then this file, in one commit.
 - Versioning (semver): MAJOR = principle removed or redefined incompatibly; MINOR = principle or
   section added or materially expanded; PATCH = wording and clarifications.
-- Compliance: `/speckit.analyze` and the `spec-reviewer` agent check each feature against this
-  constitution before `/speckit.implement`; `zmk-reviewer` checks generator and catalog changes;
+- Compliance: `/speckit-analyze` and the `spec-reviewer` agent check each feature against this
+  constitution before `/speckit-implement`; `zmk-reviewer` checks generator and catalog changes;
   code review verifies the "review only" rules in the code-quality guidelines.
 
-**Version**: 1.1.0 | **Ratified**: 2026-09-27 | **Last Amended**: 2026-09-27
+**Version**: 1.1.1 | **Ratified**: 2026-09-27 | **Last Amended**: 2026-09-29

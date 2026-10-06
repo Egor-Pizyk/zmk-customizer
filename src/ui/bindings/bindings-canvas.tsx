@@ -5,7 +5,7 @@ import type { Marquee } from '../canvas/marquee-layer';
 import type { ContentView, SurfaceContent } from '../canvas/surface-content';
 import { WorkSurface } from '../canvas/work-surface';
 import { formatBindingLegend } from './format-binding-legend';
-import { formatKeycapLabel, formatKeycapTitle } from './format-keycap-label';
+import { formatKeycapLabel, formatKeycapTag, formatKeycapTitle } from './format-keycap-label';
 import { formatKeycapCorner } from './format-keycap-corner';
 import { KeycapShape } from './keycap-shape';
 import { WiresBackdrop } from './wires-backdrop';
@@ -54,6 +54,7 @@ function Keycaps(props: BindingsCanvasProps & { readonly view: ContentView }) {
           problems,
         })}
         legend={legend}
+        tag={legend === undefined ? undefined : formatKeycapTag(binding)}
         onFocus={props.onKeyFocus}
         onKeyDown={props.onKeyKeyDown}
         title={formatKeycapTitle(binding)}

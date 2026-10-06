@@ -1,5 +1,6 @@
 import type { PointerEvent } from 'react';
 import { isKeyPositionFree } from '../../domain/is-key-position-free';
+import { moveKeys } from '../../domain/move-keys';
 import { moveKey } from '../../domain/move-key';
 import { setWireBends } from '../../domain/set-wire-bends';
 import type { Wire, WireEnd, WirePoint } from '../../domain/types';
@@ -208,20 +209,19 @@ function endMultiKeyDrag(state: PointerState, project: PointerState['project']) 
     keyId: ks.keyId,
     position: { xU: ks.start.xU + dx, yU: ks.start.yU + dy },
   }));
+  const movingKeyIds = targetPositions.map((tp) => tp.keyId);
   const allFree = targetPositions.every((tp) =>
-    isKeyPositionFree(project, { position: tp.position, ignoreKeyId: tp.keyId }),
+    isKeyPositionFree(project, { position: tp.position, ignoreKeyIds: movingKeyIds }),
   );
   if (!allFree) {
     state.onHint('There is already a key here.');
     return;
   }
-  state.commit((current) => {
-    let next = current;
-    for (const tp of targetPositions) {
-      next = moveKey(next, { keyId: tp.keyId, position: tp.position });
-    }
-    return next;
-  });
+  state.commit((current) =>
+    moveKeys(current, {
+      moves: targetPositions.map((tp) => ({ keyId: tp.keyId, position: tp.position })),
+    }),
+  );
 }
 
 function endSingleKeyDrag(state: PointerState, project: PointerState['project']) {

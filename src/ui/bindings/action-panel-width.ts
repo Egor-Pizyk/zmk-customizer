@@ -1,7 +1,7 @@
 // Width limits for the resizable Bindings Action panel (docked right, dragged by its left
 // edge). The stored preference is clamped on load and on every change, so a damaged value
 // falls back instead of collapsing the panel.
-export const ACTION_PANEL_DEFAULT_WIDTH_PX = 384;
+export const ACTION_PANEL_DEFAULT_WIDTH_PX = 448;
 export const ACTION_PANEL_MIN_WIDTH_PX = 240;
 export const ACTION_PANEL_MAX_WIDTH_PX = 640;
 

@@ -1,6 +1,6 @@
 ---
 description: Function, component and handler naming — get/find/is/validate/commit/render/format/map verb prefixes.
-globs:
+paths:
   - src/**/*.ts
   - src/**/*.tsx
 ---

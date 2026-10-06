@@ -13,7 +13,7 @@
     "format:check": "oxfmt --check",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
-    "check": "npm run typecheck && npm run lint && npm run format:check && npm run test"
+    "check": "sh scripts/check-agents-sync.sh && npm run typecheck && npm run lint && npm run format:check && npm run test"
   },
   "dependencies": {
     "react": "^19.3.0",

@@ -1,6 +1,6 @@
 ---
 description: Domain glossary, casing and file naming — one term per concept across code, tests, UI copy and docs.
-globs:
+paths:
   - src/**/*
   - tests/**/*
   - docs/**/*
@@ -19,7 +19,8 @@ Names are nouns from the glossary below; one term per concept across code, tests
 | `shield` | The user's keyboard as a ZMK shield; `shieldName` is `[a-z0-9_]+` | `keyboard` (in code), `device` |
 | `board` | Controller board ZMK already supports (`nice_nano_v2`) | `controller`, `mcu`, `chip` |
 | `key` | One switch on the layout | `switch`, `button`, `keyCap` |
-| `keyIndex` | 0-based position of a key in keymap order (ZMK "key position", DT `key-positions`) | `keyPos`, `position`, `idx`, `keyId` |
+| `keyIndex` | 0-based position of a key in keymap order (ZMK "key position", DT `key-positions`) | `keyPos`, `position`, `idx` |
+| `keyId` | Stable entity id of a key (`Key.id`, `k1`…); survives reordering, keys `Layer.bindings` | `keyIndex` (for the id) |
 | `position` / `xU`, `yU` | Where a key sits on the canvas | `coords`, `location`, `pos` |
 | `cell` | Electrical matrix location `{ row, col }` | `coord`, `rc`, `matrixPos` |
 | `row` / `col` | Matrix row / column number | `column`, `r`, `c` |

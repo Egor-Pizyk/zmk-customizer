@@ -1,6 +1,6 @@
 ---
 description: App shell layout, design-system primitives, validation display and copy tone for screens.
-globs:
+paths:
   - src/ui/**/*.tsx
 ---
 
@@ -72,7 +72,7 @@ Every catalog-backed control (behavior, keycode, Kconfig option) shows label, on
 <Field label={option.label} description={option.description} docs={<DocsLink href={option.docsUrl} topic={option.label} />}>
   <Switch checked={isEnabled} onCheckedChange={handleSleepToggle} />
 </Field>
-// DocsLink: <a href={href} target="_blank" rel="noreferrer">Docs<span className="sr-only"> for {topic} (opens in a new tab)</span></a>
+// DocsLink: <a href={href} target="_blank" rel="noreferrer" title="ZMK docs: {topic}"><ExternalLinkIcon /><span className="sr-only">Docs for {topic} (opens in a new tab)</span></a>
 
 // ❌ hard-coded URL, main-branch docs, no context for screen readers
 <a href="https://zmk.dev/docs/config/power">Docs</a>

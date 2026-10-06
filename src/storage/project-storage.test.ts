@@ -12,6 +12,14 @@ import { serializeProject } from './serialize-project';
 
 const BACKUP_KEY = 'zmk-customizer:project-backup';
 
+function serializedText(project: Parameters<typeof serializeProject>[0]): string {
+  const serialized = serializeProject(project);
+  if (!serialized.ok) {
+    throw new Error(`serialize failed: ${serialized.error}`);
+  }
+  return serialized.value;
+}
+
 function storageStub(values: Record<string, string>, overrides: Partial<Storage> = {}): Storage {
   return {
     length: 0,
@@ -43,10 +51,7 @@ describe('loadProject', () => {
       layers: [{ id: 'l0', name: 'Base', bindings: {} }],
       name: 'Corne',
     } as const;
-    vi.stubGlobal(
-      'localStorage',
-      storageStub({ [PROJECT_STORAGE_KEY]: serializeProject(project) }),
-    );
+    vi.stubGlobal('localStorage', storageStub({ [PROJECT_STORAGE_KEY]: serializedText(project) }));
     expect(loadProject()).toEqual({ project, status: { kind: 'ok' } });
   });
 
@@ -61,7 +66,7 @@ describe('loadProject', () => {
   it('never writes the main key and reports a kept backup', () => {
     const setItem = vi.fn<(key: string, value: string) => void>();
     const values = {
-      [PROJECT_STORAGE_KEY]: serializeProject(createProject()),
+      [PROJECT_STORAGE_KEY]: serializedText(createProject()),
       [BACKUP_KEY]: 'old',
     };
     vi.stubGlobal('localStorage', storageStub(values, { setItem }));
@@ -80,7 +85,7 @@ describe('saveProject', () => {
     const setItem = vi.fn<(key: string, value: string) => void>();
     vi.stubGlobal('localStorage', storageStub({}, { setItem }));
     expect(saveProject(createProject())).toEqual({ ok: true, value: undefined });
-    expect(setItem).toHaveBeenCalledWith(PROJECT_STORAGE_KEY, serializeProject(createProject()));
+    expect(setItem).toHaveBeenCalledWith(PROJECT_STORAGE_KEY, serializedText(createProject()));
   });
 
   it('reports quota-exceeded', () => {

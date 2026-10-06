@@ -21,7 +21,7 @@ sh: ## Shell inside the app container
 install: ## npm ci inside the container
 	$(RUN) npm ci
 
-check: ## typecheck + lint + format check + tests (same as CI)
+check: ## agents sync + typecheck + lint + format check + tests (same as CI)
 	$(RUN) npm run check
 
 image: ## Build production image (nginx serving dist/)
