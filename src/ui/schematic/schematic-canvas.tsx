@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { findCrossings } from '../../domain/find-crossings';
-import { getWirePath } from '../../domain/get-wire-path';
+import { getSchematicGeometry } from './get-schematic-geometry';
 import type { Project } from '../../domain/types';
 import type { ContentPointerHandler, SurfaceContent } from '../canvas/surface-content';
 import { WorkSurface } from '../canvas/work-surface';
@@ -30,7 +30,7 @@ type PointerHandlers = Pick<
 function createSurfaceContent(input: ContentInput, handlers: PointerHandlers): SurfaceContent {
   const { project, hoverPreview, commit, marquee, ...layerProps } = input;
   const crossings = findCrossings(project);
-  const paths = new Map(project.wires.map((wire) => [wire.id, getWirePath(project, wire)]));
+  const { paths } = getSchematicGeometry(project);
   return {
     ...handlers,
     label: `Schematic canvas, ${project.keys.length} keys. The Parts list below lists every key, wire and crossing.`,

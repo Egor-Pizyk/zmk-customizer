@@ -199,9 +199,12 @@ Feature order and scope: `docs/roadmap.md`. One feature = one branch `NNN-short-
 
 ## 8. Rules for agents
 
+- Не использовать Computer Use, CUA и управление браузером или нативными приложениями без явного запроса пользователя. Проверки выполнять через терминал и автоматические тесты.
 - Read the relevant `docs/zmk/*.md` page before touching anything that produces ZMK syntax. Do not write Devicetree/Kconfig from memory. Target is ZMK v0.3 — never emit anything marked "main only".
 - Stay inside the task. No drive-by refactors, no renaming unrelated code, no new dependencies without §4 approval.
 - Write the test first for domain logic and generators; watch it fail; then implement. Tests sit next to the code as `*.test.ts(x)`.
+- Test observable behavior and product contracts (see `docs/testing.md`): real React/hooks/providers for UI interaction, roles and accessible names, visible state and saved/exported data. Do not mock React state or assert implementation details, Tailwind classes, or what the compiler/linter already guarantees.
+- Keep coverage floors in `vite.config.ts` passing through `make check`. Use `make test-mutations` separately to verify regression sensitivity; never run it alongside other checks or edits to production files.
 - Keep files small and named after what they contain. One exported concept per file in `domain/` and `generators/`.
 - No comments that repeat code. Comment only non-obvious "why" (ZMK quirks, links to docs).
 - Never commit generated `dist/`, `coverage/`, `node_modules/`.

@@ -39,6 +39,7 @@ export function PartsKeysTable(props: PartsTableProps & { readonly wiresOf: Wire
       <Button
         className="self-start"
         data-parts-add="key"
+        data-issue-path="keys"
         onClick={handleAddClick}
         size="sm"
         variant="secondary"
@@ -92,7 +93,12 @@ function KeyRow(props: KeyRowProps) {
         keyIndex={keyIndex}
         schematicKey={schematicKey}
       />
-      <RowPinCells keyId={schematicKey.id} keyIndex={keyIndex} wiresOf={wiresOf} />
+      <RowPinCells
+        commit={commit}
+        schematicKey={schematicKey}
+        keyIndex={keyIndex}
+        wiresOf={wiresOf}
+      />
       <KeyRowDeleteButton keyIndex={keyIndex} onDeleteClick={handleDeleteClick} />
     </tr>
   );

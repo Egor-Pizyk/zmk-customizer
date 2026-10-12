@@ -11,7 +11,12 @@ export type DraftTarget =
       readonly pin: KeyPin;
       readonly point: WirePoint;
     }
-  | { readonly kind: 'wire'; readonly wireId: string; readonly point: WirePoint }
+  | {
+      readonly kind: 'wire';
+      readonly wireId: string;
+      readonly point: WirePoint;
+      readonly attachmentPoint?: WirePoint;
+    }
   | { readonly kind: 'empty'; readonly point: WirePoint };
 
 export type WireDraft = {
@@ -51,7 +56,11 @@ function toEnd(target: DraftTarget): WireEnd {
       return { kind: 'key-pin', keyId: target.keyId, pin: target.pin };
     }
     case 'wire': {
-      return { kind: 'junction', wireId: target.wireId, at: target.point };
+      return {
+        kind: 'junction',
+        wireId: target.wireId,
+        at: target.attachmentPoint ?? target.point,
+      };
     }
     case 'empty': {
       return { kind: 'free', at: target.point };

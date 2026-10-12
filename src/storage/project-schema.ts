@@ -1,4 +1,5 @@
 import * as z from 'zod';
+import { CONTROLLER_BOARDS } from '../catalog/controller-boards';
 import { BOARD_PIN_COUNT } from '../domain/board-pin';
 import { MODIFIERS } from '../domain/types';
 import type { Project, Wire, WireEnd, WireEndSide } from '../domain/types';
@@ -16,13 +17,19 @@ const wireEndSchema = z.discriminatedUnion('kind', [
       .min(0)
       .max(BOARD_PIN_COUNT - 1)
       .exactOptional(),
+    droppedBoardPin: z.string().min(1).max(160).exactOptional(),
   }),
 ]);
 
+const checkedWireEndSchema = wireEndSchema.refine(
+  (end) => end.kind !== 'free' || end.boardPin === undefined || end.droppedBoardPin === undefined,
+  { message: 'An assigned pin cannot also be a dropped assignment' },
+);
+
 const wireSchema = z.strictObject({
   id: z.string().regex(/^w\d+$/u),
-  start: wireEndSchema,
-  end: wireEndSchema,
+  start: checkedWireEndSchema,
+  end: checkedWireEndSchema,
   bends: z.array(pointSchema),
 });
 
@@ -202,11 +209,22 @@ function findCrossingIssues(project: Project): Issue[] {
 // every nested node is strict so a malformed binding, wire or key is rejected at its own path.
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(3),
+    schemaVersion: z.literal(5),
+    controllerId: z.enum(CONTROLLER_BOARDS.map((board) => board.id)),
     name: z.string(),
     shieldName: z.string().exactOptional(),
     keys: z.array(
-      z.strictObject({ id: z.string().regex(/^k\d+$/u), xU: z.number(), yU: z.number() }),
+      z.strictObject({
+        id: z.string().regex(/^k\d+$/u),
+        xU: z.number(),
+        yU: z.number(),
+        diode: z
+          .strictObject({
+            pin: z.literal([1, 2]),
+            cathode: z.enum(['toward-switch', 'away-switch']),
+          })
+          .exactOptional(),
+      }),
     ),
     wires: z.array(wireSchema),
     insulatedCrossings: z.array(

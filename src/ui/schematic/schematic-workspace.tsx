@@ -1,3 +1,4 @@
+import { ControllerPanel } from './controller-panel';
 import { PartsList } from './parts-list';
 import { SchematicCanvas } from './schematic-canvas';
 import { getSchematicMarks } from './schematic-marks';
@@ -17,6 +18,7 @@ export function SchematicWorkspace() {
   const marquee = toMarquee(pointer.drag);
   return (
     <>
+      <ControllerPanel project={project} commit={commit} />
       <SchematicCanvas
         {...pointer.surfaceHandlers}
         activeKeyId={selectedKeyId ?? project.keys[0]?.id}

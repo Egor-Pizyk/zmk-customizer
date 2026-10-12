@@ -4,7 +4,9 @@ function withBoardPin(end: WireEnd, boardPin: number | undefined): WireEnd {
   if (end.kind !== 'free') {
     return end;
   }
-  return boardPin === undefined ? { kind: 'free', at: end.at } : { ...end, boardPin };
+  return boardPin === undefined
+    ? { kind: 'free', at: end.at }
+    : { kind: 'free', at: end.at, boardPin };
 }
 
 export function setWireEndBoardPin(

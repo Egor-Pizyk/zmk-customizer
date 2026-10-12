@@ -1,0 +1,48 @@
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/outputs.h>
+
+/ {
+    behaviors {
+        custom_td_0: custom_td_0 {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&kp C>, <&kp D>;
+        };
+        custom_mm_1: custom_mm_1 {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp BACKSPACE>, <&kp DELETE>;
+            mods = <(MOD_LSFT | MOD_RSFT)>;
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+
+        base_layer {
+            display-name = "Base";
+            bindings = <
+                &kp A
+                &kp B
+                &mo 1
+                &custom_td_0
+                &custom_mm_1
+                &lt 1 SPACE
+            >;
+        };
+
+        fn_layer {
+            display-name = "Fn";
+            bindings = <
+                &kp N1
+                &kp N2
+                &trans
+                &none
+                &out OUT_USB
+                &to 0
+            >;
+        };
+    };
+};

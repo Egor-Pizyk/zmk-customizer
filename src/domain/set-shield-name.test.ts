@@ -3,7 +3,8 @@ import { setShieldName } from './set-shield-name';
 import type { Project } from './types';
 
 const PROJECT: Project = {
-  schemaVersion: 3,
+  schemaVersion: 5,
+  controllerId: 'nice_nano_v2',
   keys: [],
   wires: [],
   insulatedCrossings: [],

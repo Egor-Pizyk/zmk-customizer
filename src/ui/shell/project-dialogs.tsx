@@ -74,9 +74,14 @@ function OpenProjectDialog({
 }
 
 function NewProjectDialog({ isOpen, onClose }: ConfirmDialogProps) {
-  const { startNewProject } = useProject();
+  const { startNewProject, startPresetProject } = useProject();
 
   function handleClose() {
+    onClose();
+  }
+
+  function handlePresetClick() {
+    startPresetProject();
     onClose();
   }
 
@@ -91,6 +96,9 @@ function NewProjectDialog({ isOpen, onClose }: ConfirmDialogProps) {
       <DialogButtons hasSaveButton onCancel={handleClose}>
         <Button onClick={handleStartNewClick} variant="danger">
           Start new project
+        </Button>
+        <Button onClick={handlePresetClick} variant="primary">
+          Start six-key unibody preset
         </Button>
       </DialogButtons>
     </Dialog>

@@ -60,7 +60,7 @@ describe('formatWireLabel', () => {
       'Wire 0 from key 0 pin 1 to key 1 pin 1',
     );
     expect(formatWireLabel(PROJECT, { wireIndex: 1 })).toBe(
-      'Wire 1 from key 1 pin 2 to board pin P3',
+      'Wire 1 from key 1 pin 2 to board pin D3',
     );
     expect(formatWireLabel(PROJECT, { wireIndex: 2 })).toBe('Wire 2 from key 0 pin 2 to wire 1');
     expect(formatWireLabel(PROJECT, { wireIndex: 3 })).toBe(

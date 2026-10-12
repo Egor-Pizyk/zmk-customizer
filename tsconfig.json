@@ -23,5 +23,5 @@
     "erasableSyntaxOnly": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src", "vite.config.ts"]
+  "include": ["src", "tests/helpers", "vite.config.ts"]
 }

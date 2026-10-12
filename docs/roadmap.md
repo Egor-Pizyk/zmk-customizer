@@ -2,7 +2,7 @@
 
 Features in implementation order. One feature = one Spec Kit branch `NNN-short-name` = one `specs/NNN-short-name/` directory (AGENTS.md §6). Numbers of specified features (a `specs/NNN-*` directory exists) are immutable. A feature added out of order takes the next number and every planned, not yet specified feature after it moves up; the added feature's section records the shift, because older specs keep the old numbers. Spec Kit numbers specs by counting existing `specs/` directories, so run `/speckit-specify` in this order to keep numbers aligned with this file.
 
-Ordering rule: every feature ends with something a user can load, see and download. Generators come before editors: feature 008 generates real files from preset keyboards, so each later editor changes a project whose output is already visible in the export preview and covered by golden tests. Exceptions, added on user request: 003 schematic, the 004/005 bindings editors, the 006 Action panel rework and 007 layers come before 008; they store project data only, and 008 generates files from it.
+Ordering rule: every feature ends with something a user can load, see and download. Generators come before editors: feature 009 generates real files from preset keyboards, so each later editor changes a project whose output is already visible in the export preview and covered by golden tests. Exceptions, added on user request: 003 schematic, the 004/005 bindings editors, the 006 Action panel rework, 007 layers and 008 diodes come before 009; they store project data only, and 009 generates files from it.
 
 Each `/speckit-specify` prompt below describes what and why only. Technology choices go into `/speckit-plan`, which reads AGENTS.md §3–§4.
 
@@ -39,24 +39,25 @@ Each `/speckit-specify` prompt below describes what and why only. Technology cho
 | 005 | key-behaviors | 004 |
 | 006 | action-panel-rework | 004, 005 |
 | 007 | layers | 006 |
-| 008 | shield-generators | 002, 003, 004, 005, 007 |
-| 009 | export-download | 008 |
-| 010 | controller-boards | 008 |
-| 011 | layout-editor | 002, 008 |
-| 012 | matrix-wiring-editor | 010, 011 |
-| 013 | keymap-editor | 008, 011 |
+| 008 | schematic-diodes | 003, 007 |
+| 009 | shield-generators | 002, 003, 004, 005, 007, 008 |
+| 010 | export-download | 009 |
+| 011 | controller-boards | 009 |
+| 012 | layout-editor | 002, 009 |
+| 013 | matrix-wiring-editor | 011, 012 |
+| 014 | keymap-editor | 009, 012 |
 | **MVP** | custom keyboard from scratch → buildable zmk-config zip | |
-| 014 | kconfig-settings | 009 |
-| 015 | custom-behaviors | 013 |
-| 016 | combos-macros-conditional-layers | 013, 015 |
-| 017 | kle-import | 011 |
-| 018 | encoders | 012, 013 |
-| 019 | zmk-studio-support | 013, 014 |
-| 020 | lighting-displays | 012, 014 |
-| 021 | zmk-version-selection | all catalog features |
-| 022 | build-verification | 009 |
+| 015 | kconfig-settings | 010 |
+| 016 | custom-behaviors | 014 |
+| 017 | combos-macros-conditional-layers | 014, 016 |
+| 018 | kle-import | 012 |
+| 019 | encoders | 013, 014 |
+| 020 | zmk-studio-support | 014, 015 |
+| 021 | lighting-displays | 013, 015 |
+| 022 | zmk-version-selection | all catalog features |
+| 023 | build-verification | 010 |
 
-Workspaces (from 001): **Schematic** holds the schematic of keys and wires (003), the layout editor (011) and matrix/wiring editor (012) and owns the project JSON config (002); **Bindings** holds bindings keycaps (004), key behaviors (005), the Action panel (006), layers (007), the keymap editor (013), custom behaviors (015) and combos/macros/conditional layers (016); **Firmware** holds kconfig-settings (014); **Export** holds the file preview (008) and download (009). Every feature reports its validation issues in the 001 problems panel, counted in the tab badge of the workspace that fixes them.
+Workspaces (from 001): **Schematic** holds the schematic of keys and wires (003), switch diodes (008), the layout editor (012) and matrix/wiring editor (013) and owns the project JSON config (002); **Bindings** holds bindings keycaps (004), key behaviors (005), the Action panel (006), layers (007), the keymap editor (014), custom behaviors (016) and combos/macros/conditional layers (017); **Firmware** holds kconfig-settings (015); **Export** holds the file preview (009) and download (010). Every feature reports its validation issues in the 001 problems panel, counted in the tab badge of the workspace that fixes them.
 
 ---
 
@@ -113,7 +114,7 @@ Workspaces (from 001): **Schematic** holds the schematic of keys and wires (003)
 
 **Goal.** Draw the keyboard as an electrical schematic in the Schematic workspace: keys drawn as MX switches seen from above (two pins each), orthogonal wires between pins, crossings that are connected by default and can be insulated, and free wire ends attached to a generic board pin (P0–P31). Everything is part of the project.
 
-**Scope (summary).** Key and Wire tools; parts list as the keyboard/screen-reader path; checks for unconnected pins, free ends, board-pin conflicts, shorts and overlaps. A key here is the same `Key` the layout editor (011) later extends with size and rotation; the matrix/wiring editor (012) derives kscan from the schematic's nets. Out of scope: generating ZMK files, real controller boards (010), diodes.
+**Scope (summary).** Key and Wire tools; parts list as the keyboard/screen-reader path; checks for unconnected pins, free ends, board-pin conflicts, shorts and overlaps. A key here is the same `Key` the layout editor (012) later extends with size and rotation; the matrix/wiring editor (013) derives kscan from the schematic's nets. Out of scope: generating ZMK files, real controller boards (011), diodes.
 
 ---
 
@@ -123,7 +124,7 @@ Workspaces (from 001): **Schematic** holds the schematic of keys and wires (003)
 
 **Goal.** Fill the Bindings workspace: the schematic's keys drawn as keycaps over its dimmed wires, a floating Action panel to choose each key's action (kind → action, with search, description and v0.3 docs link), readable legends, multi-select, copy/paste and a table alternative. One layer (Base); bindings are stored per layer and keyed by key id.
 
-**Scope (summary).** Built-in behaviors `&kp` (full keycode catalog parsed from the vendored v0.3 `keys.h`, with modifier toggles), `&mt`, `&sk`, `&kt`, `&trans`, `&none`, `&caps_word`, `&key_repeat`, `&gresc`, `&bt`, `&out`, `&sys_reset`, `&bootloader`. Out of scope: layers and layer behaviors (007), macros, user behaviors, behaviors needing Kconfig (RGB, backlight, mouse, soft-off, Studio), keymap generation (008).
+**Scope (summary).** Built-in behaviors `&kp` (full keycode catalog parsed from the vendored v0.3 `keys.h`, with modifier toggles), `&mt`, `&sk`, `&kt`, `&trans`, `&none`, `&caps_word`, `&key_repeat`, `&gresc`, `&bt`, `&out`, `&sys_reset`, `&bootloader`. Out of scope: layers and layer behaviors (007), macros, user behaviors, behaviors needing Kconfig (RGB, backlight, mouse, soft-off, Studio), keymap generation (009).
 
 **Acceptance criteria.** The spec's user stories and success criteria (SC-001–SC-008); in short: bindings survive reload, file round trip and key deletion in Schematic; unknown key names and out-of-range profiles are reported under Bindings; every behavior and keycode links to the v0.3 docs.
 
@@ -155,7 +156,7 @@ Workspaces (from 001): **Schematic** holds the schematic of keys and wires (003)
 
 ## 007 — layers
 
-Was 005 until 2026-10-06; on user request it comes before the shield generators (008), which then emit every layer.
+Was 005 until 2026-10-06; on user request it comes before the shield generators (009), which then emit every layer.
 
 **Goal.** Add, rename, reorder and delete keymap layers in the Bindings workspace (layer tabs above the canvas, keyboard reachable), edit each layer's bindings with the existing Action panel, and offer the layer behaviors `&mo`, `&lt`, `&tog`, `&to`, `&sl` in its behavior picker, each with a layer slot (006). References to a layer follow it when layers are reordered; references to a deleted layer are reported in the problems panel (Bindings badge).
 
@@ -171,7 +172,7 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 - Whether a pass-through key shows the legend of the layer below on the canvas.
 - Schema change: new binding kinds and a layer reference; check how spec 005 handled `schemaVersion` and migrations, and follow AGENTS.md §3.2.
 
-**Out of scope.** Conditional layers (016), layer locking (main only), tuning `&lt`/`&sl` properties (015), encoders' sensor bindings (018), generating files (008).
+**Out of scope.** Conditional layers (017), layer locking (main only), tuning `&lt`/`&sl` properties (016), encoders' sensor bindings (019), generating files (009).
 
 **Relevant docs.** `docs/zmk/keymap.md` §2, `docs/zmk/behaviors.md` §3.1, §3.4, §3.8.
 
@@ -181,19 +182,33 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 
 ---
 
-## 008 — shield-generators
+## 008 — schematic-diodes
 
-**Goal.** Given a complete project as stored today (`src/domain/types.ts` v3), produce the ZMK shield files that upstream ZMK v0.3 builds unchanged. Ship with a preset unibody project so output is real and golden-tested.
+**Specified:** [`specs/008-schematic-diodes/spec.md`](../specs/008-schematic-diodes/spec.md). Added 2026-10-12 on user request; planned features 008–022 shift to 009–023. Earlier specifications keep their historical numbers.
+
+**Goal.** Add one series diode to either switch pin using buttons beside pins, disable the opposite button, draw a minimal symbol and persist pin/polarity. Parts provides keyboard controls and polarity reversal. Wire endpoints and external net identities remain unchanged. The future generator uses diode current direction to constrain matrix orientation and rejects contradictions.
+
+**Acceptance criteria.** One diode per key enforced in domain; toggle and reversal each undoable; symbol follows key; v1–v3 files migrate without adding diodes; malformed diode data rejected; save/reload preserves both pins and polarities.
+
+**Out of scope.** Free-standing diodes and ZMK file generation.
+
+---
+
+## 009 — shield-generators
+
+**Implemented (2026-10-12):** [specification](../specs/009-shield-generators/spec.md), [validation evidence](../specs/009-shield-generators/validation.md). Fixed nice_nano_v2 with exposed raw gpio0 pins; every key requires a saved diode. Five deterministic files, complete six-key preset and readonly Export preview. Schema stays v4; firmware compilation and browser verification are not claimed.
+
+**Goal.** Given a complete project as stored today (`src/domain/types.ts` v4), produce the ZMK shield files that upstream ZMK v0.3 builds unchanged. Ship with a preset unibody project so output is real and golden-tested.
 
 **What the model holds today (read `src/domain/types.ts`, not the list below from memory).**
-- Keys: `id`, `xU`, `yU` only — no size, rotation, matrix cell, half. Array order is the key index (`0..n-1`) used by the keymap.
-- Wiring: schematic nets (`getNets`) with generic board pins P0–P31; no controller boards (010), no kscan type, no diode direction, no split.
+- Keys: `id`, `xU`, `yU`, optional series diode (pin + cathode side) — no size, rotation, matrix cell, half. Array order is the key index (`0..n-1`) used by the keymap.
+- Wiring: schematic nets (`getNets`) with generic board pins P0–P31; no controller boards (011), no kscan type or row/column naming, no split; optional key diodes store current direction.
 - Keymap: layers array with layer behaviors (007 layers, done first), bindings keyed by key id, kinds `kp/mt/sk/kt/trans/none/caps_word/key_repeat/gresc/bt/out/sys_reset/bootloader` **plus `tap_dance` and `mod_morph`** (specs/005-key-behaviors) which need generated `behaviors {}` nodes.
 - Validation preconditions for generation (all Schematic): no `keys-in-parallel`, no `net-without-board-pin`, no `key-shorted`, no `board-pins-shorted`, every pin connected.
 
 **In scope**
 - RC derivation: bipartite partition of nets (every key spans two nets) with a deterministic orientation rule; non-bipartite projects are export errors, not guesses.
-- Generators (unibody only): `Kconfig.shield`, `Kconfig.defconfig`, `<name>.overlay` (kscan `gpio-matrix` node with a fixed default `diode-direction`, documented), `zmk,matrix-transform`, `zmk,physical-layout` with `keys`, `<name>.keymap` (every layer in order, all stored binding kinds incl. layer behaviors and `tap_dance`/`mod_morph` behavior nodes, identical definitions emitted once), `<name>.conf` (empty/defaults).
+- Generators (unibody only): `Kconfig.shield`, `Kconfig.defconfig`, `<name>.overlay` (kscan `gpio-matrix` node with `diode-direction` derived consistently from stored diode polarity; a documented policy for diode-free projects), `zmk,matrix-transform`, `zmk,physical-layout` with `keys`, `<name>.keymap` (every layer in order, all stored binding kinds incl. layer behaviors and `tap_dance`/`mod_morph` behavior nodes, identical definitions emitted once), `<name>.conf` (empty/defaults).
 - Key order everywhere (transform `map`, layout `keys`, keymap `bindings`) = key array order.
 - Physical-layout cells = `Math.round(value * 100)`; negative `xU`/`yU` emitted as-is in parentheses (cells are `int16`, `docs/zmk/physical-layout.md`) — no normalization.
 - Generic board pins P0–P31 mapped to DT by one documented rule (resolve exact syntax in `/speckit-clarify` against `docs/zmk/boards.md`).
@@ -201,7 +216,7 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 - Golden tests comparing generator output with expected files derived from `tests/fixtures/upstream/` (verbatim upstream + `DIFFERENCES.md` per deviation).
 - Read-only preview of all generated files in the Export workspace; export blocked with the issue list while any precondition fails.
 
-**Out of scope.** Split halves + `col-offset` (no model yet; with 010/012), matrix editor / editable diode direction (012), controller boards (010), combos/macros/conditional layers (not stored), charlieplex/direct kscan (no model yet), Kconfig settings (014), encoders/displays/RGB, zip download (009).
+**Out of scope.** Split halves + `col-offset` (no model yet; with 011/013), matrix editor / editable diode direction (013), controller boards (011), combos/macros/conditional layers (not stored), charlieplex/direct kscan (no model yet), Kconfig settings (015), encoders/displays/RGB, zip download (010).
 
 **Acceptance criteria**
 - For the preset, every generated file matches its golden file byte for byte; twice = identical bytes; `\n`, one trailing newline, stable ordering.
@@ -212,7 +227,7 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 **Open (resolve in `/speckit-clarify`)**
 - Bipartition orientation rule (which net set becomes rows) and naming of generated row/col indices.
 - Exact DT syntax for generic board pins P0–P31.
-- Fixed default `diode-direction` value until 012 makes it editable.
+- Diode polarity constrains row/column orientation; reject incompatible current directions. Resolve the explicit policy for keys without diodes until 013 adds wiring configuration.
 - Layer `display-name` over 19 UTF-8 bytes breaks in Studio builds (`docs/zmk/keymap.md` §2): cap the emitted name or raise `CONFIG_ZMK_KEYMAP_LAYER_NAME_MAX_LEN`.
 - Layer node names have no length cap yet (`toLayerNodeName`); the Devicetree spec allows 1–31 characters, enforcement by dtc unverified (`docs/zmk/keymap.md` §1).
 - Golden comparison: upstream files contain parts we do not generate and upstream formatting. Proposed default: keep upstream files verbatim as reference and store our expected output beside them with a short `DIFFERENCES.md` listing each intentional deviation; tests compare against the expected output.
@@ -223,12 +238,14 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 **Relevant docs.** `docs/zmk/README.md`, `shield-files.md`, `kscan.md`, `matrix-transform.md`, `physical-layout.md`, `boards.md`, `keymap.md`, `behaviors.md`.
 
 ```
-/speckit-specify Generate ZMK shield files from a keyboard project as stored (keys with x/y positions, schematic wiring nets with generic board pins, keymap layers with bindings including layer behaviors, tap-dance and mod-morph). From that, the tool must produce the exact set of files ZMK v0.3 expects for a unibody shield — board glue configuration, device description with kscan matrix node, matrix transform and physical layout, the keymap with behavior definitions, and the configuration file — so that the result builds with official ZMK without manual edits. Matrix rows and columns are derived from the wiring nets; key order follows the key list order; physical-layout coordinates are emitted as stored, including negative values. Correctness is the priority: output is identical every time for the same project, and it is checked against real keyboards from the official ZMK repository. Before any editor exists for wiring or boards, users can start from a preset unibody project and see every generated file in the Export workspace. The tool checks the project first and lists every problem in the problems panel, under the workspace where it is fixed (unconnected pins, two keys on the same connection pair, a connection without a board pin, shorted keys or pins) instead of producing broken files. Out of scope: editing the project, split keyboards, controller board selection, downloading files, combos, macros, encoders, lighting and displays.
+/speckit-specify Generate ZMK shield files from a keyboard project as stored (keys with x/y positions, schematic wiring nets with generic board pins and per-key diode polarity, keymap layers with bindings including layer behaviors, tap-dance and mod-morph). From that, the tool must produce the exact set of files ZMK v0.3 expects for a unibody shield — board glue configuration, device description with kscan matrix node, matrix transform and physical layout, the keymap with behavior definitions, and the configuration file — so that the result builds with official ZMK without manual edits. Matrix rows and columns are derived from the wiring nets and must agree with stored diode current direction; incompatible directions are export errors. Key order follows the key list order; physical-layout coordinates are emitted as stored, including negative values. Correctness is the priority: output is identical every time for the same project, and it is checked against real keyboards from the official ZMK repository. Before any editor exists for wiring or boards, users can start from a preset unibody project and see every generated file in the Export workspace. The tool checks the project first and lists every problem in the problems panel, under the workspace where it is fixed (unconnected pins, two keys on the same connection pair, a connection without a board pin, shorted keys or pins) instead of producing broken files. Out of scope: editing the project, split keyboards, controller board selection, downloading files, combos, macros, encoders, lighting and displays.
 ```
 
 ---
 
-## 009 — export-download
+## 010 — export-download
+
+**Specified:** [`specs/010-export-download/spec.md`](../specs/010-export-download/spec.md).
 
 **Goal.** Download the generated files as a `.zip` that can be committed as a `zmk-config` repository and built by GitHub Actions.
 
@@ -245,7 +262,7 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 - With a validation error the download control is disabled and the errors are listed.
 - Works offline (no network request during export).
 
-**Open.** Pinned ZMK revision used in `west.yml` and the workflow reference — owned by `docs/zmk/README.md`.
+**Resolved (spec 010).** `west.yml` and the reusable workflow both use `v0.3`, as pinned in `docs/zmk/README.md`. Workflow inclusion defaults on and can be switched off for the current export.
 
 **Relevant docs.** `docs/zmk/README.md`, `shield-files.md`.
 
@@ -255,7 +272,9 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 
 ---
 
-## 010 — controller-boards
+## 011 — controller-boards
+
+**Implemented (2026-10-12):** [specification](../specs/011-controller-boards/spec.md), [validation evidence](../specs/011-controller-boards/validation.md). Four verified controllers, connector GPIOs and printed pin labels, schema v5 migration, family-aware board switching with dropped endpoint issues. USB-only boards report incompatible Bluetooth bindings. One unibody controller; split selection remains in 013. Automated checks only, no firmware compilation.
 
 **Goal.** Pick the controller board and see its pins by the names printed on the board; pins in the project reference the board's connector so the overlay uses the right syntax.
 
@@ -266,7 +285,7 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 - Pin picker showing board labels.
 - Board selection in the Schematic workspace; dropped pins listed in the problems panel.
 
-**Out of scope.** Custom boards (AGENTS.md §1.4 non-goal), editing pin assignments (012).
+**Out of scope.** Custom boards (AGENTS.md §1.4 non-goal), editing pin assignments (013).
 
 **Acceptance criteria**
 - Every catalog entry has a `docsUrl`; a test fails if one is missing.
@@ -283,7 +302,7 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 
 ---
 
-## 011 — layout-editor
+## 012 — layout-editor
 
 **Goal.** Build any physical key layout visually in the Schematic workspace, with a table view that exposes every key property for keyboard and screen-reader users.
 
@@ -295,7 +314,7 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 - Start from blank or a preset.
 - Deleting a key removes its binding from every layer and its matrix assignment; indices stay contiguous.
 
-**Out of scope.** KLE import (017), wiring (012), bindings (013).
+**Out of scope.** KLE import (018), wiring (013), bindings (014).
 
 **Acceptance criteria**
 - Every canvas operation has a keyboard or table equivalent (verified by a UI test for move and rotate).
@@ -313,7 +332,7 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 
 ---
 
-## 012 — matrix-wiring-editor
+## 013 — matrix-wiring-editor
 
 **Goal.** In the Schematic workspace, describe how the switches are wired so the generated kscan node and matrix transform match the real hardware, with conflicts visible before export.
 
@@ -322,11 +341,11 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 - Kscan type: matrix or direct; diode direction `col2row` / `row2col`.
 - Matrix grid view: rows × columns, key placed per cell; assign key → (row, col) by click or table.
 - Auto-assign rows/cols by physical position, per half.
-- Pin assignment per row/column (matrix) or per key (direct), per half, using the 010 pin picker.
+- Pin assignment per row/column (matrix) or per key (direct), per half, using the 011 pin picker.
 - Conflict highlighting on the canvas and in the problems panel (Schematic badge): two keys in one cell, unassigned key/row/col/pin, pin used twice on one half, pin reserved by board.
 - Right half column offset derived for split.
 
-**Out of scope.** Charlieplex (later), encoders (018).
+**Out of scope.** Charlieplex (later), encoders (019).
 
 **Acceptance criteria**
 - Auto-assign on each preset layout reproduces the preset's matrix (or a documented equivalent), tested.
@@ -344,9 +363,9 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 
 ---
 
-## 013 — keymap-editor
+## 014 — keymap-editor
 
-**Reduced by 004 and 007 (2026-09-28).** The keycode picker, built-in behaviors, catalog, keymap view and list alternative are delivered by 004 bindings-keycaps; layer management and layer behaviors by 007 layers. What remains here: the keymap round-trip acceptance against the preset golden files once shield generators (008) and the layout editor (011) exist, and any gaps found then. The original scope is kept below for reference.
+**Reduced by 004 and 007 (2026-09-28).** The keycode picker, built-in behaviors, catalog, keymap view and list alternative are delivered by 004 bindings-keycaps; layer management and layer behaviors by 007 layers. What remains here: the keymap round-trip acceptance against the preset golden files once shield generators (009) and the layout editor (012) exist, and any gaps found then. The original scope is kept below for reference.
 
 **Goal.** In the Bindings workspace, edit layers and per-key bindings with built-in ZMK behaviors, using a searchable keycode picker instead of typed codes.
 
@@ -357,7 +376,7 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 - Keymap view on the physical layout plus a list alternative.
 - Validation: parameter count/type per behavior, layer references exist; issues go to the problems panel (Bindings badge).
 
-**Out of scope.** User-defined behaviors (015), combos/macros/conditional layers (016).
+**Out of scope.** User-defined behaviors (016), combos/macros/conditional layers (017).
 
 **Acceptance criteria**
 - Keymap generated for each preset after round-tripping through the editor (no edits) is byte-identical to its golden file.
@@ -375,11 +394,11 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 
 ## — MVP line —
 
-After 013 a user can design a non-standard keyboard from nothing, wire it, map it, and download a zmk-config that builds. Everything below adds reach, not the core promise.
+After 014 a user can design a non-standard keyboard from nothing, wire it, map it, and download a zmk-config that builds. Everything below adds reach, not the core promise.
 
 ---
 
-## 014 — kconfig-settings
+## 015 — kconfig-settings
 
 **Goal.** In the Firmware workspace, set common ZMK Kconfig options through typed controls, each explained and linked.
 
@@ -399,13 +418,13 @@ After 013 a user can design a non-standard keyboard from nothing, wire it, map i
 
 ---
 
-## 015 — custom-behaviors
+## 016 — custom-behaviors
 
 **Goal.** In the Bindings workspace, define user behaviors (hold-tap, tap-dance, mod-morph, sticky key/layer tuning) and bind them to keys.
 
-**In scope.** Create/edit/delete behaviors with typed properties per `docs/zmk/behaviors.md`; generated `behaviors {}` section; behaviors appear in the 013 picker; deleting a used behavior is a validation error in the problems panel listing the keys.
+**In scope.** Create/edit/delete behaviors with typed properties per `docs/zmk/behaviors.md`; generated `behaviors {}` section; behaviors appear in the 014 picker; deleting a used behavior is a validation error in the problems panel listing the keys.
 
-**Out of scope.** Macros, combos (016).
+**Out of scope.** Macros, combos (017).
 
 **Acceptance criteria.** Golden test per behavior type; label names sanitized and unique; timing properties validated; every property has `docsUrl`.
 
@@ -417,7 +436,7 @@ After 013 a user can design a non-standard keyboard from nothing, wire it, map i
 
 ---
 
-## 016 — combos-macros-conditional-layers
+## 017 — combos-macros-conditional-layers
 
 **Goal.** Combos, macros and conditional layers, the remaining keymap sections, in the Bindings workspace.
 
@@ -437,43 +456,43 @@ After 013 a user can design a non-standard keyboard from nothing, wire it, map i
 
 Order among these is flexible; pick by user demand.
 
-### 017 — kle-import
+### 018 — kle-import
 Import a Keyboard Layout Editor JSON into the Schematic physical layout (positions, sizes, rotations). Out: KLE colors/legends beyond a label. Acceptance: fixture KLE files for the presets import to layouts equal to the preset layouts. Open: whether KLE parsing needs a dependency (ADR required). Docs: `docs/zmk/physical-layout.md`.
 
 ```
 /speckit-specify Import a keyboard layout created in the popular Keyboard Layout Editor website into the Schematic workspace so users do not have to redraw keys they already designed. Key positions, sizes and rotations are taken over; anything the tool cannot represent is listed after import. A file that cannot be read is rejected with a clear message and the current project stays unchanged.
 ```
 
-### 018 — encoders
+### 019 — encoders
 Rotary encoders: pins per half and steps (Schematic), sensor bindings per layer (Bindings). Requires a new `docs/zmk/encoders.md` page first. Acceptance: golden test against an upstream shield with encoders.
 
 ```
 /speckit-specify Support rotary encoders: in the Schematic workspace the user adds encoders to the layout, assigns their pins and sets their resolution; in the Bindings workspace they choose per layer what turning left and right does. Each option links to the ZMK documentation.
 ```
 
-### 019 — zmk-studio-support
-Enable ZMK Studio for the generated shield (Kconfig, build snippet, unlock binding). Settings in the Firmware workspace. Requires a new `docs/zmk/studio.md` page. Physical layout from 008 is already a prerequisite Studio needs.
+### 020 — zmk-studio-support
+Enable ZMK Studio for the generated shield (Kconfig, build snippet, unlock binding). Settings in the Firmware workspace. Requires a new `docs/zmk/studio.md` page. Physical layout from 009 is already a prerequisite Studio needs.
 
 ```
 /speckit-specify Let users make their keyboard work with ZMK Studio so they can change the keymap later without rebuilding firmware. The user turns it on in the Firmware workspace, sees what it requires (for example a key that unlocks editing), and the generated configuration includes everything Studio needs.
 ```
 
-### 020 — lighting-displays
+### 021 — lighting-displays
 RGB underglow, backlight, OLED / nice!view: pins in Schematic, options in Firmware. Large surface; split into separate specs when started. Requires new `docs/zmk/` pages.
 
 ```
 /speckit-specify Support keyboard lighting and small displays: RGB underglow, single-color backlight and common display modules, with their pins in the Schematic workspace and their settings in the Firmware workspace, each linked to the ZMK documentation.
 ```
 
-### 021 — zmk-version-selection
-Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixtures per version. Depends on catalog structure proven by 010–016. Open: how many versions to support at once.
+### 022 — zmk-version-selection
+Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixtures per version. Depends on catalog structure proven by 011–017. Open: how many versions to support at once.
 
 ```
 /speckit-specify Let users choose, in the Firmware workspace, which ZMK release their configuration targets, so keyboards stay buildable when ZMK changes. Options and behaviors not available in the chosen release are hidden or reported in the problems panel.
 ```
 
-### 022 — build-verification
-`make zmk-build` target: compile the generated shield for each preset inside the `zmkfirmware/zmk-build-arm` Docker image, as a developer/CI check (not a product feature, the app stays static). Could be pulled forward to right after 009 if golden tests prove insufficient. Owned by Makefile/CI, not `src/`.
+### 023 — build-verification
+`make zmk-build` target: compile the generated shield for each preset inside the `zmkfirmware/zmk-build-arm` Docker image, as a developer/CI check (not a product feature, the app stays static). Could be pulled forward to right after 010 if golden tests prove insufficient. Owned by Makefile/CI, not `src/`.
 
 ```
 /speckit-specify A developer check that proves the generated files really build: for every preset keyboard, generate the configuration and compile the firmware with the official ZMK build environment, failing when any build fails. It runs locally and in continuous integration, never inside the app.
@@ -489,7 +508,7 @@ Parsing existing ZMK shield files back into a project (Devicetree parsing), cust
 - ~~Schema versioning before first release~~ — resolved: v1 frozen at merge of 002; every later change adds a migration.
 - ~~Undo history~~ — resolved: session only, 100 steps (spec 002).
 - Hosting target for `dist/` and app CI provider (GitHub Actions assumed by the repo layout, not stated).
-- Canvas arrow keys (011 layout-editor): spec 001 makes plain arrows pan the canvas; accessibility.md wants arrows to move focus between keys once keys exist. Decide in 011: e.g. arrows move key focus/selection when a key is focused and pan otherwise, or pan moves to Alt+Shift+arrows.
-- Charlieplex kscan: own feature or part of 012.
+- Canvas arrow keys (012 layout-editor): spec 001 makes plain arrows pan the canvas; accessibility.md wants arrows to move focus between keys once keys exist. Decide in 012: e.g. arrows move key focus/selection when a key is focused and pan otherwise, or pan moves to Alt+Shift+arrows.
+- Charlieplex kscan: own feature or part of 013.
 - Split halves on different boards.
-- Raw "extra Kconfig lines" escape hatch (014).
+- Raw "extra Kconfig lines" escape hatch (015).

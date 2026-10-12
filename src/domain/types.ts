@@ -1,5 +1,6 @@
 export type Project = {
-  readonly schemaVersion: 3;
+  readonly schemaVersion: 5;
+  readonly controllerId: string;
   readonly name: string;
   /** User override of the technical name; absent = derived from `name` (spec 002 FR-012a). */
   readonly shieldName?: string;
@@ -81,6 +82,12 @@ export type Key = {
   readonly id: string;
   readonly xU: number;
   readonly yU: number;
+  readonly diode?: KeyDiode;
+};
+
+export type KeyDiode = {
+  readonly pin: KeyPin;
+  readonly cathode: 'toward-switch' | 'away-switch';
 };
 
 export type KeyPin = 1 | 2;
@@ -93,7 +100,12 @@ export type WirePoint = {
 export type WireEnd =
   | { readonly kind: 'key-pin'; readonly keyId: string; readonly pin: KeyPin }
   | { readonly kind: 'junction'; readonly wireId: string; readonly at: WirePoint }
-  | { readonly kind: 'free'; readonly at: WirePoint; readonly boardPin?: number };
+  | {
+      readonly kind: 'free';
+      readonly at: WirePoint;
+      readonly boardPin?: number;
+      readonly droppedBoardPin?: string;
+    };
 
 export type WireEndSide = 'start' | 'end';
 
@@ -113,6 +125,18 @@ export type CrossingRef = {
 };
 
 export type ValidationCode =
+  | 'binding-controller-unsupported'
+  | 'board-pin-dropped'
+  | 'shield-empty'
+  | 'key-diode-missing'
+  | 'matrix-diode-conflict'
+  | 'matrix-not-bipartite'
+  | 'shield-pin-unsupported'
+  | 'shield-net-unused'
+  | 'keyboard-name-unsafe'
+  | 'physical-layout-out-of-range'
+  | 'layer-node-name-too-long'
+  | 'layer-display-name-too-long'
   | 'shield-name-empty'
   | 'shield-name-invalid'
   | 'keyboard-name-too-long'
@@ -143,3 +167,20 @@ export type ValidationIssue = {
 export type Result<Value, Failure> =
   | { readonly ok: true; readonly value: Value }
   | { readonly ok: false; readonly error: Failure };
+
+export type ControllerBoard = {
+  readonly id: string;
+  readonly name: string;
+  readonly family: 'pro_micro' | 'seeed_xiao';
+  readonly connector: 'pro_micro' | 'xiao_d';
+  readonly gpioPins: readonly number[];
+  readonly pins: readonly {
+    readonly index: number;
+    readonly label: string;
+    readonly mcu: string;
+  }[];
+  readonly ble: boolean;
+  readonly reservedContacts: readonly string[];
+  readonly description: string;
+  readonly docsUrl: string;
+};

@@ -1,3 +1,4 @@
+import { DiodeButtons } from './diode-buttons';
 import { formatBoardPin } from '../../domain/board-pin';
 import type { Crossing } from '../../domain/find-crossings';
 import { toggleCrossingInsulation } from '../../domain/toggle-crossing-insulation';
@@ -52,6 +53,7 @@ export function SchematicScreenLayer(props: SchematicScreenLayerProps) {
           </text>
         );
       })}
+      <DiodeButtons commit={props.commit} project={project} view={view} />
       {view.zoom < CROSSING_BUTTON_MIN_ZOOM ? undefined : <CrossingButtons {...props} />}
     </>
   );

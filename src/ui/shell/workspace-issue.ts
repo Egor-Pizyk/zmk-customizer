@@ -6,6 +6,18 @@ import type { Preferences, WorkspaceId } from '../../storage/preferences';
 export type WorkspaceIssue = ValidationIssue & { readonly workspaceId: WorkspaceId };
 
 const WORKSPACE_BY_ISSUE_CODE: Record<ValidationCode, WorkspaceId> = {
+  'binding-controller-unsupported': 'bindings',
+  'board-pin-dropped': 'schematic',
+  'shield-empty': 'schematic',
+  'key-diode-missing': 'schematic',
+  'matrix-diode-conflict': 'schematic',
+  'matrix-not-bipartite': 'schematic',
+  'shield-pin-unsupported': 'schematic',
+  'shield-net-unused': 'schematic',
+  'keyboard-name-unsafe': 'schematic',
+  'physical-layout-out-of-range': 'schematic',
+  'layer-node-name-too-long': 'bindings',
+  'layer-display-name-too-long': 'bindings',
   'shield-name-empty': 'schematic',
   'shield-name-invalid': 'schematic',
   'keyboard-name-too-long': 'schematic',
