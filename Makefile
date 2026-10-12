@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: help up down logs sh install check test-mutations image prod clean
+.PHONY: help up down logs sh install check test-mutations image prod clean zmk-build
 
 RUN := docker compose run --rm app
 
@@ -36,3 +36,7 @@ prod: ## Run production image locally (http://localhost:8080)
 clean: ## Remove dist/, coverage, containers, volumes
 	docker compose --profile prod down -v --remove-orphans
 	rm -rf dist coverage
+
+zmk-build: ## Compile actual exports in a pinned ZMK v0.3 environment
+	$(RUN) node scripts/generate-build-fixtures.mjs
+	docker compose --env-file scripts/zmk-build.env -f compose.zmk.yaml run --rm zmk-build

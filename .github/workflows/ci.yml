@@ -29,3 +29,46 @@ jobs:
       - uses: actions/checkout@v7
       - run: make install
       - run: make test-mutations
+
+  zmk-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Determine relevant inputs
+        id: changes
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          python3 - <<'PY'
+          import os, subprocess
+          base = os.environ.get('BASE', '')
+          relevant = True
+          if base and set(base) != {'0'}:
+              result = subprocess.run(['git', 'diff', '--name-only', base, 'HEAD'], capture_output=True, text=True)
+              if result.returncode == 0:
+                  roots = ('src/', 'tests/', 'scripts/', 'specs/023-', 'docs/zmk/', '.github/workflows/')
+                  files = {'Makefile', 'compose.zmk.yaml', 'compose.yaml', 'Dockerfile', 'package.json', 'package-lock.json', 'vite.config.ts', 'tsconfig.json'}
+                  relevant = any(p.startswith(roots) or p in files for p in result.stdout.splitlines())
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'relevant={str(relevant).lower()}\n')
+          PY
+      - uses: actions/cache@v5
+        if: steps.changes.outputs.relevant == 'true'
+        with:
+          path: .zmk-build/workspace
+          key: zmk-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('scripts/zmk-build.env', 'scripts/zmk-build.sh', 'scripts/zmk-west.yml', 'compose.zmk.yaml') }}
+      - run: make install && make zmk-build
+        if: steps.changes.outputs.relevant == 'true'
+      - uses: actions/upload-artifact@v6
+        if: always() && steps.changes.outputs.relevant == 'true'
+        with:
+          name: zmk-build-evidence
+          path: |
+            .zmk-build/logs
+            .zmk-build/artifacts
+            .zmk-build/exports
+      - name: Complete build status for irrelevant changes
+        if: steps.changes.outputs.relevant != 'true'
+        run: echo 'No firmware inputs changed; zmk-build status completed.'
