@@ -4,7 +4,7 @@ import { formatProjectFileError } from './format-project-file-error';
 it.each([
   ['not-json', 'This file is not a ZMK Customizer project file and could not be read.'],
   ['newer-version', 'This file was made by a newer version of ZMK Customizer.'],
-  ['too-large', 'This file is larger than 5 MB, too large to be a project file.'],
+  ['too-large', 'This project exceeds the 5 MiB file or saved-data limit.'],
 ] as const)('%s', (kind, title) => {
   expect(formatProjectFileError({ kind })).toEqual({ title, lines: [] });
 });

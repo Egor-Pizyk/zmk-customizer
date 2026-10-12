@@ -105,3 +105,26 @@ Normalized saved JSON also obeys the 5MiB byte budget. A compact input which wou
 Implemented in separate branch 023-build-verification, commit cb46462. Official build image pinned by digest, ZMK edf5c0814fd3ea202e43aad2d68fd32e882a518c, Zephyr dacab4875df72109b96cc8977547a0dc04875bcd, SDK 0.16.3 and west 1.2.0. Committed resolved active manifest pins every dependency. All eight actual-export targets passed (nice_nano_v2, seeeduino_xiao, adafruit_kb2040, sparkfun_pro_micro_rp2040 × row2col/col2row); includes tap-dance and mod-morph. USB targets explicitly omit incompatible Bluetooth binding. Intentional audit_missing_connector was rejected. No generator text changes were necessary. CI has an always-completing job, relevant src/tests/scripts/config inputs, pinned cache key and always-uploaded evidence. Remote CI has not been run.
 
 Mutation verification: 20/20 predefined regressions detected by failing test assertions; original source bytes restored. One initial survivor exposed a missing direct invalid-preview assertion; get-export-preview.test.ts now protects it. Bend limit mutation is checked at the per-wire boundary rather than a huge case also rejected by the aggregate budget. Mutation CI is a separate sequential checkout job.
+
+## A01–A12 closure evidence
+
+| Item | Implemented contract and evidence |
+|---|---|
+| A01 | Exact decimal bigint allocator; k/w/l, leading zeros, malformed suffixes, dangling/reserved references and imported edit/round-trip regressions. IDs never renumbered. |
+| A02 | Provider-lived request/revision tokens; deferred imports in both completion orders, stale errors/retry, Open/New/edit/Undo cancellation and saved JSON assertions. |
+| A03 | Measured trust-boundary resource budgets, bounded nested collections/strings/normalized bytes; file/localStorage/recovery tests and 150k-point stress regressions; min/max spread/apply guard. |
+| A04 | Single/multiple key moves and bends return original Project on no-op. Domain, reducer/autosave and real pointer/bend/Redo tests protect the contract. |
+| A05 | One contacts/nets/matrix/issues analysis shared by immutable Project identity. Electrical rules have one owner; UI import gate and invalid export contract. Local comparative benchmark 1822ms → 352ms. |
+| A06 | Parser-based resolved imports/re-exports/dynamic edges, pure APIs/common aliases, production/test separation. Positive and diagnostic-specific negative fixtures; oxlint cycle checks retained. |
+| A07 | Domain binding policy/predicate, catalog ZMK limits/default controller, explicit createProject composition input. Frozen migrations unchanged. |
+| A08 | behaviorId discriminated draft branches, required mod-tap hold, guarded exhaustive picks. Existing real picker/selection/layer tests plus incompatible hold regression. |
+| A09 | Feature 023, pinned official image and all dependency SHAs. Eight actual exports compile; intentional undefined connector rejected. CI inputs/cache/artifacts configured. |
+| A10 | Real Problems navigation/focus, failed-save/backup recovery, pointer wire create/cancel and no-op behavior. 20 predefined mutation regressions detected by assertions. |
+| A11 | SaveError invalid-project/storage-unavailable/quota-exceeded with preserved safe schema reason; invalid save does not write and Undo repairs state. |
+| A12 | Dependency matrix and exact exceptions documented; production effect registry and enabled enforcement/link fixtures checked by check:guidelines; existing agent sync retained. |
+
+Historical JSON migrations, upstream fixtures and expected generator bytes were not modified. No runtime dependency or schema version change. @babel/parser is a development dependency justified by ADR 0013. AST guards cover documented syntactic cases and common aliases; they do not prove all JavaScript data flow or semantic purity. Timing is local evidence, not a hard CI timing guarantee. No remote CI run or branch push is claimed.
+
+## Final local verification
+
+On the combined 024 branch (audit fixes + feature 023): `make check` passed 146 files / 909 tests, 35 architecture fixtures and 6 guideline fixtures; coverage 89.73% statements, 89.78% lines, 91.03% functions, 82.90% branches (all original floors preserved). `make test-mutations` detected 20/20 seeded regressions. `make zmk-build` passed 8/8 actual generated exports plus the intentional connector rejection with fully pinned dependencies. Final build evidence is in ignored `.zmk-build/{logs,artifacts,exports}`; reproduce with the commands in quickstart. All 32 tasks completed.
