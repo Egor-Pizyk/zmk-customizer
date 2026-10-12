@@ -1,5 +1,5 @@
 import type { Crossing } from '../../domain/find-crossings';
-import { findCrossings } from '../../domain/find-crossings';
+import { getProjectAnalysis } from '../project-state';
 import { toggleCrossingInsulation } from '../../domain/toggle-crossing-insulation';
 import { Switch } from '../components/switch';
 import type { PartsTableProps } from './parts-list';
@@ -9,7 +9,7 @@ const COLUMNS = ['Crossing', 'Position (u)', 'State'];
 
 // FR-014 from the keyboard; also the only path below 50% zoom where canvas buttons hide.
 export function PartsCrossingsTable(props: PartsTableProps) {
-  const crossings = findCrossings(props.project);
+  const crossings = getProjectAnalysis(props.project).crossings;
   return (
     <div className="flex flex-col gap-2">
       <h3 className="font-semibold">Crossings</h3>

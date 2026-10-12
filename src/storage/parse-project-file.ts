@@ -1,4 +1,6 @@
+import { serializeProject } from './serialize-project';
 import * as z from 'zod';
+import { PROJECT_BUDGET } from './project-budget';
 import type { Project, Result } from '../domain/types';
 import { CURRENT_SCHEMA_VERSION, migrateProject } from './migrate-project';
 import { projectSchema } from './project-schema';
@@ -31,6 +33,12 @@ function toNotProject(error: z.ZodError): ProjectFileError {
 
 // One trust boundary for files and stored state (contracts/project-file.md "Reading rules").
 export function parseProjectFile(raw: string): Result<Project, ProjectFileError> {
+  if (
+    raw.length > PROJECT_BUDGET.bytes ||
+    new TextEncoder().encode(raw).length > PROJECT_BUDGET.bytes
+  ) {
+    return { ok: false, error: { kind: 'too-large' } };
+  }
   const json = parseJson(raw);
   if (!json.ok) {
     return json;
@@ -48,6 +56,9 @@ export function parseProjectFile(raw: string): Result<Project, ProjectFileError>
   const project = projectSchema.safeParse(migrated);
   if (!project.success) {
     return { ok: false, error: toNotProject(project.error) };
+  }
+  if (!serializeProject(project.data).ok) {
+    return { ok: false, error: { kind: 'too-large' } };
   }
   return { ok: true, value: project.data };
 }

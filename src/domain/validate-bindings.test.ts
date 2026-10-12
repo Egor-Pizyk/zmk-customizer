@@ -6,6 +6,13 @@ const CATALOG = {
   keycodeNames: new Set(['A', 'SPACE', 'LSHIFT']),
   bluetoothProfileCount: 5,
   maxLayerCount: 32,
+  shieldLimits: {
+    keyboardNameBytes: 16,
+    layerNodeNameLength: 31,
+    layerDisplayNameBytes: 19,
+    minLayoutCell: -32_768,
+    maxLayoutCell: 32_767,
+  },
 };
 const KEYS = [
   { id: 'k1', xU: 0, yU: 0 },
@@ -189,3 +196,16 @@ it('checks the tap keycode of layer-tap', () => {
     'binding-keycode-unknown',
   ]);
 });
+
+it.each([0.5, Number.NaN, Infinity, -Infinity])(
+  'rejects a non-integer/non-finite tap pause %s',
+  (tappingTermMs) => {
+    const project = buildProject({
+      keys: KEYS,
+      bindings: { k1: { kind: 'tap_dance', taps: [stroke('A')], tappingTermMs } },
+    });
+    expect(validateBindings(project, CATALOG).map((issue) => issue.code)).toEqual([
+      'binding-tapping-term-out-of-range',
+    ]);
+  },
+);

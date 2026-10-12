@@ -1,0 +1,5 @@
+[
+  { "file": "src/ui/probe.tsx", "source": "import * as React from 'react'; React.useLayoutEffect(() => {}, []);", "registry": "", "diagnostic": "effect-registry" },
+  { "file": "src/ui/probe.tsx", "source": "import { useEffect as sync } from 'react'; sync(() => {}, []);", "registry": "| sync | `probe.tsx` |", "diagnostic": null },
+  { "file": "src/ui/probe.test.tsx", "source": "import { useEffect } from 'react'; useEffect(() => {}, []);", "registry": "", "diagnostic": null }
+]

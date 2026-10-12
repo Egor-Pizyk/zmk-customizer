@@ -1,3 +1,4 @@
+import { validateNetsWithoutBoardPin } from './validate-nets-without-board-pin';
 import { getKeyPinPosition } from './get-key-pin-position';
 import { formatBoardPin } from './board-pin';
 import { getKeyPinWires } from './get-key-pin-wires';
@@ -169,34 +170,11 @@ function validateParallelKeys(project: Project, nets: readonly Net[]): Validatio
   });
 }
 
-function validateNetsWithoutBoardPin(project: Project, nets: readonly Net[]): ValidationIssue[] {
-  return nets.flatMap((net) => {
-    if (net.pins.length === 0 || net.boardPins.length > 0 || net.wireIds.length === 0) {
-      return [];
-    }
-    const firstPin = net.pins.toSorted((left, right) => {
-      if (left.keyId !== right.keyId) {
-        return left.keyId < right.keyId ? -1 : 1;
-      }
-      return left.pin - right.pin;
-    })[0];
-    if (firstPin === undefined) {
-      return [];
-    }
-    const keyIndex = project.keys.findIndex((key) => key.id === firstPin.keyId);
-    return [
-      {
-        code: 'net-without-board-pin',
-        message: `Key ${keyIndex}, pin ${firstPin.pin} is on a connection with no board pin. Connect a free end to a board pin.`,
-        path: ['keys', keyIndex, 'pins', firstPin.pin],
-      },
-    ];
-  });
-}
-
 // Issue order: by code as in contracts/validation-issues.md, then by path (deterministic).
-export function validateSchematic(project: Project): readonly ValidationIssue[] {
-  const nets = getNets(project);
+export function validateSchematic(
+  project: Project,
+  nets: readonly Net[] = getNets(project),
+): readonly ValidationIssue[] {
   const located = locateBoardPins(project, nets);
   return [
     ...validateKeyOverlaps(project),
@@ -206,6 +184,9 @@ export function validateSchematic(project: Project): readonly ValidationIssue[] 
     ...validateShortedBoardPins(located),
     ...validateShortedKeys(project, nets),
     ...validateParallelKeys(project, nets),
-    ...validateNetsWithoutBoardPin(project, nets),
+    ...validateNetsWithoutBoardPin(
+      project,
+      nets.filter((net) => net.wireIds.length > 0),
+    ),
   ];
 }

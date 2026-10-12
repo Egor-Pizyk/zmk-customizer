@@ -14,7 +14,26 @@ export const DEFAULT_HOLD: KeyStroke = { keycode: 'LEFT_SHIFT', modifiers: [] };
 
 /** A new draft: mod-tap starts with Left Shift as its hold, the rest empty. */
 export function createDraft(behaviorId: DraftBehaviorId): BindingDraft {
-  return behaviorId === 'mt' ? { behaviorId, hold: DEFAULT_HOLD } : { behaviorId };
+  switch (behaviorId) {
+    case 'mt': {
+      return { behaviorId, hold: DEFAULT_HOLD };
+    }
+    case 'kp':
+    case 'sk':
+    case 'kt':
+    case 'bt':
+    case 'out':
+    case 'mo':
+    case 'tog':
+    case 'to':
+    case 'sl':
+    case 'lt': {
+      return { behaviorId };
+    }
+    default: {
+      return behaviorId satisfies never;
+    }
+  }
 }
 
 function isSameShared(first: SharedBinding, second: SharedBinding): boolean {

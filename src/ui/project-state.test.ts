@@ -19,7 +19,7 @@ function stubSetItem(setItem: (key: string, value: string) => void) {
 }
 
 function initial(status: Parameters<typeof createInitialState>[0]['status']): ProjectState {
-  return createInitialState({ project: createProject(), status });
+  return createInitialState({ project: createProject({ controllerId: 'nice_nano_v2' }), status });
 }
 
 afterEach(() => {

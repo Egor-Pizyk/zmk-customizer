@@ -109,5 +109,6 @@ generateOverlay(project, false);
 
 ## Enforced by
 
-- oxlint: `no-else-return`, `no-nested-ternary`, `max-depth`, `no-param-reassign`, `unicorn/no-array-for-each`, `unicorn/no-array-reduce`, `unicorn/no-array-callback-reference`, `require-await`, `max-lines-per-function` (if configured), `typescript/no-floating-promises` (type-aware, if enabled).
-- Review only: purity of domain/generators, no input mutation beyond param reassign, explicit sorting in generators, no boolean flags, async confined to storage/ui.
+- oxlint (error): `eslint/no-else-return`, `eslint/no-nested-ternary`, `eslint/max-depth`, `eslint/no-param-reassign`, `unicorn/no-array-for-each`, `unicorn/no-array-reduce`, `unicorn/no-array-callback-reference`, `typescript/require-await`, `eslint/max-lines-per-function`, `typescript/no-floating-promises`. check:guidelines verifies these explicit error severities against the configuration.
+- scripts/check-architecture.mjs: resolved imports/re-exports/dynamic imports, pure-layer I/O and nondeterministic APIs including common aliases, lossless allocator policy, min/max argument spreads, UI analysis ownership and test mock/focus policy. This is a static guard, not a proof of purity.
+- Review only: input mutation beyond param reassign, explicit sorting in generators, no boolean flags, async confined to storage/ui, semantic correctness of draft transitions.

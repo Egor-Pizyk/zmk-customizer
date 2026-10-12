@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { findCrossings } from '../../domain/find-crossings';
+import { getProjectAnalysis } from '../project-state';
 import { getSchematicGeometry } from './get-schematic-geometry';
 import type { Project } from '../../domain/types';
 import type { ContentPointerHandler, SurfaceContent } from '../canvas/surface-content';
@@ -29,7 +29,7 @@ type PointerHandlers = Pick<
 
 function createSurfaceContent(input: ContentInput, handlers: PointerHandlers): SurfaceContent {
   const { project, hoverPreview, commit, marquee, ...layerProps } = input;
-  const crossings = findCrossings(project);
+  const crossings = getProjectAnalysis(project).crossings;
   const { paths } = getSchematicGeometry(project);
   return {
     ...handlers,

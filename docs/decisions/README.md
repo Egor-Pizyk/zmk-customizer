@@ -38,3 +38,5 @@ What becomes easier, what becomes harder, what we must now keep true.
 | [0010](0010-target-zmk-v0-3.md) | Generated output targets ZMK v0.3 | Accepted |
 | [0011](0011-tailwind-design-system.md) | Tailwind CSS v4 as the design system | Accepted |
 | [0012](0012-behavior-testing.md) | Real React/DOM behavior tests and regression coverage floors | Accepted |
+
+- [0013 — Development architecture parser](0013-architecture-parser.md)

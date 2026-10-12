@@ -1,0 +1,53 @@
+import { expect, it } from 'vitest';
+import { createProject } from '../domain/create-project';
+import { addKey } from '../domain/add-key';
+import { moveKey } from '../domain/move-key';
+import { parseProjectFile } from './parse-project-file';
+import { serializeProject } from './serialize-project';
+import { createFileActions } from '../ui/project-file-actions';
+import { createInitialState } from '../ui/project-state';
+import { reduceProjectHistory } from '../ui/project-history';
+import { findCrossings } from '../domain/find-crossings';
+
+it('audit: accepted file below 5 MiB crashes geometry', () => {
+  const raw = JSON.stringify({ ...createProject(), keys: [{ id: 'k1', xU: 0, yU: 0 }], wires: [{ id: 'w1', start: { kind: 'key-pin', keyId: 'k1', pin: 1 }, end: { kind: 'free', at: { xU: 2, yU: 2 } }, bends: Array.from({ length: 150000 }, (_, index) => ({ xU: index % 2, yU: 2 })) }] });
+  expect(new TextEncoder().encode(raw).length).toBeLessThan(5 * 1024 * 1024);
+  const parsed = parseProjectFile(raw);
+  expect(parsed.ok).toBe(true);
+  if (!parsed.ok) throw new Error('Expected accepted input');
+  expect(() => findCrossings(parsed.value)).toThrow(RangeError);
+});
+
+it('audit: accepted large ID is allocated again', () => {
+  const parsed = parseProjectFile(JSON.stringify({ ...createProject(), keys: [{ id: 'k9007199254740992', xU: 0, yU: 0 }] }));
+  expect(parsed.ok).toBe(true);
+  if (!parsed.ok) throw new Error('Expected accepted input');
+  const changed = addKey(parsed.value, { position: { xU: 2, yU: 0 } });
+  expect(changed.keys.map((key) => key.id)).toEqual(['k9007199254740992', 'k9007199254740992']);
+  expect(serializeProject(changed).ok).toBe(false);
+});
+
+it('audit: no-op movement destroys redo', () => {
+  const project = addKey(createProject(), { position: { xU: 0, yU: 0 } });
+  const history = { past: [], present: project, future: [createProject()] };
+  const changed = reduceProjectHistory(history, { kind: 'commit', update: (current) => moveKey(current, { keyId: 'missing', position: { xU: 0, yU: 0 } }) });
+  expect(changed.present).toEqual(project);
+  expect(changed.future).toEqual([]);
+  expect(changed.past).toHaveLength(1);
+});
+
+it('audit: slow earlier import overwrites later import', async () => {
+  let state = createInitialState({ project: createProject(), status: { kind: 'missing' } });
+  const actions = createFileActions((change) => { state = change(state); });
+  const first = Promise.withResolvers<string>();
+  const fileA = new File([], 'a.json');
+  Object.defineProperty(fileA, 'text', { value: () => first.promise });
+  const fileB = new File([JSON.stringify({ ...createProject(), name: 'B' })], 'b.json');
+  const readingA = actions.openProjectFile(fileA);
+  await actions.openProjectFile(fileB);
+  expect(state.history.present.name).toBe('B');
+  first.resolve(JSON.stringify({ ...createProject(), name: 'A' }));
+  await readingA;
+  expect(state.history.present.name).toBe('A');
+  expect(state.history.past).toEqual([]);
+});

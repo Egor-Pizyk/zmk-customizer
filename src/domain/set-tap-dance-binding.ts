@@ -1,13 +1,14 @@
+import { BINDING_POLICY } from './binding-policy';
 import { mapLayerBindings } from './map-layer-bindings';
 import type { Binding, KeyStroke, Project } from './types';
 
 const PLAIN_A: KeyStroke = { keycode: 'A', modifiers: [] };
 
-/** What the pickers offer: a single plain tap with the ZMK default pause. */
+/** What the pickers offer: a single plain tap with the editor default pause. */
 export const TAP_DANCE_STARTER = {
   kind: 'tap_dance',
   taps: [PLAIN_A],
-  tappingTermMs: 200,
+  tappingTermMs: BINDING_POLICY.defaultPauseMs,
 } satisfies Binding;
 
 function findTapStroke(binding: Binding | undefined): KeyStroke {
@@ -21,7 +22,7 @@ function findTapStroke(binding: Binding | undefined): KeyStroke {
 }
 
 // The tap-dance starter: one tap from the key each selected key sends, else a plain A,
-// with the ZMK default 200 ms pause (spec 005 data-model.md).
+// with the editor default pause (spec 005 data-model.md).
 export function setTapDanceBinding(
   project: Project,
   input: {

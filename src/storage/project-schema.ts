@@ -1,4 +1,5 @@
 import * as z from 'zod';
+import { PROJECT_BUDGET } from './project-budget';
 import { CONTROLLER_BOARDS } from '../catalog/controller-boards';
 import { BOARD_PIN_COUNT } from '../domain/board-pin';
 import { MODIFIERS } from '../domain/types';
@@ -27,17 +28,20 @@ const checkedWireEndSchema = wireEndSchema.refine(
 );
 
 const wireSchema = z.strictObject({
-  id: z.string().regex(/^w\d+$/u),
+  id: z
+    .string()
+    .max(PROJECT_BUDGET.idLength)
+    .regex(/^w\d+$/u),
   start: checkedWireEndSchema,
   end: checkedWireEndSchema,
-  bends: z.array(pointSchema),
+  bends: z.array(pointSchema).max(PROJECT_BUDGET.bendsPerWire),
 });
 
 const modifierSchema = z.enum(MODIFIERS);
 
 // Unique and in MODIFIERS order, so equal bindings are deep-equal (spec 004 contracts/project-schema.md).
 const keyStrokeSchema = z.strictObject({
-  keycode: z.string().min(1),
+  keycode: z.string().min(1).max(PROJECT_BUDGET.stringLength),
   modifiers: z
     .array(modifierSchema)
     .refine(
@@ -51,7 +55,10 @@ const keyStrokeSchema = z.strictObject({
     ),
 });
 
-const layerIdSchema = z.string().regex(/^l\d+$/u);
+const layerIdSchema = z
+  .string()
+  .max(PROJECT_BUDGET.idLength)
+  .regex(/^l\d+$/u);
 
 // Unknown keycodes and profiles beyond the profile count are validation issues, not schema
 // errors, so such a file still opens (spec 004 research R7).
@@ -83,7 +90,7 @@ const bindingSchema = z.union([
   z.strictObject({ kind: z.literal('out'), command: z.enum(['OUT_TOG', 'OUT_USB', 'OUT_BLE']) }),
   z.strictObject({
     kind: z.literal('tap_dance'),
-    taps: z.array(keyStrokeSchema).min(1),
+    taps: z.array(keyStrokeSchema).min(1).max(PROJECT_BUDGET.taps),
     tappingTermMs: z.int(),
   }),
   z.strictObject({
@@ -109,7 +116,7 @@ const bindingSchema = z.union([
 
 const layerSchema = z.strictObject({
   id: layerIdSchema,
-  name: z.string(),
+  name: z.string().max(PROJECT_BUDGET.stringLength),
   bindings: z.record(z.string(), bindingSchema),
 });
 
@@ -211,28 +218,55 @@ export const projectSchema = z
   .object({
     schemaVersion: z.literal(5),
     controllerId: z.enum(CONTROLLER_BOARDS.map((board) => board.id)),
-    name: z.string(),
-    shieldName: z.string().exactOptional(),
-    keys: z.array(
-      z.strictObject({
-        id: z.string().regex(/^k\d+$/u),
-        xU: z.number(),
-        yU: z.number(),
-        diode: z
-          .strictObject({
-            pin: z.literal([1, 2]),
-            cathode: z.enum(['toward-switch', 'away-switch']),
-          })
-          .exactOptional(),
-      }),
-    ),
-    wires: z.array(wireSchema),
-    insulatedCrossings: z.array(
-      z.strictObject({ wireIds: z.tuple([z.string(), z.string()]), ordinal: z.int().min(0) }),
-    ),
-    layers: z.array(layerSchema).min(1),
+    name: z.string().max(PROJECT_BUDGET.stringLength),
+    shieldName: z.string().max(PROJECT_BUDGET.stringLength).exactOptional(),
+    keys: z
+      .array(
+        z.strictObject({
+          id: z
+            .string()
+            .max(PROJECT_BUDGET.idLength)
+            .regex(/^k\d+$/u),
+          xU: z.number(),
+          yU: z.number(),
+          diode: z
+            .strictObject({
+              pin: z.literal([1, 2]),
+              cathode: z.enum(['toward-switch', 'away-switch']),
+            })
+            .exactOptional(),
+        }),
+      )
+      .max(PROJECT_BUDGET.keys),
+    wires: z.array(wireSchema).max(PROJECT_BUDGET.wires),
+    insulatedCrossings: z
+      .array(
+        z.strictObject({ wireIds: z.tuple([z.string(), z.string()]), ordinal: z.int().min(0) }),
+      )
+      .max(PROJECT_BUDGET.crossings),
+    layers: z.array(layerSchema).min(1).max(PROJECT_BUDGET.layers),
   })
   .superRefine((project, context) => {
+    const segmentCount = project.wires.reduce(
+      (count, wire) => count + 2 * (wire.bends.length + 1),
+      0,
+    );
+    if (segmentCount > PROJECT_BUDGET.segments) {
+      context.addIssue({
+        code: 'custom',
+        message: `The wiring exceeds the ${PROJECT_BUDGET.segments}-segment processing budget. Simplify the wire bends.`,
+        path: ['wires'],
+      });
+    }
+    for (const [index, layer] of project.layers.entries()) {
+      if (Object.keys(layer.bindings).length > PROJECT_BUDGET.keys) {
+        context.addIssue({
+          code: 'custom',
+          message: 'Too many binding entries',
+          path: ['layers', index, 'bindings'],
+        });
+      }
+    }
     const issues = [
       ...findDuplicateIds(project.keys, 'keys'),
       ...findDuplicateIds(project.wires, 'wires'),

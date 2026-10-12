@@ -1,11 +1,13 @@
 import { createContext, use, useCallback, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
+import { createImportSession } from './import-session';
 import type { Project } from '../domain/types';
 import type { ProjectLoadResult } from '../storage/project-storage';
 import {
   createHistoryActions,
   createInitialState,
   getSaveStatus,
+  getProjectAnalysis,
   getValidationIssues,
   withAnnouncement,
 } from './project-state';
@@ -18,10 +20,12 @@ import type { WorkspaceIssue } from './shell/workspace-issue';
 type ProjectContextValue = ReturnType<typeof createHistoryActions> &
   ReturnType<typeof createFileActions> & {
     readonly project: Project;
+    readonly analysis: ReturnType<typeof getProjectAnalysis>;
     readonly issues: readonly WorkspaceIssue[];
     readonly rejectedFile: ProjectFileError | undefined;
     readonly backup: KeptBackup | undefined;
     readonly saveStatus: SaveStatus;
+    readonly saveError: ProjectState['saveError'];
     readonly announcement: Announcement | undefined;
     readonly announce: (text: string) => void;
     readonly canUndo: boolean;
@@ -41,16 +45,24 @@ function useProjectState(initialLoad: ProjectLoadResult) {
   const [state, setState] = useState(() => createInitialState(initialLoad));
   // Written only from event handlers, never during render.
   const latestRef = useRef(state);
+  const importSession = useMemo(() => createImportSession(), []);
   // Stable so the context value below only changes with state.
-  const change = useCallback((apply: (latest: ProjectState) => ProjectState) => {
-    latestRef.current = apply(latestRef.current);
-    setState(latestRef.current);
-  }, []);
-  return { state, change };
+  const change = useCallback(
+    (apply: (latest: ProjectState) => ProjectState) => {
+      const before = latestRef.current.history.present;
+      latestRef.current = apply(latestRef.current);
+      if (latestRef.current.history.present !== before) {
+        importSession.invalidate();
+      }
+      setState(latestRef.current);
+    },
+    [importSession],
+  );
+  return { state, change, importSession };
 }
 
 export function ProjectProvider({ initialLoad, children }: ProjectProviderProps) {
-  const { state, change } = useProjectState(initialLoad);
+  const { state, change, importSession } = useProjectState(initialLoad);
   const { present } = state.history;
   // Validation runs once per project change for every consumer (react.md "Project state").
   // getValidationIssues caches by project identity, so the run here is the only real one
@@ -61,12 +73,14 @@ export function ProjectProvider({ initialLoad, children }: ProjectProviderProps)
   const value = useMemo<ProjectContextValue>(
     () => ({
       ...createHistoryActions(change),
-      ...createFileActions(change),
+      ...createFileActions(change, importSession),
       project: present,
+      analysis: getProjectAnalysis(present),
       issues,
       rejectedFile: state.rejectedFile,
       backup: state.backup,
       saveStatus: getSaveStatus(state),
+      saveError: state.saveError,
       announcement: state.announcement,
       announce: (text) => {
         change((latest) => withAnnouncement(latest, text));
@@ -74,7 +88,7 @@ export function ProjectProvider({ initialLoad, children }: ProjectProviderProps)
       canUndo: state.history.past.length > 0,
       canRedo: state.history.future.length > 0,
     }),
-    [state, change, present, issues],
+    [state, change, present, issues, importSession],
   );
 
   return <ProjectContext value={value}>{children}</ProjectContext>;

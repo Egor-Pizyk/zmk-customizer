@@ -1,9 +1,9 @@
 import type { Project } from './types';
 
-export function createProject(): Project {
+export function createProject(input: { readonly controllerId: string }): Project {
   return {
     schemaVersion: 5,
-    controllerId: 'nice_nano_v2',
+    controllerId: input.controllerId,
     name: 'My keyboard',
     keys: [],
     wires: [],

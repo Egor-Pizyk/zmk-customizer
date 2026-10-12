@@ -5,10 +5,15 @@ export function findKeyLayoutCenter(project: Project): WirePoint | undefined {
   if (project.keys.length === 0) {
     return undefined;
   }
-  const xs = project.keys.map((key) => key.xU);
-  const ys = project.keys.map((key) => key.yU);
-  return {
-    xU: (Math.min(...xs) + Math.max(...xs) + 1) / 2,
-    yU: (Math.min(...ys) + Math.max(...ys) + 1) / 2,
-  };
+  let minX = Infinity;
+  let maxX = -Infinity;
+  let minY = Infinity;
+  let maxY = -Infinity;
+  for (const key of project.keys) {
+    minX = Math.min(minX, key.xU);
+    maxX = Math.max(maxX, key.xU);
+    minY = Math.min(minY, key.yU);
+    maxY = Math.max(maxY, key.yU);
+  }
+  return { xU: (minX + maxX + 1) / 2, yU: (minY + maxY + 1) / 2 };
 }

@@ -15,7 +15,7 @@ it('persists the reset so returning to a layer never revives its draft', () => {
     result.current.setPendingModifiers(['LC']);
     result.current.setSearch('space');
   });
-  expect(result.current.draftState?.draft.layerId).toBe('l2');
+  expect(result.current.draftState?.draft).toEqual({ behaviorId: 'lt', layerId: 'l2' });
   rerender({ layerId: 'l1', layerIndex: 1 });
   expect(result.current.draftState).toBeUndefined();
   rerender(base);

@@ -1,3 +1,5 @@
+import { BINDING_POLICY } from './binding-policy';
+import { isValidTappingTerm } from './is-valid-tapping-term';
 import { assertNever } from './assert-never';
 import type { Binding, KeyStroke, Layer, Project, ValidationIssue } from './types';
 
@@ -6,6 +8,13 @@ export type BindingsCatalog = {
   readonly keycodeNames: ReadonlySet<string>;
   readonly bluetoothProfileCount: number;
   readonly maxLayerCount: number;
+  readonly shieldLimits: {
+    readonly keyboardNameBytes: number;
+    readonly layerNodeNameLength: number;
+    readonly layerDisplayNameBytes: number;
+    readonly minLayoutCell: number;
+    readonly maxLayoutCell: number;
+  };
 };
 
 function getKeyStrokes(binding: Binding): readonly KeyStroke[] {
@@ -98,10 +107,10 @@ function findBindingIssue(
       message: `${keyLabel} uses Bluetooth profile ${binding.profile}; only profiles 0–${lastProfile} exist. Pick another profile in Bindings.`,
     };
   }
-  if (binding.kind === 'tap_dance' && (binding.tappingTermMs < 0 || binding.tappingTermMs > 5000)) {
+  if (binding.kind === 'tap_dance' && !isValidTappingTerm(binding.tappingTermMs)) {
     return {
       code: 'binding-tapping-term-out-of-range',
-      message: `${keyLabel} waits ${binding.tappingTermMs} ms to count taps; use a pause of 0–5000 ms. Change the pause in Bindings.`,
+      message: `${keyLabel} waits ${binding.tappingTermMs} ms to count taps; use a pause of ${BINDING_POLICY.minPauseMs}–${BINDING_POLICY.maxPauseMs} ms. Change the pause in Bindings.`,
     };
   }
   if (binding.kind === 'mod_morph' && isSameStroke(binding.normal, binding.morphed)) {

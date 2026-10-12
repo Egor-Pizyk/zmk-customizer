@@ -3,7 +3,10 @@ import { createProject } from './create-project';
 import { getKeyDiodeState } from './get-key-diode-state';
 import { toggleKeyDiode } from './toggle-key-diode';
 
-const project = { ...createProject(), keys: [{ id: 'k1', xU: 0, yU: 0 }] };
+const project = {
+  ...createProject({ controllerId: 'nice_nano_v2' }),
+  keys: [{ id: 'k1', xU: 0, yU: 0 }],
+};
 it('adds one diode, blocks the other pin, and removes from the active pin', () => {
   const added = toggleKeyDiode(project, { keyId: 'k1', pin: 1 });
   expect(added.keys[0]?.diode).toEqual({ pin: 1, cathode: 'away-switch' });

@@ -90,7 +90,22 @@ src/
   main.tsx     Composition root.
 ```
 
-Dependency direction is one way: `ui → storage → generators → domain ← catalog`. `domain` imports nothing from the other folders. `generators` never import from `ui`. Catalog data reaches domain functions as arguments. `ui/components/` imports neither `domain/` nor step folders; step folders do not import each other. Enforced by oxlint `no-restricted-imports` overrides in `.oxlintrc.json` (+ `import/no-cycle`).
+Production imports follow this matrix; catalog values enter domain operations as arguments:
+
+| From | Allowed project imports |
+|---|---|
+| domain | domain |
+| catalog | catalog, domain types only, pinned own assets |
+| generators | generators, domain, catalog |
+| storage | storage, generators, domain, catalog |
+| ui/components | ui/components only |
+| ui/canvas, ui/shell | shared UI, domain/catalog/storage, listed root UI contracts; no feature folders |
+| ui/<workspace> | same workspace, shared UI, root contracts, domain/catalog/storage |
+| ui/export | above, generator calls only in export/get-export-preview.ts; generated-file type in export consumers |
+| ui root | composition of UI/domain/catalog/storage; no generator calls |
+| main.tsx | UI/storage/catalog and styles.css |
+
+Enforced by scripts/check-architecture.mjs (resolved imports, re-exports, dynamic imports), oxlint no-restricted-imports overrides and import/no-cycle. Exact root contracts and exceptions are documented in docs/guidelines/code-quality/typescript.md.
 
 Folders are created when the first file needs them, not ahead of time.
 

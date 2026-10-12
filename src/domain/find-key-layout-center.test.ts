@@ -20,3 +20,12 @@ it('returns the center of a single key and no center for an empty layout', () =>
   });
   expect(findKeyLayoutCenter(buildProject({}))).toBeUndefined();
 });
+
+it('calculates large layout bounds without exceeding the argument limit', () => {
+  const keys = Array.from({ length: 150_000 }, (_, index) => ({
+    id: `k${index}`,
+    xU: index,
+    yU: 0,
+  }));
+  expect(findKeyLayoutCenter(buildProject({ keys }))).toEqual({ xU: 75_000, yU: 0.5 });
+});

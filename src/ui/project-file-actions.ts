@@ -1,3 +1,4 @@
+import { SHIELD_TARGET } from '../catalog/shield-target';
 import { UNIBODY_PRESET } from '../catalog/unibody-preset';
 import { createPresetProject } from '../domain/create-preset-project';
 import { createProject } from '../domain/create-project';
@@ -6,6 +7,7 @@ import { readImportFile } from '../storage/read-import-file';
 import { serializeProject } from '../storage/serialize-project';
 import { downloadTextFile } from './download-text-file';
 import { applyHistoryAction, discardKeptBackup, withAnnouncement } from './project-state';
+import { createImportSession } from './import-session';
 import type { ProjectState, ProjectStateChange } from './project-state';
 
 function saveToFile(state: ProjectState): ProjectState {
@@ -30,9 +32,23 @@ function downloadBackup(state: ProjectState): ProjectState {
   return downloaded.ok ? state : withAnnouncement(state, 'Could not save the file.');
 }
 
-async function openProjectFile(file: File, change: ProjectStateChange) {
+async function openProjectFile(
+  file: File,
+  change: ProjectStateChange,
+  session: ReturnType<typeof createImportSession>,
+) {
+  const token = session.begin();
   const read = await readImportFile(file);
   change((latest) => {
+    if (session.status(token) === 'superseded') {
+      return latest;
+    }
+    if (session.status(token) === 'changed') {
+      return withAnnouncement(
+        latest,
+        'Open cancelled because the project changed. Choose the file again to open it.',
+      );
+    }
     if (!read.ok) {
       return { ...latest, rejectedFile: read.error };
     }
@@ -46,19 +62,25 @@ async function openProjectFile(file: File, change: ProjectStateChange) {
 }
 
 // Project file flows: Save, Open, New and the kept damaged data (spec 002 US3–US5, US7).
-export function createFileActions(change: ProjectStateChange) {
+export function createFileActions(
+  change: ProjectStateChange,
+  session: ReturnType<typeof createImportSession> = createImportSession(),
+) {
   return {
     saveProjectFile: () => {
       change(saveToFile);
     },
-    openProjectFile: (file: File) => openProjectFile(file, change),
+    openProjectFile: (file: File) => openProjectFile(file, change, session),
     dismissRejectedFile: () => {
       change((latest) => ({ ...latest, rejectedFile: undefined }));
     },
     startNewProject: () => {
       change((latest) =>
         applyHistoryAction(latest, {
-          action: { kind: 'replace', project: createProject() },
+          action: {
+            kind: 'replace',
+            project: createProject({ controllerId: SHIELD_TARGET.boardId }),
+          },
           announcementText: 'Started a new project',
         }),
       );

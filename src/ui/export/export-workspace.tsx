@@ -9,9 +9,9 @@ import { getExportPreview } from './get-export-preview';
 import { useExportActions } from './use-export-actions';
 
 export function ExportWorkspace() {
-  const { project, issues, announce } = useProject();
+  const { project, analysis, announce } = useProject();
   const [includeWorkflow, setIncludeWorkflow] = useState(true);
-  const { files, problems, shieldName } = getExportPreview(project, { issues, includeWorkflow });
+  const { files, problems, shieldName } = getExportPreview(analysis, { includeWorkflow });
   function handleWorkflowChange(value: boolean) {
     setIncludeWorkflow(value);
   }

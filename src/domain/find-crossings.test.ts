@@ -74,3 +74,9 @@ describe('findCrossings', () => {
     expect(pairs).toEqual(['w1×w2', 'w2×w3']);
   });
 });
+
+it('handles the former 150000-bend argument-limit crash without spreading user arrays into calls', () => {
+  const bends = Array.from({ length: 150_000 }, (_, index) => ({ xU: index % 2, yU: 2 }));
+  const project = buildProject({ wires: [{ ...HORIZONTAL, bends }] });
+  expect(findCrossings(project)).toEqual([]);
+});

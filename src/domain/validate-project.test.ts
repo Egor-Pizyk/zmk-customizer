@@ -3,7 +3,18 @@ import { createProject } from './create-project';
 import type { Project } from './types';
 import { validateProject } from './validate-project';
 
-const CATALOG = { keycodeNames: new Set(['A']), bluetoothProfileCount: 5, maxLayerCount: 32 };
+const CATALOG = {
+  keycodeNames: new Set(['A']),
+  bluetoothProfileCount: 5,
+  maxLayerCount: 32,
+  shieldLimits: {
+    keyboardNameBytes: 16,
+    layerNodeNameLength: 31,
+    layerDisplayNameBytes: 19,
+    minLayoutCell: -32_768,
+    maxLayoutCell: 32_767,
+  },
+};
 
 function codesAndPaths(project: Project) {
   return validateProject(project, CATALOG).map(({ code, path }) => ({ code, path }));
@@ -33,7 +44,7 @@ function named(name: string, shieldName?: string): Project {
 }
 
 it('accepts a new project', () => {
-  expect(validateProject(createProject(), CATALOG)).toEqual([]);
+  expect(validateProject(createProject({ controllerId: 'nice_nano_v2' }), CATALOG)).toEqual([]);
 });
 
 it('reports a name without usable characters when there is no override', () => {
@@ -75,7 +86,7 @@ it('keeps the table order', () => {
 
 it('includes binding issues', () => {
   const project: Project = {
-    ...createProject(),
+    ...createProject({ controllerId: 'nice_nano_v2' }),
     keys: [{ id: 'k1', xU: 0, yU: 0 }],
     layers: [
       {

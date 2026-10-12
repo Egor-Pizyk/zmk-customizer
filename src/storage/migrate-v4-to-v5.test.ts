@@ -10,7 +10,9 @@ import { migrateV4ToV5 } from './migrate-v4-to-v5';
 const RAW_PINS = [8, 6, 17, 20, 22, 24, 11, 9, 10, 2, 29, 31];
 const CONNECTOR_PINS = [0, 1, 2, 3, 4, 5, 7, 10, 16, 19, 20, 21];
 function oldProject() {
-  const { controllerId: _controllerId, ...project } = createProject();
+  const { controllerId: _controllerId, ...project } = createProject({
+    controllerId: 'nice_nano_v2',
+  });
   return {
     ...project,
     schemaVersion: 4,
@@ -72,14 +74,16 @@ it('does not legitimize newly introduced fields in old files', () => {
   expect(migrateV4ToV5(null)).toBeNull();
 });
 it('rejects unknown controller ids and conflicting or malformed drop metadata in v5', () => {
-  expect(parseProjectFile(JSON.stringify({ ...createProject(), controllerId: 'bogus' })).ok).toBe(
-    false,
-  );
+  expect(
+    parseProjectFile(
+      JSON.stringify({ ...createProject({ controllerId: 'nice_nano_v2' }), controllerId: 'bogus' }),
+    ).ok,
+  ).toBe(false);
   for (const droppedBoardPin of ['', null, 42, 'x'.repeat(161)]) {
     expect(
       parseProjectFile(
         JSON.stringify({
-          ...createProject(),
+          ...createProject({ controllerId: 'nice_nano_v2' }),
           keys: [{ id: 'k0', xU: 0, yU: 0 }],
           wires: [
             {
@@ -96,7 +100,7 @@ it('rejects unknown controller ids and conflicting or malformed drop metadata in
   expect(
     parseProjectFile(
       JSON.stringify({
-        ...createProject(),
+        ...createProject({ controllerId: 'nice_nano_v2' }),
         keys: [{ id: 'k0', xU: 0, yU: 0 }],
         wires: [
           {

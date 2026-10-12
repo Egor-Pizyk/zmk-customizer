@@ -25,8 +25,11 @@ type ProjectMessagesProps = {
 
 // Banners below the project bar, each announced once as an alert (research R15).
 export function ProjectMessages({ onDiscardClick }: ProjectMessagesProps) {
-  const { saveStatus, backup } = useProject();
-  const storageWarning = STORAGE_WARNING[saveStatus];
+  const { saveStatus, saveError, backup } = useProject();
+  const storageWarning =
+    saveError?.kind === 'invalid-project'
+      ? `Autosave is off: the project data could not be saved (${saveError.reason}). Undo the last change or open a valid project file. Your current work remains in memory.`
+      : STORAGE_WARNING[saveStatus];
 
   function handleDiscardClick() {
     onDiscardClick();

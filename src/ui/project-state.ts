@@ -1,22 +1,27 @@
 import { BINDINGS_CATALOG } from '../catalog/bindings-catalog';
 import type { Project, ValidationIssue } from '../domain/types';
 import { getControllerBoard } from '../catalog/get-controller-board';
-import { validateShieldProject } from '../domain/validate-shield-project';
+import { analyzeProject } from '../domain/analyze-project';
 import type { ProjectFileError } from '../storage/parse-project-file';
 import { backupDamagedProject, discardBackup, saveProject } from '../storage/project-storage';
-import type { DamageReason, ProjectLoadResult, StorageError } from '../storage/project-storage';
+import type {
+  DamageReason,
+  ProjectLoadResult,
+  StorageError,
+  SaveError,
+} from '../storage/project-storage';
 import { reduceProjectHistory } from './project-history';
 import { formatIssueCount } from './shell/workspace-issue';
 import type { ProjectHistory, ProjectHistoryAction } from './project-history';
 
-export type SaveStatus = 'saved' | StorageError | 'backup-blocked';
+export type SaveStatus = 'saved' | StorageError | 'backup-blocked' | 'invalid-project';
 
 /** `id` changes on every announcement so StatusMessage re-announces a repeated text (R15). */
 export type Announcement = { readonly text: string; readonly id: number };
 
 export type ProjectState = {
   readonly history: ProjectHistory;
-  readonly saveError: StorageError | undefined;
+  readonly saveError: SaveError | undefined;
   /** The damaged stored value is not copied aside yet, so the main key must not be written (R7). */
   readonly isAutosaveBlocked: boolean;
   readonly announcement: Announcement | undefined;
@@ -49,7 +54,7 @@ export function createInitialState(initialLoad: ProjectLoadResult): ProjectState
   const { status } = initialLoad;
   return {
     history: { past: [], present: initialLoad.project, future: [] },
-    saveError: status.kind === 'unavailable' ? 'unavailable' : undefined,
+    saveError: status.kind === 'unavailable' ? { kind: 'storage-unavailable' } : undefined,
     isAutosaveBlocked: status.kind === 'damaged' && status.isBackupBlocked,
     announcement: undefined,
     rejectedFile: undefined,
@@ -62,7 +67,7 @@ export function withAnnouncement(state: ProjectState, text: string): ProjectStat
   return { ...state, announcement: { text, id } };
 }
 
-function autosave(state: ProjectState, project: Project): StorageError | undefined {
+function autosave(state: ProjectState, project: Project): SaveError | undefined {
   if (state.isAutosaveBlocked) {
     return state.saveError;
   }
@@ -73,21 +78,25 @@ function autosave(state: ProjectState, project: Project): StorageError | undefin
 // Validation cache (perf): one commit ran validateProject 3 times (before + after here,
 // plus the provider's useMemo on the same after object). Projects are immutable and shared
 // by reference through history, so a WeakMap keeps exactly one real run per new project.
-const issuesByProject = new WeakMap<Project, readonly ValidationIssue[]>();
+const analysisByProject = new WeakMap<Project, ReturnType<typeof analyzeProject>>();
 
-export function getValidationIssues(project: Project): readonly ValidationIssue[] {
-  const cached = issuesByProject.get(project);
+export function getProjectAnalysis(project: Project): ReturnType<typeof analyzeProject> {
+  const cached = analysisByProject.get(project);
   if (cached !== undefined) {
     return cached;
   }
   const board = getControllerBoard(project.controllerId);
-  const issues = validateShieldProject(project, {
+  const analysis = analyzeProject(project, {
     bindingsCatalog: BINDINGS_CATALOG,
     target: { ...board, boardId: board.id },
     board,
   });
-  issuesByProject.set(project, issues);
-  return issues;
+  analysisByProject.set(project, analysis);
+  return analysis;
+}
+
+export function getValidationIssues(project: Project): readonly ValidationIssue[] {
+  return getProjectAnalysis(project).issues;
 }
 
 // One text per change: the action's own text, plus the issue total when it changed (R15).
@@ -130,7 +139,9 @@ export function getSaveStatus(state: ProjectState): SaveStatus {
   if (state.isAutosaveBlocked) {
     return 'backup-blocked';
   }
-  return state.saveError ?? 'saved';
+  return state.saveError?.kind === 'storage-unavailable'
+    ? 'unavailable'
+    : (state.saveError?.kind ?? 'saved');
 }
 
 export type ProjectStateChange = (change: (latest: ProjectState) => ProjectState) => void;

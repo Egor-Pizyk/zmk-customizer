@@ -7,7 +7,7 @@ import { DiodeButtons } from './diode-buttons';
 
 it('canvas exposes two labeled toggles, the opposite disabled state, and low zoom fallback', () => {
   const project: Project = {
-    ...createProject(),
+    ...createProject({ controllerId: 'nice_nano_v2' }),
     keys: [{ id: 'k1', xU: 0, yU: 0, diode: { pin: 1, cathode: 'away-switch' } }],
   };
   const commit = vi.fn<(change: (project: Project) => Project) => void>();

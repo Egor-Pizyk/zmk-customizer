@@ -1,8 +1,9 @@
 import type { Project, Result } from '../domain/types';
+import { PROJECT_BUDGET } from './project-budget';
 import { parseProjectFile } from './parse-project-file';
 import type { ProjectFileError } from './parse-project-file';
 
-export const MAX_PROJECT_FILE_BYTES = 5 * 1024 * 1024;
+export const MAX_PROJECT_FILE_BYTES = PROJECT_BUDGET.bytes;
 
 async function readText(file: File): Promise<Result<string, ProjectFileError>> {
   try {

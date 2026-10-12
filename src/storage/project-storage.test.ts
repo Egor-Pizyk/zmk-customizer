@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { getResultError } from '../../tests/helpers/result';
 import { createProject } from '../domain/create-project';
 import {
   PROJECT_STORAGE_KEY,
@@ -8,7 +9,15 @@ import {
   readStoredProjectText,
   saveProject,
 } from './project-storage';
+import type { SaveError } from './project-storage';
 import { serializeProject } from './serialize-project';
+
+function saveReason(error: SaveError) {
+  if (error.kind !== 'invalid-project') {
+    throw new Error('Expected invalid-project');
+  }
+  return error.reason;
+}
 
 const BACKUP_KEY = 'zmk-customizer:project-backup';
 
@@ -39,7 +48,10 @@ afterEach(() => {
 describe('loadProject', () => {
   it('returns a new project with status missing when nothing is stored', () => {
     vi.stubGlobal('localStorage', storageStub({}));
-    expect(loadProject()).toEqual({ project: createProject(), status: { kind: 'missing' } });
+    expect(loadProject()).toEqual({
+      project: createProject({ controllerId: 'nice_nano_v2' }),
+      status: { kind: 'missing' },
+    });
   });
 
   it('returns the stored project', () => {
@@ -61,13 +73,16 @@ describe('loadProject', () => {
       throw new DOMException('blocked', 'SecurityError');
     });
     vi.stubGlobal('localStorage', storageStub({}, { getItem }));
-    expect(loadProject()).toEqual({ project: createProject(), status: { kind: 'unavailable' } });
+    expect(loadProject()).toEqual({
+      project: createProject({ controllerId: 'nice_nano_v2' }),
+      status: { kind: 'unavailable' },
+    });
   });
 
   it('never writes the main key and reports a kept backup', () => {
     const setItem = vi.fn<(key: string, value: string) => void>();
     const values = {
-      [PROJECT_STORAGE_KEY]: serializedText(createProject()),
+      [PROJECT_STORAGE_KEY]: serializedText(createProject({ controllerId: 'nice_nano_v2' })),
       [BACKUP_KEY]: 'old',
     };
     vi.stubGlobal('localStorage', storageStub(values, { setItem }));
@@ -85,8 +100,14 @@ describe('saveProject', () => {
   it('writes the serialized project to the main key', () => {
     const setItem = vi.fn<(key: string, value: string) => void>();
     vi.stubGlobal('localStorage', storageStub({}, { setItem }));
-    expect(saveProject(createProject())).toEqual({ ok: true, value: undefined });
-    expect(setItem).toHaveBeenCalledWith(PROJECT_STORAGE_KEY, serializedText(createProject()));
+    expect(saveProject(createProject({ controllerId: 'nice_nano_v2' }))).toEqual({
+      ok: true,
+      value: undefined,
+    });
+    expect(setItem).toHaveBeenCalledWith(
+      PROJECT_STORAGE_KEY,
+      serializedText(createProject({ controllerId: 'nice_nano_v2' })),
+    );
   });
 
   it('reports quota-exceeded', () => {
@@ -94,7 +115,10 @@ describe('saveProject', () => {
       throw new DOMException('full', 'QuotaExceededError');
     });
     vi.stubGlobal('localStorage', storageStub({}, { setItem }));
-    expect(saveProject(createProject())).toEqual({ ok: false, error: 'quota-exceeded' });
+    expect(saveProject(createProject({ controllerId: 'nice_nano_v2' }))).toEqual({
+      ok: false,
+      error: { kind: 'quota-exceeded' },
+    });
   });
 
   it('reports unavailable for any other failure', () => {
@@ -102,7 +126,10 @@ describe('saveProject', () => {
       throw new Error('blocked');
     });
     vi.stubGlobal('localStorage', storageStub({}, { setItem }));
-    expect(saveProject(createProject())).toEqual({ ok: false, error: 'unavailable' });
+    expect(saveProject(createProject({ controllerId: 'nice_nano_v2' }))).toEqual({
+      ok: false,
+      error: { kind: 'storage-unavailable' },
+    });
   });
 });
 
@@ -118,7 +145,7 @@ describe('loadProject with damaged stored data', () => {
   it('copies the raw value to the empty backup slot and never writes the main key', () => {
     const setItem = stubWith({ [PROJECT_STORAGE_KEY]: '{broken' });
     expect(loadProject()).toEqual({
-      project: createProject(),
+      project: createProject({ controllerId: 'nice_nano_v2' }),
       status: { kind: 'damaged', reason: 'not-json', isBackupBlocked: false },
       backupText: '{broken',
     });
@@ -191,4 +218,38 @@ describe('backup helpers', () => {
     vi.stubGlobal('localStorage', storageStub({ [PROJECT_STORAGE_KEY]: 'raw' }));
     expect(readStoredProjectText()).toBe('raw');
   });
+});
+
+it('preserves an invalid-project save diagnosis without calling storage', () => {
+  const setItem = vi.fn<(key: string, value: string) => void>();
+  const storage = storageStub({}, { setItem });
+  vi.stubGlobal('localStorage', storage);
+  const project = {
+    ...createProject({ controllerId: 'nice_nano_v2' }),
+    keys: [
+      { id: 'k1', xU: 0, yU: 0 },
+      { id: 'k1', xU: 1, yU: 0 },
+    ],
+  };
+  const result = saveProject(project);
+  expect(result.ok).toBe(false);
+  const error = getResultError(result);
+  expect(error.kind).toBe('invalid-project');
+  expect(saveReason(error)).toContain('keys.1.id');
+  expect(setItem).not.toHaveBeenCalled();
+});
+
+it('keeps a resource-excessive localStorage project as damaged backup instead of analyzing it', () => {
+  const text = JSON.stringify({
+    ...createProject({ controllerId: 'nice_nano_v2' }),
+    keys: Array.from({ length: 513 }, (_, index) => ({ id: `k${index}`, xU: index, yU: 0 })),
+  });
+  const setItem = vi.fn<(key: string, value: string) => void>();
+  const storage = storageStub({ [PROJECT_STORAGE_KEY]: text }, { setItem });
+  vi.stubGlobal('localStorage', storage);
+  const loaded = loadProject();
+  expect(loaded.status).toEqual({ kind: 'damaged', reason: 'not-project', isBackupBlocked: false });
+  expect(loaded.project).toEqual(createProject({ controllerId: 'nice_nano_v2' }));
+  expect(loaded.backupText).toBe(text);
+  expect(setItem).toHaveBeenCalledWith(BACKUP_KEY, text);
 });

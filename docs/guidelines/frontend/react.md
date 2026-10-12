@@ -31,7 +31,7 @@ src/ui/
 
 - One store: `useReducer` in `ProjectProvider` holding `{ past, present, future }` of `Project` (ADR 0003). Components get `{ project, issues, commit, undo, redo }` from `useProject()`.
 - `commit` takes an updater that calls one domain operation. The reducer stays generic; it never learns about keys or pins.
-- `issues = validateProject(project)` is computed once in the provider (`useMemo` on `project`), not per consumer.
+- `getProjectAnalysis(project)` owns contacts, nets, matrix and issues. A WeakMap in project-state.ts shares one result per immutable project across history, provider, schematic and export. UI consumers do not build a separate electrical validation pipeline.
 
 ```tsx
 // ✅
@@ -54,17 +54,18 @@ dispatch({ type: 'resize-key', keyIndex, widthU });
 ## Derived data
 
 - Compute during render: `const keyByCell = getKeyByCell(project)`. No `useState` + `useEffect` copy of anything derivable from `project`, `issues` or props.
-- `useMemo` / `useCallback` / `memo` only after the React profiler shows a problem, with a one-line comment naming it. Exceptions: the provider's `issues` above, and a context provider's `value` (plus the stable callback it closes over), which `react/jsx-no-constructed-context-values` requires.
+- `useMemo` / `useCallback` / `memo` only after the React profiler shows a problem, with a one-line comment naming it. Exceptions: the provider's analysis above, provider-lived import session tokens, and a context provider's `value` (plus the stable callback it closes over), which `react/jsx-no-constructed-context-values` requires.
 
 ## Effects
 
-Effects sync with systems outside React. A change that adds, moves or removes an effect updates this table in the same commit; `grep -rln useEffect src/ui` must list exactly the files below.
+Effects sync with systems outside React. A change that adds, moves or removes an effect updates this table in the same commit; `npm run check:guidelines` compares parsed production effect calls with the files below (tests and useEffectEvent are excluded).
 
 | Effect | Where |
 |---|---|
 | `document.documentElement.dataset.theme` sync with the theme preference | `preferences-context.tsx` |
 | Focus the workspace `<h1>` when the workspace changes (accessibility.md "Structure") | `workspace-view.tsx` |
 | `ResizeObserver`: panel and container sizes into state from the observer callback (clamp derived in render) | `components/floating-panel.tsx` |
+| Pointer subscriber registration and cleanup for the surface cursor preview | `canvas/work-surface.tsx` |
 | `ResizeObserver`: surface size into state for rulers | `canvas/use-element-size.ts` |
 | Non-passive `wheel` listener: Ctrl/Cmd zoom with `preventDefault`, wheel pan; 200 ms commit timer cleared in cleanup | `canvas/use-surface-viewport.ts` |
 | `showModal()` / `close()` to match `Dialog`'s `open` prop; `close` event → `onClose`; backdrop `click` listener added with `addEventListener` in the same effect and removed in its cleanup (no JSX `onClick` on `<dialog>`, which fails jsx-a11y) | `components/dialog.tsx` |

@@ -10,20 +10,25 @@ import type {
   KeyStroke,
 } from '../../domain/types';
 import { isProfileCommand } from './binding-slots';
-import type { BindingDraft, DraftBehaviorId } from './binding-slots';
-import { DEFAULT_HOLD } from './draft-state';
+import type { BindingDraft } from './binding-slots';
 import { throwUnfitPick, toBindingResult, toStoreResult } from './pick-result';
 import type { PickInput, PickResult } from './pick-result';
 
-function isKeyDraft(behaviorId: DraftBehaviorId): behaviorId is 'kp' | 'sk' | 'kt' | 'mt' {
-  return behaviorId === 'kp' || behaviorId === 'sk' || behaviorId === 'kt' || behaviorId === 'mt';
+type KeyDraft = Extract<BindingDraft, { readonly behaviorId: 'kp' | 'sk' | 'kt' | 'mt' }>;
+function isKeyDraft(draft: BindingDraft): draft is KeyDraft {
+  return (
+    draft.behaviorId === 'kp' ||
+    draft.behaviorId === 'sk' ||
+    draft.behaviorId === 'kt' ||
+    draft.behaviorId === 'mt'
+  );
 }
 
 // Every selected key becomes a key press of the picked key, then the drafted behavior (FR-009).
-function completeKeyDraft(input: PickInput, draft: BindingDraft): PickResult {
+function completeKeyDraft(input: PickInput, draft: KeyDraft): PickResult {
   const { target } = input;
-  const { behaviorId, key, hold } = draft;
-  if (key === undefined || !isKeyDraft(behaviorId)) {
+  const { behaviorId, key } = draft;
+  if (key === undefined) {
     return throwUnfitPick(input);
   }
   return toStoreResult((project) => {
@@ -32,7 +37,7 @@ function completeKeyDraft(input: PickInput, draft: BindingDraft): PickResult {
       behavior: { id: 'kp' },
     });
     if (behaviorId === 'mt') {
-      return setHoldKey(pressed, { ...target, hold: hold ?? DEFAULT_HOLD });
+      return setHoldKey(pressed, { ...target, hold: draft.hold });
     }
     return setKeyBehavior(pressed, { ...target, behavior: { id: behaviorId } });
   });
@@ -40,19 +45,23 @@ function completeKeyDraft(input: PickInput, draft: BindingDraft): PickResult {
 
 function toDraftKeycodeResult(input: PickInput, draft: BindingDraft, keycode: string): PickResult {
   if (input.slot.kind === 'hold') {
+    if (draft.behaviorId !== 'mt') {
+      return throwUnfitPick(input);
+    }
     const hold = { keycode, modifiers: [] };
     return { kind: 'draft', draft: { ...draft, hold }, next: { kind: 'tap' } };
   }
   const key = { keycode, modifiers: input.pendingModifiers };
-  return draft.behaviorId === 'lt'
-    ? toLayerTapDraftResult(input, { ...draft, key })
-    : completeKeyDraft(input, { ...draft, key });
+  if (draft.behaviorId === 'lt') {
+    return toLayerTapDraftResult(input, { ...draft, key });
+  }
+  return isKeyDraft(draft) ? completeKeyDraft(input, { ...draft, key }) : throwUnfitPick(input);
 }
 
 // A layer-tap draft stores once it has its layer and tap, whichever is picked last (spec 007).
 function toLayerTapDraftResult(
   input: PickInput,
-  draft: BindingDraft & { readonly key: KeyStroke },
+  draft: Extract<BindingDraft, { readonly behaviorId: 'lt' }> & { readonly key: KeyStroke },
 ): PickResult {
   const { layerId, key } = draft;
   if (layerId === undefined) {
@@ -112,7 +121,7 @@ export function toKeycodeResult(input: PickInput, keycode: string): PickResult {
 function findProfile(input: PickInput): number | undefined {
   const { source } = input;
   if (source.kind === 'draft') {
-    return source.draft.profile;
+    return source.draft.behaviorId === 'bt' ? source.draft.profile : undefined;
   }
   return source.kind === 'binding' && source.binding.kind === 'bt' && 'profile' in source.binding
     ? source.binding.profile
@@ -143,7 +152,7 @@ function findBluetoothCommand(
 ): BluetoothCommand | BluetoothProfileCommand | undefined {
   const { source } = input;
   if (source.kind === 'draft') {
-    return source.draft.btCommand;
+    return source.draft.behaviorId === 'bt' ? source.draft.btCommand : undefined;
   }
   return source.kind === 'binding' && source.binding.kind === 'bt'
     ? source.binding.command
@@ -169,15 +178,15 @@ export function toLayerResult(input: PickInput, layerId: string): PickResult {
     return throwUnfitPick(input);
   }
   const { draft } = source;
-  const { behaviorId, key } = draft;
+  const { behaviorId } = draft;
   if (behaviorId === 'mo' || behaviorId === 'tog' || behaviorId === 'to' || behaviorId === 'sl') {
     return toBindingResult(input, { kind: behaviorId, layerId });
   }
   if (behaviorId !== 'lt') {
     return throwUnfitPick(input);
   }
-  if (key !== undefined) {
-    return toBindingResult(input, { kind: 'lt', layerId, tap: key });
+  if (draft.key !== undefined) {
+    return toBindingResult(input, { kind: 'lt', layerId, tap: draft.key });
   }
   if (input.isEveryKeySendingKey) {
     const behavior = { id: 'lt', layerId } as const;

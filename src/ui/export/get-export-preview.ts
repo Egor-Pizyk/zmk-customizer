@@ -1,25 +1,22 @@
 import { getControllerBoard } from '../../catalog/get-controller-board';
 import { SHIELD_TARGET } from '../../catalog/shield-target';
-import { deriveShieldMatrix } from '../../domain/derive-shield-matrix';
+import type { analyzeProject } from '../../domain/analyze-project';
 import { getShieldName } from '../../domain/get-shield-name';
-import type { Project } from '../../domain/types';
 import { generateRepositoryFiles } from '../../generators/generate-repository-files';
 import { toWorkspaceIssues } from '../shell/workspace-issue';
-import type { WorkspaceIssue } from '../shell/workspace-issue';
 
 export function getExportPreview(
-  project: Project,
+  analysis: ReturnType<typeof analyzeProject>,
   input: {
-    readonly issues: readonly WorkspaceIssue[];
     readonly includeWorkflow: boolean;
   },
 ) {
+  const { project, matrix, issues } = analysis;
   const board = getControllerBoard(project.controllerId);
   const target = { ...SHIELD_TARGET, ...board, boardId: board.id };
-  const matrix = input.issues.length === 0 ? deriveShieldMatrix(project, target) : undefined;
-  const problems = matrix?.ok === false ? toWorkspaceIssues(matrix.error) : input.issues;
+  const problems = toWorkspaceIssues(issues);
   const files =
-    matrix?.ok === true
+    issues.length === 0 && matrix.ok
       ? generateRepositoryFiles(project, {
           matrix: matrix.value,
           target,

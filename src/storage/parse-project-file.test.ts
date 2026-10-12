@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import fixtureV1 from '../../tests/fixtures/project/v1.json?raw';
 import fixtureV2 from '../../tests/fixtures/project/v2.json?raw';
 import fixtureSmall from '../../tests/fixtures/schematic/small.json?raw';
+import { getResultError } from '../../tests/helpers/result';
 import { createProject } from '../domain/create-project';
 import type { Binding, Project } from '../domain/types';
 import { parseProjectFile } from './parse-project-file';
@@ -42,7 +43,11 @@ function withLayers(layerCount: number): Project {
     name: `Layer ${index}`,
     bindings: { k1: { kind: 'trans' } as const },
   }));
-  return { ...createProject(), keys: [{ id: 'k1', xU: 0, yU: 0 }], layers };
+  return {
+    ...createProject({ controllerId: 'nice_nano_v2' }),
+    keys: [{ id: 'k1', xU: 0, yU: 0 }],
+    layers,
+  };
 }
 
 describe('parseProjectFile', () => {
@@ -137,7 +142,7 @@ describe('bindings round trip (spec 004 FR-023, FR-024, SC-003)', () => {
       BINDINGS.map((binding, index) => [`k${index + 1}`, binding]),
     );
     const project: Project = {
-      ...createProject(),
+      ...createProject({ controllerId: 'nice_nano_v2' }),
       keys,
       layers: [{ id: 'l0', name: 'Base', bindings }],
     };
@@ -170,7 +175,7 @@ describe('tap-dance and mod-morph round trip (spec 005 contracts/binding-json.md
 
   it('keeps tap-dance and mod-morph through save and open', () => {
     const project: Project = {
-      ...createProject(),
+      ...createProject({ controllerId: 'nice_nano_v2' }),
       keys: [
         { id: 'k1', xU: 0, yU: 0 },
         { id: 'k2', xU: 1, yU: 0 },
@@ -238,7 +243,7 @@ describe('layer behaviors (spec 007 contracts/project-json.md)', () => {
       yU: 0,
     }));
     const project: Project = {
-      ...createProject(),
+      ...createProject({ controllerId: 'nice_nano_v2' }),
       keys,
       layers: [
         {
@@ -266,4 +271,24 @@ describe('layer behaviors (spec 007 contracts/project-json.md)', () => {
       value: overProject,
     });
   });
+});
+
+it('rejects computationally excessive input before geometry, including a small-byte bend attack', () => {
+  const project = {
+    ...createProject({ controllerId: 'nice_nano_v2' }),
+    keys: [{ id: 'k1', xU: 0, yU: 0 }],
+    wires: [
+      {
+        id: 'w1',
+        start: { kind: 'key-pin', keyId: 'k1', pin: 1 },
+        end: { kind: 'free', at: { xU: 2, yU: 0 } },
+        bends: Array.from({ length: 150_000 }, (_, index) => ({ xU: index % 2, yU: 2 })),
+      },
+    ],
+  };
+  const text = JSON.stringify(project);
+  expect(new TextEncoder().encode(text).length).toBeLessThan(5 * 1024 * 1024);
+  const result = parseProjectFile(text);
+  expect(result.ok).toBe(false);
+  expect(getResultError(result).kind).toBe('not-project');
 });
