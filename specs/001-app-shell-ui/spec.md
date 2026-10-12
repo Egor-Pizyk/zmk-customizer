@@ -323,3 +323,13 @@ Canvas workspaces show rulers along the top and left edges of the work surface, 
 - Zoom range 25%–400%, default 100%; zoom with Ctrl/Cmd + wheel, pan with middle-button drag, scroll or the arrow keys on a focused canvas.
 - Supported browsers: current Chrome, Firefox, Safari and Edge on desktop.
 - The original roadmap (`docs/roadmap.md`) planned five steps (Layout, Wiring, Keymap, Settings, Export). This feature replaces them with four workspaces: layout and wiring belong to Schematic, keymap to Bindings, ZMK settings to Firmware, export to Export. The roadmap is updated to match.
+
+## Maintenance revision — 2026-10-12
+
+User-requested updates supersede the minimap requirements above (US9 minimap scenarios, FR-013c, minimap in FR-014/FR-028/FR-031 and related assumptions):
+
+- Remove the minimap from both canvas workspaces and its Settings switch. Older stored preferences containing the minimap flag still load; the obsolete flag is ignored.
+- Reduce the zoom increment by one third for Ctrl/Cmd+wheel, zoom buttons and keyboard zoom. Zoom remains anchored as before and constrained to 25–400%; zoom out uses the reciprocal of the reduced zoom-in factor.
+- Add a keyboard-reachable “Center keyboard” button on both canvas workspaces. It pans the current view to the midpoint of the extreme key bounds on each axis, preserving zoom; wires are excluded. With no keys it is unavailable with an explanation. Camera changes remain interface preferences, shared between Schematic and Bindings, and do not alter the project or undo history.
+
+Acceptance: no minimap or switch; smaller reversible zoom steps; center an asymmetric layout at non-default zoom and negative coordinates; center follows moved/deleted keys; empty project states why centering is unavailable.

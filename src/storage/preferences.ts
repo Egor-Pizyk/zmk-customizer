@@ -25,7 +25,6 @@ export type Preferences = {
   readonly isGridVisible: boolean;
   readonly isSnapEnabled: boolean;
   readonly areRulersVisible: boolean;
-  readonly isMinimapVisible: boolean;
   readonly activeWorkspaceId: WorkspaceId;
   readonly isIssuesPanelOpen: boolean;
   /** Schematic parts list expanded (spec 003); missing in older stored values → default. */
@@ -59,7 +58,6 @@ export const DEFAULT_PREFERENCES: Preferences = {
   isGridVisible: true,
   isSnapEnabled: true,
   areRulersVisible: true,
-  isMinimapVisible: true,
   activeWorkspaceId: 'schematic',
   isIssuesPanelOpen: false,
   isPartsListOpen: true,
@@ -89,7 +87,6 @@ const preferencesSchema = z.object({
   isGridVisible: z.boolean().catch(DEFAULT_PREFERENCES.isGridVisible),
   isSnapEnabled: z.boolean().catch(DEFAULT_PREFERENCES.isSnapEnabled),
   areRulersVisible: z.boolean().catch(DEFAULT_PREFERENCES.areRulersVisible),
-  isMinimapVisible: z.boolean().catch(DEFAULT_PREFERENCES.isMinimapVisible),
   activeWorkspaceId: z
     .enum(['schematic', 'bindings', 'firmware', 'export'])
     .catch(DEFAULT_PREFERENCES.activeWorkspaceId),

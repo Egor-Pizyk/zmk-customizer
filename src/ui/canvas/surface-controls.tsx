@@ -1,5 +1,3 @@
-import type { RefObject } from 'react';
-import type { Viewport } from '../../storage/preferences';
 import { IconButton } from '../components/icon-button';
 import { MagnetIcon } from '../components/icons/magnet-icon';
 import { MinusIcon } from '../components/icons/minus-icon';
@@ -8,15 +6,17 @@ import { ResetViewIcon } from '../components/icons/reset-view-icon';
 import { usePreferences } from '../preferences-context';
 import { ZOOM_STEP, resetViewport, zoomAt } from './viewport';
 import { surfaceCenter } from './surface-center';
+import { CenterKeysButton } from './center-keys-button';
+import type { CenterKeysButtonProps } from './center-keys-button';
 
-type SurfaceControlsProps = {
-  readonly viewport: Viewport;
-  readonly svgRef: RefObject<SVGSVGElement | null>;
-  readonly onViewportCommit: (viewport: Viewport) => void;
-};
+type SurfaceControlsProps = CenterKeysButtonProps;
 
-// Top-right cluster: the tool window owns the top-left, the minimap the bottom-right.
-export function SurfaceControls({ viewport, svgRef, onViewportCommit }: SurfaceControlsProps) {
+// Top-right cluster; the tool window owns the top-left.
+export function SurfaceControls({
+  viewport,
+  svgRef,
+  onViewportCommit: handleViewportCommit,
+}: SurfaceControlsProps) {
   const { preferences, changePreferences } = usePreferences();
 
   function handleSnapClick() {
@@ -24,15 +24,15 @@ export function SurfaceControls({ viewport, svgRef, onViewportCommit }: SurfaceC
   }
 
   function handleZoomInClick() {
-    onViewportCommit(zoomAt(viewport, ZOOM_STEP, surfaceCenter(svgRef.current)));
+    handleViewportCommit(zoomAt(viewport, ZOOM_STEP, surfaceCenter(svgRef.current)));
   }
 
   function handleZoomOutClick() {
-    onViewportCommit(zoomAt(viewport, 1 / ZOOM_STEP, surfaceCenter(svgRef.current)));
+    handleViewportCommit(zoomAt(viewport, 1 / ZOOM_STEP, surfaceCenter(svgRef.current)));
   }
 
   function handleResetClick() {
-    onViewportCommit(resetViewport());
+    handleViewportCommit(resetViewport());
   }
 
   return (
@@ -45,6 +45,11 @@ export function SurfaceControls({ viewport, svgRef, onViewportCommit }: SurfaceC
       />
       <IconButton icon={<PlusIcon />} label="Zoom in" onClick={handleZoomInClick} />
       <IconButton icon={<MinusIcon />} label="Zoom out" onClick={handleZoomOutClick} />
+      <CenterKeysButton
+        onViewportCommit={handleViewportCommit}
+        svgRef={svgRef}
+        viewport={viewport}
+      />
       <IconButton icon={<ResetViewIcon />} label="Reset view" onClick={handleResetClick} />
     </div>
   );

@@ -14,7 +14,6 @@ const VALID_V1 = {
   isGridVisible: false,
   isSnapEnabled: false,
   areRulersVisible: false,
-  isMinimapVisible: true,
   activeWorkspaceId: 'bindings',
   isIssuesPanelOpen: true,
   isPartsListOpen: false,
@@ -52,6 +51,12 @@ describe('parsePreferences', () => {
       preferences: VALID_V1,
       status: 'ok',
     });
+  });
+
+  it('ignores the removed minimap flag while preserving older settings', () => {
+    const result = parsePreferences(JSON.stringify({ ...VALID_V1, isMinimapVisible: true }));
+    expect(result).toEqual({ preferences: VALID_V1, status: 'ok' });
+    expect(result.preferences).not.toHaveProperty('isMinimapVisible');
   });
 
   it('keeps valid fields and defaults an invalid one', () => {

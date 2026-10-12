@@ -9,7 +9,7 @@ Later features rely on these regions being stable: they add content to slots, no
 │ b  │ h1 workspace name                             │
 │    │ ┌ ruler ───────────────────────────────────┐  │
 │ b  │ │ [tool window]  work surface (SVG) [snap±] │  │
-│ a  │ │                                 [minimap] │  │
+│ a  │ │                                           │  │
 │ r  │ └──────────────────────────────────────────┘  │
 │    │ Status bar                  [Problems (N)]    │
 │ ⚙  ├──────────────────────────────────────────────┤
@@ -30,13 +30,14 @@ Later features rely on these regions being stable: they add content to slots, no
 | Action panel (Bindings, spec 004) | `<section>` floating panel, position = preference `bindingsPanel` | "Action" | Same handle and collapse button as the tool window; kinds, then choices with search; see `specs/004-bindings-keycaps/contracts/ui.md` |
 | Keys table (Bindings, spec 004) | `<section data-bindings-table>` below the work surface, `<details>` open state = preference `isBindingsTableOpen` | `<h2>` "Keys" | Every key with its action; selection column shared with the canvas |
 | Rulers | `<svg aria-hidden="true">` | — | Decorative; the position is in the status bar |
-| Minimap | `<svg aria-hidden="true">` | — (pointer-only; jsx-a11y rejects `role="img"` on `<svg>`) | Dragging is the pointer path; the keyboard path is arrow-key pan, zoom and reset on the canvas |
-| Surface controls | `<button aria-pressed>` + zoom in / zoom out / reset view buttons, top-right | "Snap to grid", "Zoom in", "Zoom out", "Reset view" | Snap is the same setting as the settings dialog |
+| Surface controls | `<button aria-pressed>` + zoom in / zoom out / center keyboard / reset view buttons, top-right | "Snap to grid", "Zoom in", "Zoom out", "Center keyboard", "Reset view" | Snap is the same setting as the settings dialog |
 | Tool window | `<section>` | "Tools" | Title bar is a `<button>` handle ("Move tools window, use arrow keys"); collapse button `aria-expanded`; tools are a `role="radiogroup"` of `role="radio"` buttons, unavailable ones `aria-disabled` with hint. From spec 003: Select, Key, Wire, all available, hints show their shortcut |
 | Status bar | `<footer>` rendered by the work surface | — | Position, zoom, snap, grid size; `IssuesToggle` "Problems (N)" (`aria-expanded`, `aria-controls="issues-panel"`) |
 | Placeholder footer | `<footer>` in Firmware / Export | — | `IssuesToggle` only |
 | Problems panel | `<section id="issues-panel">` | `<h2>` "Problems" | List, or "No problems" |
 | Live region | `<output>` (implicit `role="status"`) rendered by `shell/issues-announcer.tsx` in `app.tsx`, always mounted, visually hidden | — | Renders the total issue count; the only status region in the shell |
-| Settings dialog | `<dialog>` | `<h2>` "Settings" | Theme radio group, grid size (preset select plus text field, u), switches: grid, snap, rulers, minimap; "Reset to defaults"; notice when storage is unavailable |
+| Settings dialog | `<dialog>` | `<h2>` "Settings" | Theme radio group, grid size (preset select plus text field, u), switches: grid, snap, rulers; "Reset to defaults"; notice when storage is unavailable |
 | Help dialog | `<dialog>` | `<h2>` "Keyboard shortcuts" | Tables rendered from `SHORTCUTS` plus pointer gestures, with platform modifier names |
 | Placeholder workspace | `<main>` content | — | Empty state: heading plus one sentence on what will appear, for example "ZMK settings for your keyboard will appear here." |
+
+Maintenance 2026-10-12: no minimap; canvas controls include “Center keyboard” (unavailable with no keys), preserving zoom and centering the extreme key bounds.

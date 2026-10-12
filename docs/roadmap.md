@@ -66,7 +66,7 @@ Workspaces (from 001): **Schematic** holds the schematic of keys and wires (003)
 
 **Goal.** The app's frame, with no keyboard editing: a left tab bar with four workspaces (Schematic, Bindings, Firmware, Export) that later features fill.
 
-**Scope (summary).** Workspaces Schematic and Bindings are canvas surfaces with a shared grid (size, visibility, snap), rulers, minimap, pan/zoom and a status bar; Schematic has a floating tool window (only Select available). Firmware and Export are placeholders. Settings window: theme Light/Dark/System, grid, snap, rulers, minimap. Project bar with name, save status and New/Open/Save/Undo/Redo shown but unavailable. Problems panel and per-tab badges (always zero here). Keyboard shortcuts with a help window. Interface preferences persist per browser, separate from project data.
+**Scope (summary).** Workspaces Schematic and Bindings are canvas surfaces with a shared grid (size, visibility, snap), rulers, pan/zoom and a status bar; Schematic has a floating tool window (only Select available). Firmware and Export are placeholders. Settings window: theme Light/Dark/System, grid, snap, rulers. Project bar with name, save status and New/Open/Save/Undo/Redo shown but unavailable. Problems panel and per-tab badges (always zero here). Keyboard shortcuts with a help window. Interface preferences persist per browser, separate from project data.
 
 ---
 

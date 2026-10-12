@@ -34,7 +34,8 @@ export function displayGridStep(gridSizeU: number, zoom: number): number {
 
 export const ZOOM_MIN = 0.25;
 export const ZOOM_MAX = 4;
-export const ZOOM_STEP = 1.25;
+export const ZOOM_STEP = 1 + (0.25 * 2) / 3;
+export const WHEEL_ZOOM_STEP = 1 + (0.1 * 2) / 3;
 
 // Zooms so the world point under the anchor stays under it; zoom is clamped to 25–400%.
 export function zoomAt(viewport: Viewport, factor: number, anchor: ScreenPoint): Viewport {
@@ -52,6 +53,18 @@ export function zoomAt(viewport: Viewport, factor: number, anchor: ScreenPoint):
 
 export function resetViewport(): Viewport {
   return { zoom: 1, panXPx: 0, panYPx: 0 };
+}
+
+export function centerViewportAt(
+  viewport: Viewport,
+  input: { readonly world: WorldPoint; readonly screen: ScreenPoint },
+): Viewport {
+  const pxPerU = PX_PER_U * viewport.zoom;
+  return {
+    ...viewport,
+    panXPx: input.screen.xPx - input.world.xU * pxPerU,
+    panYPx: input.screen.yPx - input.world.yU * pxPerU,
+  };
 }
 
 export type PanDelta = {

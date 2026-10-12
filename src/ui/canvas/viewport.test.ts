@@ -2,12 +2,37 @@ import { describe, expect, it } from 'vitest';
 import { DEFAULT_VIEWPORT } from '../../storage/preferences';
 import {
   PX_PER_U,
+  ZOOM_STEP,
+  WHEEL_ZOOM_STEP,
+  centerViewportAt,
   displayGridStep,
   panViewportByU,
   resetViewport,
   screenToWorld,
   zoomAt,
 } from './viewport';
+
+it('reduces button and wheel zoom increments by a third and keeps zoom steps reversible', () => {
+  expect(ZOOM_STEP - 1).toBeCloseTo((0.25 * 2) / 3);
+  expect(WHEEL_ZOOM_STEP - 1).toBeCloseTo((0.1 * 2) / 3);
+  const anchor = { xPx: 200, yPx: 100 };
+  const restored = zoomAt(
+    zoomAt(DEFAULT_VIEWPORT, WHEEL_ZOOM_STEP, anchor),
+    1 / WHEEL_ZOOM_STEP,
+    anchor,
+  );
+  expect(restored.zoom).toBeCloseTo(1);
+  expect(restored.panXPx).toBeCloseTo(0);
+  expect(restored.panYPx).toBeCloseTo(0);
+});
+
+it('places the keyboard center at the surface center without changing zoom', () => {
+  const world = { xU: -2.5, yU: 4 };
+  const screen = { xPx: 350, yPx: 200 };
+  const centered = centerViewportAt({ zoom: 2, panXPx: 1000, panYPx: -80 }, { world, screen });
+  expect(centered.zoom).toBe(2);
+  expect(screenToWorld(screen, centered)).toEqual(world);
+});
 
 describe('screenToWorld', () => {
   it('maps screen px to key units at the default view', () => {

@@ -26,7 +26,6 @@ const SETTINGS_DEFAULTS: Partial<Preferences> = {
   isGridVisible: DEFAULT_PREFERENCES.isGridVisible,
   isSnapEnabled: DEFAULT_PREFERENCES.isSnapEnabled,
   areRulersVisible: DEFAULT_PREFERENCES.areRulersVisible,
-  isMinimapVisible: DEFAULT_PREFERENCES.isMinimapVisible,
 };
 
 const PreferencesContext = createContext<PreferencesContextValue | undefined>(undefined);

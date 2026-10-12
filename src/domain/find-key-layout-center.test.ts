@@ -1,0 +1,22 @@
+import { expect, it } from 'vitest';
+import { buildProject } from '../../tests/helpers/build-project';
+import { findKeyLayoutCenter } from './find-key-layout-center';
+
+it('centers between extreme key bounds rather than averaging the keys', () => {
+  const project = buildProject({
+    keys: [
+      { id: 'k1', xU: -4, yU: -2 },
+      { id: 'k2', xU: -3, yU: -1 },
+      { id: 'k3', xU: 10, yU: 6 },
+    ],
+  });
+  expect(findKeyLayoutCenter(project)).toEqual({ xU: 3.5, yU: 2.5 });
+});
+
+it('returns the center of a single key and no center for an empty layout', () => {
+  expect(findKeyLayoutCenter(buildProject({ keys: [{ id: 'k1', xU: 2, yU: 3 }] }))).toEqual({
+    xU: 2.5,
+    yU: 3.5,
+  });
+  expect(findKeyLayoutCenter(buildProject({}))).toBeUndefined();
+});

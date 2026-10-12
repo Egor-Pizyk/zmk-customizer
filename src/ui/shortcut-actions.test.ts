@@ -34,11 +34,12 @@ describe('getShortcutAction', () => {
   });
 
   it('zooms the shared canvas view around the focused canvas center', () => {
+    const factor = 1 + (0.25 * 2) / 3;
     expect(getShortcutAction('zoom-in', CONTEXT)).toMatchObject({
       kind: 'change-preferences',
       changes: {
         viewByWorkspace: {
-          schematic: { zoom: 1.25, panXPx: 200 - 200 * 1.25, panYPx: 100 - 100 * 1.25 },
+          schematic: { zoom: factor, panXPx: 200 - 200 * factor, panYPx: 100 - 100 * factor },
           bindings: DEFAULT_VIEWPORT,
         },
       },

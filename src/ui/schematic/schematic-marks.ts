@@ -27,7 +27,12 @@ export function getSchematicMarks(issues: readonly WorkspaceIssue[]): SchematicM
     if (collection === 'keys' && typeof index === 'number' && part === undefined) {
       problemsByKeyIndex.set(index, [...(problemsByKeyIndex.get(index) ?? []), issue.message]);
     }
-    if (collection === 'keys' && typeof index === 'number' && part === 'pins') {
+    if (
+      issue.code === 'key-pin-unconnected' &&
+      collection === 'keys' &&
+      typeof index === 'number' &&
+      part === 'pins'
+    ) {
       unconnectedPins.add(`${index}:${String(pin)}`);
     }
     if (

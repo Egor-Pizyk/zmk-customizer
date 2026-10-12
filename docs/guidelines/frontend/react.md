@@ -19,7 +19,7 @@ src/ui/
   error-boundary.tsx    the only class component (observability.md)
   components/           design-system primitives: button.tsx, text-field.tsx, dialog.tsx, …
   shell/                tab bar, project bar, problems panel, settings and help dialogs
-  canvas/               work surface, rulers, minimap, tool window (shared by canvas workspaces)
+  canvas/               work surface, rulers, tool window (shared by canvas workspaces)
   schematic/ bindings/ firmware/ export/   one folder per workspace, feature screens
 ```
 
@@ -65,7 +65,7 @@ Effects sync with systems outside React. A change that adds, moves or removes an
 | `document.documentElement.dataset.theme` sync with the theme preference | `preferences-context.tsx` |
 | Focus the workspace `<h1>` when the workspace changes (accessibility.md "Structure") | `workspace-view.tsx` |
 | `ResizeObserver`: panel and container sizes into state from the observer callback (clamp derived in render) | `components/floating-panel.tsx` |
-| `ResizeObserver`: surface size into state for rulers and minimap | `canvas/use-element-size.ts` |
+| `ResizeObserver`: surface size into state for rulers | `canvas/use-element-size.ts` |
 | Non-passive `wheel` listener: Ctrl/Cmd zoom with `preventDefault`, wheel pan; 200 ms commit timer cleared in cleanup | `canvas/use-surface-viewport.ts` |
 | `showModal()` / `close()` to match `Dialog`'s `open` prop; `close` event → `onClose`; backdrop `click` listener added with `addEventListener` in the same effect and removed in its cleanup (no JSX `onClick` on `<dialog>`, which fails jsx-a11y) | `components/dialog.tsx` |
 | Global `keydown` on `globalThis` for all shortcuts: Alt+Shift globals and canvas-scoped single keys (`shortcuts.ts`) | `use-global-shortcuts.ts` (mounted by `app.tsx`) |
