@@ -1,0 +1,17 @@
+services:
+  zmk-build:
+    image: ${ZMK_BUILD_IMAGE:?Use scripts/zmk-build.env}
+    working_dir: /workspace
+    environment:
+      ZMK_BUILD_ZEPHYR_REVISION: ${ZMK_BUILD_ZEPHYR_REVISION}
+      ZMK_BUILD_REVISION: ${ZMK_BUILD_REVISION}
+      ZMK_BUILD_ZEPHYR_VERSION: ${ZMK_BUILD_ZEPHYR_VERSION}
+      ZMK_BUILD_SDK_VERSION: ${ZMK_BUILD_SDK_VERSION}
+    volumes:
+      - ./.zmk-build/workspace:/workspace
+      - ./.zmk-build/exports:/exports:ro
+      - ./.zmk-build/artifacts:/artifacts
+      - ./.zmk-build/logs:/logs
+      - ./scripts/zmk-west.yml:/zmk-west.yml:ro
+      - ./scripts/zmk-build.sh:/runner.sh:ro
+    entrypoint: [bash, /runner.sh]
