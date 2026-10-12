@@ -2,7 +2,7 @@ import { BEHAVIORS } from '../../catalog/behaviors';
 import { BLUETOOTH_COMMANDS } from '../../catalog/bluetooth-commands';
 import { OUTPUT_COMMANDS } from '../../catalog/output-commands';
 import { assertNever } from '../../domain/assert-never';
-import type { Binding, KeyStroke } from '../../domain/types';
+import type { Binding, KeyStroke, Layer, LayerBinding } from '../../domain/types';
 import { formatKeycodeName } from './format-keycode-name';
 import { MODIFIER_LABELS } from './modifier-labels';
 
@@ -65,7 +65,12 @@ function isCatalogBinding(binding: Binding): binding is CatalogBinding {
     case 'bt':
     case 'out':
     case 'tap_dance':
-    case 'mod_morph': {
+    case 'mod_morph':
+    case 'mo':
+    case 'tog':
+    case 'to':
+    case 'sl':
+    case 'lt': {
       return false;
     }
     default: {
@@ -74,13 +79,30 @@ function isCatalogBinding(binding: Binding): binding is CatalogBinding {
   }
 }
 
+function findBehaviorLabel(binding: Binding): string {
+  return BEHAVIORS.find((behavior) => behavior.id === binding.kind)?.label ?? binding.kind;
+}
+
+// "Momentary layer Nav"; layer-tap follows the mod-tap pattern (spec 007 contracts/ui.md).
+function formatLayerBindingName(binding: LayerBinding, layers: readonly Layer[]): string {
+  const name = layers.find((layer) => layer.id === binding.layerId)?.name;
+  if (binding.kind === 'lt') {
+    const held = name === undefined ? 'deleted layer' : `layer ${name}`;
+    return `${formatKeyStroke(binding.tap)}, ${held} when held`;
+  }
+  return `${findBehaviorLabel(binding)} ${name ?? '(deleted layer)'}`;
+}
+
 /** Full action name: keycap aria-label, tooltip, Bindings table, status messages (FR-007). */
-export function formatBindingName(binding: Binding | undefined): string {
+export function formatBindingName(binding: Binding | undefined, layers: readonly Layer[]): string {
   if (binding === undefined) {
     return 'Not assigned (does nothing)';
   }
   if (isCatalogBinding(binding)) {
-    return BEHAVIORS.find((behavior) => behavior.id === binding.kind)?.label ?? binding.kind;
+    return findBehaviorLabel(binding);
+  }
+  if ('layerId' in binding) {
+    return formatLayerBindingName(binding, layers);
   }
   switch (binding.kind) {
     case 'kp': {

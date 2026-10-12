@@ -28,3 +28,15 @@ it('is false for other kinds, unassigned keys or no keys', () => {
   ).toBe(false);
   expect(isEveryKeySendingKey(PROJECT, { layerIndex: 0, keyIds: [] })).toBe(false);
 });
+
+it('counts layer-tap as sending its tap key (spec 007)', () => {
+  const project = buildProject({
+    keys: KEYS,
+    bindings: {
+      k1: { kind: 'lt', layerId: 'l1', tap: KEY_A },
+      k2: { kind: 'mo', layerId: 'l1' },
+    },
+  });
+  expect(isEveryKeySendingKey(project, { layerIndex: 0, keyIds: ['k1'] })).toBe(true);
+  expect(isEveryKeySendingKey(project, { layerIndex: 0, keyIds: ['k1', 'k2'] })).toBe(false);
+});

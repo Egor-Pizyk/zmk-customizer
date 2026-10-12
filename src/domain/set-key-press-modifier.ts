@@ -19,10 +19,12 @@ function withModifier(
   if (binding?.kind === 'kp') {
     return { ...binding, key: toggle(binding.key, input) };
   }
-  return binding?.kind === 'mt' ? { ...binding, tap: toggle(binding.tap, input) } : undefined;
+  return binding?.kind === 'mt' || binding?.kind === 'lt'
+    ? { ...binding, tap: toggle(binding.tap, input) }
+    : undefined;
 }
 
-// Modifier chips act on key presses and the tap of mod-tap; others stay as they are (FR-011).
+// Modifier chips act on key presses and the tap of mod-tap and layer-tap; others stay (FR-011).
 export function setKeyPressModifier(
   project: Project,
   input: {

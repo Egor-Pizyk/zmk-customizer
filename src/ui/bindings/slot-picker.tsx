@@ -1,7 +1,7 @@
 import { useId } from 'react';
 import type { ChangeEvent, KeyboardEvent } from 'react';
 import { INPUT_CLASSES } from '../components/input-classes';
-import { findSlotValueId } from './binding-slots';
+import { findLineBehavior, findSlotValueId } from './binding-slots';
 import { ChoiceList } from './choice-list';
 import { filterPickerItems } from './filter-picker-items';
 import { formatSlotPrompt, getSlotChoices } from './slot-choices';
@@ -69,7 +69,10 @@ export function SlotPicker(props: SlotPickerProps) {
   const { picker } = props;
   const promptId = useId();
   const listId = useId();
-  const groups = filterGroups(getSlotChoices(picker.slot), picker.search);
+  // Layer rows link to the open behavior's docs; a layer slot exists only on its line.
+  const docsUrl = findLineBehavior(picker.source)?.docsUrl ?? '';
+  const choices = getSlotChoices(picker.slot, { layers: picker.layers, docsUrl });
+  const groups = filterGroups(choices, picker.search);
 
   function handleExitTop() {
     document.querySelector<HTMLInputElement>(`[data-slot-search="${listId}"]`)?.focus();

@@ -1,26 +1,25 @@
-import { useState } from 'react';
-import type { Project } from '../../domain/types';
 import { usePreferences } from '../preferences-context';
 import { useProject } from '../project-context';
 import { advanceSelection } from './advance-selection';
-import { focusActionPanel } from './focus-action-panel';
 import { formatSelectionName } from './format-selection-name';
 import { getProblemsByKeyId } from './get-problems-by-key-id';
 import { useCopiedBinding } from './use-copied-binding';
 import { useKeyPicker } from './use-key-picker';
+import { useKeySelection } from './use-key-selection';
+import { useLayerActions } from './use-layer-actions';
 
 // Bindings UI state (selection, active key, key picker, copied action); the project changes
 // only through domain operations committed via ProjectProvider (react.md "Project state").
 export function useBindingsWorkspace() {
-  const { project, issues, commit, announce } = useProject();
-  const { isAutoAdvanceEnabled } = usePreferences().preferences;
-  const [selection, setSelection] = useState<readonly string[]>([]);
-  const [activeKeyId, setActiveKeyId] = useState<string | undefined>();
-  // Keys deleted in Schematic drop out of the selection (spec 004 edge cases), derived in render.
-  const selectedKeyIds = selection.filter((keyId) => project.keys.some((key) => key.id === keyId));
-  const picker = useKeyPicker(project, selectedKeyIds);
+  const { project, issues, commit } = useProject();
+  const { isAutoAdvanceEnabled, bindingsLayerIndex } = usePreferences().preferences;
+  const layerIndex = Math.min(bindingsLayerIndex, project.layers.length - 1);
+  const { selectedKeyIds, activeKeyId, setSelection, setActiveKeyId } = useKeySelection(project);
+  const picker = useKeyPicker(project, { layerIndex, keyIds: selectedKeyIds });
   const selectionName = formatSelectionName(project, selectedKeyIds);
-  const copied = useCopiedBinding({ project, selectedKeyIds, selectionName, commit, announce });
+  const copied = useCopiedBinding({ target: picker.target, selectionName });
+  const { reservedLayerIds } = copied;
+  const layers = useLayerActions({ project, issues, commit, layerIndex, reservedLayerIds });
 
   function handleSelectionChange(keyIds: readonly string[]) {
     setSelection(keyIds);
@@ -40,9 +39,10 @@ export function useBindingsWorkspace() {
 
   return {
     project,
-    problemsByKeyId: getProblemsByKeyId(issues),
+    layers,
+    problemsByKeyId: getProblemsByKeyId(issues, { layerIndex: layers.layerIndex }),
     selectedKeyIds,
-    activeKeyId: findActiveKeyId(project, activeKeyId),
+    activeKeyId,
     picker,
     selectionName,
     copied,
@@ -50,13 +50,7 @@ export function useBindingsWorkspace() {
     handlePicked,
     handleSelectionChange,
     handleActiveKeyChange: setActiveKeyId,
-    handleOpenPanel: focusActionPanel,
   };
-}
-
-// The roving tab stop: the last focused key if it still exists, else key 0.
-function findActiveKeyId(project: Project, activeKeyId: string | undefined) {
-  return project.keys.some((key) => key.id === activeKeyId) ? activeKeyId : project.keys[0]?.id;
 }
 
 export type BindingsWorkspaceState = ReturnType<typeof useBindingsWorkspace>;

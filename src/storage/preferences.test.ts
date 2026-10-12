@@ -23,6 +23,7 @@ const VALID_V1 = {
   isBindingsTableOpen: true,
   isAutoAdvanceEnabled: false,
   actionPanelWidthPx: 400,
+  bindingsLayerIndex: 2,
   viewByWorkspace: {
     schematic: { zoom: 2, panXPx: 10, panYPx: -5 },
     bindings: { zoom: 0.5, panXPx: 0, panYPx: 0 },
@@ -80,6 +81,15 @@ describe('parsePreferences', () => {
   it.each([100, 900])('defaults an action panel width outside 240..640 (%s)', (widthPx) => {
     const result = parsePreferences(JSON.stringify({ version: 1, actionPanelWidthPx: widthPx }));
     expect(result.preferences.actionPanelWidthPx).toBe(448);
+  });
+
+  it('opens the first layer for older values (spec 007)', () => {
+    expect(parsePreferences('{"version":1}').preferences.bindingsLayerIndex).toBe(0);
+  });
+
+  it.each([-1, 1.5, '2'])('opens the first layer for a stored layer position %j', (index) => {
+    const result = parsePreferences(JSON.stringify({ version: 1, bindingsLayerIndex: index }));
+    expect(result.preferences.bindingsLayerIndex).toBe(0);
   });
 
   it('defaults a grid size outside 0.05..2', () => {

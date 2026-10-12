@@ -4,11 +4,13 @@ import { KEYCODES, MODIFIER_KEYCODES } from '../../catalog/keycodes';
 import type { KeycodeCategory } from '../../catalog/parse-keys-header';
 import { OUTPUT_COMMANDS } from '../../catalog/output-commands';
 import { assertNever } from '../../domain/assert-never';
+import type { Layer } from '../../domain/types';
 import type { SlotRef } from './binding-slots';
 import {
   toBehaviorItem,
   toBluetoothCommandItem,
   toKeycodeItem,
+  toLayerItem,
   toOutputCommandItem,
   toProfileItem,
 } from './to-picker-item';
@@ -116,8 +118,14 @@ const OUT_COMMAND_GROUPS = [
   ),
 ];
 
-/** What the open slot offers, grouped (spec 006 FR-004); module constants, stable references. */
-export function getSlotChoices(slot: SlotRef): readonly ChoiceGroup[] {
+/** The project's layers, and the open behavior's docs page that layer rows link to (spec 007). */
+export type LayerChoiceContext = { readonly layers: readonly Layer[]; readonly docsUrl: string };
+
+/**
+ * What the open slot offers, grouped (spec 006 FR-004); module constants, stable references,
+ * except the layer rows, built from the project's layers (at most 32) per render.
+ */
+export function getSlotChoices(slot: SlotRef, context: LayerChoiceContext): readonly ChoiceGroup[] {
   switch (slot.kind) {
     case 'behavior': {
       return BEHAVIOR_GROUPS;
@@ -139,6 +147,11 @@ export function getSlotChoices(slot: SlotRef): readonly ChoiceGroup[] {
     }
     case 'out-command': {
       return OUT_COMMAND_GROUPS;
+    }
+    case 'layer': {
+      const { layers, docsUrl } = context;
+      const items = layers.map((layer, layerIndex) => toLayerItem(layer, { layerIndex, docsUrl }));
+      return [toGroup('layers', 'Layers', items)];
     }
     default: {
       return assertNever(slot);
@@ -169,6 +182,9 @@ export function formatSlotPrompt(slot: SlotRef): string {
     }
     case 'out-command': {
       return 'Where should keys go?';
+    }
+    case 'layer': {
+      return 'Which layer?';
     }
     case 'dance-tap': {
       return `Which key for tap ${slot.index + 1}?`;

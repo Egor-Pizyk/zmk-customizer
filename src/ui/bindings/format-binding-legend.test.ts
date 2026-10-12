@@ -1,11 +1,17 @@
 import { expect, it } from 'vitest';
 import { KEYCODES } from '../../catalog/keycodes';
-import type { Binding, Modifier } from '../../domain/types';
+import type { Binding, Layer, Modifier } from '../../domain/types';
 import {
   countGraphemes,
   formatBindingLegend,
   formatFullBindingLegend,
 } from './format-binding-legend';
+
+const LAYERS: readonly Layer[] = [
+  { id: 'l0', name: 'Base', bindings: {} },
+  { id: 'l1', name: 'Nav', bindings: {} },
+  { id: 'l2', name: 'Symbols and numbers', bindings: {} },
+];
 
 function kp(keycode: string, modifiers: readonly Modifier[] = []): Binding {
   return { kind: 'kp', key: { keycode, modifiers } };
@@ -118,8 +124,22 @@ it.each<[string, Binding | undefined, ReturnType<typeof formatBindingLegend>]>([
     },
     { tap: 'A', hold: '⌃R⇧B' },
   ],
+  ['momentary layer', { kind: 'mo', layerId: 'l1' }, { tap: 'Nav' }],
+  ['toggle layer, name shortened', { kind: 'tog', layerId: 'l2' }, { tap: 'Symbol…' }],
+  ['to a deleted layer', { kind: 'to', layerId: 'l9' }, { tap: '?' }],
+  ['sticky layer', { kind: 'sl', layerId: 'l0' }, { tap: 'Base' }],
+  [
+    'layer-tap',
+    { kind: 'lt', layerId: 'l1', tap: { keycode: 'SPACE', modifiers: [] } },
+    { tap: '␣', hold: 'Nav' },
+  ],
+  [
+    'layer-tap on a deleted layer',
+    { kind: 'lt', layerId: 'l9', tap: { keycode: 'A', modifiers: [] } },
+    { tap: 'A', hold: '?' },
+  ],
 ])('formats %s', (_label, binding, legend) => {
-  expect(formatBindingLegend(binding)).toEqual(legend);
+  expect(formatBindingLegend(binding, LAYERS)).toEqual(legend);
 });
 
 it.each<[string, Binding | undefined, ReturnType<typeof formatFullBindingLegend>]>([
@@ -145,12 +165,13 @@ it.each<[string, Binding | undefined, ReturnType<typeof formatFullBindingLegend>
     },
     { tap: 'A', hold: 'B/C' },
   ],
+  ['layer name in full', { kind: 'tog', layerId: 'l2' }, { tap: 'Symbols and numbers' }],
 ])('formats the full %s', (_label, binding, legend) => {
-  expect(formatFullBindingLegend(binding)).toEqual(legend);
+  expect(formatFullBindingLegend(binding, LAYERS)).toEqual(legend);
 });
 
 it('gives every keycode a unique legend that fits the keycap', () => {
-  const legends = KEYCODES.map((keycode) => formatBindingLegend(kp(keycode.name)));
+  const legends = KEYCODES.map((keycode) => formatBindingLegend(kp(keycode.name), LAYERS));
   expect(legends).not.toContain(undefined);
   const taps = legends.filter((legend) => legend !== undefined).map((legend) => legend.tap);
   expect(taps.length).toBe(KEYCODES.length);

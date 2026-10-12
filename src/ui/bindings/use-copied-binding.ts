@@ -2,20 +2,21 @@ import { useState } from 'react';
 import { findBinding } from '../../domain/find-binding';
 import { isSameBinding } from '../../domain/is-same-binding';
 import { setBindings } from '../../domain/set-bindings';
-import type { Binding, Project } from '../../domain/types';
+import type { Binding } from '../../domain/types';
+import { useProject } from '../project-context';
 import { formatBindingName } from './format-binding-name';
 
 type CopiedBindingOptions = {
-  readonly project: Project;
-  readonly selectedKeyIds: readonly string[];
+  /** The open layer and the selected keys (spec 007 FR-007). */
+  readonly target: { readonly layerIndex: number; readonly keyIds: readonly string[] };
   readonly selectionName: string;
-  readonly commit: (change: (project: Project) => Project, announcementText?: string) => void;
-  readonly announce: (text: string) => void;
 };
 
 // Session-only clipboard for one action (spec 004 FR-018, R12); never project data.
 export function useCopiedBinding(options: CopiedBindingOptions) {
-  const { project, selectedKeyIds, selectionName, commit, announce } = options;
+  const { project, commit, announce } = useProject();
+  const { selectionName } = options;
+  const { layerIndex, keyIds: selectedKeyIds } = options.target;
   const [copiedBinding, setCopiedBinding] = useState<Binding | undefined>();
 
   function handleCopy() {
@@ -24,9 +25,9 @@ export function useCopiedBinding(options: CopiedBindingOptions) {
       return;
     }
     // An unassigned key does nothing, so copying it copies "Do nothing".
-    const binding = findBinding(project, { layerIndex: 0, keyId }) ?? { kind: 'none' };
+    const binding = findBinding(project, { layerIndex, keyId }) ?? { kind: 'none' };
     setCopiedBinding(binding);
-    announce(`Copied ${formatBindingName(binding)}`);
+    announce(`Copied ${formatBindingName(binding, project.layers)}`);
   }
 
   function handlePaste() {
@@ -36,7 +37,7 @@ export function useCopiedBinding(options: CopiedBindingOptions) {
     // Unassigned (missing entry) renders as an empty keycap while `none` renders as ✕,
     // but both do nothing (FR-021): pasting "Do nothing" onto an empty key is a no-op.
     const targetKeyIds = selectedKeyIds.filter((keyId) => {
-      const current = findBinding(project, { layerIndex: 0, keyId });
+      const current = findBinding(project, { layerIndex, keyId });
       return (
         !isSameBinding(current, copiedBinding) &&
         !(current === undefined && copiedBinding.kind === 'none')
@@ -45,10 +46,13 @@ export function useCopiedBinding(options: CopiedBindingOptions) {
     if (targetKeyIds.length === 0) {
       return;
     }
-    const change = { layerIndex: 0, keyIds: targetKeyIds, binding: copiedBinding };
-    const text = `Pasted ${formatBindingName(copiedBinding)} to ${selectionName}`;
+    const change = { layerIndex, keyIds: targetKeyIds, binding: copiedBinding };
+    const name = formatBindingName(copiedBinding, project.layers);
+    const text = `Pasted ${name} to ${selectionName}`;
     commit((current) => setBindings(current, change), text);
   }
 
-  return { canPaste: copiedBinding !== undefined, handleCopy, handlePaste };
+  const reservedLayerIds =
+    copiedBinding !== undefined && 'layerId' in copiedBinding ? [copiedBinding.layerId] : [];
+  return { canPaste: copiedBinding !== undefined, reservedLayerIds, handleCopy, handlePaste };
 }

@@ -200,3 +200,122 @@ describe('value picks (spec 006 FR-009, FR-011)', () => {
     ).toMatchObject({ kind: 'store', next: { kind: 'morph-side', side: 'morphed' } });
   });
 });
+
+function pickLayer(layerId: string): PickerPick {
+  return { kind: 'layer', layerId };
+}
+
+describe('layer picks (spec 007)', () => {
+  const LAYER_SLOT: SlotRef = { kind: 'layer' };
+
+  it('starts a draft with the layer slot open for every layer behavior', () => {
+    for (const behaviorId of ['mo', 'tog', 'to', 'sl', 'lt'] as const) {
+      expect(
+        pickOn({
+          source: storedOn({ kind: 'kp', key: KEY_A }),
+          slot: { kind: 'behavior' },
+          pick: { kind: 'behavior', behaviorId },
+          isEveryKeySendingKey: true,
+        }),
+      ).toEqual({ kind: 'draft', draft: { behaviorId }, next: LAYER_SLOT });
+    }
+  });
+
+  it('stores a momentary layer once its layer is picked', () => {
+    const result = pickOn({
+      source: { kind: 'draft', draft: { behaviorId: 'mo' } },
+      slot: LAYER_SLOT,
+      pick: pickLayer('l1'),
+    });
+    expect(result).toMatchObject({ kind: 'store', next: undefined });
+    expect(storedBindings(result, EMPTY)).toEqual({
+      k1: { kind: 'mo', layerId: 'l1' },
+      k2: { kind: 'mo', layerId: 'l1' },
+    });
+  });
+
+  it('keeps each key for layer-tap when every key sends one, then opens the tap', () => {
+    const project = buildProject({
+      keys: KEYS,
+      bindings: {
+        k1: { kind: 'kp', key: KEY_A },
+        k2: { kind: 'mt', hold: LEFT_SHIFT, tap: KEY_A },
+      },
+    });
+    const result = pickOn({
+      source: { kind: 'draft', draft: { behaviorId: 'lt' } },
+      slot: LAYER_SLOT,
+      pick: pickLayer('l1'),
+      isEveryKeySendingKey: true,
+    });
+    expect(result).toMatchObject({ kind: 'store', next: { kind: 'tap' } });
+    expect(storedBindings(result, project)).toEqual({
+      k1: { kind: 'lt', layerId: 'l1', tap: KEY_A },
+      k2: { kind: 'lt', layerId: 'l1', tap: KEY_A },
+    });
+  });
+
+  it('asks for the tap of a layer-tap draft when a key sends none', () => {
+    expect(
+      pickOn({
+        source: { kind: 'draft', draft: { behaviorId: 'lt' } },
+        slot: LAYER_SLOT,
+        pick: pickLayer('l1'),
+      }),
+    ).toEqual({
+      kind: 'draft',
+      draft: { behaviorId: 'lt', layerId: 'l1' },
+      next: { kind: 'tap' },
+    });
+    const tapped = pickOn({
+      source: { kind: 'draft', draft: { behaviorId: 'lt', layerId: 'l1' } },
+      slot: { kind: 'tap' },
+      pick: { kind: 'keycode', keycode: 'SPACE' },
+      pendingModifiers: ['LS'],
+    });
+    expect(tapped).toMatchObject({ kind: 'store', next: undefined });
+    expect(storedBindings(tapped, EMPTY)?.['k1']).toEqual({
+      kind: 'lt',
+      layerId: 'l1',
+      tap: { keycode: 'SPACE', modifiers: ['LS'] },
+    });
+  });
+
+  it('keeps a tap picked before the layer', () => {
+    const first = pickOn({
+      source: { kind: 'draft', draft: { behaviorId: 'lt' } },
+      slot: { kind: 'tap' },
+      pick: { kind: 'keycode', keycode: 'SPACE' },
+    });
+    const space = { keycode: 'SPACE', modifiers: [] };
+    expect(first).toEqual({
+      kind: 'draft',
+      draft: { behaviorId: 'lt', key: space },
+      next: LAYER_SLOT,
+    });
+    const result = pickOn({
+      source: { kind: 'draft', draft: { behaviorId: 'lt', key: space } },
+      slot: LAYER_SLOT,
+      pick: pickLayer('l2'),
+      isEveryKeySendingKey: true,
+    });
+    expect(result).toMatchObject({ kind: 'store', next: undefined });
+    expect(storedBindings(result, EMPTY)?.['k2']).toEqual({
+      kind: 'lt',
+      layerId: 'l2',
+      tap: space,
+    });
+  });
+
+  it('changes only the layer of a stored layer behavior', () => {
+    const lt: Binding = { kind: 'lt', layerId: 'l1', tap: KEY_A };
+    const result = pickOn({ source: storedOn(lt), slot: LAYER_SLOT, pick: pickLayer('l0') });
+    expect(storedBindings(result, EMPTY)?.['k1']).toEqual({ ...lt, layerId: 'l0' });
+    const mo = pickOn({
+      source: storedOn({ kind: 'tog', layerId: 'l1' }),
+      slot: LAYER_SLOT,
+      pick: pickLayer('l2'),
+    });
+    expect(storedBindings(mo, EMPTY)?.['k2']).toEqual({ kind: 'tog', layerId: 'l2' });
+  });
+});

@@ -19,6 +19,9 @@ function cornerForBinding(binding: Binding): string | undefined {
     case 'kt': {
       return `${cornerStrokeText(binding.key)}/TOG`;
     }
+    case 'lt': {
+      return cornerStrokeText(binding.tap);
+    }
     case 'bt':
     case 'out':
     case 'trans':
@@ -29,7 +32,11 @@ function cornerForBinding(binding: Binding): string | undefined {
     case 'sys_reset':
     case 'bootloader':
     case 'tap_dance':
-    case 'mod_morph': {
+    case 'mod_morph':
+    case 'mo':
+    case 'tog':
+    case 'to':
+    case 'sl': {
       return undefined;
     }
     default: {

@@ -4,7 +4,7 @@ import { CloseIcon } from '../components/icons/close-icon';
 import { usePreferences } from '../preferences-context';
 import { getWorkspaceLabel } from '../workspaces';
 import { useProject } from '../project-context';
-import { ISSUES_PANEL_ID } from './workspace-issue';
+import { ISSUES_PANEL_ID, toIssueTargetPreferences } from './workspace-issue';
 import type { WorkspaceIssue } from './workspace-issue';
 
 export function IssuesPanel() {
@@ -55,7 +55,7 @@ function IssueButton({ issue }: IssueButtonProps) {
 
   // `~=` because one control may own several paths (a board pin select: the end and its pin).
   // The target may not be rendered yet: switch to its workspace and open the Schematic parts
-  // list first, then focus on the next frame (spec 003 FR-025).
+  // list or the issue's layer first, then focus on the next frame (spec 003 FR-025, spec 007).
   function handleClick() {
     const selector = `[data-issue-path~="${issue.path.join('.')}"]`;
     const target = document.querySelector<HTMLElement>(selector);
@@ -63,12 +63,7 @@ function IssueButton({ issue }: IssueButtonProps) {
       target.focus();
       return;
     }
-    // The Schematic target lives in the parts list; Bindings keycaps are always rendered.
-    changePreferences(
-      issue.workspaceId === 'schematic'
-        ? { activeWorkspaceId: issue.workspaceId, isPartsListOpen: true }
-        : { activeWorkspaceId: issue.workspaceId },
-    );
+    changePreferences(toIssueTargetPreferences(issue));
     requestAnimationFrame(() => {
       document.querySelector<HTMLElement>(selector)?.focus();
     });

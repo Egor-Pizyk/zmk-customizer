@@ -8,7 +8,7 @@ export type Project = {
   readonly wires: readonly Wire[];
   /** Crossings are connected by default; only the insulated exceptions are stored (003 R6). */
   readonly insulatedCrossings: readonly CrossingRef[];
-  /** Keymap layers in ZMK order; exactly one (Base) until spec 005 adds layer management. */
+  /** Keymap layers in ZMK order (index = ZMK layer number); 1–32 in a valid project (spec 007). */
   readonly layers: readonly Layer[];
 };
 
@@ -63,9 +63,18 @@ export type Binding =
       readonly morphed: KeyStroke;
       /** Trigger modifiers, unique and in MODIFIERS order; never empty. */
       readonly mods: readonly Modifier[];
-    };
+    }
+  /**
+   * Layer behaviors (docs/zmk/behaviors.md §3.8). `layerId` is the target's Layer.id, so moving
+   * layers rewrites nothing; it may name a deleted layer, which validation reports (spec 007 R1).
+   */
+  | { readonly kind: 'mo' | 'tog' | 'to' | 'sl'; readonly layerId: string }
+  | { readonly kind: 'lt'; readonly layerId: string; readonly tap: KeyStroke };
 
 export type BehaviorId = Binding['kind'];
+
+/** The layer behaviors; `'layerId' in binding` narrows a Binding to these. */
+export type LayerBinding = Extract<Binding, { readonly layerId: string }>;
 
 /** A key, drawn on the Schematic as a switch seen from above; position is its top-left corner. */
 export type Key = {
@@ -118,7 +127,12 @@ export type ValidationCode =
   | 'binding-keycode-unknown'
   | 'binding-profile-out-of-range'
   | 'binding-tapping-term-out-of-range'
-  | 'binding-mod-morph-same-action';
+  | 'binding-mod-morph-same-action'
+  | 'binding-layer-missing'
+  | 'layer-name-empty'
+  | 'layer-name-invalid-character'
+  | 'layer-name-duplicate'
+  | 'layer-count-exceeded';
 
 export type ValidationIssue = {
   readonly code: ValidationCode;

@@ -1,8 +1,12 @@
 import { expect, it } from 'vitest';
-import type { Binding } from '../../domain/types';
+import type { Binding, Layer } from '../../domain/types';
 import { formatBindingName } from './format-binding-name';
 
 const SPACE = { keycode: 'SPACE', modifiers: [] } as const;
+const LAYERS: readonly Layer[] = [
+  { id: 'l0', name: 'Base', bindings: {} },
+  { id: 'l1', name: 'Nav', bindings: {} },
+];
 
 it.each<[Binding | undefined, string]>([
   [undefined, 'Not assigned (does nothing)'],
@@ -42,6 +46,13 @@ it.each<[Binding | undefined, string]>([
     },
     'Mod-morph Space into A with Left Shift',
   ],
+  [{ kind: 'mo', layerId: 'l1' }, 'Momentary layer Nav'],
+  [{ kind: 'tog', layerId: 'l1' }, 'Toggle layer Nav'],
+  [{ kind: 'to', layerId: 'l0' }, 'To layer Base'],
+  [{ kind: 'sl', layerId: 'l1' }, 'Sticky layer Nav'],
+  [{ kind: 'lt', layerId: 'l1', tap: SPACE }, 'Space, layer Nav when held'],
+  [{ kind: 'mo', layerId: 'l9' }, 'Momentary layer (deleted layer)'],
+  [{ kind: 'lt', layerId: 'l9', tap: SPACE }, 'Space, deleted layer when held'],
 ])('names %j as %s', (binding, name) => {
-  expect(formatBindingName(binding)).toBe(name);
+  expect(formatBindingName(binding, LAYERS)).toBe(name);
 });

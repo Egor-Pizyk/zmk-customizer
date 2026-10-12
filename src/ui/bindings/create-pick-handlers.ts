@@ -29,7 +29,7 @@ function findDraftStateAfterStore(
   }
   const { source, draftState } = picker;
   if (source.kind === 'draft' && draftState !== undefined) {
-    return { draft: createDraft(source.draft.behaviorId), over: draftState.over };
+    return { ...draftState, draft: createDraft(source.draft.behaviorId) };
   }
   return draftState;
 }
@@ -37,7 +37,11 @@ function findDraftStateAfterStore(
 function applyPickResult(options: PickHandlerOptions, item: PickerItem, result: PickResult) {
   const { picker } = options;
   if (result.kind === 'draft') {
-    picker.setDraftState({ draft: result.draft, over: picker.shared });
+    picker.setDraftState({
+      draft: result.draft,
+      over: picker.shared,
+      layerIndex: picker.target.layerIndex,
+    });
     picker.handleSlotOpen(result.next);
     return;
   }
@@ -52,8 +56,8 @@ function applyPickResult(options: PickHandlerOptions, item: PickerItem, result: 
 
 // Every pick is one commit for all selected keys (spec 004 FR-015), or a draft step (spec 006).
 export function createPickHandlers(options: PickHandlerOptions) {
-  const { project, selectedKeyIds: keyIds, picker } = options;
-  const target = { layerIndex: 0, keyIds };
+  const { project, picker } = options;
+  const { target } = picker;
   return {
     ...createOptionHandlers({ ...options, target }),
     handlePick: (item: PickerItem) => {

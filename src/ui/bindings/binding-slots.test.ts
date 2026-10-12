@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { Binding } from '../../domain/types';
+import type { Binding, Layer } from '../../domain/types';
 import {
   findModifierTarget,
   findSlotValueId,
@@ -11,13 +11,17 @@ import type { LineSource } from './binding-slots';
 
 const KEY_A = { keycode: 'A', modifiers: [] } as const;
 const LEFT_SHIFT = { keycode: 'LEFT_SHIFT', modifiers: [] } as const;
+const LAYERS: readonly Layer[] = [
+  { id: 'l0', name: 'Base', bindings: {} },
+  { id: 'l1', name: 'Nav', bindings: {} },
+];
 
 function fromBinding(binding: Binding): LineSource {
   return { kind: 'binding', binding };
 }
 
 function toText(source: LineSource): readonly string[] {
-  return getLineSlots(source).map((slot) => `${slot.label}=${slot.value ?? '?'}`);
+  return getLineSlots(source, LAYERS).map((slot) => `${slot.label}=${slot.value ?? '?'}`);
 }
 
 describe('getLineSlots (spec 006 FR-001–FR-002)', () => {
@@ -50,8 +54,8 @@ describe('getLineSlots (spec 006 FR-001–FR-002)', () => {
     expect(toText(dance)).toEqual(['tap 1=A', 'tap 2=B']);
     const morph = fromBinding({ kind: 'mod_morph', normal: KEY_A, morphed: KEY_A, mods: ['LS'] });
     expect(toText(morph)).toEqual(['normal=A', 'morphed=A']);
-    expect(getLineSlots(fromBinding({ kind: 'trans' }))).toEqual([]);
-    expect(getLineSlots({ kind: 'none', isMixed: false })).toEqual([]);
+    expect(getLineSlots(fromBinding({ kind: 'trans' }), LAYERS)).toEqual([]);
+    expect(getLineSlots({ kind: 'none', isMixed: false }, LAYERS)).toEqual([]);
   });
 
   it('shows the empty slots of a draft', () => {
@@ -64,6 +68,49 @@ describe('getLineSlots (spec 006 FR-001–FR-002)', () => {
       'command=BT_DISC',
       'profile=?',
     ]);
+  });
+});
+
+describe('layer slot (spec 007)', () => {
+  it('names the target layer by position and name, a missing one as deleted', () => {
+    for (const kind of ['mo', 'tog', 'to', 'sl'] as const) {
+      expect(toText(fromBinding({ kind, layerId: 'l1' }))).toEqual(['layer=1 Nav']);
+    }
+    expect(toText(fromBinding({ kind: 'lt', layerId: 'l1', tap: KEY_A }))).toEqual([
+      'layer=1 Nav',
+      'tap=A',
+    ]);
+    expect(toText(fromBinding({ kind: 'mo', layerId: 'l7' }))).toEqual(['layer=deleted layer']);
+    expect(toText({ kind: 'draft', draft: { behaviorId: 'lt' } })).toEqual(['layer=?', 'tap=?']);
+    expect(toText({ kind: 'draft', draft: { behaviorId: 'tog', layerId: 'l0' } })).toEqual([
+      'layer=0 Base',
+    ]);
+  });
+
+  it('opens the layer slot of a new draft and marks the current layer', () => {
+    expect(resolveOpenSlot({ kind: 'draft', draft: { behaviorId: 'mo' } })).toEqual({
+      kind: 'layer',
+    });
+    expect(resolveOpenSlot({ kind: 'draft', draft: { behaviorId: 'lt' } })).toEqual({
+      kind: 'layer',
+    });
+    expect(findSlotValueId(fromBinding({ kind: 'sl', layerId: 'l1' }), { kind: 'layer' })).toBe(
+      'l1',
+    );
+    expect(findSlotValueId({ kind: 'draft', draft: { behaviorId: 'mo' } }, { kind: 'layer' })).toBe(
+      undefined,
+    );
+  });
+
+  it('offers chips for the tap of layer-tap, stored or drafted', () => {
+    const ctrlA = { keycode: 'A', modifiers: ['LC'] } as const;
+    const lt = fromBinding({ kind: 'lt', layerId: 'l1', tap: ctrlA });
+    expect(findModifierTarget(lt, { kind: 'tap' })).toEqual(ctrlA);
+    expect(findModifierTarget(lt, { kind: 'layer' })).toBeUndefined();
+    expect(findSlotValueId(lt, { kind: 'tap' })).toBe('A');
+    expect(
+      findModifierTarget({ kind: 'draft', draft: { behaviorId: 'lt' } }, { kind: 'tap' }),
+    ).toBe('pending');
   });
 });
 

@@ -34,6 +34,15 @@ function projectJson(binding: unknown) {
   });
 }
 
+function withLayers(layerCount: number): Project {
+  const layers = Array.from({ length: layerCount }, (_, index) => ({
+    id: `l${index}`,
+    name: `Layer ${index}`,
+    bindings: { k1: { kind: 'trans' } as const },
+  }));
+  return { ...createProject(), keys: [{ id: 'k1', xU: 0, yU: 0 }], layers };
+}
+
 describe('parseProjectFile', () => {
   it('rejects text that is not JSON', () => {
     expect(parseProjectFile('hello')).toEqual({ ok: false, error: { kind: 'not-json' } });
@@ -185,13 +194,72 @@ describe('tap-dance and mod-morph round trip (spec 005 contracts/binding-json.md
       issuePathsOf(projectJson(binding)).some((path) => path.startsWith('layers.0.bindings.k1')),
     ).toBe(true);
   });
+});
 
-  it.each(['mo', 'lt', 'tog', 'to', 'sl'])(
-    'rejects the layer behavior %s until layers exist (spec 005 story 4)',
-    (kind) => {
-      const result = parseProjectFile(projectJson({ kind, layer: 0 }));
-      expect(result.ok).toBe(false);
-      expect(JSON.stringify(result)).toContain('layers.0.bindings.k1');
-    },
-  );
+// Supersedes spec 005 story 4 ("reject layer behaviors until layers exist"), spec 007 R2.
+describe('layer behaviors (spec 007 contracts/project-json.md)', () => {
+  const SPACE = { keycode: 'SPACE', modifiers: [] } as const;
+
+  it.each([
+    [{ kind: 'mo', layerId: 'l1' }],
+    [{ kind: 'tog', layerId: 'l1' }],
+    [{ kind: 'to', layerId: 'l0' }],
+    [{ kind: 'sl', layerId: 'l2' }],
+    [{ kind: 'lt', layerId: 'l1', tap: SPACE }],
+  ])('accepts %j, even when the layer does not exist', (binding) => {
+    expect(parseProjectFile(projectJson(binding))).toMatchObject({
+      ok: true,
+      value: { layers: [{ bindings: { k1: binding } }] },
+    });
+  });
+
+  it.each([
+    [{ kind: 'mo', layer: 0 }],
+    [{ kind: 'mo' }],
+    [{ kind: 'mo', layerId: 'nav' }],
+    [{ kind: 'mo', layerId: 1 }],
+    [{ kind: 'lt', layerId: 'l1' }],
+    [{ kind: 'tog', layerId: 'l1', tap: SPACE }],
+    [{ kind: 'sl', layerId: 'l1', extra: true }],
+  ])('rejects the malformed layer behavior %j at its own path', (binding) => {
+    expect(
+      issuePathsOf(projectJson(binding)).some((path) => path.startsWith('layers.0.bindings.k1')),
+    ).toBe(true);
+  });
+
+  it('keeps layers, names, order and every layer behavior through save and open', () => {
+    const keys = ['k1', 'k2', 'k3', 'k4', 'k5', 'k6'].map((id, index) => ({
+      id,
+      xU: index,
+      yU: 0,
+    }));
+    const project: Project = {
+      ...createProject(),
+      keys,
+      layers: [
+        {
+          id: 'l0',
+          name: 'Base',
+          bindings: {
+            k1: { kind: 'mo', layerId: 'l2' },
+            k2: { kind: 'lt', layerId: 'l5', tap: { keycode: 'SPACE', modifiers: ['LS'] } },
+            k3: { kind: 'sl', layerId: 'l9' },
+          },
+        },
+        { id: 'l5', name: 'Nav & Sym', bindings: { k4: { kind: 'tog', layerId: 'l2' } } },
+        { id: 'l2', name: 'Num', bindings: { k5: { kind: 'to', layerId: 'l0' } } },
+      ],
+    };
+    expect(parseProjectFile(serializedText(project))).toEqual({ ok: true, value: project });
+  });
+
+  it('keeps 32 layers, and opens 33 for validation to report (spec 007 R3)', () => {
+    const maxProject = withLayers(32);
+    expect(parseProjectFile(serializedText(maxProject))).toEqual({ ok: true, value: maxProject });
+    const overProject = withLayers(33);
+    expect(parseProjectFile(serializedText(overProject))).toEqual({
+      ok: true,
+      value: overProject,
+    });
+  });
 });

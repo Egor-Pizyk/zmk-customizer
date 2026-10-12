@@ -2,8 +2,15 @@ import { expect, it } from 'vitest';
 import { filterPickerItems } from './filter-picker-items';
 import { getSlotChoices } from './slot-choices';
 
+const LAYER_CONTEXT = {
+  layers: [
+    { id: 'l0', name: 'Base', bindings: {} },
+    { id: 'l3', name: 'Nav & Sym', bindings: {} },
+  ],
+  docsUrl: 'https://v0-3-branch.zmk.dev/docs/keymaps/behaviors/layers#momentary-layer',
+};
 const ITEMS = (['key', 'bt-command', 'out-command'] as const).flatMap((kind) =>
-  getSlotChoices({ kind }).flatMap((group) => group.items),
+  getSlotChoices({ kind }, LAYER_CONTEXT).flatMap((group) => group.items),
 );
 
 function findIds(query: string): readonly string[] {
@@ -52,4 +59,15 @@ it('finds N and numbers for a single n', () => {
 
 it.each(['PRINTSCREEN', 'RETURN', 'Q', 'MINUS', 'W'])('ignores %s for a single n', (id) => {
   expect(findIds('n')).not.toContain(id);
+});
+
+it('finds layers by name, position and keymap node name (spec 007)', () => {
+  const layerItems = getSlotChoices({ kind: 'layer' }, LAYER_CONTEXT).flatMap(
+    (group) => group.items,
+  );
+  const findLayerIds = (query: string) =>
+    filterPickerItems(layerItems, query).map((item) => item.id);
+  expect(findLayerIds('sym')).toEqual(['l3']);
+  expect(findLayerIds('0')).toEqual(['l0']);
+  expect(findLayerIds('nav_sym_layer')).toEqual(['l3']);
 });

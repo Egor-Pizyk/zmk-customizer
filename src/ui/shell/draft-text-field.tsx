@@ -7,6 +7,7 @@ type DraftTextFieldProps = {
   readonly label: string;
   readonly value: string;
   readonly placeholder?: string;
+  readonly description?: string;
   /** Joined issue path; the problems panel focuses `[data-issue-path]` (research R14). */
   readonly issuePath: string;
   readonly error?: string | undefined;
@@ -17,6 +18,7 @@ export function DraftTextField({
   label,
   value,
   placeholder,
+  description,
   issuePath,
   error,
   onCommit,
@@ -24,6 +26,7 @@ export function DraftTextField({
   const draft = useTextDraft(value, onCommit);
   return (
     <Field
+      description={description}
       error={error}
       label={label}
       renderControl={(controlProps) => (

@@ -190,7 +190,7 @@ Every key's action is saved with the project: kept on reload, written to the pro
 - **FR-014a**: Automatic next key MUST be on by default and switchable (interface preference): after an action is assigned from the picker to a single selected key, the selection moves to the next key by key index; the canvas focus follows only when focus was on the canvas.
 - **FR-015**: Choosing an action MUST apply it at once to every selected key as one project change (one undo step); choosing the action the selection already has MUST make no change.
 - **FR-016**: With several keys selected, the panel MUST state the count and whether their actions are the same (then shown in the preview and marked) or differ.
-- **FR-017**: The panel MUST NOT offer layer actions, macros, user-defined behaviors, lighting, mouse, power-off or ZMK Studio actions.
+- **FR-017**: The panel MUST NOT offer layer actions, macros, user-defined behaviors, lighting, mouse, power-off or ZMK Studio actions. *"Layer actions" superseded by spec 007, which offers them.*
 
 **Copy and paste**
 

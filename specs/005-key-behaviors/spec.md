@@ -62,6 +62,8 @@ The user makes a key send one action normally and another one while a chosen mod
 
 ### User Story 4 - Layer behaviors stay out until layers exist (Priority: P3)
 
+> Superseded by spec 007 (layers): layer behaviors are offered and stored by layer id.
+
 The user does not see momentary/toggle/switch-to/sticky-layer/layer-tap behaviors while the project has exactly one layer, because there is no layer to point them at.
 
 **Why this priority**: Guards the scope boundary with the layers feature; prevents bindings that cannot reference anything.
@@ -117,7 +119,7 @@ The user does not see momentary/toggle/switch-to/sticky-layer/layer-tap behavior
 
 **Out of scope (MUST NOT be offered or stored)**
 
-- **FR-015**: Layer behaviors (momentary, layer-tap, toggle, switch-to, sticky layer) MUST NOT be offered or accepted while the project has exactly one layer; they belong to the layers feature.
+- **FR-015**: Layer behaviors (momentary, layer-tap, toggle, switch-to, sticky layer) MUST NOT be offered or accepted while the project has exactly one layer; they belong to the layers feature. *Superseded by spec 007.*
 - **FR-016**: Combos, macros and conditional layers MUST NOT be offered (separate feature).
 - **FR-017**: Behaviors needing firmware settings that do not exist yet (RGB underglow, backlight, external power, mouse, soft-off, ZMK Studio unlock) MUST NOT be offered.
 - **FR-018**: Generating keymap text or `behaviors {}` sections MUST NOT be part of this feature (generator feature); persistence of the new behaviors is required so generation can use them later.

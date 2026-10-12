@@ -26,6 +26,7 @@ export function ActionPanelBody(props: ActionPanelBodyProps) {
     <>
       <SelectionHeader {...props} />
       <BindingLine
+        layers={picker.layers}
         onAddTap={handlers.handleAddTap}
         onSlotOpen={picker.handleSlotOpen}
         slot={picker.slot}

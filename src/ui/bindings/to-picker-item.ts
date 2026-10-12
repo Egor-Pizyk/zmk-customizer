@@ -2,18 +2,17 @@ import type { BehaviorEntry } from '../../catalog/behaviors';
 import type { BluetoothCommandEntry } from '../../catalog/bluetooth-commands';
 import { keycodeByName } from '../../catalog/keycodes';
 import type { OutputCommandEntry } from '../../catalog/output-commands';
+import { toLayerNodeName } from '../../domain/to-layer-node-name';
 import type {
   BehaviorId,
   Binding,
   BluetoothCommand,
   BluetoothProfileCommand,
+  Layer,
   OutputCommand,
 } from '../../domain/types';
-import {
-  formatBindingLegend,
-  formatBluetoothCommandLegend,
-  formatFullBindingLegend,
-} from './format-binding-legend';
+import { formatBindingLegend, formatFullBindingLegend } from './format-binding-legend';
+import { formatBluetoothCommandLegend, formatCommandLegend } from './format-command-legend';
 import { formatKeycodeName } from './format-keycode-name';
 
 /** The value a picker row sets in the open slot (spec 006 FR-004). */
@@ -22,7 +21,8 @@ export type PickerPick =
   | { readonly kind: 'keycode'; readonly keycode: string }
   | { readonly kind: 'bt-command'; readonly command: BluetoothCommand | BluetoothProfileCommand }
   | { readonly kind: 'profile'; readonly profile: number }
-  | { readonly kind: 'out-command'; readonly command: OutputCommand };
+  | { readonly kind: 'out-command'; readonly command: OutputCommand }
+  | { readonly kind: 'layer'; readonly layerId: string };
 
 /** One row of the slot picker (spec 006 FR-005). */
 export type PickerItem = {
@@ -39,6 +39,9 @@ export type PickerItem = {
   readonly pick: PickerPick;
 };
 
+// Key rows are no layer behaviors, so their legends need no layers.
+const NO_LAYERS: readonly Layer[] = [];
+
 export function toKeycodeItem(name: string): readonly PickerItem[] {
   const keycode = keycodeByName.get(name);
   if (keycode === undefined) {
@@ -48,8 +51,8 @@ export function toKeycodeItem(name: string): readonly PickerItem[] {
   return [
     {
       id: keycode.name,
-      legend: formatBindingLegend(binding)?.tap ?? keycode.name,
-      fullLegend: formatFullBindingLegend(binding)?.tap ?? keycode.name,
+      legend: formatBindingLegend(binding, NO_LAYERS)?.tap ?? keycode.name,
+      fullLegend: formatFullBindingLegend(binding, NO_LAYERS)?.tap ?? keycode.name,
       name: formatKeycodeName(keycode.name),
       description: keycode.description,
       codes: [keycode.name, ...keycode.aliases],
@@ -100,7 +103,7 @@ export function toProfileItem(profile: number, docsUrl: string): PickerItem {
 }
 
 export function toOutputCommandItem(entry: OutputCommandEntry): PickerItem {
-  const legend = formatBindingLegend({ kind: 'out', command: entry.id })?.tap ?? entry.id;
+  const legend = formatCommandLegend({ kind: 'out', command: entry.id });
   return {
     id: entry.id,
     legend,
@@ -110,5 +113,26 @@ export function toOutputCommandItem(entry: OutputCommandEntry): PickerItem {
     codes: [entry.id],
     docsUrl: entry.docsUrl,
     pick: { kind: 'out-command', command: entry.id },
+  };
+}
+
+// A layer row: position as the legend, searchable by name, position and node name (spec 007).
+export function toLayerItem(
+  layer: Layer,
+  input: { readonly layerIndex: number; readonly docsUrl: string },
+): PickerItem {
+  const position = String(input.layerIndex);
+  return {
+    id: layer.id,
+    legend: position,
+    fullLegend: position,
+    name: layer.name,
+    description:
+      input.layerIndex === 0
+        ? 'Layer 0, the base layer, always on'
+        : `Layer ${position} in keymap order`,
+    codes: [position, toLayerNodeName(layer.name)],
+    docsUrl: input.docsUrl,
+    pick: { kind: 'layer', layerId: layer.id },
   };
 }

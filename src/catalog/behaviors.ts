@@ -1,7 +1,13 @@
 import type { BehaviorId } from '../domain/types';
 
 /** Group of the behavior picker (spec 006 US2 AS4). */
-export type BehaviorGroup = 'Send a key' | 'Special' | 'Connection' | 'Firmware' | 'Your behaviors';
+export type BehaviorGroup =
+  | 'Send a key'
+  | 'Layers'
+  | 'Special'
+  | 'Connection'
+  | 'Firmware'
+  | 'Your behaviors';
 
 export type BehaviorEntry = {
   readonly id: BehaviorId;
@@ -19,8 +25,9 @@ export type BehaviorEntry = {
 
 const DOCS = 'https://v0-3-branch.zmk.dev/docs/keymaps/behaviors';
 
-// Built-in behaviors that build without extra Kconfig (docs/zmk/behaviors.md §1); layer,
-// lighting, mouse, power-off and Studio behaviors are out of scope (spec 004 FR-017).
+// Built-in behaviors that build without extra Kconfig (docs/zmk/behaviors.md §1); lighting,
+// mouse, power-off and Studio behaviors are out of scope (spec 004 FR-017). Layer behaviors
+// since spec 007; anchors checked against the v0.3.0 docs source headings.
 export const BEHAVIORS = [
   {
     id: 'kp',
@@ -53,6 +60,46 @@ export const BEHAVIORS = [
     description: 'Presses a key and keeps it pressed until the key is pressed again.',
     group: 'Send a key',
     docsUrl: `${DOCS}/key-toggle`,
+  },
+  {
+    id: 'mo',
+    tag: '&mo',
+    label: 'Momentary layer',
+    description: 'Turns a layer on while the key is held.',
+    group: 'Layers',
+    docsUrl: `${DOCS}/layers#momentary-layer`,
+  },
+  {
+    id: 'lt',
+    tag: '&lt',
+    label: 'Layer on hold, key on tap',
+    description: 'Turns a layer on while held and sends a key when tapped (layer-tap).',
+    group: 'Layers',
+    docsUrl: `${DOCS}/hold-tap#layer-tap`,
+  },
+  {
+    id: 'tog',
+    tag: '&tog',
+    label: 'Toggle layer',
+    description: 'Turns a layer on, or off if it is already on.',
+    group: 'Layers',
+    docsUrl: `${DOCS}/layers#toggle-layer`,
+  },
+  {
+    id: 'to',
+    tag: '&to',
+    label: 'To layer',
+    description: 'Turns a layer on and every other layer off, except the base layer.',
+    group: 'Layers',
+    docsUrl: `${DOCS}/layers#to-layer`,
+  },
+  {
+    id: 'sl',
+    tag: '&sl',
+    label: 'Sticky layer',
+    description: 'Keeps a layer on for the next key press.',
+    group: 'Layers',
+    docsUrl: `${DOCS}/sticky-layer`,
   },
   {
     id: 'trans',

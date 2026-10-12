@@ -12,6 +12,8 @@ import { WiresBackdrop } from './wires-backdrop';
 
 type BindingsCanvasProps = {
   readonly project: Project;
+  /** The open layer (spec 007 FR-007). */
+  readonly layerIndex: number;
   readonly selectedKeyIds: readonly string[];
   readonly activeKeyId: string | undefined;
   readonly marquee: Marquee | undefined;
@@ -30,13 +32,14 @@ type BindingsCanvasProps = {
 const LEGEND_MIN_ZOOM = 0.4;
 
 function Keycaps(props: BindingsCanvasProps & { readonly view: ContentView }) {
-  const { project, selectedKeyIds, activeKeyId, problemsByKeyId, view } = props;
-  const layer = project.layers[0];
+  const { project, layerIndex, selectedKeyIds, activeKeyId, problemsByKeyId, view } = props;
+  const layer = project.layers[layerIndex];
   return project.keys.map((key, keyIndex) => {
     const binding = layer?.bindings[key.id];
     const isSelected = selectedKeyIds.includes(key.id);
     const problems = problemsByKeyId.get(key.id) ?? [];
-    const legend = view.zoom < LEGEND_MIN_ZOOM ? undefined : formatBindingLegend(binding);
+    const legend =
+      view.zoom < LEGEND_MIN_ZOOM ? undefined : formatBindingLegend(binding, project.layers);
     return (
       <KeycapShape
         bindingKey={key}
@@ -46,10 +49,12 @@ function Keycaps(props: BindingsCanvasProps & { readonly view: ContentView }) {
         isSelected={isSelected}
         key={key.id}
         keyIndex={keyIndex}
+        issuePath={`layers.${layerIndex}.bindings.${key.id}`}
         label={formatKeycapLabel({
           keyIndex,
           layerName: layer?.name ?? '',
           binding,
+          layers: project.layers,
           isSelected,
           problems,
         })}
@@ -57,7 +62,7 @@ function Keycaps(props: BindingsCanvasProps & { readonly view: ContentView }) {
         tag={legend === undefined ? undefined : formatKeycapTag(binding)}
         onFocus={props.onKeyFocus}
         onKeyDown={props.onKeyKeyDown}
-        title={formatKeycapTitle(binding)}
+        title={formatKeycapTitle(binding, project.layers)}
       />
     );
   });

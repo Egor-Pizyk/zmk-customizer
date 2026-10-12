@@ -44,6 +44,8 @@ const keyStrokeSchema = z.strictObject({
     ),
 });
 
+const layerIdSchema = z.string().regex(/^l\d+$/u);
+
 // Unknown keycodes and profiles beyond the profile count are validation issues, not schema
 // errors, so such a file still opens (spec 004 research R7).
 // z.union, not discriminatedUnion: `bt` has two shapes under one kind. A failing binding is
@@ -94,10 +96,12 @@ const bindingSchema = z.union([
         { message: 'Expected unique modifiers in the order LC LS LA LG RC RS RA RG' },
       ),
   }),
+  z.strictObject({ kind: z.literal(['mo', 'tog', 'to', 'sl']), layerId: layerIdSchema }),
+  z.strictObject({ kind: z.literal('lt'), layerId: layerIdSchema, tap: keyStrokeSchema }),
 ]);
 
 const layerSchema = z.strictObject({
-  id: z.string().regex(/^l\d+$/u),
+  id: layerIdSchema,
   name: z.string(),
   bindings: z.record(z.string(), bindingSchema),
 });
@@ -191,7 +195,9 @@ function findCrossingIssues(project: Project): Issue[] {
 }
 
 // Describes only the current schemaVersion; older files are migrated before parsing (research R8).
-// References must resolve so domain operations never meet a dangling id (003 R15).
+// References must resolve so domain operations never meet a dangling id (003 R15). Exception:
+// a layer behavior's layerId may name a deleted layer; no operation dereferences it and
+// validation reports it (spec 007 R2).
 // The top level strips unknown keys (forward compat, tested in parse-project-file.test.ts);
 // every nested node is strict so a malformed binding, wire or key is rejected at its own path.
 export const projectSchema = z

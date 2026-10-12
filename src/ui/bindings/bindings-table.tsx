@@ -30,7 +30,7 @@ export function BindingsTable(props: BindingsTableProps) {
         </summary>
         <div className="max-h-72 overflow-auto overscroll-contain px-4 pb-4">
           <table className="w-full text-left">
-            <TableHead layerName={props.project.layers[0]?.name ?? 'Base'} />
+            <TableHead layerName={props.project.layers[props.layerIndex]?.name ?? ''} />
             <tbody>
               <BindingsTableRows {...props} />
             </tbody>

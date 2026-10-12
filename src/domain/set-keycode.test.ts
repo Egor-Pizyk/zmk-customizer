@@ -52,3 +52,16 @@ it('normalizes new modifiers to union order without duplicates', () => {
     key: { keycode: 'S', modifiers: ['LC', 'LS'] },
   });
 });
+
+it('replaces the tap key of layer-tap, keeping its modifiers and layer', () => {
+  const project = buildProject({
+    keys: KEYS,
+    bindings: { k1: { kind: 'lt', layerId: 'l1', tap: KEY_A } },
+  });
+  const next = setKeycode(project, { layerIndex: 0, keyIds: ['k1'], keycode: 'S', modifiers: [] });
+  expect(next.layers[0]?.bindings['k1']).toEqual({
+    kind: 'lt',
+    layerId: 'l1',
+    tap: { keycode: 'S', modifiers: ['LC'] },
+  });
+});
