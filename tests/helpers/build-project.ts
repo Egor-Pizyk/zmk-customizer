@@ -6,6 +6,8 @@ export function buildProject(input: {
   readonly wires?: readonly Wire[];
   readonly insulatedCrossings?: Project['insulatedCrossings'];
   readonly bindings?: Project['layers'][number]['bindings'];
+  /** Replaces the one Base layer built from `bindings`. */
+  readonly layers?: Project['layers'];
 }): Project {
   return {
     schemaVersion: 3,
@@ -13,7 +15,7 @@ export function buildProject(input: {
     keys: input.keys ?? [],
     wires: input.wires ?? [],
     insulatedCrossings: input.insulatedCrossings ?? [],
-    layers: [{ id: 'l0', name: 'Base', bindings: input.bindings ?? {} }],
+    layers: input.layers ?? [{ id: 'l0', name: 'Base', bindings: input.bindings ?? {} }],
   };
 }
 

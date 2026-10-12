@@ -55,3 +55,25 @@ it('returns the same project when nothing changes', () => {
     setKeyBehavior(PROJECT, { layerIndex: 0, keyIds: ['k1', 'k4'], behavior: { id: 'kp' } }),
   ).toBe(PROJECT);
 });
+
+it('turns every key-sending key into layer-tap with its own key (spec 007)', () => {
+  const next = setKeyBehavior(PROJECT, { ...ALL, behavior: { id: 'lt', layerId: 'l1' } });
+  expect(next.layers[0]?.bindings).toEqual({
+    k1: { kind: 'lt', layerId: 'l1', tap: CTRL_A },
+    k2: { kind: 'lt', layerId: 'l1', tap: KEY_B },
+    k3: { kind: 'lt', layerId: 'l1', tap: KEY_B },
+    k4: { kind: 'trans' },
+  });
+});
+
+it('turns layer-tap back into a key press or mod-tap, keeping the tap', () => {
+  const project = buildProject({
+    keys: KEYS,
+    bindings: { k1: { kind: 'lt', layerId: 'l1', tap: CTRL_A } },
+  });
+  const target = { layerIndex: 0, keyIds: ['k1'] };
+  const pressed = setKeyBehavior(project, { ...target, behavior: { id: 'kp' } });
+  expect(pressed.layers[0]?.bindings['k1']).toEqual({ kind: 'kp', key: CTRL_A });
+  const modTap = setKeyBehavior(project, { ...target, behavior: { id: 'mt', hold: LEFT_SHIFT } });
+  expect(modTap.layers[0]?.bindings['k1']).toEqual({ kind: 'mt', hold: LEFT_SHIFT, tap: CTRL_A });
+});

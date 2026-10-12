@@ -75,3 +75,21 @@ it('changes the tap of mod-tap too', () => {
     tap: { keycode: 'A', modifiers: ['LG'] },
   });
 });
+
+it('changes the tap of layer-tap too', () => {
+  const project = buildProject({
+    keys: KEYS,
+    bindings: { k1: { kind: 'lt', layerId: 'l1', tap: { keycode: 'A', modifiers: [] } } },
+  });
+  const next = setKeyPressModifier(project, {
+    layerIndex: 0,
+    keyIds: ['k1'],
+    modifier: 'LS',
+    isEnabled: true,
+  });
+  expect(next.layers[0]?.bindings['k1']).toEqual({
+    kind: 'lt',
+    layerId: 'l1',
+    tap: { keycode: 'A', modifiers: ['LS'] },
+  });
+});

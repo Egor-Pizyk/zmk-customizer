@@ -3,8 +3,9 @@ import { KEYCODES, keycodeByName } from '../../catalog/keycodes';
 import type { Keycode } from '../../catalog/parse-keys-header';
 import { assertNever } from '../../domain/assert-never';
 import { MODIFIERS } from '../../domain/types';
-import type { Binding, KeyStroke, Modifier } from '../../domain/types';
+import type { Binding, KeyStroke, Layer, LayerBinding, Modifier } from '../../domain/types';
 import { abbreviateKeycodeNames } from './abbreviate-keycode';
+import { formatCommandLegend } from './format-command-legend';
 import { MODIFIER_SYMBOLS } from './modifier-labels';
 
 /**
@@ -121,15 +122,6 @@ function toStrokeLegend(stroke: KeyStroke, isFull: boolean): BindingLegend {
   return shifted === undefined ? { tap } : { tap, shifted };
 }
 
-const BLUETOOTH_LEGENDS = {
-  BT_SEL: 'BT',
-  BT_DISC: 'BT✕',
-  BT_NXT: 'BT→',
-  BT_PRV: 'BT←',
-  BT_CLR: 'BT⌫',
-  BT_CLR_ALL: 'BT⌫*',
-};
-const OUTPUT_LEGENDS = { OUT_TOG: 'OUT', OUT_USB: 'USB', OUT_BLE: 'BLE' };
 const FIXED_LEGENDS = {
   trans: '▽',
   none: '✕',
@@ -139,20 +131,6 @@ const FIXED_LEGENDS = {
   sys_reset: 'RST',
   bootloader: 'BOOT',
 };
-
-/** The command without its profile, for the picker's command rows (spec 006). */
-export function formatBluetoothCommandLegend(
-  command: Extract<Binding, { kind: 'bt' }>['command'],
-): string {
-  return BLUETOOTH_LEGENDS[command];
-}
-
-function formatBluetoothLegend(binding: Extract<Binding, { kind: 'bt' }>): string {
-  if ('profile' in binding) {
-    return binding.command === 'BT_SEL' ? `BT ${binding.profile}` : `BT✕${binding.profile}`;
-  }
-  return BLUETOOTH_LEGENDS[binding.command];
-}
 
 /** One-face legends: no parameters to format (spec 004 FR-006). */
 type SimpleBinding = Extract<
@@ -180,7 +158,12 @@ function isSimpleBinding(binding: Binding): binding is SimpleBinding {
     case 'bt':
     case 'out':
     case 'tap_dance':
-    case 'mod_morph': {
+    case 'mod_morph':
+    case 'mo':
+    case 'tog':
+    case 'to':
+    case 'sl':
+    case 'lt': {
       return false;
     }
     default: {
@@ -189,23 +172,55 @@ function isSimpleBinding(binding: Binding): binding is SimpleBinding {
   }
 }
 
-/** Undefined = unassigned: an empty keycap (FR-006). */
-export function formatBindingLegend(binding: Binding | undefined): BindingLegend | undefined {
-  return toBindingLegend(binding, false);
+/** Undefined = unassigned: an empty keycap (FR-006). Layer behaviors name their layer. */
+export function formatBindingLegend(
+  binding: Binding | undefined,
+  layers: readonly Layer[],
+): BindingLegend | undefined {
+  return toBindingLegend(binding, { isFull: false, layers });
 }
 
 /** Hover tooltips: the same legend, never shortened with "…" (FR-007). */
-export function formatFullBindingLegend(binding: Binding | undefined): BindingLegend | undefined {
-  return toBindingLegend(binding, true);
+export function formatFullBindingLegend(
+  binding: Binding | undefined,
+  layers: readonly Layer[],
+): BindingLegend | undefined {
+  return toBindingLegend(binding, { isFull: true, layers });
 }
 
-function toBindingLegend(binding: Binding | undefined, isFull: boolean): BindingLegend | undefined {
+type LegendOptions = { readonly isFull: boolean; readonly layers: readonly Layer[] };
+
+function toBindingLegend(
+  binding: Binding | undefined,
+  options: LegendOptions,
+): BindingLegend | undefined {
   if (binding === undefined) {
     return undefined;
   }
   if (isSimpleBinding(binding)) {
     return { tap: FIXED_LEGENDS[binding.kind] };
   }
+  if ('layerId' in binding) {
+    return toLayerLegend(binding, options);
+  }
+  return toParameterLegend(binding, options.isFull);
+}
+
+// The target layer's name, `?` when it was deleted; layer-tap shows it as the hold part like
+// the modifier of mod-tap (spec 007 contracts/ui.md "Keycaps").
+function toLayerLegend(binding: LayerBinding, options: LegendOptions): BindingLegend {
+  const name = options.layers.find((layer) => layer.id === binding.layerId)?.name ?? '?';
+  const layerLegend = options.isFull ? name : truncate(name);
+  if (binding.kind === 'lt') {
+    return { ...toStrokeLegend(binding.tap, options.isFull), hold: layerLegend };
+  }
+  return { tap: layerLegend };
+}
+
+function toParameterLegend(
+  binding: Exclude<Binding, SimpleBinding | LayerBinding>,
+  isFull: boolean,
+): BindingLegend {
   switch (binding.kind) {
     case 'kp': {
       return toStrokeLegend(binding.key, isFull);
@@ -222,11 +237,9 @@ function toBindingLegend(binding: Binding | undefined, isFull: boolean): Binding
     case 'kt': {
       return { ...toStrokeLegend(binding.key, isFull), hold: 'TOG' };
     }
-    case 'bt': {
-      return { tap: formatBluetoothLegend(binding) };
-    }
+    case 'bt':
     case 'out': {
-      return { tap: OUTPUT_LEGENDS[binding.command] };
+      return { tap: formatCommandLegend(binding) };
     }
     case 'tap_dance': {
       return formatTapDanceLegend(binding, isFull);

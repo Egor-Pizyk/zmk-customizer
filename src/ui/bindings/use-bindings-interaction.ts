@@ -1,5 +1,6 @@
 import { createPickHandlers } from './create-pick-handlers';
 import { createKeycapKeyboardHandler } from './create-keycap-keyboard-handler';
+import { focusActionPanel } from './focus-action-panel';
 import { focusKeycap } from './focus-keycap';
 import { useBindingsPointer } from './use-bindings-pointer';
 import { useBindingsShortcuts } from './use-bindings-shortcuts';
@@ -12,7 +13,8 @@ export function useBindingsInteraction(workspace: BindingsWorkspaceState) {
   const onTagPress = workspace.picker.handleBehaviorOpen;
   const pointer = useBindingsPointer({ project, selectedKeyIds, onSelectionChange, onTagPress });
   useBindingsShortcuts({ onCopy: copied.handleCopy, onPaste: copied.handlePaste });
-  const shared = { project, selectedKeyIds, activeKeyId, problemsByKeyId };
+  const { layerIndex } = workspace.layers;
+  const shared = { project, layerIndex, selectedKeyIds, activeKeyId, problemsByKeyId };
   return {
     canvasProps: {
       ...shared,
@@ -30,7 +32,7 @@ export function useBindingsInteraction(workspace: BindingsWorkspaceState) {
         project,
         selectedKeyIds,
         onSelectionChange,
-        onOpenPanel: workspace.handleOpenPanel,
+        onOpenPanel: focusActionPanel,
       }),
     },
     panelProps: toPanelProps(workspace),
@@ -40,7 +42,7 @@ export function useBindingsInteraction(workspace: BindingsWorkspaceState) {
       onActiveKeyChange: workspace.handleActiveKeyChange,
       onChooseAction: (keyId: string) => {
         onSelectionChange([keyId]);
-        workspace.handleOpenPanel();
+        focusActionPanel();
       },
     },
   };

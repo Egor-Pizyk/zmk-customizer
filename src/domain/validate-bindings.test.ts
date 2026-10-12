@@ -2,7 +2,11 @@ import { expect, it } from 'vitest';
 import { buildProject } from '../../tests/helpers/build-project';
 import { validateBindings } from './validate-bindings';
 
-const CATALOG = { keycodeNames: new Set(['A', 'SPACE', 'LSHIFT']), bluetoothProfileCount: 5 };
+const CATALOG = {
+  keycodeNames: new Set(['A', 'SPACE', 'LSHIFT']),
+  bluetoothProfileCount: 5,
+  maxLayerCount: 32,
+};
 const KEYS = [
   { id: 'k1', xU: 0, yU: 0 },
   { id: 'k2', xU: 1, yU: 0 },
@@ -135,4 +139,53 @@ it('accepts mod-morph with known actions and reports unknown or equal ones per k
   ]);
   expect(issues[0]?.message).toContain('NOPE');
   expect(issues[1]?.message).toContain('SPACE');
+});
+
+it('reports layer behaviors whose layer was deleted, at the key (spec 007 FR-012)', () => {
+  const project = buildProject({
+    keys: [...KEYS, { id: 'k5', xU: 4, yU: 0 }],
+    layers: [
+      {
+        id: 'l0',
+        name: 'Base',
+        bindings: {
+          k1: { kind: 'mo', layerId: 'l7' },
+          k2: { kind: 'tog', layerId: 'l7' },
+          k3: { kind: 'to', layerId: 'l0' },
+          k4: { kind: 'sl', layerId: 'l1' },
+          k5: { kind: 'lt', layerId: 'l7', tap: stroke('SPACE') },
+        },
+      },
+      {
+        id: 'l1',
+        name: 'Nav',
+        bindings: {
+          k1: { kind: 'sl', layerId: 'l7' },
+          k2: { kind: 'to', layerId: 'l7' },
+          k3: { kind: 'mo', layerId: 'l1' },
+        },
+      },
+    ],
+  });
+  const issues = validateBindings(project, CATALOG);
+  expect(issues.map(({ code, path }) => ({ code, path }))).toEqual([
+    { code: 'binding-layer-missing', path: ['layers', 0, 'bindings', 'k1'] },
+    { code: 'binding-layer-missing', path: ['layers', 0, 'bindings', 'k2'] },
+    { code: 'binding-layer-missing', path: ['layers', 0, 'bindings', 'k5'] },
+    { code: 'binding-layer-missing', path: ['layers', 1, 'bindings', 'k1'] },
+    { code: 'binding-layer-missing', path: ['layers', 1, 'bindings', 'k2'] },
+  ]);
+  expect(issues[0]?.message).toBe(
+    'Key 0 on layer Base uses a deleted layer. Pick another layer in Bindings.',
+  );
+});
+
+it('checks the tap keycode of layer-tap', () => {
+  const project = buildProject({
+    keys: KEYS,
+    bindings: { k1: { kind: 'lt', layerId: 'l0', tap: stroke('NOPE') } },
+  });
+  expect(validateBindings(project, CATALOG).map(({ code }) => code)).toEqual([
+    'binding-keycode-unknown',
+  ]);
 });

@@ -1,15 +1,22 @@
 import { describe, expect, it } from 'vitest';
 import { KEYCODES } from '../../catalog/keycodes';
+import type { Layer } from '../../domain/types';
 import { formatSlotPrompt, getSlotChoices } from './slot-choices';
 
 const V0_3_DOCS = 'https://v0-3-branch.zmk.dev/docs/';
+const MO_DOCS = `${V0_3_DOCS}keymaps/behaviors/layers#momentary-layer`;
+const LAYERS: readonly Layer[] = [
+  { id: 'l0', name: 'Base', bindings: {} },
+  { id: 'l3', name: 'Nav & Sym', bindings: {} },
+];
+const CONTEXT = { layers: LAYERS, docsUrl: MO_DOCS };
 
 function countChoices(kind: 'hold' | 'bt-command' | 'profile' | 'out-command'): number {
-  return getSlotChoices({ kind }).flatMap((group) => group.items).length;
+  return getSlotChoices({ kind }, CONTEXT).flatMap((group) => group.items).length;
 }
 
 describe('getSlotChoices (spec 006 FR-004–FR-006)', () => {
-  const keyGroups = getSlotChoices({ kind: 'key' });
+  const keyGroups = getSlotChoices({ kind: 'key' }, CONTEXT);
 
   it('groups keys in a fixed order with rare media codes last', () => {
     expect(keyGroups.map((group) => group.label)).toEqual([
@@ -43,11 +50,12 @@ describe('getSlotChoices (spec 006 FR-004–FR-006)', () => {
 
   it('groups behaviors and offers the fixed choices of the other slots', () => {
     expect(
-      getSlotChoices({ kind: 'behavior' }).map(
+      getSlotChoices({ kind: 'behavior' }, CONTEXT).map(
         (group) => `${group.label}: ${group.items.map((item) => item.legend).join(' ')}`,
       ),
     ).toEqual([
       'Send a key: &kp &mt &sk &kt',
+      'Layers: &mo &lt &tog &to &sl',
       'Special: &trans &none &caps_word &key_repeat &gresc',
       'Connection: &bt &out',
       'Firmware: &sys_reset &bootloader',
@@ -62,9 +70,17 @@ describe('getSlotChoices (spec 006 FR-004–FR-006)', () => {
   });
 
   it('explains and links every choice to the v0.3 docs', () => {
-    const slots = ['behavior', 'key', 'hold', 'bt-command', 'profile', 'out-command'] as const;
+    const slots = [
+      'behavior',
+      'key',
+      'hold',
+      'bt-command',
+      'profile',
+      'out-command',
+      'layer',
+    ] as const;
     for (const kind of slots) {
-      for (const item of getSlotChoices({ kind }).flatMap((group) => group.items)) {
+      for (const item of getSlotChoices({ kind }, CONTEXT).flatMap((group) => group.items)) {
         expect(item.description).not.toBe('');
         expect(item.docsUrl.startsWith(V0_3_DOCS)).toBe(true);
       }
@@ -72,7 +88,32 @@ describe('getSlotChoices (spec 006 FR-004–FR-006)', () => {
   });
 });
 
+it('lists every layer by position, name and node name, linked to the behavior docs (spec 007)', () => {
+  const groups = getSlotChoices({ kind: 'layer' }, CONTEXT);
+  expect(groups.map((group) => group.label)).toEqual(['Layers']);
+  expect(groups[0]?.items).toMatchObject([
+    {
+      id: 'l0',
+      legend: '0',
+      name: 'Base',
+      codes: ['0', 'base_layer'],
+      description: 'Layer 0, the base layer, always on',
+      docsUrl: MO_DOCS,
+      pick: { kind: 'layer', layerId: 'l0' },
+    },
+    {
+      id: 'l3',
+      legend: '1',
+      name: 'Nav & Sym',
+      codes: ['1', 'nav_sym_layer'],
+      description: 'Layer 1 in keymap order',
+      pick: { kind: 'layer', layerId: 'l3' },
+    },
+  ]);
+});
+
 it('asks what the open slot needs (FR-003)', () => {
+  expect(formatSlotPrompt({ kind: 'layer' })).toBe('Which layer?');
   expect(formatSlotPrompt({ kind: 'behavior' })).toBe('What should the key do?');
   expect(formatSlotPrompt({ kind: 'dance-tap', index: 1 })).toBe('Which key for tap 2?');
   expect(formatSlotPrompt({ kind: 'morph-side', side: 'morphed' })).toBe(

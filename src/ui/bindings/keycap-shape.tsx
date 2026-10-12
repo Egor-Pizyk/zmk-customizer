@@ -7,6 +7,8 @@ type KeycapShapeProps = {
   readonly keyIndex: number;
   readonly bindingKey: Key;
   readonly label: string;
+  /** `layers.L.bindings.keyId` of the open layer; the problems panel focuses it (FR-022). */
+  readonly issuePath: string;
   /** Full action name for the hover tooltip (FR-007). */
   readonly title: string;
   /** Undefined: unassigned, or the zoom is too small to read (contracts/ui.md). */
@@ -24,7 +26,7 @@ type KeycapShapeProps = {
 
 // A focusable keycap; `data-issue-path` lets a problem in the panel focus it (FR-022).
 export function KeycapShape(props: KeycapShapeProps) {
-  const { bindingKey, label, title, isActive, isSelected, hasConflict } = props;
+  const { bindingKey, label, issuePath, title, isActive, isSelected, hasConflict } = props;
 
   function handleKeyDown(event: KeyboardEvent<SVGGElement>) {
     props.onKeyDown(bindingKey.id, event);
@@ -39,7 +41,7 @@ export function KeycapShape(props: KeycapShapeProps) {
       aria-label={label}
       className="group"
       data-conflict={hasConflict || undefined}
-      data-issue-path={`layers.0.bindings.${bindingKey.id}`}
+      data-issue-path={issuePath}
       data-keycap-id={bindingKey.id}
       data-selected={isSelected || undefined}
       onFocus={handleFocus}

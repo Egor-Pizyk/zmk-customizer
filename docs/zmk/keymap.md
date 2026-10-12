@@ -49,7 +49,7 @@ Target: ZMK **v0.3.0** (`edf5c08`). Verified 2026-09-27 at v0.3.0 and `main` @ `
 Rules:
 - Everything except `#include`/`#define` lives inside the root node `/ { ... };`.
 - Keymap node name is free; `compatible = "zmk,keymap"` is mandatory.
-- Layer child-node names are free (must be valid DT node names: `[a-z0-9_,.+-]`, conventionally `snake_case`). Layer index = order of definition, starting at 0. Layer 0 is always active.
+- Layer child-node names are free (must be valid DT node names: `[a-z0-9_,.+-]`, conventionally `snake_case`). The Devicetree specification also requires a node name to start with a letter and to be 1–31 characters long (https://devicetree-specification.readthedocs.io/en/stable/devicetree-basics.html#node-names); whether dtc or Zephyr's devicetree tooling enforce the length is **not verified** here, so generators should stay within it. Layer index = order of definition, starting at 0. Layer 0 is always active.
 - Priority: highest-numbered active layer wins; activation order is irrelevant.
 - `behaviors`, `macros`, `combos`, `conditional_layers` node names are conventional; what matters is the `compatible` of each child/container. Behavior and macro nodes may be placed under any node name; ZMK docs use `behaviors {}` / `macros {}`.
 - Nodes that already exist (e.g. `&mt`, `&sk`, `&caps_word`) are modified with a top-level override outside `/ { }`: `&mt { tapping-term-ms = <180>; };`.
@@ -62,13 +62,15 @@ Sources: https://zmk.dev/docs/keymaps#keymap-file , https://zmk.dev/docs/keymaps
 |---|---|---|---|
 | `bindings` | phandle-array | yes | One binding per key position, in key-position order (= order of the matrix transform `map`, or kscan order if no transform). |
 | `sensor-bindings` | phandle-array | no | One binding per sensor, in order of `zmk,keymap-sensors` `sensors`. |
-| `display-name` | string | no | Name shown in ZMK Studio and display widgets. With `CONFIG_ZMK_KEYMAP_SETTINGS_STORAGE`, Studio-edited names are limited by `CONFIG_ZMK_KEYMAP_LAYER_NAME_MAX_LEN` (default 20). |
+| `display-name` | string | no | Name shown in ZMK Studio and display widgets. Length limit when `CONFIG_ZMK_KEYMAP_SETTINGS_STORAGE` is on (selected by `CONFIG_ZMK_STUDIO` on a unibody or central half, via `ZMK_STUDIO_RPC`): every keymap `display-name` is copied at build time into `char[CONFIG_ZMK_KEYMAP_LAYER_NAME_MAX_LEN]` (default 20, v0.3.0 `app/src/keymap.c`). A name of exactly 20 bytes loses its terminating NUL, a longer one is truncated with only a GCC warning; the build passes and Studio shows a broken name. Keep each name ≤ `MAX_LEN − 1` (19) UTF-8 bytes, or raise the option. Without settings storage names are plain `const char *` with no limit. |
 | `label` | string | no | **Deprecated**, use `display-name`. Do not generate. |
 | `status` | string | no | Standard DT; `"reserved"` = layer ignored in normal builds, available as a spare layer in ZMK Studio builds. |
 
 Invariant for generators: `len(bindings)` must equal the number of key positions (`n`). Mismatch is a build/runtime error.
 
-Sources: https://zmk.dev/docs/config/keymap#keymap , https://github.com/zmkfirmware/zmk/blob/main/app/dts/bindings/zmk%2Ckeymap.yaml
+Layer count limit (v0.3.0, verified 2026-10-06 in source; the v0.3.0 docs pages `keymaps/index.mdx`, `keymaps/behaviors/layers.md`, `config/keymap.md` do not state one): at most **32 layers**, indices `0..31`. Layer state is `typedef uint32_t zmk_keymap_layers_state_t` (`app/include/zmk/keymap.h`) and `set_layer_state()` writes `WRITE_BIT(_zmk_keymap_layer_state, layer_id, state)` (`app/src/keymap.c`); layer ids/indices are `uint8_t`. No `BUILD_ASSERT` checks the count, so a 33rd layer still builds but can never be activated correctly (bit 32 of a 32-bit mask). Combo `layers` masks are `uint32_t` as well (combos-macros-layers.md §1). With `CONFIG_ZMK_STUDIO`, `status = "reserved"` layers count toward the same total (`ZMK_KEYMAP_LAYERS_LEN` counts all children when Studio is on).
+
+Sources: https://zmk.dev/docs/config/keymap#keymap , https://github.com/zmkfirmware/zmk/blob/main/app/dts/bindings/zmk%2Ckeymap.yaml , https://github.com/zmkfirmware/zmk/blob/v0.3.0/app/include/zmk/keymap.h , https://github.com/zmkfirmware/zmk/blob/v0.3.0/app/src/keymap.c , https://github.com/zmkfirmware/zmk/blob/v0.3.0/app/Kconfig , https://github.com/zmkfirmware/zmk/blob/v0.3.0/app/src/studio/Kconfig
 
 ## 3. Binding syntax
 

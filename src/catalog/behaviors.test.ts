@@ -6,12 +6,17 @@ import { OUTPUT_COMMANDS } from './output-commands';
 const V0_3_DOCS = 'https://v0-3-branch.zmk.dev/docs/';
 
 describe('binding catalog tables', () => {
-  it('lists the 13 built-in behaviors of spec 004 plus tap-dance and mod-morph in picker order', () => {
+  it('lists spec 004 built-ins, spec 007 layer behaviors, tap-dance and mod-morph in picker order', () => {
     expect(BEHAVIORS.map((behavior) => behavior.id)).toEqual([
       'kp',
       'mt',
       'sk',
       'kt',
+      'mo',
+      'lt',
+      'tog',
+      'to',
+      'sl',
       'trans',
       'none',
       'caps_word',
@@ -32,6 +37,11 @@ describe('binding catalog tables', () => {
       'Send a key: &mt',
       'Send a key: &sk',
       'Send a key: &kt',
+      'Layers: &mo',
+      'Layers: &lt',
+      'Layers: &tog',
+      'Layers: &to',
+      'Layers: &sl',
       'Special: &trans',
       'Special: &none',
       'Special: &caps_word',

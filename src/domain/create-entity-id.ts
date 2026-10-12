@@ -1,6 +1,6 @@
 // Deterministic ids (no Math.random, AGENTS §7.7): the highest existing number plus one (003 R8).
 export function createEntityId(input: {
-  readonly prefix: 'k' | 'w';
+  readonly prefix: 'k' | 'w' | 'l';
   readonly existingIds: readonly string[];
 }): string {
   let highest = 0;

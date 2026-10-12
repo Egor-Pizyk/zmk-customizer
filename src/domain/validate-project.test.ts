@@ -3,7 +3,7 @@ import { createProject } from './create-project';
 import type { Project } from './types';
 import { validateProject } from './validate-project';
 
-const CATALOG = { keycodeNames: new Set(['A']), bluetoothProfileCount: 5 };
+const CATALOG = { keycodeNames: new Set(['A']), bluetoothProfileCount: 5, maxLayerCount: 32 };
 
 function codesAndPaths(project: Project) {
   return validateProject(project, CATALOG).map(({ code, path }) => ({ code, path }));

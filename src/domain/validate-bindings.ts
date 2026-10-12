@@ -5,6 +5,7 @@ import type { Binding, KeyStroke, Layer, Project, ValidationIssue } from './type
 export type BindingsCatalog = {
   readonly keycodeNames: ReadonlySet<string>;
   readonly bluetoothProfileCount: number;
+  readonly maxLayerCount: number;
 };
 
 function getKeyStrokes(binding: Binding): readonly KeyStroke[] {
@@ -16,6 +17,9 @@ function getKeyStrokes(binding: Binding): readonly KeyStroke[] {
     }
     case 'mt': {
       return [binding.hold, binding.tap];
+    }
+    case 'lt': {
+      return [binding.tap];
     }
     case 'tap_dance': {
       return binding.taps;
@@ -31,7 +35,11 @@ function getKeyStrokes(binding: Binding): readonly KeyStroke[] {
     case 'bt':
     case 'out':
     case 'sys_reset':
-    case 'bootloader': {
+    case 'bootloader':
+    case 'mo':
+    case 'tog':
+    case 'to':
+    case 'sl': {
       return [];
     }
     default: {
@@ -40,11 +48,18 @@ function getKeyStrokes(binding: Binding): readonly KeyStroke[] {
   }
 }
 
-function findBindingIssue(input: {
+type BindingIssueInput = {
   readonly binding: Binding;
   readonly keyLabel: string;
   readonly catalog: BindingsCatalog;
-}): Pick<ValidationIssue, 'code' | 'message'> | undefined {
+  /** Ids of the project's layers; a layer behavior may name a deleted one (spec 007 R1). */
+  readonly layerIds: ReadonlySet<string>;
+};
+
+// Keys a binding sends must exist in ZMK v0.3, layers it switches to in the project.
+function findReferenceIssue(
+  input: BindingIssueInput,
+): Pick<ValidationIssue, 'code' | 'message'> | undefined {
   const { binding, keyLabel, catalog } = input;
   const unknown = getKeyStrokes(binding).find(
     (stroke) => !catalog.keycodeNames.has(stroke.keycode),
@@ -54,6 +69,23 @@ function findBindingIssue(input: {
       code: 'binding-keycode-unknown',
       message: `${keyLabel} sends ${unknown.keycode}, which ZMK v0.3 does not know. Pick another key in Bindings.`,
     };
+  }
+  if ('layerId' in binding && !input.layerIds.has(binding.layerId)) {
+    return {
+      code: 'binding-layer-missing',
+      message: `${keyLabel} uses a deleted layer. Pick another layer in Bindings.`,
+    };
+  }
+  return undefined;
+}
+
+function findBindingIssue(
+  input: BindingIssueInput,
+): Pick<ValidationIssue, 'code' | 'message'> | undefined {
+  const { binding, keyLabel, catalog } = input;
+  const referenceIssue = findReferenceIssue(input);
+  if (referenceIssue !== undefined) {
+    return referenceIssue;
   }
   if (
     binding.kind === 'bt' &&
@@ -92,26 +124,33 @@ function isSameStroke(first: KeyStroke, second: KeyStroke): boolean {
 
 function validateLayer(
   project: Project,
-  input: { readonly layer: Layer; readonly layerIndex: number; readonly catalog: BindingsCatalog },
+  input: Pick<BindingIssueInput, 'catalog' | 'layerIds'> & {
+    readonly layer: Layer;
+    readonly layerIndex: number;
+  },
 ): readonly ValidationIssue[] {
-  const { layer, layerIndex, catalog } = input;
+  const { layer, layerIndex, catalog, layerIds } = input;
   return project.keys.flatMap((key, keyIndex) => {
     const binding = layer.bindings[key.id];
     const keyLabel = `Key ${keyIndex} on layer ${layer.name}`;
     const issue =
-      binding === undefined ? undefined : findBindingIssue({ binding, keyLabel, catalog });
+      binding === undefined
+        ? undefined
+        : findBindingIssue({ binding, keyLabel, catalog, layerIds });
     return issue === undefined
       ? []
       : [{ ...issue, path: ['layers', layerIndex, 'bindings', key.id] }];
   });
 }
 
-// Key names and profiles are checked here, not by the schema, so old files still open (R7).
+// Key names, profiles and layer targets are checked here, not by the schema, so old files still
+// open (R7) and a deleted layer's references stay until the user repicks them (spec 007 R2).
 export function validateBindings(
   project: Project,
   catalog: BindingsCatalog,
 ): readonly ValidationIssue[] {
+  const layerIds = new Set(project.layers.map((layer) => layer.id));
   return project.layers.flatMap((layer, layerIndex) =>
-    validateLayer(project, { layer, layerIndex, catalog }),
+    validateLayer(project, { layer, layerIndex, catalog, layerIds }),
   );
 }

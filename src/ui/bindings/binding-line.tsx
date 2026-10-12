@@ -1,34 +1,24 @@
-import { BEHAVIORS } from '../../catalog/behaviors';
 import type { BehaviorEntry } from '../../catalog/behaviors';
+import type { Layer } from '../../domain/types';
 import { Button } from '../components/button';
 import { DocsLink } from '../components/docs-link';
-import { getLineSlots, isSameSlot } from './binding-slots';
+import { findLineBehavior, getLineSlots, isSameSlot } from './binding-slots';
 import type { LineSource, SlotRef } from './binding-slots';
 
 type BindingLineProps = {
   readonly source: LineSource;
   readonly slot: SlotRef;
+  /** Every layer, so a layer slot reads "1 Nav" (spec 007). */
+  readonly layers: readonly Layer[];
   readonly onSlotOpen: (slot: SlotRef) => void;
   readonly onAddTap: () => void;
 };
 
-function findBehavior(source: LineSource): BehaviorEntry | undefined {
-  if (source.kind === 'none') {
-    return undefined;
-  }
-  const behaviorId = source.kind === 'draft' ? source.draft.behaviorId : source.binding.kind;
-  return BEHAVIORS.find((behavior) => behavior.id === behaviorId);
-}
-
 // The binding as the keymap reads it, one button per part (spec 006 FR-001): the behavior tag,
 // then each slot with its label and value; the open part is pressed.
-export function BindingLine({
-  source,
-  slot,
-  onSlotOpen: handleSlotOpen,
-  onAddTap: handleAddTap,
-}: BindingLineProps) {
-  const behavior = findBehavior(source);
+export function BindingLine(props: BindingLineProps) {
+  const { source, slot, onSlotOpen: handleSlotOpen } = props;
+  const behavior = findLineBehavior(source);
   const isTapDance = source.kind === 'binding' && source.binding.kind === 'tap_dance';
   return (
     <section aria-label="Binding" className="flex flex-col gap-2">
@@ -41,7 +31,7 @@ export function BindingLine({
           slotRef={{ kind: 'behavior' }}
           value={behavior?.tag}
         />
-        {getLineSlots(source).map((lineSlot) => (
+        {getLineSlots(source, props.layers).map((lineSlot) => (
           <SlotButton
             isOpen={isSameSlot(lineSlot.ref, slot)}
             isTag={false}
@@ -53,7 +43,7 @@ export function BindingLine({
           />
         ))}
         {isTapDance ? (
-          <Button onClick={handleAddTap} size="sm" variant="secondary">
+          <Button onClick={props.onAddTap} size="sm" variant="secondary">
             Add tap
           </Button>
         ) : undefined}

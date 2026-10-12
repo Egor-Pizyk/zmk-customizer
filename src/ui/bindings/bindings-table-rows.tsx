@@ -6,6 +6,8 @@ import { formatBindingName } from './format-binding-name';
 
 export type BindingsTableRowsProps = {
   readonly project: Project;
+  /** The open layer (spec 007 FR-007). */
+  readonly layerIndex: number;
   readonly selectedKeyIds: readonly string[];
   readonly activeKeyId: string | undefined;
   readonly problemsByKeyId: ReadonlyMap<string, readonly string[]>;
@@ -23,7 +25,7 @@ function focusCheckbox(keyId: string) {
 // Selection column: one tab stop with a roving tabindex; Space toggles natively, arrows move,
 // Shift+arrows extend (admin-ui.md "Tables").
 export function BindingsTableRows(props: BindingsTableRowsProps) {
-  const { project, selectedKeyIds, activeKeyId, problemsByKeyId } = props;
+  const { project, layerIndex, selectedKeyIds, activeKeyId, problemsByKeyId } = props;
   const rovingKeyId = activeKeyId ?? project.keys[0]?.id;
   return project.keys.map((key, keyIndex) => {
     const isSelected = selectedKeyIds.includes(key.id);
@@ -45,7 +47,9 @@ export function BindingsTableRows(props: BindingsTableRowsProps) {
         </td>
         <RowHeader {...props} keyId={key.id} keyIndex={keyIndex} />
         <td>
-          <span>{formatBindingName(project.layers[0]?.bindings[key.id])}</span>
+          <span>
+            {formatBindingName(project.layers[layerIndex]?.bindings[key.id], project.layers)}
+          </span>
           {problems.map((problem) => (
             <span className="flex items-center gap-1 text-xs text-danger" key={problem}>
               <WarningIcon />
@@ -106,7 +110,8 @@ function SelectCell(
 // Problem activation focuses this header, which selects the key (contracts/validation-issues.md).
 // The same data-issue-path exists on the keycap, which comes first in the DOM, so IssueButton
 // focuses the canvas keycap; this header is the fallback when the canvas is unavailable.
-function RowHeader({ keyId, keyIndex, onSelectionChange, onActiveKeyChange }: RowProps) {
+function RowHeader(props: RowProps) {
+  const { layerIndex, keyId, keyIndex, onSelectionChange, onActiveKeyChange } = props;
   function handleFocus() {
     onActiveKeyChange(keyId);
     onSelectionChange([keyId]);
@@ -115,7 +120,7 @@ function RowHeader({ keyId, keyIndex, onSelectionChange, onActiveKeyChange }: Ro
   return (
     <th
       className="font-medium"
-      data-issue-path={`layers.0.bindings.${keyId}`}
+      data-issue-path={`layers.${layerIndex}.bindings.${keyId}`}
       onFocus={handleFocus}
       scope="row"
       tabIndex={-1}

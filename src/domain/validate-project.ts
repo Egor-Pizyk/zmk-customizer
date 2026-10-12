@@ -1,6 +1,7 @@
 import { toShieldName } from './to-shield-name';
 import { validateBindings } from './validate-bindings';
 import type { BindingsCatalog } from './validate-bindings';
+import { validateLayers } from './validate-layers';
 import { validateSchematic } from './validate-schematic';
 import type { Project, ValidationIssue } from './types';
 
@@ -56,6 +57,7 @@ export function validateProject(
     ...validateShieldName(project),
     ...validateKeyboardName(project),
     ...validateSchematic(project),
+    ...validateLayers(project, catalog),
     ...validateBindings(project, catalog),
   ];
 }

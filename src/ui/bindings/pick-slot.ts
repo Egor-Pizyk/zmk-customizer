@@ -2,12 +2,17 @@ import { setKeyBehavior } from '../../domain/set-key-behavior';
 import type { KeyBehavior } from '../../domain/set-key-behavior';
 import { setModMorphBinding } from '../../domain/set-mod-morph-binding';
 import { setTapDanceBinding } from '../../domain/set-tap-dance-binding';
-import type { BehaviorId } from '../../domain/types';
+import type { BehaviorId, LayerBinding } from '../../domain/types';
 import type { SlotRef } from './binding-slots';
 import { DEFAULT_HOLD, createDraft } from './draft-state';
 import { toBindingResult, toStoreResult } from './pick-result';
 import type { PickInput, PickResult } from './pick-result';
-import { toBluetoothCommandResult, toKeycodeResult, toProfileResult } from './pick-value';
+import {
+  toBluetoothCommandResult,
+  toKeycodeResult,
+  toLayerResult,
+  toProfileResult,
+} from './pick-value';
 
 // What a pick in the open slot does (spec 006 FR-008, FR-009, FR-011).
 export function toPickResult(input: PickInput): PickResult {
@@ -28,6 +33,9 @@ export function toPickResult(input: PickInput): PickResult {
     case 'out-command': {
       return toBindingResult(input, { kind: 'out', command: pick.command });
     }
+    case 'layer': {
+      return toLayerResult(input, pick.layerId);
+    }
     default: {
       return pick satisfies never;
     }
@@ -35,7 +43,10 @@ export function toPickResult(input: PickInput): PickResult {
 }
 
 // Every key already sends a key: switch keeping each key; else draft the key (FR-008).
-function toKeyBehaviorResult(input: PickInput, behaviorId: KeyBehavior['id']): PickResult {
+function toKeyBehaviorResult(
+  input: PickInput,
+  behaviorId: Exclude<KeyBehavior['id'], 'lt'>,
+): PickResult {
   if (!input.isEveryKeySendingKey) {
     const next: SlotRef = behaviorId === 'mt' ? { kind: 'tap' } : { kind: 'key' };
     return { kind: 'draft', draft: createDraft(behaviorId), next };
@@ -44,6 +55,16 @@ function toKeyBehaviorResult(input: PickInput, behaviorId: KeyBehavior['id']): P
     behaviorId === 'mt' ? { id: 'mt', hold: DEFAULT_HOLD } : { id: behaviorId };
   const next: SlotRef = behaviorId === 'mt' ? { kind: 'hold' } : { kind: 'key' };
   return toStoreResult((project) => setKeyBehavior(project, { ...input.target, behavior }), next);
+}
+
+// Behaviors whose values must be picked first start a draft at their first slot (FR-009); a
+// layer behavior always asks for its layer first (spec 007).
+function toDraftStartResult(behaviorId: 'bt' | 'out' | LayerBinding['kind']): PickResult {
+  if (behaviorId === 'bt' || behaviorId === 'out') {
+    const next: SlotRef = behaviorId === 'bt' ? { kind: 'bt-command' } : { kind: 'out-command' };
+    return { kind: 'draft', draft: createDraft(behaviorId), next };
+  }
+  return { kind: 'draft', draft: createDraft(behaviorId), next: { kind: 'layer' } };
 }
 
 function toBehaviorResult(input: PickInput, behaviorId: BehaviorId): PickResult {
@@ -56,9 +77,13 @@ function toBehaviorResult(input: PickInput, behaviorId: BehaviorId): PickResult 
       return toKeyBehaviorResult(input, behaviorId);
     }
     case 'bt':
-    case 'out': {
-      const next: SlotRef = behaviorId === 'bt' ? { kind: 'bt-command' } : { kind: 'out-command' };
-      return { kind: 'draft', draft: createDraft(behaviorId), next };
+    case 'out':
+    case 'mo':
+    case 'tog':
+    case 'to':
+    case 'sl':
+    case 'lt': {
+      return toDraftStartResult(behaviorId);
     }
     case 'tap_dance': {
       const next: SlotRef = { kind: 'dance-tap', index: 0 };
