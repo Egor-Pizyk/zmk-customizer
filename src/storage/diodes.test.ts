@@ -6,14 +6,16 @@ import { serializeProject } from './serialize-project';
 it.each([1, 2] as const)('round-trips both polarities at pin %s', (pin) => {
   for (const cathode of ['toward-switch', 'away-switch'] as const) {
     const project = {
-      ...createProject(),
+      ...createProject({ controllerId: 'nice_nano_v2' }),
       keys: [{ id: 'k1', xU: 0, yU: 0, diode: { pin, cathode } }],
     };
     expect(parseProjectFile(serializedText(project))).toEqual({ ok: true, value: project });
   }
 });
 it('loads v3 without adding diodes or changing the circuit', () => {
-  const { controllerId: _controllerId, ...legacy } = createProject();
+  const { controllerId: _controllerId, ...legacy } = createProject({
+    controllerId: 'nice_nano_v2',
+  });
   const old = { ...legacy, schemaVersion: 3, keys: [{ id: 'k1', xU: 0, yU: 0 }] };
   expect(parseProjectFile(JSON.stringify(old))).toEqual({
     ok: true,
@@ -29,7 +31,7 @@ it.each([
 ])('rejects malformed diode %j at its key path', (diode) => {
   const paths = issuePaths(
     JSON.stringify({
-      ...createProject(),
+      ...createProject({ controllerId: 'nice_nano_v2' }),
       schemaVersion: 5,
       controllerId: 'nice_nano_v2',
       keys: [{ id: 'k1', xU: 0, yU: 0, diode }],

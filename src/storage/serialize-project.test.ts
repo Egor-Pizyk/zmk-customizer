@@ -71,7 +71,7 @@ it('reports a schema failure instead of throwing', () => {
 
 describe('every domain operation result passes the schema', () => {
   it('round-trips create/add/move/wire through serialize + parse', () => {
-    const empty = createProject();
+    const empty = createProject({ controllerId: 'nice_nano_v2' });
     const withKey = addKey(empty, { position: { xU: 0, yU: 0 } });
     const withTwo = addKey(withKey, { position: { xU: 2, yU: 0 } });
     const moved = moveKey(withTwo, { keyId: 'k1', position: { xU: 0, yU: 1 } });

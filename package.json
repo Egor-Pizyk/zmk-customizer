@@ -7,14 +7,16 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "lint": "oxlint",
-    "lint:fix": "oxlint --fix",
+    "lint": "oxlint src tests/helpers vite.config.ts && oxlint --disable-typescript-plugin -c scripts/.oxlintrc.json scripts",
+    "lint:fix": "oxlint --fix src tests/helpers vite.config.ts && oxlint --fix --disable-typescript-plugin -c scripts/.oxlintrc.json scripts",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check": "sh scripts/check-agents-sync.sh && npm run typecheck && npm run lint && npm run format:check && npm run test:coverage",
-    "test:coverage": "vitest run --coverage"
+    "check": "sh scripts/check-agents-sync.sh && npm run check:architecture && npm run check:guidelines && npm run typecheck && npm run lint && npm run format:check && npm run test:coverage",
+    "test:coverage": "vitest run --coverage",
+    "check:architecture": "node --test scripts/check-architecture.test.mjs && node scripts/check-architecture.mjs",
+    "check:guidelines": "node --test scripts/check-guidelines.test.mjs && node scripts/check-guidelines.mjs"
   },
   "dependencies": {
     "fflate": "0.8.2",
@@ -23,6 +25,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@babel/parser": "7.29.9",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",

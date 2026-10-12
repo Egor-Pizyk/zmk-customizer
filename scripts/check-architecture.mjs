@@ -1,0 +1,328 @@
+import { parse } from '@babel/parser';
+import { readdirSync, readFileSync } from 'node:fs';
+import path from 'node:path';
+import { pathToFileURL } from 'node:url';
+
+const PURE_LAYERS = new Set(['domain', 'catalog', 'generators']);
+const IO_NAMES = new Set([
+  'window',
+  'document',
+  'navigator',
+  'localStorage',
+  'sessionStorage',
+  'fetch',
+  'XMLHttpRequest',
+  'WebSocket',
+  'EventSource',
+  'Worker',
+  'setTimeout',
+  'setInterval',
+  'requestAnimationFrame',
+  'queueMicrotask',
+]);
+const ROOT_UI = new Set([
+  'project-context',
+  'project-state',
+  'preferences-context',
+  'workspaces',
+  'shortcuts',
+  'use-shell-dialogs',
+  'use-issue-navigation',
+  'import-session',
+  'use-global-shortcuts',
+  'download-blob',
+  'download-text-file',
+]);
+const FEATURES = new Set(['schematic', 'bindings', 'firmware', 'export']);
+
+export function parseSource(file, source) {
+  return parse(source, {
+    sourceType: 'module',
+    plugins: ['typescript', 'jsx'],
+    sourceFilename: file,
+  });
+}
+
+export function walk(node, visit, parent) {
+  if (node === null || typeof node !== 'object') {
+    return;
+  }
+  if (typeof node.type === 'string') {
+    visit(node, parent);
+  }
+  for (const [key, value] of Object.entries(node)) {
+    if (['loc', 'start', 'end', 'comments', 'tokens'].includes(key)) {
+      continue;
+    }
+    if (Array.isArray(value)) {
+      for (const child of value) {
+        walk(child, visit, node);
+      }
+    } else if (value && typeof value === 'object') {
+      walk(value, visit, node);
+    }
+  }
+}
+
+function allowedEdge(file, target, typeOnly) {
+  const [, layer, group] = file.split('/');
+  const [, targetLayer, targetGroup] = target.split('/');
+  if (
+    layer === 'ui' &&
+    targetLayer === 'domain' &&
+    /\/(?:get-nets|find-wire-contacts|find-crossings|derive-shield-matrix|validate-(?:project|schematic|shield-project))(?:\.ts)?$/u.test(
+      target,
+    ) &&
+    !typeOnly
+  )
+    return false;
+  if (layer === 'domain') {
+    return targetLayer === 'domain';
+  }
+  if (layer === 'catalog') {
+    return targetLayer === 'catalog' || (targetLayer === 'domain' && typeOnly);
+  }
+  if (layer === 'generators') {
+    return ['generators', 'domain', 'catalog'].includes(targetLayer);
+  }
+  if (layer === 'storage') {
+    return ['storage', 'domain', 'catalog', 'generators'].includes(targetLayer);
+  }
+  if (file === 'src/main.tsx' && target === 'src/styles.css') {
+    return true;
+  }
+  if (file === 'src/main.tsx') {
+    return ['ui', 'storage', 'catalog'].includes(targetLayer);
+  }
+  if (layer !== 'ui') {
+    return false;
+  }
+  if (group === 'components') {
+    return targetLayer === 'ui' && targetGroup === 'components';
+  }
+  if (['domain', 'catalog', 'storage'].includes(targetLayer)) {
+    return true;
+  }
+  if (targetLayer === 'generators') {
+    return (
+      file === 'src/ui/export/get-export-preview.ts' ||
+      (group === 'export' &&
+        typeOnly &&
+        target.replace(/\.ts$/u, '') === 'src/generators/generated-file')
+    );
+  }
+  if (targetLayer !== 'ui') {
+    return false;
+  }
+  if (!FEATURES.has(group) && !['canvas', 'shell'].includes(group)) {
+    return true;
+  }
+  if (FEATURES.has(targetGroup)) {
+    return group === targetGroup;
+  }
+  if (['components', 'canvas', 'shell'].includes(targetGroup)) {
+    return true;
+  }
+  return ROOT_UI.has(targetGroup.replace(/\.(?:tsx?|jsx?)$/u, ''));
+}
+
+function propertyName(node) {
+  return node?.type === 'Identifier' ? node.name : node?.value;
+}
+
+export function checkSource(file, source) {
+  const issues = [];
+  const ast = parseSource(file, source);
+  const isTest = /\.test\.[cm]?[jt]sx?$/u.test(file);
+  const isPure = !isTest && PURE_LAYERS.has(file.split('/')[1]);
+  const aliases = new Map();
+  function origin(node) {
+    if (node?.type === 'Identifier') {
+      return aliases.get(node.name) ?? node.name;
+    }
+    if (['MemberExpression', 'OptionalMemberExpression'].includes(node?.type)) {
+      return `${origin(node.object)}.${propertyName(node.property)}`;
+    }
+    return '';
+  }
+  walk(ast, (node) => {
+    if (node.type === 'ImportDeclaration' && node.source.value === 'vitest') {
+      for (const item of node.specifiers) {
+        if (item.imported?.name) aliases.set(item.local.name, item.imported.name);
+      }
+    }
+  });
+  // A bounded fixed point resolves aliases declared in any order without executing code.
+  for (let pass = 0; pass < 8; pass += 1) {
+    walk(ast, (node) => {
+      if (node.type !== 'VariableDeclarator' || !node.init) {
+        return;
+      }
+      if (node.id.type === 'Identifier') {
+        aliases.set(node.id.name, origin(node.init));
+      }
+      if (node.id.type === 'ObjectPattern') {
+        for (const property of node.id.properties) {
+          if (property.type === 'ObjectProperty' && property.value.type === 'Identifier') {
+            aliases.set(property.value.name, `${origin(node.init)}.${propertyName(property.key)}`);
+          }
+        }
+      }
+    });
+  }
+  function report(node, rule, message) {
+    issues.push({ file, line: node.loc?.start.line ?? 1, rule, message });
+  }
+  function checkImport(node, specifier, typeOnly) {
+    if (isTest || !file.startsWith('src/')) {
+      return;
+    }
+    if (typeof specifier !== 'string') {
+      report(node, 'layer-import', 'Dynamic imports require a literal target');
+      return;
+    }
+    if (!specifier.startsWith('.')) {
+      const externalAllowed =
+        file.startsWith('src/ui/') || file === 'src/main.tsx'
+          ? ['react', 'react-dom', 'fflate'].some(
+              (name) => specifier === name || specifier.startsWith(`${name}/`),
+            )
+          : file.startsWith('src/storage/') && ['zod', 'fflate'].includes(specifier);
+      if (!externalAllowed) {
+        report(node, 'external-import', `External import ${specifier} is not allowed here`);
+      }
+      return;
+    }
+    const target = path.posix
+      .normalize(path.posix.join(path.posix.dirname(file), specifier.split('?')[0]))
+      .replace(/\.js$/u, '.ts');
+    if (target.startsWith('tests/') || /\.test\./u.test(target)) {
+      report(node, 'test-import', 'Production cannot import tests');
+    } else if (!allowedEdge(file, target, typeOnly)) {
+      report(node, 'layer-import', `Forbidden edge to ${target}`);
+    }
+  }
+  walk(ast, (node, parent) => {
+    if (
+      ['ImportDeclaration', 'ExportNamedDeclaration', 'ExportAllDeclaration'].includes(node.type) &&
+      node.source
+    ) {
+      const typeOnly =
+        node.importKind === 'type' ||
+        node.exportKind === 'type' ||
+        (node.specifiers?.length > 0 &&
+          node.specifiers.every(
+            (item) => item.importKind === 'type' || item.exportKind === 'type',
+          ));
+      checkImport(node, node.source.value, typeOnly);
+    }
+    if (node.type === 'CallExpression' && node.callee.type === 'Import') {
+      checkImport(node, node.arguments[0]?.value, false);
+    }
+    if (node.type === 'ImportExpression') {
+      checkImport(node, node.source?.value, false);
+    }
+    const name = origin(node).replace(/^globalThis\./u, '');
+    const isReference =
+      node.type === 'Identifier' &&
+      !(
+        (parent?.type === 'MemberExpression' && parent.property === node && !parent.computed) ||
+        ((parent?.type === 'ObjectProperty' || parent?.type === 'ObjectMethod') &&
+          parent.key === node &&
+          !parent.computed) ||
+        parent?.type.startsWith('TS')
+      );
+    if (
+      isPure &&
+      ((isReference &&
+        (IO_NAMES.has(name.split('.')[0]) ||
+          [
+            'Date.now',
+            'Math.random',
+            'performance.now',
+            'crypto.getRandomValues',
+            'crypto.randomUUID',
+          ].includes(name))) ||
+        (['MemberExpression', 'OptionalMemberExpression'].includes(node.type) &&
+          (IO_NAMES.has(name.split('.')[0]) ||
+            [
+              'Date.now',
+              'Math.random',
+              'performance.now',
+              'crypto.getRandomValues',
+              'crypto.randomUUID',
+            ].includes(name))))
+    ) {
+      report(node, 'purity', `Non-deterministic or I/O API ${name}`);
+    }
+    if (
+      isPure &&
+      node.type === 'NewExpression' &&
+      origin(node.callee).replace(/^globalThis\./u, '') === 'Date' &&
+      node.arguments.length === 0
+    ) {
+      report(node, 'purity', 'Current-time Date is forbidden');
+    }
+    if (
+      file === 'src/domain/create-entity-id.ts' &&
+      node.type === 'CallExpression' &&
+      ['Number', 'parseInt', 'Number.parseInt'].includes(origin(node.callee))
+    ) {
+      report(node, 'lossy-id', 'ID suffix arithmetic must preserve decimal precision');
+    }
+    if (
+      !isTest &&
+      file.startsWith('src/') &&
+      node.type === 'CallExpression' &&
+      ((['Math.min', 'Math.max', 'Math.min.call', 'Math.max.call'].includes(
+        origin(node.callee).replace(/^globalThis\./u, ''),
+      ) &&
+        node.arguments.some((argument) => argument.type === 'SpreadElement')) ||
+        ['Math.min.apply', 'Math.max.apply'].includes(
+          origin(node.callee).replace(/^globalThis\./u, ''),
+        ))
+    ) {
+      report(node, 'argument-spread', 'Do not spread unbounded arrays into min/max');
+    }
+    if (
+      isTest &&
+      node.type === 'CallExpression' &&
+      /^(vi|vitest)\.(mock|doMock)$/u.test(origin(node.callee)) &&
+      ['react', 'react-dom'].includes(node.arguments[0]?.value)
+    ) {
+      report(node, 'react-mock', 'React and its hooks must run normally');
+    }
+    if (
+      isTest &&
+      node.type === 'CallExpression' &&
+      /^(vi|vitest)\.spyOn$/u.test(origin(node.callee)) &&
+      /^(useState|useRef|useMemo|useEffect|useCallback)$/u.test(node.arguments[1]?.value ?? '')
+    ) {
+      report(node, 'react-mock', 'Do not replace React hooks');
+    }
+    if (
+      isTest &&
+      node.type === 'MemberExpression' &&
+      ['skip', 'only'].includes(propertyName(node.property)) &&
+      /^(it|test|describe)(\.|$)/u.test(origin(node.object))
+    ) {
+      report(node, 'focused-test', 'Focused or skipped tests cannot enter the suite');
+    }
+  });
+  return issues;
+}
+
+export function sourceFiles(directory = 'src') {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const file = `${directory}/${entry.name}`;
+    return entry.isDirectory() ? sourceFiles(file) : /\.[jt]sx?$/u.test(file) ? [file] : [];
+  });
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
+  const issues = sourceFiles().flatMap((file) => checkSource(file, readFileSync(file, 'utf8')));
+  for (const issue of issues) {
+    process.stderr.write(`${issue.file}:${issue.line} ${issue.rule}: ${issue.message}\n`);
+  }
+  process.exitCode = issues.length === 0 ? 0 : 1;
+}

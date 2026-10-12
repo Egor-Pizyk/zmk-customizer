@@ -1,4 +1,5 @@
 import type { Project, Result } from '../domain/types';
+import { PROJECT_BUDGET } from './project-budget';
 import { projectSchema } from './project-schema';
 
 // Parsing fixes the key order to the schema order however the object was built (research R8).
@@ -12,5 +13,9 @@ export function serializeProject(project: Project): Result<string, string> {
     const detail = first === undefined ? 'unknown schema error' : first.message;
     return { ok: false, error: path === '' ? detail : `${path}: ${detail}` };
   }
-  return { ok: true, value: `${JSON.stringify(parsed.data, null, 2)}\n` };
+  const value = `${JSON.stringify(parsed.data, null, 2)}\n`;
+  if (new TextEncoder().encode(value).length > PROJECT_BUDGET.bytes) {
+    return { ok: false, error: 'Project exceeds the saved JSON byte budget' };
+  }
+  return { ok: true, value };
 }

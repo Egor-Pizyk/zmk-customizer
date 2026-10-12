@@ -35,3 +35,12 @@ it('leaves untouched keys in place', () => {
   });
   expect(after.keys[2]).toEqual({ id: 'k3', xU: 5, yU: 5 });
 });
+
+it('preserves identity for empty, unknown and unchanged moves', () => {
+  const project = buildProject({ keys: [{ id: 'k1', xU: 0, yU: 0 }] });
+  expect(moveKeys(project, { moves: [] })).toBe(project);
+  expect(moveKeys(project, { moves: [{ keyId: 'missing', position: { xU: 2, yU: 3 } }] })).toBe(
+    project,
+  );
+  expect(moveKeys(project, { moves: [{ keyId: 'k1', position: { xU: 0, yU: 0 } }] })).toBe(project);
+});

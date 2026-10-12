@@ -1,13 +1,18 @@
+import { validateSchematic } from './validate-schematic';
+import type { Net } from './get-nets';
+import type { ShieldMatrix, ShieldTarget } from './derive-shield-matrix';
 import { validateControllerBindings } from './validate-controller-bindings';
 import { validateControllerPins } from './validate-controller-pins';
 import { deriveShieldMatrix } from './derive-shield-matrix';
-import type { ShieldTarget } from './derive-shield-matrix';
 import { toLayerNodeName } from './to-layer-node-name';
-import type { ControllerBoard, Project, ValidationIssue } from './types';
+import type { ControllerBoard, Project, Result, ValidationIssue } from './types';
 import { validateProject } from './validate-project';
 import type { BindingsCatalog } from './validate-bindings';
 
-function validateNames(project: Project): ValidationIssue[] {
+function validateNames(
+  project: Project,
+  limits: BindingsCatalog['shieldLimits'],
+): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
   if (/[\p{Cc}]/u.test(project.name) || !project.name.isWellFormed()) {
     issues.push({
@@ -25,17 +30,17 @@ function validateNames(project: Project): ValidationIssue[] {
         path: ['layers', layerIndex, 'name'],
       });
     }
-    if (toLayerNodeName(layer.name).length > 31) {
+    if (toLayerNodeName(layer.name).length > limits.layerNodeNameLength) {
       issues.push({
         code: 'layer-node-name-too-long',
-        message: `Layer ${layerIndex} becomes a node name longer than 31 characters. Shorten it in Bindings.`,
+        message: `Layer ${layerIndex} becomes a node name longer than ${limits.layerNodeNameLength} characters. Shorten it in Bindings.`,
         path: ['layers', layerIndex, 'name'],
       });
     }
-    if (new TextEncoder().encode(layer.name).length > 19) {
+    if (new TextEncoder().encode(layer.name).length > limits.layerDisplayNameBytes) {
       issues.push({
         code: 'layer-display-name-too-long',
-        message: `Layer ${layerIndex} exceeds 19 UTF-8 bytes. Shorten its name in Bindings.`,
+        message: `Layer ${layerIndex} exceeds ${limits.layerDisplayNameBytes} UTF-8 bytes. Shorten its name in Bindings.`,
         path: ['layers', layerIndex, 'name'],
       });
     }
@@ -43,10 +48,16 @@ function validateNames(project: Project): ValidationIssue[] {
   return issues;
 }
 
-function validatePhysicalLayout(project: Project): ValidationIssue[] {
+function validatePhysicalLayout(
+  project: Project,
+  limits: BindingsCatalog['shieldLimits'],
+): ValidationIssue[] {
   return project.keys.flatMap((key, keyIndex) => {
     const cells = [key.xU, key.yU].map((value) => Math.round(value * 100));
-    return cells.some((cell) => !Number.isFinite(cell) || cell < -32_768 || cell > 32_767)
+    return cells.some(
+      (cell) =>
+        !Number.isFinite(cell) || cell < limits.minLayoutCell || cell > limits.maxLayoutCell,
+    )
       ? [
           {
             code: 'physical-layout-out-of-range' as const,
@@ -64,15 +75,21 @@ export function validateShieldProject(
     readonly bindingsCatalog: BindingsCatalog;
     readonly target: ShieldTarget;
     readonly board: ControllerBoard;
+    readonly nets?: readonly Net[];
+    readonly schematicIssues?: readonly ValidationIssue[];
+    readonly matrix?: Result<ShieldMatrix, readonly ValidationIssue[]>;
   },
 ): readonly ValidationIssue[] {
-  const matrix = deriveShieldMatrix(project, input.target);
+  const schematicIssues = input.schematicIssues ?? validateSchematic(project, input.nets);
+  const matrix =
+    input.matrix ??
+    deriveShieldMatrix(project, input.target, { nets: input.nets, schematicIssues });
   const issues = [
-    ...validateProject(project, input.bindingsCatalog),
-    ...validateNames(project),
+    ...validateProject(project, input.bindingsCatalog, schematicIssues),
+    ...validateNames(project, input.bindingsCatalog.shieldLimits),
     ...validateControllerPins(project, input.board),
     ...validateControllerBindings(project, input.board),
-    ...validatePhysicalLayout(project),
+    ...validatePhysicalLayout(project, input.bindingsCatalog.shieldLimits),
     ...(matrix.ok ? [] : matrix.error),
   ];
   return issues.filter(

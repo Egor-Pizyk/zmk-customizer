@@ -37,6 +37,9 @@
     "eslint/no-empty": "error",
     "eslint/no-empty-function": "error",
     "eslint/no-nested-ternary": "error",
+    "eslint/no-else-return": "error",
+    "typescript/require-await": "error",
+    "typescript/no-floating-promises": "error",
     "eslint/max-depth": ["error", 3],
     "eslint/max-params": ["error", 3],
     "eslint/max-lines-per-function": [
@@ -215,6 +218,7 @@
     // False positive on zod's schema `.catch(default)`; the app has no top-level promise chains.
     "unicorn/prefer-top-level-await": "off",
     "unicorn/no-array-for-each": "error",
+    "unicorn/no-array-callback-reference": "error",
     "unicorn/no-array-reduce": ["error", { "allowSimpleOperations": true }],
     "unicorn/throw-new-error": "error",
     "unicorn/prefer-node-protocol": "error",
@@ -341,6 +345,22 @@
       }
     },
     {
+      "files": ["src/storage/**"],
+      "rules": {
+        "eslint/no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "(^|/)ui(/|$)|^react(-dom)?(/|$)",
+                "message": "storage cannot import UI or React; boundary adapters only."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
       "files": ["src/catalog/**"],
       "rules": {
         "eslint/no-restricted-imports": [
@@ -411,7 +431,7 @@
                 "message": "ui/components/ primitives know nothing about Project: take strings, numbers and callbacks (docs/guidelines/frontend/react.md)."
               },
               {
-                "regex": "(^|/)(storage|canvas|shell)(/|$)|preferences-context",
+                "regex": "(^|/)(storage|catalog|canvas|shell)(/|$)|(preferences|project)-context",
                 "message": "ui/components/ primitives take strings, numbers and callbacks; they do not read preferences or import workspace folders (docs/guidelines/frontend/react.md)."
               }
             ]

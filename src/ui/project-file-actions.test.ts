@@ -9,7 +9,7 @@ afterEach(() => {
 it('New preset autosaves through replacement, resets history, and later edits undo/redo while empty New stays available', () => {
   const setItem = vi.fn<(key: string, value: string) => void>();
   vi.stubGlobal('localStorage', { setItem });
-  const empty = createProject();
+  const empty = createProject({ controllerId: 'nice_nano_v2' });
   let state = createInitialState({ project: empty, status: { kind: 'ok' } });
   const actions = createFileActions((change) => {
     state = change(state);

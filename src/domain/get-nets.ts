@@ -1,3 +1,4 @@
+import type { WireContacts } from './find-wire-contacts';
 import { findWireContacts } from './find-wire-contacts';
 import { getKeyPinWires } from './get-key-pin-wires';
 import { isSameCrossing } from './is-same-crossing';
@@ -37,7 +38,11 @@ function createUnionFind() {
   };
 }
 
-function joinProject(project: Project, union: (first: string, second: string) => void) {
+function joinProject(
+  project: Project,
+  union: (first: string, second: string) => void,
+  contacts: WireContacts,
+) {
   const wiresOf = getKeyPinWires(project);
   for (const key of project.keys) {
     for (const pin of KEY_PINS) {
@@ -55,7 +60,7 @@ function joinProject(project: Project, union: (first: string, second: string) =>
     }
   }
   // One O(n²) contact pass for both joins (003 R12).
-  const { overlaps, crossings } = findWireContacts(project);
+  const { overlaps, crossings } = contacts;
   for (const [first, second] of overlaps) {
     union(`wire:${first}`, `wire:${second}`);
   }
@@ -73,9 +78,12 @@ type MutableNet = { pins: Net['pins'][number][]; wireIds: string[]; boardPins: N
 
 // Derived, never stored (003 R7). Every key pin is in exactly one net, even when unconnected;
 // nets are ordered by their first key pin, then first wire, in project order.
-export function getNets(project: Project): readonly Net[] {
+export function getNets(
+  project: Project,
+  contacts: WireContacts = findWireContacts(project),
+): readonly Net[] {
   const { find, union } = createUnionFind();
-  joinProject(project, union);
+  joinProject(project, union, contacts);
   const netByRoot = new Map<string, MutableNet>();
   function netOf(node: string): MutableNet {
     const root = find(node);

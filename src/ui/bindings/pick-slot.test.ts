@@ -319,3 +319,13 @@ describe('layer picks (spec 007)', () => {
     expect(storedBindings(mo, EMPTY)?.['k2']).toEqual({ kind: 'tog', layerId: 'l2' });
   });
 });
+
+it('rejects a hold-slot pick for a key-press draft rather than retaining an incompatible hold', () => {
+  expect(() =>
+    pickOn({
+      source: { kind: 'draft', draft: { behaviorId: 'kp' } },
+      slot: { kind: 'hold' },
+      pick: { kind: 'keycode', keycode: 'A' },
+    }),
+  ).toThrow('does not fit');
+});

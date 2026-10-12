@@ -8,6 +8,7 @@ import { DraftTextField } from './draft-text-field';
 
 const SAVE_STATUS_TEXT: Record<SaveStatus, string> = {
   saved: 'Saved in this browser',
+  'invalid-project': 'Not saved: project data needs repair',
   unavailable: 'Not saved: browser storage is blocked',
   'quota-exceeded': 'Not saved: browser storage is full',
   'backup-blocked': 'Not saved: damaged data from an earlier visit is still kept',

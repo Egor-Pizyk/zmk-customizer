@@ -125,3 +125,14 @@ export function assertNever(value: never): never {
 - tsconfig: `strict`, `noUncheckedIndexedAccess`, `verbatimModuleSyntax` (type-only imports), `erasableSyntaxOnly` (bans enums, namespaces, parameter properties).
 - oxlint: `typescript/no-explicit-any`, `typescript/no-non-null-assertion`, `typescript/consistent-type-definitions` (type), `typescript/consistent-type-imports`, `typescript/ban-ts-comment`, `import/no-default-export`, `react/rules-of-hooks`, `react/exhaustive-deps`, `typescript/switch-exhaustiveness-check` (type-aware, if enabled).
 - Review only: no brands, `kind` discriminant, `readonly` everywhere, `satisfies` on catalog, return-vs-throw rule, one concept per file, no logic in components, no effects for derived state.
+
+## Resolved architecture gate exceptions
+
+The dependency matrix in AGENTS §3.1 is checked by scripts/check-architecture.mjs, including relative path normalization, exports and dynamic imports. Pure layers accept no external packages. React/react-dom/fflate are allowed in UI composition; zod/fflate in storage. Catalog raw assets stay in catalog. Tests may read fixtures and use test helpers; production cannot import either tests or test helpers.
+
+- Root UI contracts allowed from workspaces/shared UI: project-context, project-state, preferences-context, workspaces, shortcuts, use-shell-dialogs, use-issue-navigation, import-session, use-global-shortcuts, download-blob, download-text-file. Owner: UI composition. Reason: shared project/preferences/actions. Remove individual allowance when its last consumer disappears; positive import fixtures protect the contract.
+- src/ui/export/get-export-preview.ts is the only runtime UI→generators bridge. Owner: Export. Reason: prepare deterministic generated previews from the shared analysis. Remove only if preview preparation moves to another named composition boundary. generated-file type-only imports are allowed in export consumers.
+- src/main.tsx may import src/styles.css. Owner: composition root. Reason: Vite entry styles. Remove if the stylesheet entry moves.
+- Low-level electrical runtime APIs get-nets, find-wire-contacts, find-crossings, derive-shield-matrix, validate-project, validate-schematic and validate-shield-project are unavailable to UI imports. Use getProjectAnalysis; domain type imports remain allowed.
+
+These static checks do not establish semantic purity or complete alias/data-flow analysis; tests and review remain required.

@@ -1,3 +1,5 @@
+import { validateSchematic } from './validate-schematic';
+import { validateNetsWithoutBoardPin } from './validate-nets-without-board-pin';
 import { findKeyCurrentFlow } from './find-key-current-flow';
 import { getNets } from './get-nets';
 import type { Net, NetBoardPin } from './get-nets';
@@ -31,11 +33,9 @@ function validateBoardPin(
   input: {
     readonly pin: NetBoardPin;
     readonly target: ShieldTarget;
-    readonly hasShort: boolean;
-    readonly hasConflict: boolean;
   },
 ): ValidationIssue[] {
-  const { pin, target, hasShort, hasConflict } = input;
+  const { pin, target } = input;
   const wireIndex = project.wires.findIndex((wire) => wire.id === pin.wireId);
   const path = ['wires', wireIndex, pin.side, 'boardPin'];
   const issues: ValidationIssue[] = [];
@@ -46,32 +46,18 @@ function validateBoardPin(
       path,
     });
   }
-  if (hasShort) {
-    issues.push({
-      code: 'board-pins-shorted',
-      message: `Wire ${wireIndex} joins several controller pins. Remove the short in Schematic.`,
-      path,
-    });
-  }
-  if (hasConflict) {
-    issues.push({
-      code: 'board-pin-conflict',
-      message: `D${pin.boardPin} is assigned to different nets. Choose a unique controller pin in Schematic.`,
-      path,
-    });
-  }
   return issues;
 }
 
 function validateNets(
   project: Project,
   nets: readonly Net[],
-  target: ShieldTarget,
+  input: { readonly target: ShieldTarget; readonly schematicIssues: readonly ValidationIssue[] },
 ): ValidationIssue[] {
+  const { target, schematicIssues } = input;
   const issues: ValidationIssue[] = [];
-  for (const [netIndex, net] of nets.entries()) {
+  for (const net of nets) {
     const firstPin = net.pins[0];
-    const keyIndex = project.keys.findIndex((key) => key.id === firstPin?.keyId);
     if (firstPin === undefined) {
       const wireIndex = project.wires.findIndex((wire) => wire.id === net.wireIds[0]);
       issues.push({
@@ -80,23 +66,24 @@ function validateNets(
         path: ['wires', wireIndex],
       });
     }
-    if (net.boardPins.length === 0 && firstPin !== undefined) {
-      issues.push({
-        code: 'net-without-board-pin',
-        message: `Key ${keyIndex}, pin ${firstPin.pin} has no controller pin. Connect it in Schematic.`,
-        path: ['keys', keyIndex, 'pins', firstPin.pin],
-      });
-    }
-    const hasShort = new Set(net.boardPins.map((pin) => pin.boardPin)).size > 1;
     for (const pin of net.boardPins) {
-      const hasConflict = nets.some(
-        (other, otherIndex) =>
-          otherIndex !== netIndex &&
-          other.boardPins.some((otherPin) => otherPin.boardPin === pin.boardPin),
-      );
-      issues.push(...validateBoardPin(project, { pin, target, hasShort, hasConflict }));
+      issues.push(...validateBoardPin(project, { pin, target }));
     }
   }
+  const electricalCodes = new Set([
+    'board-pin-conflict',
+    'board-pins-shorted',
+    'key-shorted',
+    'keys-in-parallel',
+    'net-without-board-pin',
+  ]);
+  issues.push(
+    ...schematicIssues.filter((issue) => electricalCodes.has(issue.code)),
+    ...validateNetsWithoutBoardPin(
+      project,
+      nets.filter((net) => net.wireIds.length === 0),
+    ),
+  );
   return issues;
 }
 
@@ -172,23 +159,6 @@ function deriveCells(graph: ColoredGraph): Pick<ShieldMatrix, 'rowPins' | 'colPi
   return { rowPins, colPins, cells };
 }
 
-function validateCells(cells: ShieldMatrix['cells']): ValidationIssue[] {
-  return cells.flatMap((cell, keyIndex) =>
-    cells.some(
-      (other, otherIndex) =>
-        otherIndex !== keyIndex && other.row === cell.row && other.col === cell.col,
-    )
-      ? [
-          {
-            code: 'keys-in-parallel' as const,
-            message: `Key ${keyIndex} duplicates a matrix cell. Rewire one of these keys in Schematic.`,
-            path: ['keys', keyIndex],
-          },
-        ]
-      : [],
-  );
-}
-
 function deriveDirection(
   project: Project,
   graph: ColoredGraph,
@@ -237,11 +207,7 @@ function deriveMatrix(
 ): Result<ShieldMatrix, readonly ValidationIssue[]> {
   const matrix = deriveCells(graph);
   const direction = deriveDirection(project, graph);
-  const issues = [
-    ...validateMissingDiodes(project),
-    ...validateCells(matrix.cells),
-    ...(direction.ok ? [] : direction.error),
-  ];
+  const issues = [...validateMissingDiodes(project), ...(direction.ok ? [] : direction.error)];
   if (!direction.ok || issues.length > 0) {
     return { ok: false, error: issues };
   }
@@ -251,7 +217,13 @@ function deriveMatrix(
 export function deriveShieldMatrix(
   project: Project,
   target: ShieldTarget,
+  input: {
+    readonly nets?: readonly Net[] | undefined;
+    readonly schematicIssues?: readonly ValidationIssue[];
+  } = {},
 ): Result<ShieldMatrix, readonly ValidationIssue[]> {
+  const nets = input.nets ?? getNets(project);
+  const schematicIssues = input.schematicIssues ?? validateSchematic(project, nets);
   if (project.keys.length === 0) {
     return {
       ok: false,
@@ -265,20 +237,12 @@ export function deriveShieldMatrix(
       ],
     };
   }
-  const nets = getNets(project);
   const edges = project.keys.map((key, keyIndex) => ({
     keyIndex,
     first: findNet(nets, { keyId: key.id, pin: 1 }),
     second: findNet(nets, { keyId: key.id, pin: 2 }),
   }));
-  const shorts: ValidationIssue[] = edges
-    .filter((edge) => edge.first === edge.second)
-    .map((edge) => ({
-      code: 'key-shorted',
-      message: `Key ${edge.keyIndex} connects both pins to one net. Remove the short in Schematic.`,
-      path: ['keys', edge.keyIndex],
-    }));
-  const issues = [...validateNets(project, nets, target), ...shorts];
+  const issues = validateNets(project, nets, { target, schematicIssues });
   if (issues.length > 0) {
     return { ok: false, error: [...issues, ...validateMissingDiodes(project)] };
   }

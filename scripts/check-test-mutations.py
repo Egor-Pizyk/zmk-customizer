@@ -37,9 +37,9 @@ MUTATIONS = [['cross-family pin retention',
   ['src/generators/generate-shield-files.test.ts']],
  ['export ignores validation',
   'src/ui/export/get-export-preview.ts',
-  ': input.issues;',
-  ': [];',
-  ['src/ui/app.test.ts']],
+  'issues.length === 0 && matrix.ok',
+  'matrix.ok',
+  ['src/ui/export/get-export-preview.test.ts']],
  ['controller select loses change handler',
   'src/ui/schematic/controller-panel.tsx',
   'onChange={handleChange}',
@@ -55,6 +55,19 @@ MUTATIONS = [['cross-family pin retention',
   'project.shieldName ?? toShieldName(project.name)',
   'toShieldName(project.name)',
   ['src/domain/get-shield-name.test.ts']]]
+
+MUTATIONS += [
+ ['backup discard leaves damaged bytes', 'src/storage/project-storage.ts', 'localStorage.removeItem(PROJECT_BACKUP_STORAGE_KEY);', '', ['src/ui/app-storage.test.tsx']],
+ ['imprecise entity IDs', 'src/domain/create-entity-id.ts', 'BigInt(suffix)', 'BigInt(Number(suffix))', ['src/domain/create-entity-id.test.ts', 'src/storage/project-file.test.ts']],
+ ['stale imports replace newest request', 'src/ui/import-session.ts', "return 'superseded';", "return 'current';", ['src/ui/app-project-files.test.ts']],
+ ['import overwrites edited project', 'src/ui/import-session.ts', "token.revision === revision ? 'current' : 'changed'", "'current'", ['src/ui/app-project-files.test.ts']],
+ ['empty move destroys redo', 'src/domain/move-keys.ts', '? project', '? { ...project }', ['src/ui/project-noops.test.ts']],
+ ['identical bends creates a new project', 'src/domain/set-wire-bends.ts', '? project', '? { ...project }', ['src/domain/set-wire-bends.test.ts']],
+ ['geometry argument stack overflow', 'src/domain/find-key-layout-center.ts', 'return {', 'Math.max(...project.keys.map(key => key.xU)); return {', ['src/domain/find-key-layout-center.test.ts']],
+ ['oversized wire bends accepted', 'src/storage/project-schema.ts', '.max(PROJECT_BUDGET.bendsPerWire)', '', ['src/storage/project-budget.test.ts']],
+ ['invalid project mislabeled as unavailable', 'src/storage/project-storage.ts', "error: { kind: 'invalid-project', reason: serialized.error }", "error: { kind: 'storage-unavailable' }", ['src/ui/app-storage.test.tsx']],
+ ['incompatible draft accepts hold key', 'src/ui/bindings/pick-value.ts', "draft.behaviorId !== 'mt'", "false", ['src/ui/bindings/pick-slot.test.ts']],
+]
 
 def run_mutation(mutation, report_path):
     label, relative, before, after, tests = mutation

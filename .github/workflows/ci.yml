@@ -22,3 +22,10 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - run: docker build --target prod -t zmk-customizer .
+
+  mutations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: make install
+      - run: make test-mutations

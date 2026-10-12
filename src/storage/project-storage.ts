@@ -1,3 +1,4 @@
+import { SHIELD_TARGET } from '../catalog/shield-target';
 import { createProject } from '../domain/create-project';
 import type { Project, Result } from '../domain/types';
 import { parseProjectFile } from './parse-project-file';
@@ -8,6 +9,11 @@ export const PROJECT_STORAGE_KEY = 'zmk-customizer:project';
 export const PROJECT_BACKUP_STORAGE_KEY = 'zmk-customizer:project-backup';
 
 export type StorageError = 'unavailable' | 'quota-exceeded';
+
+export type SaveError =
+  | { readonly kind: 'invalid-project'; readonly reason: string }
+  | { readonly kind: 'storage-unavailable' }
+  | { readonly kind: 'quota-exceeded' };
 
 export type DamageReason = 'not-json' | 'not-project' | 'newer-version';
 
@@ -85,10 +91,16 @@ function toDamageReason(error: ProjectFileError): DamageReason {
 export function loadProject(): ProjectLoadResult {
   const stored = readItem(PROJECT_STORAGE_KEY);
   if (!stored.ok) {
-    return { project: createProject(), status: { kind: 'unavailable' } };
+    return {
+      project: createProject({ controllerId: SHIELD_TARGET.boardId }),
+      status: { kind: 'unavailable' },
+    };
   }
   if (stored.value === undefined) {
-    return withBackup({ project: createProject(), status: { kind: 'missing' } });
+    return withBackup({
+      project: createProject({ controllerId: SHIELD_TARGET.boardId }),
+      status: { kind: 'missing' },
+    });
   }
   const parsed = parseProjectFile(stored.value);
   if (parsed.ok) {
@@ -97,7 +109,10 @@ export function loadProject(): ProjectLoadResult {
   const copy = copyToBackup(stored.value);
   const reason = toDamageReason(parsed.error);
   const status = { kind: 'damaged', reason, isBackupBlocked: !copy.isCopied } as const;
-  return withBackupText({ project: createProject(), status }, copy.backupText);
+  return withBackupText(
+    { project: createProject({ controllerId: SHIELD_TARGET.boardId }), status },
+    copy.backupText,
+  );
 }
 
 /** After a discard while blocked: moves the untouched damaged main value into the empty slot. */
@@ -132,10 +147,16 @@ export function readStoredProjectText(): string | undefined {
   return stored.ok ? stored.value : undefined;
 }
 
-export function saveProject(project: Project): Result<void, StorageError> {
+export function saveProject(project: Project): Result<void, SaveError> {
   const serialized = serializeProject(project);
   if (!serialized.ok) {
-    return { ok: false, error: 'unavailable' };
+    return { ok: false, error: { kind: 'invalid-project', reason: serialized.error } };
   }
-  return writeItem(PROJECT_STORAGE_KEY, serialized.value);
+  const written = writeItem(PROJECT_STORAGE_KEY, serialized.value);
+  return written.ok
+    ? written
+    : {
+        ok: false,
+        error: { kind: written.error === 'unavailable' ? 'storage-unavailable' : 'quota-exceeded' },
+      };
 }

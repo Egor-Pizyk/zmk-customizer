@@ -12,7 +12,6 @@ import type {
   OutputCommand,
 } from '../../domain/types';
 import { findSlotStroke } from './find-slot-stroke';
-
 /** One part of a binding the picker edits (spec 006 FR-002). */
 export type SlotRef =
   | { readonly kind: 'behavior' }
@@ -29,16 +28,17 @@ export type SlotRef =
 export type DraftBehaviorId = 'kp' | 'sk' | 'kt' | 'mt' | 'bt' | 'out' | LayerBinding['kind'];
 
 /** A chosen behavior with the values picked so far; stored only when complete (FR-009). */
-export type BindingDraft = {
-  readonly behaviorId: DraftBehaviorId;
-  /** The key of kp/sk/kt, the tap of mt and lt. */
-  readonly key?: KeyStroke;
-  readonly hold?: KeyStroke;
-  readonly btCommand?: BluetoothCommand | BluetoothProfileCommand;
-  readonly profile?: number;
-  readonly outCommand?: OutputCommand;
-  readonly layerId?: string;
-};
+export type BindingDraft =
+  | { readonly behaviorId: 'kp' | 'sk' | 'kt'; readonly key?: KeyStroke }
+  | { readonly behaviorId: 'mt'; readonly key?: KeyStroke; readonly hold: KeyStroke }
+  | {
+      readonly behaviorId: 'bt';
+      readonly btCommand?: BluetoothCommand | BluetoothProfileCommand;
+      readonly profile?: number;
+    }
+  | { readonly behaviorId: 'out'; readonly outCommand?: OutputCommand }
+  | { readonly behaviorId: 'mo' | 'tog' | 'to' | 'sl'; readonly layerId?: string }
+  | { readonly behaviorId: 'lt'; readonly key?: KeyStroke; readonly layerId?: string };
 
 /** What the binding line shows: the stored binding, a draft, or nothing to share. */
 export type LineSource =
@@ -172,11 +172,14 @@ function getDraftSlots(draft: BindingDraft): readonly LineSlot[] {
     case 'to':
     case 'sl':
     case 'lt': {
-      const values = { layerId: draft.layerId, tap: toStrokeValue(draft.key) };
+      const values = {
+        layerId: draft.layerId,
+        tap: draft.behaviorId === 'lt' ? toStrokeValue(draft.key) : undefined,
+      };
       return toLayerSlots(draft.behaviorId, values);
     }
     default: {
-      return assertNever(draft.behaviorId);
+      return assertNever(draft);
     }
   }
 }

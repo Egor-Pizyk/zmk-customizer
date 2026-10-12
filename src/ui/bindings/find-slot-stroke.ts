@@ -4,7 +4,11 @@ import type { LineSource, SlotRef } from './binding-slots';
 /** The key stroke an open slot edits, stored or drafted. */
 export function findSlotStroke(source: LineSource, slot: SlotRef): KeyStroke | undefined {
   if (source.kind === 'draft') {
-    return slot.kind === 'hold' ? source.draft.hold : source.draft.key;
+    const { draft } = source;
+    if (slot.kind === 'hold') {
+      return draft.behaviorId === 'mt' ? draft.hold : undefined;
+    }
+    return 'key' in draft ? draft.key : undefined;
   }
   if (source.kind !== 'binding') {
     return undefined;

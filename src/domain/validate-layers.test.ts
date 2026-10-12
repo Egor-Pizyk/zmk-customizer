@@ -2,7 +2,16 @@ import { expect, it } from 'vitest';
 import { buildProject } from '../../tests/helpers/build-project';
 import { validateLayers } from './validate-layers';
 
-const CATALOG = { maxLayerCount: 32 };
+const CATALOG = {
+  maxLayerCount: 32,
+  shieldLimits: {
+    keyboardNameBytes: 16,
+    layerNodeNameLength: 31,
+    layerDisplayNameBytes: 19,
+    minLayoutCell: -32_768,
+    maxLayoutCell: 32_767,
+  },
+};
 
 function withNames(names: readonly string[]) {
   return buildProject({

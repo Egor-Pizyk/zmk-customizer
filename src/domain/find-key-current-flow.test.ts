@@ -12,7 +12,10 @@ it.each([
 ] as const)(
   'exposes current polarity on pin %s and reverses without rewiring',
   ({ pin, otherPin }) => {
-    const project = { ...createProject(), keys: [{ id: 'k1', xU: 0, yU: 0 }] };
+    const project = {
+      ...createProject({ controllerId: 'nice_nano_v2' }),
+      keys: [{ id: 'k1', xU: 0, yU: 0 }],
+    };
     expect(findKeyCurrentFlow(project.keys[0])).toBeUndefined();
     const added = toggleKeyDiode(project, { keyId: 'k1', pin });
     expect(findKeyCurrentFlow(added.keys[0])).toEqual({ fromPin: otherPin, toPin: pin });

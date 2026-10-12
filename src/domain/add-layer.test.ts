@@ -28,7 +28,18 @@ it('keeps a copied reference deleted after its last project reference is replace
   const added = addLayer(replaced, { reservedLayerIds: [copied.layerId] });
   expect(added.layers[1]?.id).toBe('l2');
   const pasted = setBindings(added, { layerIndex: 0, keyIds: ['k2'], binding: copied });
-  const catalog = { keycodeNames: new Set<string>(), bluetoothProfileCount: 5, maxLayerCount: 32 };
+  const catalog = {
+    keycodeNames: new Set<string>(),
+    bluetoothProfileCount: 5,
+    maxLayerCount: 32,
+    shieldLimits: {
+      keyboardNameBytes: 16,
+      layerNodeNameLength: 31,
+      layerDisplayNameBytes: 19,
+      minLayoutCell: -32_768,
+      maxLayoutCell: 32_767,
+    },
+  };
   expect(validateBindings(pasted, catalog).map(({ code }) => code)).toEqual([
     'binding-layer-missing',
   ]);
@@ -79,7 +90,18 @@ it('never reuses the id of a deleted layer that a key still points at (research 
   const added = addLayer(removeLayer(project, { layerIndex: 1 }));
   expect(added.layers.map((layer) => layer.id)).toEqual(['l0', 'l2']);
   expect(added.layers[0]?.bindings['k1']).toEqual({ kind: 'mo', layerId: 'l1' });
-  const catalog = { keycodeNames: new Set<string>(), bluetoothProfileCount: 5, maxLayerCount: 32 };
+  const catalog = {
+    keycodeNames: new Set<string>(),
+    bluetoothProfileCount: 5,
+    maxLayerCount: 32,
+    shieldLimits: {
+      keyboardNameBytes: 16,
+      layerNodeNameLength: 31,
+      layerDisplayNameBytes: 19,
+      minLayoutCell: -32_768,
+      maxLayoutCell: 32_767,
+    },
+  };
   expect(validateBindings(added, catalog).map(({ code }) => code)).toEqual([
     'binding-layer-missing',
   ]);

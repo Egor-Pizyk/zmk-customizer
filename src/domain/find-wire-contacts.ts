@@ -39,14 +39,13 @@ function toShape(project: Project, wire: Wire): WireShape {
     const from = path[index] ?? to;
     return { from, to, isHorizontal: from.yU === to.yU };
   });
-  const xs = path.map((point) => point.xU);
-  const ys = path.map((point) => point.yU);
-  const bounds = {
-    minX: Math.min(...xs),
-    maxX: Math.max(...xs),
-    minY: Math.min(...ys),
-    maxY: Math.max(...ys),
-  };
+  const bounds = { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity };
+  for (const point of path) {
+    bounds.minX = Math.min(bounds.minX, point.xU);
+    bounds.maxX = Math.max(bounds.maxX, point.xU);
+    bounds.minY = Math.min(bounds.minY, point.yU);
+    bounds.maxY = Math.max(bounds.maxY, point.yU);
+  }
   return { wire, path, segments, bounds };
 }
 

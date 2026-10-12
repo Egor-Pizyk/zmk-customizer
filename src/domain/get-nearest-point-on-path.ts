@@ -2,7 +2,7 @@ import { roundU } from './round-u';
 import type { WirePoint } from './types';
 
 function clamp(value: number, bounds: readonly [number, number]): number {
-  return Math.min(Math.max(value, Math.min(...bounds)), Math.max(...bounds));
+  return Math.min(Math.max(value, Math.min(bounds[0], bounds[1])), Math.max(bounds[0], bounds[1]));
 }
 
 // Paths are orthogonal, so the nearest point on a segment clamps one coordinate and keeps the other.

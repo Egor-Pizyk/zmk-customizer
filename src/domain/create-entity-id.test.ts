@@ -16,3 +16,24 @@ it('ignores ids with another prefix', () => {
 it('creates layer ids (spec 007)', () => {
   expect(createEntityId({ prefix: 'l', existingIds: ['l0', 'l3'] })).toBe('l4');
 });
+
+it.each(['k', 'w', 'l'] as const)(
+  'allocates %s ids beyond Number precision without exponent notation',
+  (prefix) => {
+    expect(createEntityId({ prefix, existingIds: [`${prefix}9007199254740992`] })).toBe(
+      `${prefix}9007199254740993`,
+    );
+    expect(
+      createEntityId({ prefix, existingIds: [`${prefix}999999999999999999999999999999`] }),
+    ).toBe(`${prefix}1000000000000000000000000000000`);
+    expect(createEntityId({ prefix, existingIds: [`${prefix}0009`, `${prefix}10`] })).toBe(
+      `${prefix}11`,
+    );
+  },
+);
+
+it('ignores non-decimal suffixes', () => {
+  expect(createEntityId({ prefix: 'k', existingIds: ['k1e3', 'k', 'k-2', 'k2.5', 'k3'] })).toBe(
+    'k4',
+  );
+});

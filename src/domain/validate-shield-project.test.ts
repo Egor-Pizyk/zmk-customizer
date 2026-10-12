@@ -8,7 +8,18 @@ const { getBoard: getControllerBoard } = getControllerFixtures();
 const options = {
   board: getControllerBoard('nice_nano_v2'),
   target: { boardId: 'nice_nano_v2', gpioPins: [2, 6, 8, 9, 10, 11, 17, 20, 22, 24, 29, 31] },
-  bindingsCatalog: { keycodeNames: new Set(['A']), bluetoothProfileCount: 5, maxLayerCount: 32 },
+  bindingsCatalog: {
+    keycodeNames: new Set(['A']),
+    bluetoothProfileCount: 5,
+    maxLayerCount: 32,
+    shieldLimits: {
+      keyboardNameBytes: 16,
+      layerNodeNameLength: 31,
+      layerDisplayNameBytes: 19,
+      minLayoutCell: -32_768,
+      maxLayoutCell: 32_767,
+    },
+  },
 };
 it('accepts a complete project without mutating schemaVersion 5', () => {
   const project = buildMatrixProject();

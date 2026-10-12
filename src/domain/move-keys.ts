@@ -8,7 +8,11 @@ export function moveKeys(
   const positionByKeyId = new Map(input.moves.map((move) => [move.keyId, move.position]));
   const keys = project.keys.map((key) => {
     const position = positionByKeyId.get(key.id);
-    return position === undefined ? key : { ...key, xU: position.xU, yU: position.yU };
+    return position === undefined || (key.xU === position.xU && key.yU === position.yU)
+      ? key
+      : { ...key, xU: position.xU, yU: position.yU };
   });
-  return pruneInsulatedCrossings({ ...project, keys });
+  return keys.every((key, index) => key === project.keys[index])
+    ? project
+    : pruneInsulatedCrossings({ ...project, keys });
 }

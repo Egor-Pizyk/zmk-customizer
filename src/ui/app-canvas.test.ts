@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { screen, fireEvent, waitFor, within } from '@testing-library/react';
-import { expect, it } from 'vitest';
+import { expect, it, vi } from 'vitest';
 import { getDefinedValue } from '../../tests/helpers/defined-value';
 import { renderApp } from '../../tests/helpers/render-app';
 import { buildProject } from '../../tests/helpers/build-project';
@@ -179,4 +179,79 @@ it('middle-button pan commits the viewport once without moving or selecting keys
     panYPx: 50,
   });
   expect(loadProject().project).toEqual(before);
+});
+
+it('keeps Redo and avoids autosave when a pointer drag ends at its original position', async () => {
+  const { user } = renderApp(simpleProject());
+  preparePointerCapture();
+  const name = screen.getByRole('textbox', { name: 'Name' });
+  await user.clear(name);
+  await user.type(name, 'Edited{Enter}');
+  await user.click(screen.getByRole('button', { name: /^Undo/u }));
+  const before = loadProject().project;
+  const write = vi.spyOn(Storage.prototype, 'setItem');
+  const canvas = screen.getByRole('application', { name: /^Schematic canvas/u });
+  const key = screen.getByRole('graphics-symbol', { name: /^Key 0\b/u });
+  fireEvent.pointerDown(key, { button: 0, pointerId: 1, clientX: 24, clientY: 24 });
+  fireEvent.pointerUp(canvas, { button: 0, pointerId: 1, clientX: 24, clientY: 24 });
+  expect(write).not.toHaveBeenCalled();
+  expect(loadProject().project).toEqual(before);
+  await user.click(screen.getByRole('button', { name: /^Redo/u }));
+  expect(loadProject().project.name).toBe('Edited');
+});
+
+it('cancels an in-progress wire without saving and commits a completed wire', async () => {
+  const { user } = renderApp(simpleProject());
+  preparePointerCapture();
+  const before = loadProject().project;
+  const canvas = screen.getByRole('application', { name: /^Schematic canvas/u });
+  await user.click(screen.getByRole('radio', { name: /^Wire/u }));
+  fireEvent.pointerDown(canvas, { button: 0, pointerId: 1, clientX: 14.4, clientY: 17.6 });
+  fireEvent.pointerMove(canvas, { pointerId: 1, clientX: 100, clientY: 100 });
+  fireEvent.keyDown(canvas, { key: 'Escape', code: 'Escape' });
+  expect(loadProject().project).toEqual(before);
+  await user.click(screen.getByRole('radio', { name: /^Wire/u }));
+  fireEvent.pointerDown(getDefinedValue(canvas.querySelector('[data-key-id="k1"][data-pin="1"]')), {
+    button: 0,
+    pointerId: 2,
+    clientX: 14.4,
+    clientY: 17.6,
+  });
+  fireEvent.pointerDown(getDefinedValue(canvas.querySelector('[data-key-id="k2"][data-pin="1"]')), {
+    button: 0,
+    pointerId: 2,
+    clientX: 158.4,
+    clientY: 17.6,
+  });
+  expect(loadProject().project.wires).toHaveLength(1);
+  expect(loadProject().project.wires[0]?.start).toEqual({ kind: 'key-pin', keyId: 'k1', pin: 1 });
+  expect(loadProject().project.wires[0]?.end).toEqual({ kind: 'key-pin', keyId: 'k2', pin: 1 });
+});
+
+it('keeps saved bends and Redo when committing an unchanged bend coordinate', async () => {
+  const project = {
+    ...simpleProject(),
+    wires: [
+      {
+        id: 'w1',
+        start: { kind: 'key-pin' as const, keyId: 'k1', pin: 1 as const },
+        end: { kind: 'key-pin' as const, keyId: 'k2', pin: 1 as const },
+        bends: [{ xU: 1, yU: 1 }],
+      },
+    ],
+  };
+  const { user } = renderApp(project);
+  const name = screen.getByRole('textbox', { name: 'Name' });
+  await user.clear(name);
+  await user.type(name, 'Edited{Enter}');
+  await user.click(screen.getByRole('button', { name: /^Undo/u }));
+  const before = loadProject().project;
+  const write = vi.spyOn(Storage.prototype, 'setItem');
+  const bend = screen.getByRole('spinbutton', { name: 'Wire 0 bend 0 X (u)' });
+  await user.clear(bend);
+  await user.type(bend, '1{Enter}');
+  expect(write).not.toHaveBeenCalled();
+  expect(loadProject().project).toEqual(before);
+  await user.click(screen.getByRole('button', { name: /^Redo/u }));
+  expect(loadProject().project.name).toBe('Edited');
 });

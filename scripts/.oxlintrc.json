@@ -1,0 +1,11 @@
+{
+  "plugins": ["eslint", "unicorn", "import"],
+  "options": { "typeAware": false },
+  "categories": { "correctness": "error", "suspicious": "error" },
+  "rules": {
+    "eslint/no-eval": "error",
+    "eslint/no-var": "error",
+    "eslint/eqeqeq": "error",
+    "eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
+  }
+}

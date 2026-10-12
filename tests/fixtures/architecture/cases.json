@@ -1,0 +1,177 @@
+[
+  {
+    "file": "src/domain/probe.ts",
+    "code": "export const value = localStorage.getItem('x');",
+    "diagnostic": "purity"
+  },
+  {
+    "file": "src/domain/probe.ts",
+    "code": "const root = globalThis; const { localStorage: saved } = root; export const value = saved.getItem('x');",
+    "diagnostic": "purity"
+  },
+  {
+    "file": "src/domain/probe.ts",
+    "code": "import { readFile } from 'node:fs/promises';",
+    "diagnostic": "external-import"
+  },
+  {
+    "file": "src/domain/probe.ts",
+    "code": "const Clock = Date; export const time = new Clock();",
+    "diagnostic": "purity"
+  },
+  {
+    "file": "src/domain/probe.ts",
+    "code": "const { now: readTime } = Date; export const time = readTime();",
+    "diagnostic": "purity"
+  },
+  {
+    "file": "src/storage/probe.ts",
+    "code": "export { useProject } from '../ui/project-context';",
+    "diagnostic": "layer-import"
+  },
+  {
+    "file": "src/storage/probe.ts",
+    "code": "export const load = () => import('../domain/../ui/workspaces');",
+    "diagnostic": "layer-import"
+  },
+  {
+    "file": "src/ui/components/probe.ts",
+    "code": "export { useProject } from '../project-context';",
+    "diagnostic": "layer-import"
+  },
+  {
+    "file": "src/ui/components/probe.ts",
+    "code": "import type { ControllerBoard } from '../../catalog/../domain/types';",
+    "diagnostic": "layer-import"
+  },
+  {
+    "file": "src/ui/schematic/probe.ts",
+    "code": "export { createDraft } from '../bindings/draft-state';",
+    "diagnostic": "layer-import"
+  },
+  {
+    "file": "src/ui/probe.ts",
+    "code": "import { buildProject } from '../../tests/helpers/build-project';",
+    "diagnostic": "test-import"
+  },
+  {
+    "file": "src/domain/create-entity-id.ts",
+    "code": "const convert = Number; export const value = convert(id.slice(1));",
+    "diagnostic": "lossy-id"
+  },
+  {
+    "file": "src/domain/probe.ts",
+    "code": "export const value = Math.max(...points);",
+    "diagnostic": "argument-spread"
+  },
+  {
+    "file": "src/ui/probe.test.ts",
+    "code": "vi.mock('react', () => ({useState: vi.fn()}));",
+    "diagnostic": "react-mock"
+  },
+  {
+    "file": "src/ui/probe.test.ts",
+    "code": "it.only('ignored', () => {});",
+    "diagnostic": "focused-test"
+  },
+  {
+    "file": "src/domain/probe.ts",
+    "code": "import type { Project } from './types'; export const values = new Map();",
+    "diagnostic": null
+  },
+  {
+    "file": "src/catalog/probe.ts",
+    "code": "import type { Project } from '../domain/types'; export const values = [] as const;",
+    "diagnostic": null
+  },
+  {
+    "file": "src/ui/probe.ts",
+    "code": "import { createProject } from '../domain/create-project';",
+    "diagnostic": null
+  },
+  {
+    "file": "src/ui/components/probe.ts",
+    "code": "export { Button } from './button';",
+    "diagnostic": null
+  },
+  {
+    "file": "src/domain/probe.test.ts",
+    "code": "import { readFile } from 'node:fs/promises';",
+    "diagnostic": null
+  },
+  {
+    "file": "src/domain/probe.ts",
+    "code": "export const date = new Date('2000-01-01');",
+    "diagnostic": null
+  },
+  {
+    "file": "src/ui/schematic/probe.ts",
+    "code": "import { getNets } from '../../domain/get-nets';",
+    "diagnostic": "layer-import"
+  },
+  {
+    "file": "src/ui/schematic/probe.ts",
+    "code": "import type { Net } from '../../domain/get-nets';",
+    "diagnostic": null
+  },
+  {
+    "file": "src/ui/probe.test.ts",
+    "code": "import { vi as mocker } from 'vitest'; mocker.mock('react');",
+    "diagnostic": "react-mock"
+  },
+  {
+    "file": "src/ui/export/get-export-preview.ts",
+    "code": "import { generateRepositoryFiles } from '../../generators/generate-repository-files';",
+    "diagnostic": null
+  },
+  {
+    "file": "src/ui/export/probe.ts",
+    "code": "import type { GeneratedFile } from '../../generators/generated-file';",
+    "diagnostic": null
+  },
+  {
+    "file": "src/ui/schematic/probe.ts",
+    "code": "import { useProject } from '../project-context';",
+    "diagnostic": null
+  },
+  {
+    "file": "src/main.tsx",
+    "code": "import './styles.css';",
+    "diagnostic": null
+  },
+  {
+    "file": "src/domain/probe.ts",
+    "code": "const { now: clock } = Date; export const tick = clock();",
+    "diagnostic": "purity"
+  },
+  {
+    "file": "src/domain/probe.ts",
+    "code": "const CurrentDate = Date; export const date = new CurrentDate();",
+    "diagnostic": "purity"
+  },
+  {
+    "file": "src/domain/probe.ts",
+    "code": "const { localStorage: disk } = globalThis; export const value = disk.getItem('x');",
+    "diagnostic": "purity"
+  },
+  {
+    "file": "src/ui/probe.test.ts",
+    "code": "import * as React from 'react'; vi.spyOn(React, 'useState');",
+    "diagnostic": "react-mock"
+  },
+  {
+    "file": "src/domain/probe.ts",
+    "code": "export const date = new globalThis.Date();",
+    "diagnostic": "purity"
+  },
+  {
+    "file": "src/domain/probe.ts",
+    "code": "export const peak = Math.max.apply(null, values);",
+    "diagnostic": "argument-spread"
+  },
+  {
+    "file": "src/domain/probe.ts",
+    "code": "export const peak = globalThis.Math.max(...values);",
+    "diagnostic": "argument-spread"
+  }
+]

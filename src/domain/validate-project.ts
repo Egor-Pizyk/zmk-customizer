@@ -6,9 +6,6 @@ import { validateSchematic } from './validate-schematic';
 import type { Project, ValidationIssue } from './types';
 
 const SHIELD_NAME_PATTERN = /^[a-z_][a-z0-9_]*$/u;
-// CONFIG_ZMK_KEYBOARD_NAME is checked against BT_DEVICE_NAME_MAX (16) with strlen, i.e. in bytes
-// (docs/zmk/kconfig-options.md §1).
-const MAX_KEYBOARD_NAME_BYTES = 16;
 
 function validateShieldName(project: Project): readonly ValidationIssue[] {
   if (project.shieldName === undefined) {
@@ -35,15 +32,18 @@ function validateShieldName(project: Project): readonly ValidationIssue[] {
       ];
 }
 
-function validateKeyboardName(project: Project): readonly ValidationIssue[] {
+function validateKeyboardName(
+  project: Project,
+  maxKeyboardNameBytes: number,
+): readonly ValidationIssue[] {
   const byteCount = new TextEncoder().encode(project.name).length;
-  if (byteCount <= MAX_KEYBOARD_NAME_BYTES) {
+  if (byteCount <= maxKeyboardNameBytes) {
     return [];
   }
   return [
     {
       code: 'keyboard-name-too-long',
-      message: `The keyboard name is ${byteCount} bytes; keyboards can announce at most ${MAX_KEYBOARD_NAME_BYTES}. Shorten it (non-Latin letters count as 2–3).`,
+      message: `The keyboard name is ${byteCount} bytes; keyboards can announce at most ${maxKeyboardNameBytes}. Shorten it (non-Latin letters count as 2–3).`,
       path: ['name'],
     },
   ];
@@ -52,11 +52,12 @@ function validateKeyboardName(project: Project): readonly ValidationIssue[] {
 export function validateProject(
   project: Project,
   catalog: BindingsCatalog,
+  schematicIssues: readonly ValidationIssue[] = validateSchematic(project),
 ): readonly ValidationIssue[] {
   return [
     ...validateShieldName(project),
-    ...validateKeyboardName(project),
-    ...validateSchematic(project),
+    ...validateKeyboardName(project, catalog.shieldLimits.keyboardNameBytes),
+    ...schematicIssues,
     ...validateLayers(project, catalog),
     ...validateBindings(project, catalog),
   ];
