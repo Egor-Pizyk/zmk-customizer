@@ -524,3 +524,11 @@ Deviations from the task text, each smaller or forced by lint/type rules; code c
 ### Not done by the implementing agent
 
 - **T071** (browser verification of Alt+Shift combos) and the interactive rows of **T078** need a real browser session; no browser automation is available here and adding one would be a new dependency. Verified instead: `make check`, `npm run build`, production image headers and CSP, `theme-init.js` served before the module entry, and the built CSS theme mechanism (LightningCSS lowers `light-dark()` to `--lightningcss-light/dark` variables, overridden by `:root[data-theme=light|dark]`).
+
+## Maintenance — 2026-10-12
+
+- [X] Remove minimap and its settings/storage field; older preferences retain all other values (regression test).
+- [X] Reduce wheel, button and shortcut zoom increments by one third; test factors, reversible wheel zoom and shortcut output.
+- [X] Add Center keyboard on shared canvas controls, preserving zoom; test empty/single/asymmetric/negative layouts and viewport placement.
+- [X] `make check`: 698 tests pass; production build passes.
+- [ ] Browser smoke test: unavailable in this session (no browser connector; native Chrome access denied by Computer Use). Dev server runs at http://localhost:5173.

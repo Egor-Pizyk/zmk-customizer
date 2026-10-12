@@ -16,7 +16,6 @@ The browser `localStorage` is the only persisted interface in this feature. Two 
   "isGridVisible": true,
   "isSnapEnabled": true,
   "areRulersVisible": true,
-  "isMinimapVisible": true,
   "activeWorkspaceId": "schematic",
   "isIssuesPanelOpen": false,
   "isPartsListOpen": true,
@@ -46,7 +45,7 @@ Field rules: `data-model.md`. `isPartsListOpen` (added by spec 003, optional, de
 ## Write behavior
 
 - Only `changePreferences(change)` and `resetSettings()` write, and they write the whole object. `change` may be an updater `(latest) => changes`; both merge into the latest state, not a render snapshot, so a delayed gesture commit never reverts a newer change.
-- `resetSettings()` resets only the settings-dialog fields (theme, grid size, grid, snap, rulers, minimap; FR-018); workspace, views, tool window and panel state are kept.
+- `resetSettings()` resets only the settings-dialog fields (theme, grid size, grid, snap, rulers; FR-018); workspace, views, tool window and panel state are kept.
 - A write failure (quota, blocked) never throws to the UI; `storageStatus` becomes `unavailable`.
 
 ## `theme-init.js`
@@ -58,3 +57,5 @@ Field rules: `data-model.md`. `isPartsListOpen` (added by spec 003, optional, de
 ## Migration
 
 A future `version: 2` adds a `v1 → v2` migration in `src/storage/`. Until then, any other version reads as `corrupt`.
+
+Maintenance 2026-10-12: `isMinimapVisible` is removed; the preferences parser ignores that obsolete field in older values without resetting other settings.

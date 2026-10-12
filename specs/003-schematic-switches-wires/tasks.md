@@ -318,3 +318,9 @@ Deviations from the task text, each smaller or forced by lint/type rules.
 - **Wire snaps before the click**: `getHoverPreview` (tested) derives the draft end from the same `toDraftTarget` a click uses, so the preview shows exactly where the wire will attach; an accent ring marks the pin or wire point. Hover is tracked only for the Key and Wire tools; `SurfaceContent.onPointerLeave` clears it.
 - **Key preview**: the Key tool draws a dashed accent outline where the key would go, danger color when the cell is taken (FR-010a).
 - Verified in Chrome with a puppeteer script outside the repo (three keys in a row, one wire from key 0 to key 2: key 1 pin 1 reports "wire 0").
+
+## Maintenance — 2026-10-12
+
+- [X] Regression test: connecting two key pins leaves both filled even when the net has no board pin; unwired pins retain their warning.
+- [X] Classify unconnected pin marks by `key-pin-unconnected`, keeping wiring-completeness checks in Problems.
+- [X] `make check`: 698 tests pass.

@@ -3,15 +3,14 @@ import type { PointerEvent, RefObject } from 'react';
 import type { CanvasWorkspaceId, Viewport } from '../../storage/preferences';
 import { usePreferences } from '../preferences-context';
 import type { PreferencesChange } from '../preferences-context';
-import { zoomAt } from './viewport';
+import { WHEEL_ZOOM_STEP, zoomAt } from './viewport';
 import type { ScreenPoint } from './viewport';
 
 const WHEEL_COMMIT_DELAY_MS = 200;
-const WHEEL_ZOOM_STEP = 1.1;
 const MIDDLE_BUTTON = 1;
 
 // A draft remembers the stored viewport it started from. When the stored value changes from
-// outside (shortcut, button, minimap click), the draft no longer matches and is ignored, so a
+// outside (shortcut or button), the draft no longer matches and is ignored, so a
 // stale gesture can never overwrite a newer view (research R15).
 type Draft = {
   readonly base: Viewport;

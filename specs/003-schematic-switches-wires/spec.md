@@ -227,3 +227,9 @@ Keys, their positions and numbers, wires with their bend points and end attachme
 - The last line of the request ("all pin connections by wires and wire ends bound to board pins") is read as: all of these are stored in the project config (FR-026).
 - Depends on project foundation (roadmap 002, built first): the project, autosave, project file Open/Save and undo/redo come from it; this feature only adds schematic data to the project and one project change per gesture.
 - The problems panel, tab badges, tool window, grid, snapping and shortcut help come from spec 001.
+
+## Maintenance revision — 2026-10-12
+
+A pin with a wire to another key pin must render as connected. Only `key-pin-unconnected` marks a pin as unconnected; the path of a different validation issue must not change its connection indicator. A connection awaiting a board pin is a separate wiring-completeness issue (`net-without-board-pin`), not an unconnected key pin. Actual shorts and other wiring checks remain enforced.
+
+Acceptance: connect pins of two different keys without a board pin; both connected pin dots are filled and neither gets the unconnected warning. The other unwired pins still show their warning; the board-pin requirement remains in Problems.

@@ -25,7 +25,6 @@ No keyboard project data in this feature. All state is UI state; persisted state
 | `isGridVisible` | boolean | `true` | independent of snapping |
 | `isSnapEnabled` | boolean | `true` | |
 | `areRulersVisible` | boolean | `true` | |
-| `isMinimapVisible` | boolean | `true` | |
 | `activeWorkspaceId` | `WorkspaceId` | `'schematic'` | |
 | `isIssuesPanelOpen` | boolean | `false` | |
 | `toolWindow` | `ToolWindowState` | see below | |

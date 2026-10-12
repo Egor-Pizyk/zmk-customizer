@@ -16,7 +16,7 @@ import type { ScreenPoint, WorldPoint } from './viewport';
 type WorkSurfaceProps = {
   /** Canvas identity for labels and data attributes; the viewport is shared across canvases. */
   readonly workspaceId: CanvasWorkspaceId;
-  /** Overlays inside the surface: tool window, minimap. */
+  /** Overlays inside the surface, such as the tool window. */
   readonly children?: ReactNode;
   /** World-space content in key units, drawn above the grid. */
   readonly content?: SurfaceContent;

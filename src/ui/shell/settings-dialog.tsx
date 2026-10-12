@@ -74,10 +74,6 @@ function DisplaySwitches() {
     changePreferences({ areRulersVisible });
   }
 
-  function handleMinimapChange(isMinimapVisible: boolean) {
-    changePreferences({ isMinimapVisible });
-  }
-
   return (
     <div className="flex flex-col gap-1">
       <Switch isChecked={preferences.isGridVisible} label="Show grid" onChange={handleGridChange} />
@@ -90,11 +86,6 @@ function DisplaySwitches() {
         isChecked={preferences.areRulersVisible}
         label="Show rulers"
         onChange={handleRulersChange}
-      />
-      <Switch
-        isChecked={preferences.isMinimapVisible}
-        label="Show minimap"
-        onChange={handleMinimapChange}
       />
     </div>
   );
