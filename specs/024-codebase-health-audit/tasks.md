@@ -2,7 +2,7 @@
 
 **Input**: spec.md, plan.md, research.md, data-model.md, gates.md, quickstart.md в `specs/024-codebase-health-audit/`.
 **Tests**: обязательны по spec §3 и AGENTS; domain/generators test-first, реальные provider/controls для UI. `[P]` обозначает независимые файлы после prerequisites; mutation runs всегда последовательны.
-**Status**: implementation backlog; выполненное отмечается только после проверки. Исходные T01–T12 заменены перечисленными ниже задачами с A-traceability.
+**Status**: complete; 32/32 tasks verified. Local validation and limitations are recorded in research.md. Исходные T01–T12 заменены перечисленными ниже задачами с A-traceability.
 
 ## Phase 1: Setup
 
@@ -46,8 +46,8 @@
 
 **Goal**: A07, A05; зависит от US2. **Independent test**: boundary predicates/defaults едины; issues/golden/matrix совпадают; benchmark до/после приложен.
 
-- [x] T018 [US4] Зафиксировать product vs ZMK ownership inventory и integer/range/default failing tests в specs/024-codebase-health-audit/research.md, src/domain/validate-bindings.test.ts и src/catalog/behaviors.test.ts.
-- [x] T019 [US4] Централизовать product limits/defaults и predicates в src/domain/binding-policy.ts; передать catalog default board через composition в src/domain/create-project.ts, src/main.tsx и UI consumers; frozen migrations сохранить.
+- [x] T018 [US4] Зафиксировать product vs ZMK ownership inventory и integer/range/default failing tests в specs/024-codebase-health-audit/research.md, src/domain/validate-bindings.test.ts и src/domain/create-project.test.ts.
+- [x] T019 [US4] Централизовать product limits/defaults и predicates в src/domain/binding-policy.ts; передать catalog default board через composition в src/domain/create-project.ts, src/storage/project-storage.ts и UI consumers; frozen migrations сохранить.
 - [x] T020 [US4] Добавить analysis behavioral/matrix/invalid export contract regressions в src/domain/analyze-project.test.ts и src/ui/export/get-export-preview.test.ts; записать исходный benchmark в specs/024-codebase-health-audit/research.md.
 - [x] T021 [US4] Создать согласованный pure analysis в src/domain/analyze-project.ts; убрать повторные electrical rules/pipelines в validate-shield-project.ts, validate-schematic.ts, derive-shield-matrix.ts; consumers project-state.ts, schematic-canvas.tsx и export/get-export-preview.ts получают один результат.
 - [x] T022 [US4] Ограничить UI low-level analysis imports в scripts/check-architecture.mjs; проверить unchanged golden bytes и benchmark после в specs/024-codebase-health-audit/research.md; geometry cache вводить только при измеренной необходимости с rename/binding edit regression.
@@ -56,7 +56,7 @@
 
 **Goal**: A08, A10; policy после US4, regression seeds после US1/US3. **Independent test**: transitions и реальные Problems/recovery/pointer controls защищены чувствительными tests.
 
-- [x] T023 [US5] Описать behavior-specific transition table в specs/024-codebase-health-audit/data-model.md; добавить failing commit/cancel/layer switch/deletion/selection flows в src/ui/bindings/draft-state.test.ts и app-bindings.test.ts.
+- [x] T023 [US5] Описать behavior-specific transition table в specs/024-codebase-health-audit/data-model.md; проверить commit/cancel/layer switch/deletion/selection flows в src/ui/bindings/draft-state.test.ts и app-bindings.test.ts, добавить failing incompatible hold pick в pick-slot.test.ts.
 - [x] T024 [US5] Преобразовать BindingDraft в behaviorId discriminated union и exhaustive transitions в src/ui/bindings/draft-state.ts и связанных picker consumers без optional bag.
 - [x] T025 [US5] Добавить Problems focus return, failed autosave/backup recovery, pointer create/cancel/bend no-op tests в src/ui/app-problems.test.ts, app-storage.test.tsx и app-canvas.test.ts с saved JSON assertions.
 - [x] T026 [US5] Расширить seeds E1–E4/error mapping/draft/recovery в scripts/check-test-mutations.py; gate React hook mocks/skip/only fixtures в scripts/check-architecture.test.mjs; isolated sequential mutation job в .github/workflows/ci.yml.
@@ -78,7 +78,7 @@
 
 ## Phase 10: Polish
 
-- [ ] T032 Выполнить quickstart и make check; отдельно make test-mutations и make zmk-build; зафиксировать actual results/limitations и A01–A12 closure evidence в specs/024-codebase-health-audit/research.md.
+- [x] T032 Выполнить quickstart и make check; отдельно make test-mutations и make zmk-build; зафиксировать actual results/limitations и A01–A12 closure evidence в specs/024-codebase-health-audit/research.md.
 
 ## Dependencies and execution order
 

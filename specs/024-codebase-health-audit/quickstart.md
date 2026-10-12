@@ -11,3 +11,5 @@ Prerequisites: Docker и Python 3; repository dependencies установлен�
 7. После feature 023: `make zmk-build`; actual export проходит smoke matrix pinned ZMK v0.3. Намеренная DT/connector поломка должна отклоняться; сохранить environment pins и logs.
 
 Закрытые пункты и непроведённые проверки отмечаются в tasks.md; исходный evidence audit-probes.test.ts.txt не включается в постоянный suite, поскольку утверждает наличие дефектов.
+
+Local result: all 32 tasks completed; make check 909/909 tests, seeded mutations 20/20 detected, actual firmware builds 8/8 and intentional connector rejection PASS. Remote CI is configured but has not been executed or claimed.

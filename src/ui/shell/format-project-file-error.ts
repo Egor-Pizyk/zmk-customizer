@@ -18,7 +18,7 @@ export function formatProjectFileError(error: ProjectFileError): FormattedFileEr
       return { title: 'This file was made by a newer version of ZMK Customizer.', lines: [] };
     }
     case 'too-large': {
-      return { title: 'This file is larger than 5 MB, too large to be a project file.', lines: [] };
+      return { title: 'This project exceeds the 5 MiB file or saved-data limit.', lines: [] };
     }
     case 'not-project': {
       const lines = error.issues
