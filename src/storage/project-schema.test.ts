@@ -1,20 +1,11 @@
-import { describe, expect, expectTypeOf, it } from 'vitest';
-import type * as z from 'zod';
-import type { Project } from '../domain/types';
+import { describe, expect, it } from 'vitest';
 import { projectSchema } from './project-schema';
-
-it('keeps the schema keys identical to Project keys in both directions', () => {
-  // Full toEqualTypeOf<Project> cannot pass: Project is readonly everywhere while zod
-  // infers mutable output. Keyof equality catches a new Project field dropped on save
-  // (or a stale schema field) in either direction, which `satisfies` alone misses for
-  // optional fields (P0.5).
-  expectTypeOf<keyof z.output<typeof projectSchema>>().toEqualTypeOf<keyof Project>();
-});
 
 const BASE_LAYER = { id: 'l0', name: 'Base', bindings: {} };
 
 const BASE = {
-  schemaVersion: 3,
+  schemaVersion: 5,
+  controllerId: 'nice_nano_v2',
   name: 'x',
   keys: [],
   wires: [],

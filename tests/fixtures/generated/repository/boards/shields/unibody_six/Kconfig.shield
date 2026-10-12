@@ -1,0 +1,2 @@
+config SHIELD_UNIBODY_SIX
+    def_bool $(shields_list_contains,unibody_six)

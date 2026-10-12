@@ -2,7 +2,8 @@ import type { Project } from './types';
 
 export function createProject(): Project {
   return {
-    schemaVersion: 3,
+    schemaVersion: 5,
+    controllerId: 'nice_nano_v2',
     name: 'My keyboard',
     keys: [],
     wires: [],

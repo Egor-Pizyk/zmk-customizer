@@ -1,0 +1,44 @@
+#include <dt-bindings/zmk/matrix_transform.h>
+#include <physical_layouts.dtsi>
+
+/ {
+    chosen {
+        zmk,kscan = &kscan0;
+        zmk,physical-layout = &default_layout;
+    };
+
+    kscan0: kscan_0 {
+        compatible = "zmk,kscan-gpio-matrix";
+        wakeup-source;
+        diode-direction = "col2row";
+        row-gpios = <&xiao_d 2 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>, <&xiao_d 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
+        col-gpios = <&xiao_d 8 GPIO_ACTIVE_HIGH>, <&xiao_d 9 GPIO_ACTIVE_HIGH>, <&xiao_d 10 GPIO_ACTIVE_HIGH>;
+    };
+
+    default_transform: keymap_transform_0 {
+        compatible = "zmk,matrix-transform";
+        rows = <2>;
+        columns = <3>;
+        map = <
+            RC(0,0)
+            RC(0,1)
+            RC(0,2)
+            RC(1,0)
+            RC(1,1)
+            RC(1,2)
+        >;
+    };
+
+    default_layout: default_layout {
+        compatible = "zmk,physical-layout";
+        display-name = "Unibody six";
+        transform = <&default_transform>;
+        kscan = <&kscan0>;
+        keys = <&key_physical_attrs 100 100 0 0 0 0 0>,
+            <&key_physical_attrs 100 100 200 0 0 0 0>,
+            <&key_physical_attrs 100 100 400 0 0 0 0>,
+            <&key_physical_attrs 100 100 0 200 0 0 0>,
+            <&key_physical_attrs 100 100 200 200 0 0 0>,
+            <&key_physical_attrs 100 100 400 200 0 0 0>;
+    };
+};

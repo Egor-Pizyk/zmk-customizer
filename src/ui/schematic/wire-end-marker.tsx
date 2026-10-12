@@ -53,7 +53,7 @@ function EndCap({ at, hasBoardPin, radiusU }: EndCapProps) {
   }
   return (
     <circle
-      className="fill-surface stroke-danger"
+      className="fill-surface stroke-text group-data-conflict:stroke-danger"
       cx={at.xU}
       cy={at.yU}
       r={radiusU}

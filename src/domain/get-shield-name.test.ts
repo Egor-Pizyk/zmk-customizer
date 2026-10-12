@@ -4,7 +4,8 @@ import { getShieldName } from './get-shield-name';
 it('returns the override as typed when present', () => {
   expect(
     getShieldName({
-      schemaVersion: 3,
+      schemaVersion: 5,
+      controllerId: 'nice_nano_v2',
       keys: [],
       wires: [],
       insulatedCrossings: [],
@@ -18,7 +19,8 @@ it('returns the override as typed when present', () => {
 it('derives the technical name from the name when there is no override', () => {
   expect(
     getShieldName({
-      schemaVersion: 3,
+      schemaVersion: 5,
+      controllerId: 'nice_nano_v2',
       keys: [],
       wires: [],
       insulatedCrossings: [],

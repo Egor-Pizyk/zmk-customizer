@@ -1,3 +1,4 @@
+import { migrateProject } from './migrate-project';
 import { describe, expect, it } from 'vitest';
 import fixtureV1 from '../../tests/fixtures/project/v1.json?raw';
 import fixtureV2 from '../../tests/fixtures/project/v2.json?raw';
@@ -25,7 +26,8 @@ function issuePathsOf(raw: string): readonly string[] {
 
 function projectJson(binding: unknown) {
   return JSON.stringify({
-    schemaVersion: 3,
+    schemaVersion: 5,
+    controllerId: 'nice_nano_v2',
     name: 'x',
     keys: [{ id: 'k1', xU: 0, yU: 0 }],
     wires: [],
@@ -71,7 +73,8 @@ describe('parseProjectFile', () => {
     expect(parseProjectFile('{"schemaVersion":1,"name":"x","extra":true}')).toEqual({
       ok: true,
       value: {
-        schemaVersion: 3,
+        schemaVersion: 5,
+        controllerId: 'nice_nano_v2',
         name: 'x',
         keys: [],
         wires: [],
@@ -85,7 +88,8 @@ describe('parseProjectFile', () => {
     expect(parseProjectFile(fixtureV1)).toEqual({
       ok: true,
       value: {
-        schemaVersion: 3,
+        schemaVersion: 5,
+        controllerId: 'nice_nano_v2',
         name: 'My Corne v2!',
         shieldName: 'corne',
         keys: [],
@@ -97,7 +101,7 @@ describe('parseProjectFile', () => {
   });
 
   it('round-trips the v3 schematic fixture', () => {
-    const expected: unknown = JSON.parse(fixtureSmall);
+    const expected: unknown = migrateProject(JSON.parse(fixtureSmall), { fromVersion: 3 });
     expect(parseProjectFile(fixtureSmall)).toEqual({ ok: true, value: expected });
   });
 

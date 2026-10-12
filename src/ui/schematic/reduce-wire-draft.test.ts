@@ -111,3 +111,23 @@ describe('reduceWireDraft', () => {
     expect(reduceWireDraft(started.draft, { kind: 'cancel' }).draft).toBeUndefined();
   });
 });
+
+it('keeps a junction attachment on the electrical wire while its preview uses display coordinates', () => {
+  const result = clickAll([
+    [PIN_A, 0],
+    [
+      {
+        kind: 'wire',
+        wireId: 'w1',
+        point: { xU: 2.9533, yU: 0.2333 },
+        attachmentPoint: { xU: 2.8, yU: 0.2333 },
+      },
+      1000,
+    ],
+  ]);
+  expect(result.finished?.end).toEqual({
+    kind: 'junction',
+    wireId: 'w1',
+    at: { xU: 2.8, yU: 0.2333 },
+  });
+});

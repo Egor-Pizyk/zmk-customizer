@@ -39,9 +39,13 @@ export function formatKeyLabel(
   const pins = KEY_PINS.map(
     (pin) => `Pin ${pin}: ${formatPinConnections(input.wiresOf, { keyId: key.id, pin })}`,
   );
+  const diode =
+    key.diode === undefined
+      ? ''
+      : `. Diode at pin ${key.diode.pin}, cathode ${key.diode.cathode === 'away-switch' ? 'away from' : 'toward'} switch`;
   const selected = input.isSelected ? ', selected' : '';
   const problems = input.problems.length === 0 ? '' : `. ${input.problems.join(' ')}`;
-  return `Key ${input.keyIndex} at ${key.xU}, ${key.yU}. ${pins.join('. ')}${selected}${problems}`;
+  return `Key ${input.keyIndex} at ${key.xU}, ${key.yU}. ${pins.join('. ')}${diode}${selected}${problems}`;
 }
 
 export function formatWireEnd(project: Project, end: WireEnd): string {

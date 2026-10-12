@@ -87,7 +87,7 @@ function WireEndCell(props: WireRowProps & { readonly side: WireEndSide }) {
       {end.kind === 'free' ? (
         <BoardPinSelect {...props} boardPin={end.boardPin} side={side} wireIndex={wireIndex} />
       ) : (
-        <span data-issue-path={`wires.${wireIndex}.${side}`} tabIndex={-1}>
+        <span data-issue-path={`wires.${wireIndex} wires.${wireIndex}.${side}`} tabIndex={-1}>
           {formatWireEnd(project, end)}
         </span>
       )}

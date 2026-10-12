@@ -251,3 +251,18 @@ Shield `.zmk.yml` declares `requires: [pro_micro]` (or `[seeed_xiao]`); board `.
 Sources:
 - https://github.com/zmkfirmware/zmk/blob/v0.3.0/docs/docs/development/hardware-integration/hardware-metadata-files.md (v0.3.0; zmk.dev: https://zmk.dev/docs/hardware-integration/hardware-metadata-files)
 - https://github.com/zmkfirmware/zmk/blob/v0.3.0/app/boards/shields/corne/corne.zmk.yml
+
+## 8. Customizer controller catalog (011)
+
+The initial catalog offers nice!nano v2, XIAO nRF52840 BLE, SparkFun Pro Micro RP2040 and Adafruit KB2040 using the verified maps above. Schema v5 stores connector indices; v1–v4 raw nice!nano P0.n assignments migrate to the same physical connector position. Unmapped values remain unassigned with their old label. Switching connector families clears all assignments, while a shared family preserves existing available positions.
+
+Printed RP2040 labels differ from connector indices. SparkFun: RX/D0, TX/D1, printed 21/D10, CI/D14, SCK/D15, CO/D16, A0–A3/D18–D21. KB2040: RX/D0, TX/D1, MI/D14, CLK/D15, MO/D16, A0–A3/D18–D21. Never attach AVR A6–A10 aliases to RP2040 pins. XIAO silk numbers 0–10 correspond to D0–D10; A0–A5 and UART/SPI aliases are shown as additional pinout information, not GPIO reservations.
+
+Sources verified 2026-10-12:
+- https://cdn.sparkfun.com/assets/e/2/7/6/b/ProMicroRP2040_Graphical_Datasheet.pdf
+- https://raw.githubusercontent.com/adafruit/Adafruit-KB2040-PCB/main/assets/5302.jpg
+- https://files.seeedstudio.com/wiki/XIAO-BLE/XIAO_nRF52840_front_pinout.png
+
+USB-only boards cannot use Bluetooth actions: v0.3 `app/CMakeLists.txt` includes `behavior_bt.c` only under `CONFIG_ZMK_BLE`, so a referenced `&bt` binding lacks its driver implementation. The customizer keeps bindings on a board switch and reports `bt`/`OUT_BLE` actions under Bindings, blocking export until corrected. `&out` itself is compiled unconditionally; `OUT_USB` and `OUT_TOG` are supported on USB-only boards.
+
+Source: https://github.com/zmkfirmware/zmk/blob/v0.3.0/app/CMakeLists.txt#L77

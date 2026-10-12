@@ -5,7 +5,8 @@ import type { ProjectHistory } from './project-history';
 
 function named(name: string): Project {
   return {
-    schemaVersion: 3,
+    schemaVersion: 5,
+    controllerId: 'nice_nano_v2',
     keys: [],
     wires: [],
     insulatedCrossings: [],

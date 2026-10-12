@@ -21,21 +21,23 @@ it('writes 2-space JSON in schema key order with one trailing newline', () => {
   const text = expectSerializedText({
     shieldName: 'corne',
     name: 'x',
-    schemaVersion: 3,
+    schemaVersion: 5,
+    controllerId: 'nice_nano_v2',
     keys: [],
     wires: [],
     insulatedCrossings: [],
     layers: [{ id: 'l0', name: 'Base', bindings: {} }],
   });
   expect(text).toBe(
-    '{\n  "schemaVersion": 3,\n  "name": "x",\n  "shieldName": "corne",\n  "keys": [],\n  "wires": [],\n  "insulatedCrossings": [],\n  "layers": [\n    {\n      "id": "l0",\n      "name": "Base",\n      "bindings": {}\n    }\n  ]\n}\n',
+    '{\n  "schemaVersion": 5,\n  "controllerId": "nice_nano_v2",\n  "name": "x",\n  "shieldName": "corne",\n  "keys": [],\n  "wires": [],\n  "insulatedCrossings": [],\n  "layers": [\n    {\n      "id": "l0",\n      "name": "Base",\n      "bindings": {}\n    }\n  ]\n}\n',
   );
 });
 
 it('omits shieldName when absent', () => {
   expect(
     expectSerializedText({
-      schemaVersion: 3,
+      schemaVersion: 5,
+      controllerId: 'nice_nano_v2',
       keys: [],
       wires: [],
       insulatedCrossings: [],
@@ -45,14 +47,18 @@ it('omits shieldName when absent', () => {
   ).not.toContain('shieldName');
 });
 
-it('reproduces the v3 schematic fixture bytes', () => {
-  const project = projectSchema.parse(JSON.parse(fixtureSmall));
-  expect(expectSerializedText(project)).toBe(fixtureSmall);
+it('writes migrated v3 bytes with explicit controller and unmappable pin metadata', () => {
+  const expected = fixtureSmall
+    .replace('"schemaVersion": 3,', '"schemaVersion": 5,\n  "controllerId": "nice_nano_v2",')
+    .replace('"boardPin": 3', '"droppedBoardPin": "nice!nano v2 P3"');
+  const project = projectSchema.parse(JSON.parse(expected));
+  expect(expectSerializedText(project)).toBe(expected);
 });
 
 it('reports a schema failure instead of throwing', () => {
   const bad: Project = {
-    schemaVersion: 3,
+    schemaVersion: 5,
+    controllerId: 'nice_nano_v2',
     name: 'x',
     keys: [{ id: 'bad', xU: 0, yU: 0 }],
     wires: [],

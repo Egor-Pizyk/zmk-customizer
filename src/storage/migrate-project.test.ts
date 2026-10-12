@@ -1,25 +1,27 @@
 import { expect, it } from 'vitest';
 import { CURRENT_SCHEMA_VERSION, migrateProject } from './migrate-project';
 
-it('is at version 3', () => {
-  expect(CURRENT_SCHEMA_VERSION).toBe(3);
+it('is at version 5', () => {
+  expect(CURRENT_SCHEMA_VERSION).toBe(5);
 });
 
 it('returns current-version data unchanged', () => {
   const data = {
-    schemaVersion: 3,
+    schemaVersion: 5,
+    controllerId: 'nice_nano_v2',
     name: 'x',
     keys: [],
     wires: [],
     insulatedCrossings: [],
     layers: [{ id: 'l0', name: 'Base', bindings: {} }],
   };
-  expect(migrateProject(data, { fromVersion: 3 })).toBe(data);
+  expect(migrateProject(data, { fromVersion: 5 })).toBe(data);
 });
 
-it('migrates v1 through v2 to v3', () => {
+it('migrates v1 through v2 and v3 to v4', () => {
   expect(migrateProject({ schemaVersion: 1, name: 'x' }, { fromVersion: 1 })).toEqual({
-    schemaVersion: 3,
+    schemaVersion: 5,
+    controllerId: 'nice_nano_v2',
     name: 'x',
     keys: [],
     wires: [],

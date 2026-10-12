@@ -1,3 +1,4 @@
+import { getKeyPinPosition } from './get-key-pin-position';
 import { formatBoardPin } from './board-pin';
 import { getKeyPinWires } from './get-key-pin-wires';
 import { getNets } from './get-nets';
@@ -37,11 +38,16 @@ function validateUnconnectedPins(project: Project): ValidationIssue[] {
 }
 
 function validateFreeEnds(project: Project): ValidationIssue[] {
+  const pins = project.keys.flatMap((key) => KEY_PINS.map((pin) => getKeyPinPosition(key, pin)));
   return project.wires.flatMap((wire, wireIndex) =>
     (['start', 'end'] as const)
       .filter((side) => {
         const end = wire[side];
-        return end.kind === 'free' && end.boardPin === undefined;
+        return (
+          end.kind === 'free' &&
+          end.boardPin === undefined &&
+          !pins.some((pin) => Math.hypot(pin.xU - end.at.xU, pin.yU - end.at.yU) < 1e-4)
+        );
       })
       .map((side) => ({
         code: 'wire-end-unconnected',

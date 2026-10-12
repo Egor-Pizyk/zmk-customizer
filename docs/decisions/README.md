@@ -37,3 +37,4 @@ What becomes easier, what becomes harder, what we must now keep true.
 | [0009](0009-runtime-dependencies.md) | Runtime dependencies limited to react, zod, fflate | Accepted |
 | [0010](0010-target-zmk-v0-3.md) | Generated output targets ZMK v0.3 | Accepted |
 | [0011](0011-tailwind-design-system.md) | Tailwind CSS v4 as the design system | Accepted |
+| [0012](0012-behavior-testing.md) | Real React/DOM behavior tests and regression coverage floors | Accepted |

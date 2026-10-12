@@ -1,3 +1,8 @@
+import { getDefinedValue } from '../../tests/helpers/defined-value';
+import { UNIBODY_PRESET } from '../catalog/unibody-preset';
+import { CONTROLLER_BOARDS } from '../catalog/controller-boards';
+import { changeController } from '../domain/change-controller';
+import { parseProjectFile } from '../storage/parse-project-file';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createProject } from '../domain/create-project';
 import { renameProject } from '../domain/rename-project';
@@ -80,7 +85,7 @@ describe('applyHistoryAction', () => {
     const broken = applyHistoryAction(initial({ kind: 'ok' }), {
       action: { kind: 'commit', update: (project) => renameProject(project, { name: '!!!' }) },
     });
-    expect(broken.announcement).toEqual({ text: '1 problem', id: 1 });
+    expect(broken.announcement).toEqual({ text: '2 problems', id: 1 });
     const renamed = applyHistoryAction(broken, {
       action: { kind: 'commit', update: (project) => renameProject(project, { name: '???' }) },
     });
@@ -101,6 +106,37 @@ describe('applyHistoryAction', () => {
       action: { kind: 'undo' },
       announcementText: 'Undone',
     });
-    expect(undone.announcement?.text).toBe('Undone. No problems');
+    expect(undone.announcement?.text).toBe('Undone. 1 problem');
   });
+});
+
+it('autosaves controller selection, dropped endpoints and exact undo/redo states', () => {
+  const writes: string[] = [];
+  stubSetItem((_key, value) => {
+    writes.push(value);
+  });
+  const before = createInitialState({ project: UNIBODY_PRESET, status: { kind: 'ok' } });
+  const after = applyHistoryAction(before, {
+    action: {
+      kind: 'commit',
+      update: (project) =>
+        changeController(project, { boardId: 'seeeduino_xiao_ble', boards: CONTROLLER_BOARDS }),
+    },
+  });
+  expect(after.history.past).toHaveLength(1);
+  expect(parseProjectFile(getDefinedValue(writes.at(-1)))).toEqual({
+    ok: true,
+    value: after.history.present,
+  });
+  const undone = applyHistoryAction(after, { action: { kind: 'undo' } });
+  expect(parseProjectFile(getDefinedValue(writes.at(-1)))).toEqual({
+    ok: true,
+    value: before.history.present,
+  });
+  const redone = applyHistoryAction(undone, { action: { kind: 'redo' } });
+  expect(parseProjectFile(getDefinedValue(writes.at(-1)))).toEqual({
+    ok: true,
+    value: after.history.present,
+  });
+  expect(redone.history.present).toEqual(after.history.present);
 });

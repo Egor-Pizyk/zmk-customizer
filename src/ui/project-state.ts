@@ -1,6 +1,7 @@
 import { BINDINGS_CATALOG } from '../catalog/bindings-catalog';
 import type { Project, ValidationIssue } from '../domain/types';
-import { validateProject } from '../domain/validate-project';
+import { getControllerBoard } from '../catalog/get-controller-board';
+import { validateShieldProject } from '../domain/validate-shield-project';
 import type { ProjectFileError } from '../storage/parse-project-file';
 import { backupDamagedProject, discardBackup, saveProject } from '../storage/project-storage';
 import type { DamageReason, ProjectLoadResult, StorageError } from '../storage/project-storage';
@@ -79,7 +80,12 @@ export function getValidationIssues(project: Project): readonly ValidationIssue[
   if (cached !== undefined) {
     return cached;
   }
-  const issues = validateProject(project, BINDINGS_CATALOG);
+  const board = getControllerBoard(project.controllerId);
+  const issues = validateShieldProject(project, {
+    bindingsCatalog: BINDINGS_CATALOG,
+    target: { ...board, boardId: board.id },
+    board,
+  });
   issuesByProject.set(project, issues);
   return issues;
 }

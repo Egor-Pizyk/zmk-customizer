@@ -114,3 +114,24 @@ describe('validateSchematic', () => {
     expect(issue?.message).toBe('Key 0, pin 1 is not connected. Draw a wire from it.');
   });
 });
+
+it('does not report a free end at a key pin as dangling', () => {
+  const project = buildProject({
+    keys: KEYS,
+    wires: [{ id: 'w0', start: freeEnd(0.3, 0.3667), end: freeEnd(-1, 0.3667, 2), bends: [] }],
+  });
+  expect(issuesOf(project)).not.toContainEqual(['wire-end-unconnected', 'wires.0.start']);
+});
+
+it('keeps a free end touching another wire dangling until it is an explicit junction', () => {
+  const project = buildProject({
+    wires: [
+      { id: 'w0', start: freeEnd(0, 0, 2), end: freeEnd(2, 0, 2), bends: [] },
+      { id: 'w1', start: freeEnd(1, 0), end: freeEnd(1, 1, 2), bends: [] },
+    ],
+  });
+  expect(issuesOf(project)).toContainEqual(['wire-end-unconnected', 'wires.1.start']);
+  expect(
+    issuesOf({ ...project, insulatedCrossings: [{ wireIds: ['w0', 'w1'], ordinal: 0 }] }),
+  ).toContainEqual(['wire-end-unconnected', 'wires.1.start']);
+});
