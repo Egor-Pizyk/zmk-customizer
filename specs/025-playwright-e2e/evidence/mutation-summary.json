@@ -1,0 +1,32 @@
+[
+  {
+    "seed": "disabled-resize",
+    "assertion": "toBeCloseTo",
+    "detected": true
+  },
+  {
+    "seed": "invisible-preview",
+    "assertion": "toHaveScreenshot",
+    "detected": true
+  },
+  {
+    "seed": "shifted-hit-area",
+    "assertion": "toBeLessThan",
+    "detected": true
+  },
+  {
+    "seed": "lost-save",
+    "assertion": "toBe",
+    "detected": true
+  },
+  {
+    "seed": "extra-undo",
+    "assertion": "toEqual",
+    "detected": true
+  },
+  {
+    "seed": "cancelled-value",
+    "assertion": "toHaveValue",
+    "detected": true
+  }
+]

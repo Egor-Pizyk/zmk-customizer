@@ -1,0 +1,8 @@
+# Research
+
+- Decision: mandatory Chromium full suite, focused Firefox/WebKit projects. Rationale: primary desktop browser plus independent SVG/foreignObject/native-input engines without tripling all domain permutations. Alternatives: Chromium only misses engine behavior; all permutations on every engine wastes time. [Projects](https://playwright.dev/docs/test-projects).
+- Decision: production preview isolated port, reuseExistingServer false, ordinary test contexts, import fixtures through UI. Rationale: validates shipped paint, prevents accidental development server/user profile reuse. [Web server](https://playwright.dev/docs/test-webserver), [Fixtures](https://playwright.dev/docs/api/class-fixtures).
+- Decision: Node24 Bookworm E2E image, retain existing Alpine app. Alpine/musl unsupported for Firefox/WebKit. [Docker](https://playwright.dev/docs/docker).
+- Decision: zero retries, one worker, traces/screenshots on failure, CI artifacts always. Rationale: retain first behavioral failure and measure repeatability honestly. [CI](https://playwright.dev/docs/ci), [Trace viewer](https://playwright.dev/docs/trace-viewer).
+- Decision: transform keycap SVG corners with getScreenCTM, compare independent trigonometric expected corners, opposite anchors and screen edge lengths. 0.75px tolerance covers device-pixel/subpixel rounding; project precision 0.0001u permits 0.001u/0.02° tolerance. Paint checks use focused reviewed reference at fixed environment, never automatic refresh on normal runs. [Visual comparisons](https://playwright.dev/docs/test-snapshots).
+- Numeric behavior follows 012 contracts and NumberInput, rather than inventing per-keystroke saving.

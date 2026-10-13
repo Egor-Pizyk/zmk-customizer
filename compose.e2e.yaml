@@ -1,0 +1,16 @@
+services:
+  e2e:
+    build:
+      context: .
+      dockerfile: Dockerfile.e2e
+    command: ['sh', '-c', 'npm ci && npm run test:e2e']
+    init: true
+    ipc: host
+    volumes:
+      - .:/app
+      - e2e_node_modules:/app/node_modules
+      - ./playwright-report:/app/playwright-report
+      - ./test-results:/app/test-results
+
+volumes:
+  e2e_node_modules:

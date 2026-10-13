@@ -1,0 +1,31 @@
+# Verification evidence
+
+## Preparation and workflow
+
+Read AGENTS, constitution, docs/testing, all applicable guidelines and 012 spec/contracts/analysis/verification, latest canvas commit 575c79d. Initial git status clean on 012-layout-editor. Created separate 025-playwright-e2e branch; 001–012, 023, 024 unchanged. Spec Kit specify/clarify/plan/tasks/analyze/implement prerequisites executed, no extension hooks registered, quality checklist 6/6 passed. Read-only planning research agent selected supported browser/Docker strategy. Constitution unchanged. ADR 0014 records dev-only Playwright and Node types.
+
+## Reproduced product bug and repair
+
+At 1280×800, opening Precise properties while Parts stays open reduced the flex canvas to **0px height**, hiding selected keys and the unsaved preview. jsdom's geometry attributes still appeared valid. `compact desktop keeps canvas usable when precise properties expand` failed first on user assertion `key corner must not be clipped by panels`: canvas ended at y=289 but key corner was y=307.42. The captured before screenshot is [evidence/compact-canvas-before.png](evidence/compact-canvas-before.png). Repair: WorkSurface has min-h-64; existing main overflow handles vertical space. No domain, generator or schema change. Focused Chromium regression passed after the one-line repair; the regression subsequently passed in Chromium, Firefox and WebKit.
+
+## Test calibration, not product repairs
+
+The first fixture was placed at y=5 with a zero-pan viewport, so bottom handles lay outside the short canvas and mouse gestures reached panels below. Fixtures now use the real Center keyboard action before gestures. This does not bypass covered controls/hit testing. Cross-engine runs showed integer pointer coordinate rounding around very tight snap thresholds: 38° lies only 0.5° beyond the 37.5° rounding boundary, and 0.37u only 0.005u below 0.375u. Tests now choose 43°/0.31u; expected snaps remain exact and assertions are not widened. Native dialog Tab may visit browser chrome/document.body; the test forbids focus on inert app controls and requires exact Escape return. macOS WebKit uses Option+Tab for all-control traversal, matching native Safari behavior; Linux uses normal Tab. Binding chooser tests explicitly select Key press before searching keys from an unassigned action, and expand the default-collapsed Keys table. Final review strengthened JSON roundtrip by resetting to an empty project before restoring the actual download. An immediate saved-state read then exposed a test race with asynchronous file reading; it now waits for exact expected saved state, followed by visible geometry/binding assertions. Added exact GPIO assertions initially copied row2col values from a unit fixture with reversed diode polarity; corrected to the documented col2row polarity of the actual UI journey, with exact direction and row/column pins retained. Both strengthened journeys passed focused verification before the final full rerun.
+
+## Paint review and tolerances
+
+Independently inspected both macOS and Linux Chromium 200×200 references after their first missing-reference failure. They show 30° key art, eight resize marks aligned to the thin selected frame, enlarged live-preview dimensions and surrounding electrical wire. No automatic --update-snapshots used. 0.75px polygon/anchor tolerance covers subpixel serialization; edge length checks use 0.05px for fixed 48px-scale samples. Pixel threshold 0.15 / 20 pixels tolerates sparse antialiasing, not a missing body/frame or changed key dimensions. Reference failures remain reviewable through actual/diff/trace artifacts.
+
+## Results
+
+- `make check`: PASS, 163 Vitest files / 968 tests; architecture/guideline guards, strict types (including E2E), lint, formatting and coverage floors passed. Coverage: statements 90.11%, branches 83.69%, functions 91.45%, lines 90.14%.
+- Production `docker compose run --rm app npm run build`: PASS. Existing bundle-size advisory remains; no build failure.
+- `make test-e2e`: PASS, 71 tests: Chromium 39, Firefox 16, WebKit 16; one worker, zero retries. A previous complete Linux run also passed 71/71.
+- Three sequential complete Chromium runs on the final test code: PASS, 39/39 each (41.6s, 41.1s, 41.3s), with zero retries. [Run summaries](evidence/repeat-runs.txt). [Final all-engine run](evidence/browser-suite.txt).
+- `make test-e2e-mutations`: PASS, baseline 4/4, all six seeds detected on the expected behavioral assertion. Disabled resize → toBeCloseTo; invisible preview → toHaveScreenshot; displaced hit area → toBeLessThan; lost persistence → toBe; extra history → toEqual; cancelled draft resurrection → toHaveValue. [Structured summary](evidence/mutation-summary.json). Each seed restored exact original bytes before the next seed. Failure JSON, logs, screenshot/trace/diff evidence remain in `.e2e-mutations/<seed>/`; runner rejects global/compilation failures as proof. Stale report files are removed before future seed runs.
+- Source diff audit after restoration: only intended WorkSurface minimum-height repair; no domain/generator/schema edits. ZMK build was not additionally run because generators/export geometry were unchanged.
+- CI job and retained failure artifacts configured; remote GitHub Actions execution is not claimed (no push/PR). Local canonical browser environment: Node24 Bookworm Linux arm64, Playwright 1.64.0. macOS reference was visually reviewed separately; Linux and macOS Chromium paint references are committed.
+
+## Limits and remaining work
+
+No claim that green tests prove absence of user problems. Only Chromium runs all lifecycle/ZIP journeys; Firefox/WebKit run focused engine-sensitive cases. Native screen-reader speech, OS/hardware-originated pointercancel, touch/stylus, all combinations of zoom, tiny keys and imported rotation origins, themes/contrast, and every viewport size are not exhaustive. Cancellation is exercised with Escape, stale selection/project and native canvas removal during active capture; no synthetic pointercancel injection. Actual user firmware compilation is not added to E2E; existing pinned golden/build gates remain authoritative. No generators/exported cells changed, so the conditional additional ZMK build requirement does not apply to the UI height repair.

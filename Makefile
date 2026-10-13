@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: help up down logs sh install check test-mutations image prod clean zmk-build
+.PHONY: help up down logs sh install check test-mutations image prod clean zmk-build test-e2e test-e2e-mutations
 
 RUN := docker compose run --rm app
 
@@ -40,3 +40,9 @@ clean: ## Remove dist/, coverage, containers, volumes
 zmk-build: ## Compile actual exports in a pinned ZMK v0.3 environment
 	$(RUN) node scripts/generate-build-fixtures.mjs
 	docker compose --env-file scripts/zmk-build.env -f compose.zmk.yaml run --rm zmk-build
+
+test-e2e: ## Run production browser journeys in isolated Chromium/Firefox/WebKit
+	docker compose -f compose.e2e.yaml run --build --rm e2e
+
+test-e2e-mutations: ## Verify six browser regressions (run alone)
+	python3 scripts/check-e2e-mutations.py

@@ -286,7 +286,19 @@
   },
   "overrides": [
     {
-      "files": ["vite.config.ts"],
+      "files": ["tests/e2e/**"],
+      "rules": {
+        // Browser journeys are sequential protocols with prerequisite guards, not Vitest unit tests.
+        "typescript/dot-notation": ["error", { "allowIndexSignaturePropertyAccess": true }],
+        "oxc/no-map-spread": "off",
+        "vitest/no-conditional-in-test": "off",
+        "eslint/no-await-in-loop": "off",
+        "unicorn/no-await-expression-member": "off",
+        "eslint/max-lines-per-function": "off"
+      }
+    },
+    {
+      "files": ["vite.config.ts", "playwright.config.ts"],
       "rules": {
         "import/no-default-export": "off"
       }
