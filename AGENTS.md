@@ -99,15 +99,17 @@ Production imports follow this matrix; catalog values enter domain operations as
 | generators | generators, domain, catalog |
 | storage | storage, generators, domain, catalog |
 | ui/components | ui/components only |
-| ui/canvas, ui/shell | shared UI, domain/catalog/storage, listed root UI contracts; no feature folders |
-| ui/<workspace> | same workspace, shared UI, root contracts, domain/catalog/storage |
+| ui/canvas, ui/shell | shared UI, domain/catalog/storage, listed shared UI module contracts; no feature folders |
+| ui/<workspace> | same workspace, shared UI module contracts, domain/catalog/storage |
 | ui/export | above, generator calls only in export/get-export-preview.ts; generated-file type in export consumers |
-| ui root | composition of UI/domain/catalog/storage; no generator calls |
+| ui/app | composition of UI/domain/catalog/storage; no generator calls |
 | main.tsx | UI/storage/catalog and styles.css |
 
-Enforced by scripts/check-architecture.mjs (resolved imports, re-exports, dynamic imports), oxlint no-restricted-imports overrides and import/no-cycle. Exact root contracts and exceptions are documented in docs/guidelines/code-quality/typescript.md.
+Enforced by scripts/check-architecture.mjs (resolved imports, re-exports, dynamic imports, separate test locations), oxlint no-restricted-imports overrides and import/no-cycle. Exact root contracts and exceptions are documented in docs/guidelines/code-quality/typescript.md.
 
-Folders are created when the first file needs them, not ahead of time.
+See [folder ownership](docs/folder-structure.md) for the concrete groups and test locations.
+
+Group related files inside each layer by responsibility (project, geometry, keys, wiring, bindings, validation). UI workspaces group rendering, interaction, panels and editors. Keep layer roots for composition and shared contracts; avoid generic utils folders; expose each module through explicit named exports in `index.ts`. Unit and interaction tests live separately in `tests/unit/`, mirroring source groups. Browser tests, helpers and fixtures remain in `tests/e2e/`, `tests/helpers/` and `tests/fixtures/`. Cross-module imports use the exact TypeScript alias for the public `index.ts` (`@domain`, `@generators`, `@catalog/bindings`, `@storage/project`, `@ui/schematic`, etc.). No deep or relative cross-module imports. Within a module, implementation files use relative imports and never import their own public index. The `modules/public-api` Oxlint rule enforces this in source and tests; the resolved architecture gate follows named re-exports to their owners. Folders are created when the first file needs them, not ahead of time.
 
 ### 3.2 State
 
@@ -237,10 +239,10 @@ For new or changed user journeys, add or update Playwright E2E tests and include
 - Не использовать Computer Use, CUA и управление обычным браузером или нативными приложениями без явного запроса пользователя. Автоматические Playwright-тесты через терминал разрешены в изолированном тестовом браузере (§6.1); пользовательский профиль не использовать.
 - Read the relevant `docs/zmk/*.md` page before touching anything that produces ZMK syntax. Do not write Devicetree/Kconfig from memory. Target is ZMK v0.3 — never emit anything marked "main only".
 - Stay inside the task. No drive-by refactors, no renaming unrelated code, no new dependencies without §4 approval.
-- Write the test first for domain logic and generators; watch it fail; then implement. Tests sit next to the code as `*.test.ts(x)`.
+- Write the test first for domain logic and generators; watch it fail; then implement. Tests live in `tests/unit/<layer>/<group>/` as `*.test.ts(x)`, mirroring the production groups; no tests in `src/`.
 - Test observable behavior and product contracts (see `docs/testing.md`): real React/hooks/providers for UI interaction, roles and accessible names, visible state and saved/exported data. Do not mock React state or assert implementation details, Tailwind classes, or what the compiler/linter already guarantees.
 - Keep coverage floors in `vite.config.ts` passing through `make check`. Use `make test-mutations` separately to verify regression sensitivity; never run it alongside other checks or edits to production files.
-- Keep files small and named after what they contain. One exported concept per file in `domain/` and `generators/`.
+- Keep files small and named after what they contain. One exported concept per implementation file in `domain/` and `generators/`; `index.ts` files list the explicit public API.
 - No comments that repeat code. Comment only non-obvious "why" (ZMK quirks, links to docs).
 - Never commit generated `dist/`, `coverage/`, `node_modules/`.
 - Commits: Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `test:`, `refactor:`), one logical change each.

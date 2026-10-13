@@ -82,7 +82,7 @@ type Key = { x: number; y: number; w: number; r: number; pos?: [number, number] 
 ## Files
 
 - All files kebab-case, named after their single export: `add-key.ts` → `addKey`, `matrix-grid.tsx` → `MatrixGrid`, `project-schema.ts` → `projectSchema`. One rule for everything; avoids case-only renames on case-insensitive filesystems.
-- Tests sit next to the file: `add-key.test.ts`. Golden fixtures: `tests/fixtures/<shield>/` (AGENTS §3.3).
+- Tests live separately in mirrored groups: `tests/unit/domain/keys/add-key.test.ts`. Golden fixtures: `tests/fixtures/<shield>/` (AGENTS §3.3).
 - `.tsx` only for files containing JSX.
 
 ## Enforced by

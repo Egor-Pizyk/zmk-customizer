@@ -1,4 +1,4 @@
-import type { WirePoint } from '../../domain/types';
+import type { WirePoint } from '@domain';
 
 export type Marquee = {
   readonly start: WirePoint;

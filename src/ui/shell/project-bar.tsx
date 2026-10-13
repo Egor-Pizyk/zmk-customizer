@@ -1,9 +1,7 @@
-import { renameProject } from '../../domain/rename-project';
-import { setShieldName } from '../../domain/set-shield-name';
-import { toShieldName } from '../../domain/to-shield-name';
-import { Button } from '../components/button';
-import { useProject } from '../project-context';
-import type { SaveStatus } from '../project-state';
+import { renameProject, setShieldName, toShieldName } from '@domain';
+import { Button } from '@ui/components';
+import { useProject } from '@ui/project';
+import type { SaveStatus } from '@ui/project';
 import { DraftTextField } from './draft-text-field';
 
 const SAVE_STATUS_TEXT: Record<SaveStatus, string> = {

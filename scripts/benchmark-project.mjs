@@ -2,17 +2,15 @@ import { createServer } from 'vite';
 import { performance } from 'node:perf_hooks';
 const server = await createServer({ server: { middlewareMode: true } });
 try {
-  const { findWireContacts } = await server.ssrLoadModule('/src/domain/find-wire-contacts.ts');
-  const { createProject } = await server.ssrLoadModule('/src/domain/create-project.ts');
+  const { findWireContacts } = await server.ssrLoadModule('/src/domain/index.ts');
+  const { createProject } = await server.ssrLoadModule('/src/domain/index.ts');
   const analysisInput = (
     await server.ssrLoadModule('/tests/helpers/analysis-input.ts')
   ).createAnalysisInput();
-  const { analyzeProject } = await server.ssrLoadModule('/src/domain/analyze-project.ts');
-  const { getNets } = await server.ssrLoadModule('/src/domain/get-nets.ts');
-  const { validateSchematic } = await server.ssrLoadModule('/src/domain/validate-schematic.ts');
-  const { validateShieldProject } = await server.ssrLoadModule(
-    '/src/domain/validate-shield-project.ts',
-  );
+  const { analyzeProject } = await server.ssrLoadModule('/src/domain/index.ts');
+  const { getNets } = await server.ssrLoadModule('/src/domain/index.ts');
+  const { validateSchematic } = await server.ssrLoadModule('/src/domain/index.ts');
+  const { validateShieldProject } = await server.ssrLoadModule('/src/domain/index.ts');
   for (const [wireCount, bendCount] of process.argv.includes('--analysis')
     ? [[300, 4]]
     : [

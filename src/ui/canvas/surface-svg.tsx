@@ -1,7 +1,7 @@
 import type { PointerEvent, RefObject } from 'react';
-import type { CanvasWorkspaceId, Viewport } from '../../storage/preferences';
-import { usePreferences } from '../preferences-context';
-import { getWorkspaceLabel } from '../workspaces';
+import type { CanvasWorkspaceId, Viewport } from '@storage/preferences';
+import { usePreferences } from '@ui/preferences';
+import { getWorkspaceLabel } from '@ui/navigation';
 import { GridPattern } from './grid-pattern';
 import { toContentView, toWorldPoint } from './surface-content';
 import type { SurfaceContent } from './surface-content';

@@ -1,4 +1,4 @@
-import type { CanvasWorkspaceId, Viewport } from '../../storage/preferences';
+import type { CanvasWorkspaceId, Viewport } from '@storage/preferences';
 
 /** Screen px per key unit at zoom 1. */
 export const PX_PER_U = 48;

@@ -336,6 +336,8 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 
 ## 013 — matrix-wiring-editor
 
+**Implemented (2026-10-13):** [specification](../specs/013-matrix-wiring-editor/spec.md), [verification evidence](../specs/013-matrix-wiring-editor/verification.md). Grid/table assignments edit actual schematic connections with preview/Apply/Cancel and atomic Undo/Redo. Stable axes, both diode directions, direct GND, independent BLE split halves, schema v7 migration and conflict repair are covered by real browser/download checks, independent golden files and 19 actual-export ZMK builds.
+
 **Goal.** In the Schematic workspace, describe how the switches are wired so the generated kscan node and matrix transform match the real hardware, with conflicts visible before export.
 
 **In scope**
@@ -355,7 +357,7 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 - Switching diode direction regenerates the kscan node per `docs/zmk/kscan.md`; golden tests for both directions.
 - Direct-kscan project generates a valid `gpio-direct` node (golden test).
 
-**Open.** Whether charlieplex gets its own feature; heuristic for auto-assign on rotated clusters.
+**Open.** Whether charlieplex gets its own feature. Rotated-cluster auto-assignment heuristic resolved in spec 013 planning: visible centers, grid-quantized center-y rows, center-x rank within each row, with manual correction and preset-specific equivalence tests.
 
 **Relevant docs.** `docs/zmk/kscan.md`, `matrix-transform.md`, `boards.md`, `shield-files.md`.
 

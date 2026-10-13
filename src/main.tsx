@@ -1,11 +1,10 @@
 import './styles.css';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { loadProject } from './storage/project-storage';
-import { App } from './ui/app';
-import { ErrorBoundary } from './ui/error-boundary';
-import { PreferencesProvider } from './ui/preferences-context';
-import { ProjectProvider } from './ui/project-context';
+import { loadProject } from '@storage/project';
+import { App, ErrorBoundary } from '@ui/app';
+import { PreferencesProvider } from '@ui/preferences';
+import { ProjectProvider } from '@ui/project';
 
 const rootElement = document.querySelector('#root');
 if (rootElement === null) {

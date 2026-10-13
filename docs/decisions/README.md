@@ -42,3 +42,5 @@ What becomes easier, what becomes harder, what we must now keep true.
 - [0013 — Development architecture parser](0013-architecture-parser.md)
 
 - [0014 — Real browser behavioral testing](0014-browser-behavior-testing.md)
+
+- [0015 — Module public APIs and exact import aliases](0015-module-public-apis.md)

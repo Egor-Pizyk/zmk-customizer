@@ -1,4 +1,4 @@
-import { useProject } from '../project-context';
+import { useProject } from '@ui/project';
 
 // The one polite status region, always mounted and empty on load. Only the inner span remounts:
 // screen readers ignore a region inserted already filled, but announce a new child (R15).

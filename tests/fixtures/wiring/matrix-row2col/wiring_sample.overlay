@@ -1,0 +1,38 @@
+#include <dt-bindings/zmk/matrix_transform.h>
+#include <physical_layouts.dtsi>
+
+/ {
+    chosen {
+        zmk,kscan = &kscan0;
+        zmk,physical-layout = &default_layout;
+    };
+
+    kscan0: kscan_0 {
+        compatible = "zmk,kscan-gpio-matrix";
+        wakeup-source;
+        diode-direction = "row2col";
+        row-gpios = <&pro_micro 0 GPIO_ACTIVE_HIGH>, <&pro_micro 1 GPIO_ACTIVE_HIGH>;
+        col-gpios = <&pro_micro 2 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>, <&pro_micro 3 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
+    };
+
+    default_transform: keymap_transform_0 {
+        compatible = "zmk,matrix-transform";
+        rows = <2>;
+        columns = <2>;
+        map = <
+            RC(0,0)
+            RC(1,1)
+            RC(0,1)
+        >;
+    };
+
+    default_layout: default_layout {
+        compatible = "zmk,physical-layout";
+        display-name = "Wiring sample";
+        transform = <&default_transform>;
+        kscan = <&kscan0>;
+        keys = <&key_physical_attrs 100 100 0 0 0 0 0>,
+            <&key_physical_attrs 100 100 200 200 0 0 0>,
+            <&key_physical_attrs 100 100 400 0 0 0 0>;
+    };
+};

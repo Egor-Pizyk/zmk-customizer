@@ -1,8 +1,8 @@
 import { useEffect, useEffectEvent, useRef, useState } from 'react';
 import type { PointerEvent, RefObject } from 'react';
-import type { CanvasWorkspaceId, Viewport } from '../../storage/preferences';
-import { usePreferences } from '../preferences-context';
-import type { PreferencesChange } from '../preferences-context';
+import type { CanvasWorkspaceId, Viewport } from '@storage/preferences';
+import { usePreferences } from '@ui/preferences';
+import type { PreferencesChange } from '@ui/preferences';
 import { WHEEL_ZOOM_STEP, zoomAt } from './viewport';
 import type { ScreenPoint } from './viewport';
 

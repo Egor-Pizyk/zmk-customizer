@@ -1,7 +1,7 @@
-import { usePreferences } from '../preferences-context';
-import { getWorkspaceLabel } from '../workspaces';
-import { toIssueTargetPreferences } from './workspace-issue';
-import type { WorkspaceIssue } from './workspace-issue';
+import { usePreferences } from '@ui/preferences';
+import { getWorkspaceLabel } from '@ui/navigation';
+import { toIssueTargetPreferences } from '@ui/issues';
+import type { WorkspaceIssue } from '@ui/issues';
 
 type IssueButtonProps = {
   readonly issue: WorkspaceIssue;
@@ -18,12 +18,15 @@ export function IssueButton({ issue }: IssueButtonProps) {
     const selector = `[data-issue-path~="${issue.path.join('.')}"]`;
     const target = document.querySelector<HTMLElement>(selector);
     if (target !== null) {
-      target.focus();
+      focusTarget(target);
       return;
     }
     changePreferences(toIssueTargetPreferences(issue));
     requestAnimationFrame(() => {
-      document.querySelector<HTMLElement>(selector)?.focus();
+      const mountedTarget = document.querySelector<HTMLElement>(selector);
+      if (mountedTarget !== null) {
+        focusTarget(mountedTarget);
+      }
     });
   }
 
@@ -37,4 +40,13 @@ export function IssueButton({ issue }: IssueButtonProps) {
       {`: ${issue.message}`}
     </button>
   );
+}
+
+function focusTarget(target: HTMLElement) {
+  let details = target.closest('details');
+  while (details !== null) {
+    details.open = true;
+    details = details.parentElement?.closest('details') ?? null;
+  }
+  target.focus();
 }

@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import type { ChangeEvent, KeyboardEvent } from 'react';
-import { Field } from '../components/field';
-import { INPUT_CLASSES } from '../components/input-classes';
-import { usePreferences } from '../preferences-context';
+import { Field, INPUT_CLASSES } from '@ui/components';
+import { usePreferences } from '@ui/preferences';
 import { GRID_PRESETS_U, parseGridSizeInput } from './grid-size';
 
 const CUSTOM_PRESET = 'custom';

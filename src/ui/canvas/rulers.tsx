@@ -1,5 +1,5 @@
 import { useId } from 'react';
-import type { Viewport } from '../../storage/preferences';
+import type { Viewport } from '@storage/preferences';
 import { PX_PER_U, displayGridStep } from './viewport';
 import type { ElementSize } from './use-element-size';
 import type { WorldPoint } from './viewport';

@@ -4,6 +4,7 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  resolve: { tsconfigPaths: true },
   server: {
     host: '0.0.0.0',
     port: 5173,
@@ -13,15 +14,16 @@ export default defineConfig({
     environment: 'node',
     maxWorkers: 4,
     testTimeout: 15_000,
-    include: ['src/**/*.test.{ts,tsx}'],
+    include: ['tests/unit/**/*.test.{ts,tsx}'],
     setupFiles: ['tests/helpers/setup-tests.ts'],
     coverage: {
       provider: 'v8',
       include: [
         'src/{domain,generators,storage,ui}/**/*.{ts,tsx}',
-        'src/catalog/{parse-keys-header,get-controller-board}.ts',
+        'src/catalog/bindings/parse-keys-header.ts',
+        'src/catalog/controllers/get-controller-board.ts',
       ],
-      exclude: ['src/**/*.test.{ts,tsx}', 'src/domain/types.ts'],
+      exclude: ['src/**/*.test.{ts,tsx}', 'src/**/index.ts', 'src/domain/types.ts'],
       reporter: ['text', 'json-summary', 'html'],
       thresholds: {
         lines: 88,

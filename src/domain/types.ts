@@ -1,6 +1,7 @@
 export type Project = {
-  readonly schemaVersion: 6;
+  readonly schemaVersion: 7;
   readonly controllerId: string;
+  readonly wiring?: Wiring;
   readonly name: string;
   /** User override of the technical name; absent = derived from `name` (spec 002 FR-012a). */
   readonly shieldName?: string;
@@ -11,6 +12,21 @@ export type Project = {
   readonly insulatedCrossings: readonly CrossingRef[];
   /** Keymap layers in ZMK order (index = ZMK layer number); 1–32 in a valid project (spec 007). */
   readonly layers: readonly Layer[];
+};
+
+export type Half = 'left' | 'right';
+export type WiringTerminal = {
+  readonly id: string;
+  readonly half: Half;
+  readonly kind: 'row' | 'col' | 'input' | 'ground';
+  readonly boardPin?: number;
+  readonly droppedBoardPin?: string;
+};
+export type Wiring = {
+  readonly kind: 'matrix' | 'direct';
+  readonly topology: 'unibody' | 'split';
+  readonly diodeDirection: 'row2col' | 'col2row';
+  readonly terminals: readonly WiringTerminal[];
 };
 
 export type Layer = {
@@ -80,6 +96,7 @@ export type LayerBinding = Extract<Binding, { readonly layerId: string }>;
 /** A key, drawn on the Schematic as a switch seen from above; position is its top-left corner. */
 export type Key = {
   readonly id: string;
+  readonly half?: Half;
   readonly xU: number;
   readonly yU: number;
   readonly widthU?: number;
@@ -118,6 +135,7 @@ export type WireEnd =
   | {
       readonly kind: 'free';
       readonly at: WirePoint;
+      readonly terminalId?: string;
       readonly boardPin?: number;
       readonly droppedBoardPin?: string;
     };
@@ -140,6 +158,14 @@ export type CrossingRef = {
 };
 
 export type ValidationCode =
+  | 'wiring-cell-missing'
+  | 'wiring-terminal-conflict'
+  | 'wiring-half-conflict'
+  | 'wiring-pin-missing'
+  | 'wiring-split-unsupported'
+  | 'wiring-dimension-invalid'
+  | 'wiring-route-failed'
+  | 'wiring-half-empty'
   | 'binding-controller-unsupported'
   | 'board-pin-dropped'
   | 'shield-empty'

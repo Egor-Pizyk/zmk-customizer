@@ -1,0 +1,29 @@
+import { expect, it } from 'vitest';
+import type { Key } from '@domain';
+import { findNearestKey } from '@ui/canvas';
+
+const KEYS: readonly Key[] = [
+  { id: 'k1', xU: 0, yU: 0 },
+  { id: 'k2', xU: 1, yU: 0 },
+  { id: 'k3', xU: 5, yU: 0.25 },
+  { id: 'k4', xU: 1, yU: 1 },
+];
+
+it('finds the nearest key in the pressed direction', () => {
+  expect(findNearestKey(KEYS, { fromKeyId: 'k1', direction: 'right' })?.id).toBe('k2');
+  expect(findNearestKey(KEYS, { fromKeyId: 'k2', direction: 'down' })?.id).toBe('k4');
+  expect(findNearestKey(KEYS, { fromKeyId: 'k4', direction: 'up' })?.id).toBe('k2');
+});
+
+it('returns nothing when no key lies that way', () => {
+  expect(findNearestKey(KEYS, { fromKeyId: 'k1', direction: 'left' })).toBeUndefined();
+});
+
+it('navigates by visible resized and rotated centers', () => {
+  const keys: readonly Key[] = [
+    { id: 'from', xU: 0, yU: 0 },
+    { id: 'rotated', xU: 10, yU: 0, rotationDeg: 180, rotationOriginXU: 6, rotationOriginYU: 0.5 },
+    { id: 'wide', xU: 1, yU: 0, widthU: 10 },
+  ];
+  expect(findNearestKey(keys, { fromKeyId: 'from', direction: 'right' })?.id).toBe('rotated');
+});

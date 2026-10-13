@@ -1,4 +1,4 @@
-"""Run six real-browser regressions alone and restore exact original production bytes."""
+"""Run nine real-browser regressions alone and restore exact original production bytes."""
 import json
 from pathlib import Path
 import subprocess
@@ -6,28 +6,38 @@ import subprocess
 ROOT = Path(__file__).resolve().parent.parent
 EVIDENCE = ROOT / '.e2e-mutations'
 SEEDS = [
-    ('disabled-resize', 'src/ui/schematic/use-key-transform-pointer.ts',
+    ('disabled-resize', 'src/ui/schematic/interaction/use-key-transform-pointer.ts',
      "options.activeToolId === 'select' ? readTransformTarget(event.target, world) : undefined",
      "options.activeToolId === 'select' && options.project.keys.length === -1 ? readTransformTarget(event.target, world) : undefined", 'resize right at 0', 'toBeCloseTo'),
-    ('invisible-preview', 'src/ui/schematic/key-art.tsx',
+    ('invisible-preview', 'src/ui/schematic/rendering/key-art.tsx',
      'className="fill-surface-raised stroke-border-strong',
      'className="opacity-0 fill-surface-raised stroke-border-strong',
      'reviewed rotated selection frame', 'toHaveScreenshot'),
-    ('shifted-hit-area', 'src/ui/schematic/key-transform-frames.tsx',
+    ('shifted-hit-area', 'src/ui/schematic/rendering/key-transform-frames.tsx',
      'className={`group flex size-full',
      'className={`translate-x-10 [&>span]:-translate-x-10 group flex size-full',
      'handles remain aligned after zoom', 'toBeLessThan'),
-    ('lost-save', 'src/ui/project-state.ts',
+    ('lost-save', 'src/ui/project/project-state.ts',
      'const saved = saveProject(project);',
      'const saved = project.keys.some(key => key.widthU !== undefined) ? { ok: true as const } : saveProject(project);',
      'resize right at 0', 'toBe'),
-    ('extra-undo', 'src/ui/project-history.ts',
+    ('extra-undo', 'src/ui/project/project-history.ts',
      'past: [...history.past, history.present].slice(-UNDO_LIMIT)',
      'past: [...history.past, history.present, present].slice(-UNDO_LIMIT)',
      'resize right at 0', 'toEqual'),
-    ('cancelled-value', 'src/ui/schematic/layout-controls.tsx',
+    ('cancelled-value', 'src/ui/schematic/layout/layout-controls.tsx',
      'props.hasPreview &&', '',
      'precise numeric Enter shows', 'toHaveValue'),
+    ('lost-wiring-route', 'src/domain/wiring/edit-wiring.ts',
+     'connections: connections.filter((connection) => terminalIds.includes(connection.terminalId)),',
+     'connections: [],', 'matrix preview, conflict repair', 'toBeVisible'),
+    ('saved-wiring-preview', 'src/ui/schematic/wiring/use-wiring-preview.ts',
+     'setDraft(result.value === project ? undefined : { base: project, preview: result.value });',
+     'commit(() => result.value); setDraft(result.value === project ? undefined : { base: project, preview: result.value });',
+     'matrix preview, conflict repair', 'toEqual'),
+    ('wrong-split-offset', 'src/generators/shield/generate-split-overlays.ts',
+     'col-offset = <${matrix.halves.left.colPins.length}>;',
+     'col-offset = <0>;', 'BLE split uses separate', 'toContain'),
 ]
 
 
@@ -85,8 +95,8 @@ if __name__ == '__main__':
     # Baseline must pass before any source mutation, with reviewed snapshots already present.
     subprocess.run(['docker', 'compose', '-f', 'compose.e2e.yaml', 'run', '--rm',
                     'e2e', 'npx', 'playwright', 'test', '--project=chromium', '--grep',
-                    'resize right at 0|reviewed rotated selection frame|handles remain aligned after zoom|precise numeric Enter shows'],
+                    'resize right at 0|reviewed rotated selection frame|handles remain aligned after zoom|precise numeric Enter shows|matrix preview, conflict repair|BLE split uses separate'],
                    cwd=ROOT, check=True)
     results = [check_seed(seed) for seed in SEEDS]
     (EVIDENCE / 'summary.json').write_text(json.dumps(results, indent=2) + '\n')
-    print('Detected 6/6 regressions; exact original production bytes restored.')
+    print('Detected 9/9 regressions; exact original production bytes restored.')

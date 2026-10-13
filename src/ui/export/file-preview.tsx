@@ -1,5 +1,5 @@
-import type { GeneratedFile } from '../../generators/generated-file';
-import { Button } from '../components/button';
+import type { GeneratedFile } from '@generators';
+import { Button } from '@ui/components';
 import type { useExportActions } from './use-export-actions';
 
 type FilePreviewProps = {

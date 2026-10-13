@@ -1,4 +1,4 @@
-import type { WirePoint } from '../../domain/types';
+import type { WirePoint } from '@domain';
 
 export function toPathData(points: readonly WirePoint[]): string {
   return points

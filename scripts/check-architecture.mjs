@@ -2,6 +2,8 @@ import { parse } from '@babel/parser';
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { checkModuleImport, resolveProjectImport } from './module-imports.mjs';
+import { resolvePublicExports } from './resolve-public-exports.mjs';
 
 const PURE_LAYERS = new Set(['domain', 'catalog', 'generators']);
 const IO_NAMES = new Set([
@@ -21,17 +23,13 @@ const IO_NAMES = new Set([
   'queueMicrotask',
 ]);
 const ROOT_UI = new Set([
-  'project-context',
-  'project-state',
-  'preferences-context',
-  'workspaces',
+  'project',
+  'preferences',
+  'navigation',
   'shortcuts',
-  'use-shell-dialogs',
-  'use-issue-navigation',
-  'import-session',
-  'use-global-shortcuts',
-  'download-blob',
-  'download-text-file',
+  'dialogs',
+  'downloads',
+  'issues',
 ]);
 const FEATURES = new Set(['schematic', 'bindings', 'firmware', 'export']);
 
@@ -130,10 +128,18 @@ function propertyName(node) {
   return node?.type === 'Identifier' ? node.name : node?.value;
 }
 
-export function checkSource(file, source) {
+export function checkSource(file, source, { loadSource } = {}) {
   const issues = [];
   const ast = parseSource(file, source);
   const isTest = /\.test\.[cm]?[jt]sx?$/u.test(file);
+  if (isTest && file.startsWith('src/')) {
+    issues.push({
+      file,
+      line: 1,
+      rule: 'test-location',
+      message: 'Tests belong in tests/unit, outside production source folders',
+    });
+  }
   const isPure = !isTest && PURE_LAYERS.has(file.split('/')[1]);
   const aliases = new Map();
   function origin(node) {
@@ -174,35 +180,46 @@ export function checkSource(file, source) {
     issues.push({ file, line: node.loc?.start.line ?? 1, rule, message });
   }
   function checkImport(node, specifier, typeOnly) {
-    if (isTest || !file.startsWith('src/')) {
-      return;
-    }
     if (typeof specifier !== 'string') {
       report(node, 'layer-import', 'Dynamic imports require a literal target');
       return;
     }
-    if (!specifier.startsWith('.')) {
+    const moduleIssue = checkModuleImport(file, specifier);
+    if (moduleIssue) report(node, moduleIssue.rule, moduleIssue.message);
+    if (isTest || !file.startsWith('src/')) return;
+    const target = resolveProjectImport(file, specifier);
+    if (!target) {
       const externalAllowed =
         file.startsWith('src/ui/') || file === 'src/main.tsx'
           ? ['react', 'react-dom', 'fflate'].some(
               (name) => specifier === name || specifier.startsWith(`${name}/`),
             )
           : file.startsWith('src/storage/') && ['zod', 'fflate'].includes(specifier);
-      if (!externalAllowed) {
+      if (!externalAllowed)
         report(node, 'external-import', `External import ${specifier} is not allowed here`);
-      }
       return;
     }
-    const target = path.posix
-      .normalize(path.posix.join(path.posix.dirname(file), specifier.split('?')[0]))
-      .replace(/\.js$/u, '.ts');
     if (target.startsWith('tests/') || /\.test\./u.test(target)) {
       report(node, 'test-import', 'Production cannot import tests');
-    } else if (!allowedEdge(file, target, typeOnly)) {
-      report(node, 'layer-import', `Forbidden edge to ${target}`);
+      return;
+    }
+    const specifiers = node.specifiers;
+    const names =
+      node.type === 'TSImportType' && node.qualifier?.type === 'Identifier'
+        ? [node.qualifier.name]
+        : specifiers?.length && specifiers.every((item) => item.type !== 'ImportNamespaceSpecifier')
+          ? specifiers.map((item) => propertyName(item.imported ?? item.local))
+          : undefined;
+    for (const owner of resolvePublicExports(target, { names, typeOnly, loadSource })) {
+      if (!allowedEdge(file, owner.target, owner.typeOnly)) {
+        report(node, 'layer-import', `Forbidden edge to ${owner.target} through ${specifier}`);
+      }
     }
   }
   walk(ast, (node, parent) => {
+    if (file.endsWith('/index.ts') && node.type === 'ExportAllDeclaration') {
+      report(node, 'public-api', 'Public indexes use explicit named exports, not export *');
+    }
     if (
       ['ImportDeclaration', 'ExportNamedDeclaration', 'ExportAllDeclaration'].includes(node.type) &&
       node.source
@@ -221,6 +238,9 @@ export function checkSource(file, source) {
     }
     if (node.type === 'ImportExpression') {
       checkImport(node, node.source?.value, false);
+    }
+    if (node.type === 'TSImportType') {
+      checkImport(node, node.argument?.value, true);
     }
     const name = origin(node).replace(/^globalThis\./u, '');
     const isReference =
@@ -264,7 +284,7 @@ export function checkSource(file, source) {
       report(node, 'purity', 'Current-time Date is forbidden');
     }
     if (
-      file === 'src/domain/create-entity-id.ts' &&
+      file === 'src/domain/project/create-entity-id.ts' &&
       node.type === 'CallExpression' &&
       ['Number', 'parseInt', 'Number.parseInt'].includes(origin(node.callee))
     ) {
@@ -320,7 +340,9 @@ export function sourceFiles(directory = 'src') {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
-  const issues = sourceFiles().flatMap((file) => checkSource(file, readFileSync(file, 'utf8')));
+  const issues = [...sourceFiles(), ...sourceFiles('tests/unit')].flatMap((file) =>
+    checkSource(file, readFileSync(file, 'utf8')),
+  );
   for (const issue of issues) {
     process.stderr.write(`${issue.file}:${issue.line} ${issue.rule}: ${issue.message}\n`);
   }

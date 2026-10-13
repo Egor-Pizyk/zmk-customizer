@@ -1,8 +1,7 @@
 import { useRef } from 'react';
 import type { ChangeEvent, MouseEvent, ReactNode, RefObject } from 'react';
-import { Button } from '../components/button';
-import { Dialog } from '../components/dialog';
-import { useProject } from '../project-context';
+import { Button, Dialog } from '@ui/components';
+import { useProject } from '@ui/project';
 
 type ProjectDialogsProps = {
   readonly isNewDialogOpen: boolean;

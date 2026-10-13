@@ -1,4 +1,4 @@
-import type { Key, Project, Wire, WireEnd } from '../../src/domain/types';
+import type { Key, Project, Wire, WireEnd } from '@domain';
 
 // Test-only builders; not imported by app code.
 export function buildProject(input: {
@@ -10,7 +10,7 @@ export function buildProject(input: {
   readonly layers?: Project['layers'];
 }): Project {
   return {
-    schemaVersion: 6,
+    schemaVersion: 7,
     controllerId: 'nice_nano_v2',
     name: 'Test',
     keys: input.keys ?? [],

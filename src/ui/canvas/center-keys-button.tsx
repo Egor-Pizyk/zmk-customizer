@@ -1,9 +1,8 @@
 import type { RefObject } from 'react';
-import { findKeyLayoutCenter } from '../../domain/find-key-layout-center';
-import type { Viewport } from '../../storage/preferences';
-import { IconButton } from '../components/icon-button';
-import { CenterViewIcon } from '../components/icons/center-view-icon';
-import { useProject } from '../project-context';
+import { findKeyLayoutCenter } from '@domain';
+import type { Viewport } from '@storage/preferences';
+import { IconButton, CenterViewIcon } from '@ui/components';
+import { useProject } from '@ui/project';
 import { surfaceCenter } from './surface-center';
 import { centerViewportAt } from './viewport';
 

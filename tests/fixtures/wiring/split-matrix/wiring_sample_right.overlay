@@ -1,0 +1,10 @@
+#include "wiring_sample.dtsi"
+
+&kscan0 {
+    row-gpios = <&pro_micro 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>;
+    col-gpios = <&pro_micro 1 GPIO_ACTIVE_HIGH>;
+};
+
+&default_transform {
+    col-offset = <2>;
+};

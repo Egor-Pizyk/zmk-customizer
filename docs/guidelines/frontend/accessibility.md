@@ -64,7 +64,7 @@ Baseline: WCAG 2.2 AA (AGENTS §7.8, ADR 0008). A feature is not done until its 
 
 ## Live announcements
 
-- One polite `role="status"` region in the shell (`app.tsx`, `StatusMessage`), always mounted. It announces status changes: the issue total when it changes ("3 problems"), undo toasts ("Deleted key 12. Undo"), "Undone" / "Redone", copy/download results.
+- One polite `role="status"` region in the shell (`app/app.tsx`, `StatusMessage`), always mounted. It announces status changes: the issue total when it changes ("3 problems"), undo toasts ("Deleted key 12. Undo"), "Undone" / "Redone", copy/download results.
 - The project-bar save status is plain text, not a second status region.
 - Storage failures use `role="alert"` once, then remain as a banner.
 - Never announce per keystroke or on every autosave.

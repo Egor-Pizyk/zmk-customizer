@@ -1,4 +1,4 @@
-import type { WireCheck } from '../../domain/can-add-wire';
+import type { WireCheck } from '@domain';
 
 const HINT_BY_CHECK: Record<Exclude<WireCheck, 'ok'>, string> = {
   'no-key-pin': 'A wire must start or end on a key pin.',

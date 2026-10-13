@@ -20,7 +20,41 @@
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "erasableSyntaxOnly": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@domain": ["./src/domain/index.ts"],
+      "@generators": ["./src/generators/index.ts"],
+      "@catalog/bindings": ["./src/catalog/bindings/index.ts"],
+      "@catalog/controllers": ["./src/catalog/controllers/index.ts"],
+      "@catalog/firmware": ["./src/catalog/firmware/index.ts"],
+      "@catalog/presets": ["./src/catalog/presets/index.ts"],
+      "@storage/project": ["./src/storage/project/index.ts"],
+      "@storage/migrations": ["./src/storage/migrations/index.ts"],
+      "@storage/preferences": ["./src/storage/preferences/index.ts"],
+      "@storage/export": ["./src/storage/export/index.ts"],
+      "@ui/app": ["./src/ui/app/index.ts"],
+      "@ui/project": ["./src/ui/project/index.ts"],
+      "@ui/preferences": ["./src/ui/preferences/index.ts"],
+      "@ui/downloads": ["./src/ui/downloads/index.ts"],
+      "@ui/navigation": ["./src/ui/navigation/index.ts"],
+      "@ui/shortcuts": ["./src/ui/shortcuts/index.ts"],
+      "@ui/dialogs": ["./src/ui/dialogs/index.ts"],
+      "@ui/issues": ["./src/ui/issues/index.ts"],
+      "@ui/components": ["./src/ui/components/index.ts"],
+      "@ui/canvas": ["./src/ui/canvas/index.ts"],
+      "@ui/shell": ["./src/ui/shell/index.ts"],
+      "@ui/schematic": ["./src/ui/schematic/index.ts"],
+      "@ui/bindings": ["./src/ui/bindings/index.ts"],
+      "@ui/firmware": ["./src/ui/firmware/index.ts"],
+      "@ui/export": ["./src/ui/export/index.ts"]
+    }
   },
-  "include": ["src", "tests/helpers", "vite.config.ts", "tests/e2e", "playwright.config.ts"]
+  "include": [
+    "src",
+    "tests/helpers",
+    "tests/unit",
+    "vite.config.ts",
+    "tests/e2e",
+    "playwright.config.ts"
+  ]
 }

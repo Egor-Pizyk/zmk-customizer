@@ -71,7 +71,7 @@ handleProject(project);
 ## Length
 
 - Name length scales with scope: exported functions are fully descriptive (`renderMatrixTransform`); a local helper used on the next line can be short (`renderRow`).
-- Don't repeat the file's subject in private helpers: in `generators/generate-overlay.ts`, helpers are `renderKscanNode`, not `renderOverlayKscanNode`.
+- Don't repeat the file's subject in private helpers: in `generators/shield/generate-overlay.ts`, helpers are `renderKscanNode`, not `renderOverlayKscanNode`.
 
 ## Enforced by
 

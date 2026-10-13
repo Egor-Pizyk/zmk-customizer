@@ -1,5 +1,5 @@
 import type { PointerEvent, ReactNode } from 'react';
-import type { Viewport } from '../../storage/preferences';
+import type { Viewport } from '@storage/preferences';
 import { PX_PER_U, screenToWorld } from './viewport';
 import type { WorldPoint } from './viewport';
 

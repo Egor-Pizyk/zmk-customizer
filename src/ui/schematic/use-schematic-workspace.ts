@@ -1,13 +1,13 @@
-import { useLayoutPreview } from './use-layout-preview';
+import { useSchematicPreviews } from './use-schematic-previews';
 import { useState } from 'react';
-import type { Project } from '../../domain/types';
-import { usePreferences } from '../preferences-context';
-import { useProject } from '../project-context';
-import type { Commit } from './pointer-types';
-import type { SchematicSelection } from './schematic-selection';
-import type { ToolId } from './tools';
-import { useSchematicKeyboard } from './use-schematic-keyboard';
-import { useEditingPointer } from './use-editing-pointer';
+import type { Project } from '@domain';
+import { usePreferences } from '@ui/preferences';
+import { useProject } from '@ui/project';
+import type { Commit } from './interaction/pointer-types';
+import type { SchematicSelection } from './interaction/schematic-selection';
+import type { ToolId } from './tools/tools';
+import { useSchematicKeyboard } from './interaction/use-schematic-keyboard';
+import { useEditingPointer } from './interaction/use-editing-pointer';
 
 type InteractionInput = {
   readonly project: Project;
@@ -33,31 +33,23 @@ function useCanvasHint(announce: (text: string) => void) {
 }
 
 function useSchematicInteraction(input: InteractionInput) {
-  const { project, commit } = input;
-  const [activeToolId, setActiveToolId] = useState<ToolId>('select');
-  const [selection, setSelection] = useState<SchematicSelection>();
-  const { hint, handleHint, handleHintClear } = useCanvasHint(input.announce);
-  const handleSelectionChange = setSelection;
-  const pointer = useWorkspacePointer(input, {
-    activeToolId,
+  const {
     selection,
-    onSelectionChange: handleSelectionChange,
-    onHint: handleHint,
-    onHintClear: handleHintClear,
-  });
-  const layout = useLayoutPreview(project, selection, commit);
-  const handleToolChange = (toolId: ToolId) => {
-    pointer.cancelDraft();
-    layout.handleCancel();
-    handleHintClear();
-    setActiveToolId(toolId);
-  };
-  const handleKeyKeyDown = useSchematicKeyboard({
-    ...input,
+    activeToolId,
+    hint,
+    pointer,
+    layout,
+    wiring,
+    keyboardLayout,
+    handleSelectionChange,
+    handleToolChange,
+  } = useInteractionState(input);
+  const handleKeyKeyDown = useInteractionKeyboard(input, {
     selection,
     activeToolId,
     pointer,
-    layout,
+    layout: keyboardLayout,
+    wiring,
     onSelectionChange: handleSelectionChange,
     onToolChange: handleToolChange,
   });
@@ -65,7 +57,8 @@ function useSchematicInteraction(input: InteractionInput) {
     selection,
     activeToolId,
     hint,
-    pointer: getEditingPointer(pointer, layout.hasPreview),
+    pointer: getEditingPointer(pointer, layout.hasPreview || wiring.hasPreview),
+    wiring,
     layout,
     handleSelectionChange,
     handleToolChange,
@@ -115,4 +108,69 @@ function getEditingPointer(pointer: ReturnType<typeof useEditingPointer>, hasPre
         },
       }
     : pointer;
+}
+
+function createToolChangeHandler(
+  setActiveToolId: (toolId: ToolId) => void,
+  handlers: {
+    wiring: { handleCancel: () => void };
+    pointer: { cancelDraft: () => void };
+    layout: { handleCancel: () => void };
+    handleHintClear: () => void;
+  },
+) {
+  const { wiring, pointer, layout, handleHintClear } = handlers;
+  const handleToolChange = (toolId: ToolId) => {
+    wiring.handleCancel();
+    pointer.cancelDraft();
+    layout.handleCancel();
+    handleHintClear();
+    setActiveToolId(toolId);
+  };
+
+  return handleToolChange;
+}
+
+function useInteractionKeyboard(
+  input: InteractionInput,
+  handlers: Omit<Parameters<typeof useSchematicKeyboard>[0], keyof InteractionInput>,
+) {
+  return useSchematicKeyboard({ ...input, ...handlers });
+}
+
+function useInteractionState(input: InteractionInput) {
+  const { project } = input;
+  const [activeToolId, setActiveToolId] = useState<ToolId>('select');
+  const [selection, setSelection] = useState<SchematicSelection>();
+  const { hint, handleHint, handleHintClear } = useCanvasHint(input.announce);
+  const handleSelectionChange = setSelection;
+  const pointer = useWorkspacePointer(input, {
+    activeToolId,
+    selection,
+    onSelectionChange: handleSelectionChange,
+    onHint: handleHint,
+    onHintClear: handleHintClear,
+  });
+  const { layout, wiring, keyboardLayout } = useSchematicPreviews(project, selection, {
+    commit: input.commit,
+    pointer,
+  });
+  const handleToolChange = createToolChangeHandler(setActiveToolId, {
+    wiring,
+    pointer,
+    layout,
+    handleHintClear,
+  });
+
+  return {
+    selection,
+    activeToolId,
+    hint,
+    pointer,
+    layout,
+    wiring,
+    keyboardLayout,
+    handleSelectionChange,
+    handleToolChange,
+  };
 }

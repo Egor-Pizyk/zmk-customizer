@@ -1,0 +1,2 @@
+config SHIELD_WIRING_SAMPLE
+    def_bool $(shields_list_contains,wiring_sample)

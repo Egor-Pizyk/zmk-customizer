@@ -1,11 +1,11 @@
 import { useId } from 'react';
-import { toTabId } from '../components/to-tab-id';
-import { ActionPanel } from './action-panel';
-import { BindingsCanvas } from './bindings-canvas';
-import { BindingsTable } from './bindings-table';
-import { LayerBar } from './layer-bar';
-import { NoKeys } from './no-keys';
-import { useBindingsInteraction } from './use-bindings-interaction';
+import { toTabId } from '@ui/components';
+import { ActionPanel } from './panel/action-panel';
+import { BindingsCanvas } from './rendering/bindings-canvas';
+import { BindingsTable } from './rendering/bindings-table';
+import { LayerBar } from './rendering/layer-bar';
+import { NoKeys } from './rendering/no-keys';
+import { useBindingsInteraction } from './interaction/use-bindings-interaction';
 import { useBindingsWorkspace } from './use-bindings-workspace';
 
 // Layer tabs over the keycaps on the dimmed schematic, the Action panel, and the Keys table

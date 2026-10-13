@@ -36,7 +36,7 @@
   },
   {
     "file": "src/ui/components/probe.ts",
-    "code": "export { useProject } from '../project-context';",
+    "code": "export { useProject } from '@ui/project';",
     "diagnostic": "layer-import"
   },
   {
@@ -55,7 +55,7 @@
     "diagnostic": "test-import"
   },
   {
-    "file": "src/domain/create-entity-id.ts",
+    "file": "src/domain/project/create-entity-id.ts",
     "code": "const convert = Number; export const value = convert(id.slice(1));",
     "diagnostic": "lossy-id"
   },
@@ -65,12 +65,12 @@
     "diagnostic": "argument-spread"
   },
   {
-    "file": "src/ui/probe.test.ts",
+    "file": "tests/unit/ui/probe.test.ts",
     "code": "vi.mock('react', () => ({useState: vi.fn()}));",
     "diagnostic": "react-mock"
   },
   {
-    "file": "src/ui/probe.test.ts",
+    "file": "tests/unit/ui/probe.test.ts",
     "code": "it.only('ignored', () => {});",
     "diagnostic": "focused-test"
   },
@@ -81,12 +81,12 @@
   },
   {
     "file": "src/catalog/probe.ts",
-    "code": "import type { Project } from '../domain/types'; export const values = [] as const;",
+    "code": "import type { Project } from '@domain'; export const values = [] as const;",
     "diagnostic": null
   },
   {
-    "file": "src/ui/probe.ts",
-    "code": "import { createProject } from '../domain/create-project';",
+    "file": "src/ui/app/probe.ts",
+    "code": "import { createProject } from '@domain';",
     "diagnostic": null
   },
   {
@@ -95,7 +95,7 @@
     "diagnostic": null
   },
   {
-    "file": "src/domain/probe.test.ts",
+    "file": "tests/unit/domain/probe.test.ts",
     "code": "import { readFile } from 'node:fs/promises';",
     "diagnostic": null
   },
@@ -106,32 +106,32 @@
   },
   {
     "file": "src/ui/schematic/probe.ts",
-    "code": "import { getNets } from '../../domain/get-nets';",
+    "code": "import { getNets } from '@domain';",
     "diagnostic": "layer-import"
   },
   {
     "file": "src/ui/schematic/probe.ts",
-    "code": "import type { Net } from '../../domain/get-nets';",
+    "code": "import type { Net } from '@domain';",
     "diagnostic": null
   },
   {
-    "file": "src/ui/probe.test.ts",
+    "file": "tests/unit/ui/probe.test.ts",
     "code": "import { vi as mocker } from 'vitest'; mocker.mock('react');",
     "diagnostic": "react-mock"
   },
   {
     "file": "src/ui/export/get-export-preview.ts",
-    "code": "import { generateRepositoryFiles } from '../../generators/generate-repository-files';",
+    "code": "import { generateRepositoryFiles } from '@generators';",
     "diagnostic": null
   },
   {
     "file": "src/ui/export/probe.ts",
-    "code": "import type { GeneratedFile } from '../../generators/generated-file';",
+    "code": "import type { GeneratedFile } from '@generators';",
     "diagnostic": null
   },
   {
     "file": "src/ui/schematic/probe.ts",
-    "code": "import { useProject } from '../project-context';",
+    "code": "import { useProject } from '@ui/project';",
     "diagnostic": null
   },
   {
@@ -155,7 +155,7 @@
     "diagnostic": "purity"
   },
   {
-    "file": "src/ui/probe.test.ts",
+    "file": "tests/unit/ui/probe.test.ts",
     "code": "import * as React from 'react'; vi.spyOn(React, 'useState');",
     "diagnostic": "react-mock"
   },
@@ -173,5 +173,105 @@
     "file": "src/domain/probe.ts",
     "code": "export const peak = globalThis.Math.max(...values);",
     "diagnostic": "argument-spread"
+  },
+  {
+    "file": "src/domain/project/probe.test.ts",
+    "code": "import { test } from 'vitest'; test('example', () => {});",
+    "diagnostic": "test-location"
+  },
+  {
+    "file": "src/ui/bindings/picker/probe.ts",
+    "code": "import { formatBindingName } from '../formatting/format-binding-name';",
+    "diagnostic": null
+  },
+  {
+    "file": "src/ui/schematic/interaction/probe.ts",
+    "code": "export { pickSlot } from '../../bindings/picker/pick-slot';",
+    "diagnostic": "layer-import"
+  },
+  {
+    "file": "src/ui/schematic/interaction/probe.ts",
+    "code": "import { KEYCODES } from '@catalog/bindings';",
+    "diagnostic": null
+  },
+  {
+    "file": "src/ui/components/probe.ts",
+    "code": "export { keys } from '../../catalog/bindings/keycodes';",
+    "diagnostic": "layer-import"
+  },
+  {
+    "file": "src/ui/schematic/probe.ts",
+    "code": "import { getNets } from '@domain';",
+    "diagnostic": "layer-import"
+  },
+  {
+    "file": "src/ui/schematic/probe.ts",
+    "code": "import type { Net } from '@domain';",
+    "diagnostic": null
+  },
+  {
+    "file": "src/ui/schematic/probe.ts",
+    "code": "import * as domain from '@domain';",
+    "diagnostic": "layer-import"
+  },
+  {
+    "file": "src/ui/schematic/probe.ts",
+    "code": "export { validateProject as validate } from '@domain';",
+    "diagnostic": "layer-import"
+  },
+  {
+    "file": "src/ui/schematic/probe.ts",
+    "code": "export const load = () => import('@domain');",
+    "diagnostic": "layer-import"
+  },
+  {
+    "file": "src/domain/probe.ts",
+    "code": "import { KEYCODES } from '@catalog/bindings';",
+    "diagnostic": "layer-import"
+  },
+  {
+    "file": "src/catalog/probe.ts",
+    "code": "import { createProject } from '@domain';",
+    "diagnostic": "layer-import"
+  },
+  {
+    "file": "src/catalog/probe.ts",
+    "code": "import type { Project } from '@domain';",
+    "diagnostic": null
+  },
+  {
+    "file": "src/ui/components/probe.ts",
+    "code": "import { useProject } from '@ui/project';",
+    "diagnostic": "layer-import"
+  },
+  {
+    "file": "src/ui/schematic/probe.ts",
+    "code": "import { generateRepositoryFiles } from '@generators';",
+    "diagnostic": "layer-import"
+  },
+  {
+    "file": "src/domain/index.ts",
+    "code": "export * from './types';",
+    "diagnostic": "public-api"
+  },
+  {
+    "file": "src/ui/schematic/probe.ts",
+    "code": "export type Value = import('@domain').Project;",
+    "diagnostic": null
+  },
+  {
+    "file": "src/ui/export/probe.ts",
+    "code": "export type Value = import('@generators').GeneratedFile;",
+    "diagnostic": null
+  },
+  {
+    "file": "src/ui/components/probe.ts",
+    "code": "export type Value = import('@domain').Project;",
+    "diagnostic": "layer-import"
+  },
+  {
+    "file": "tests/unit/ui/probe.test.ts",
+    "code": "export type Value = import('/src/domain/types').Project;",
+    "diagnostic": "public-api"
   }
 ]

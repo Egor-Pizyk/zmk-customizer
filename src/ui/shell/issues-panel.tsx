@@ -1,10 +1,9 @@
 import { useId } from 'react';
-import { IconButton } from '../components/icon-button';
-import { CloseIcon } from '../components/icons/close-icon';
-import { usePreferences } from '../preferences-context';
-import { useProject } from '../project-context';
+import { IconButton, CloseIcon } from '@ui/components';
+import { usePreferences } from '@ui/preferences';
+import { useProject } from '@ui/project';
 import { IssueButton } from './issue-button';
-import { ISSUES_PANEL_ID } from './workspace-issue';
+import { ISSUES_PANEL_ID } from '@ui/issues';
 
 export function IssuesPanel() {
   const { issues } = useProject();

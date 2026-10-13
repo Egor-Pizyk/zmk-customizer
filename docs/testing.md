@@ -130,7 +130,8 @@ snapshot refresh. Firefox/WebKit geometry checks remain independent of Chromium 
 
 `make test-e2e-mutations` runs alone after `make test-e2e` has prepared the browser image.
 It first checks the relevant Chromium baseline, then temporarily seeds disabled resize,
-invisible preview, shifted hit area, lost save, extra Undo and cancelled-value resurrection.
+invisible preview, shifted hit area, lost save, extra Undo, cancelled-value resurrection,
+lost actual wiring routes, prematurely saved wiring previews and wrong split column offset.
 Each seed must fail its expected behavioral assertion; compiler/runner exceptions do not
 count. Exact original production bytes are restored in finally, and concurrent modifications
 are never overwritten. Evidence lives in ignored `.e2e-mutations/`. Do not run it alongside
@@ -140,3 +141,7 @@ See [coverage matrix](../specs/025-playwright-e2e/coverage-matrix.md) and
 [verification](../specs/025-playwright-e2e/verification.md) for measured results and limits.
 Real-browser automation does not establish screen-reader speech, OS-originated pointercancel,
 all desktop sizes/themes, physical keyboard firmware behavior, or absence of all user bugs.
+
+## File organization
+
+Production modules live in responsibility groups under `src/<layer>/`. Vitest tests live in `tests/unit/<layer>/<group>/`, mirroring these groups; application integration tests live in `tests/unit/ui/integration/`. Shared UI tests mirror their module folders (project, app, shortcuts, downloads and issues). Shared test builders and setup stay in `tests/helpers/`, golden inputs and outputs in `tests/fixtures/`, Playwright journeys in `tests/e2e/`, and Node tooling tests in `tests/tooling/`. Tests import each module through its public index.ts alias. Internal implementation files use relative peer imports; the module lint rule also covers tests. Re-export indexes are excluded from coverage because implementation contracts and compiler checks cover them.

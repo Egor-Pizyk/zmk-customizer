@@ -1,5 +1,5 @@
-import { getKeyCenter } from '../../domain/get-key-center';
-import type { Key } from '../../domain/types';
+import { getKeyCenter } from '@domain';
+import type { Key } from '@domain';
 
 export type Direction = 'left' | 'right' | 'up' | 'down';
 

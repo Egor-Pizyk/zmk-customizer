@@ -1,0 +1,7 @@
+# Wiring editor golden contracts
+
+These complete shield files are independent hand-authored expectations, not snapshots of generator output. Target: ZMK v0.3.0 (`edf5c08`). Sources: `docs/zmk/kscan.md`, `docs/zmk/matrix-transform.md`, `docs/zmk/physical-layout.md`, `docs/zmk/shield-files.md`, and verbatim upstream Corne fixtures under `tests/fixtures/upstream/`.
+
+Compared with Corne, Wiring sample has three keys, no hardware-specific fixups, one Base layer with `&none`, and explicit whole-keyboard physical geometry. Matrix has 2 rows and 2 columns; split matrix has a 2×2 left scan and 1×1 right scan, sharing a 2×3 transform with right offset 2. Both GPIO arrays are overridden per half. Matrix direction fixtures cover both col2row (row pull-down) and row2col (column pull-down), including unequal split halves. Direct uses active-low/pull-up GPIOs, a one-row transform, no diodes, and switch ground represented in the schematic rather than as a GPIO output. Split direct uses two left inputs and one right input, offset 2. Identity and central role are left-only; split defaults apply to both halves.
+
+The shipped Unibody six preset auto-assignment remains exactly row-major 2×3: `(0,0),(0,1),(0,2),(1,0),(1,1),(1,2)`. Existing GPIO pair associations are preserved because bus identities are reused in their original ordered axes. The preset is the only available complete electrical preset; physical layout presets have no existing electrical assignments to preserve.
