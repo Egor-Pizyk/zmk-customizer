@@ -39,6 +39,7 @@ Rules for humans and agents: [AGENTS.md](AGENTS.md). Project subagents (`zmk-rev
 ## Docs
 
 - [AGENTS.md](AGENTS.md) — product, domain model, architecture, stack, principles
+- [docs/folder-structure.md](docs/folder-structure.md) — source groups and separate test folders
 - [docs/roadmap.md](docs/roadmap.md) — features in implementation order
 - [docs/decisions/](docs/decisions/README.md) — architecture decision records
 - [docs/zmk/](docs/zmk/README.md) — verified ZMK reference notes

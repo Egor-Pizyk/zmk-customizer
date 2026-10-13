@@ -2,14 +2,13 @@ import { StrictMode } from 'react';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
-
-import { App } from '../../src/ui/app';
-import { PreferencesProvider } from '../../src/ui/preferences-context';
-import { ProjectProvider } from '../../src/ui/project-context';
-import { loadProject, saveProject } from '../../src/storage/project-storage';
-import { UNIBODY_PRESET } from '../../src/catalog/unibody-preset';
-import { DEFAULT_PREFERENCES, savePreferences } from '../../src/storage/preferences';
-import type { Preferences } from '../../src/storage/preferences';
+import { App } from '@ui/app';
+import { PreferencesProvider } from '@ui/preferences';
+import { ProjectProvider } from '@ui/project';
+import { loadProject, saveProject } from '@storage/project';
+import { UNIBODY_PRESET } from '@catalog/presets';
+import { DEFAULT_PREFERENCES, savePreferences } from '@storage/preferences';
+import type { Preferences } from '@storage/preferences';
 
 type Project = ReturnType<typeof loadProject>['project'];
 

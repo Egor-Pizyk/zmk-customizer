@@ -2,12 +2,12 @@ import { expect } from '@playwright/test';
 import type { Locator, Page } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import { unzipSync, strFromU8 } from 'fflate';
-import type { Key, Project } from '../../src/domain/types';
-import { parseProjectFile } from '../../src/storage/parse-project-file';
+import type { Key, Project } from '@domain';
+import { parseProjectFile } from '@storage/project';
 
 export type Point = { readonly x: number; readonly y: number };
 export const fixture: Project = {
-  schemaVersion: 6,
+  schemaVersion: 7,
   controllerId: 'nice_nano_v2',
   name: 'Browser shield',
   shieldName: 'browser_shield',

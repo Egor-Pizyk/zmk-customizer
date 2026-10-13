@@ -1,6 +1,5 @@
-import type { Project, Key, Wire } from '../../src/domain/types';
-import { findCrossings } from '../../src/domain/find-crossings';
-import { getKeyPinPosition } from '../../src/domain/get-key-pin-position';
+import type { Project, Key, Wire } from '@domain';
+import { findCrossings, getKeyPinPosition } from '@domain';
 import { buildProject } from './build-project';
 
 const LAYERS: Project['layers'] = [

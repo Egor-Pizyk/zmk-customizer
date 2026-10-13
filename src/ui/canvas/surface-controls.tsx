@@ -1,9 +1,5 @@
-import { IconButton } from '../components/icon-button';
-import { MagnetIcon } from '../components/icons/magnet-icon';
-import { MinusIcon } from '../components/icons/minus-icon';
-import { PlusIcon } from '../components/icons/plus-icon';
-import { ResetViewIcon } from '../components/icons/reset-view-icon';
-import { usePreferences } from '../preferences-context';
+import { IconButton, MagnetIcon, MinusIcon, PlusIcon, ResetViewIcon } from '@ui/components';
+import { usePreferences } from '@ui/preferences';
 import { ZOOM_STEP, resetViewport, zoomAt } from './viewport';
 import { surfaceCenter } from './surface-center';
 import { CenterKeysButton } from './center-keys-button';

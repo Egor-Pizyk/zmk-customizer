@@ -1,11 +1,7 @@
 import type { ReactNode } from 'react';
-import type { WorkspaceId } from '../../storage/preferences';
-import { Button } from '../components/button';
-import { BindingsIcon } from '../components/icons/bindings-icon';
-import { ExportIcon } from '../components/icons/export-icon';
-import { FirmwareIcon } from '../components/icons/firmware-icon';
-import { SchematicIcon } from '../components/icons/schematic-icon';
-import type { Workspace } from '../workspaces';
+import type { WorkspaceId } from '@storage/preferences';
+import { Button, BindingsIcon, ExportIcon, FirmwareIcon, SchematicIcon } from '@ui/components';
+import type { Workspace } from '@ui/navigation';
 
 const ICON_BY_WORKSPACE: Record<WorkspaceId, ReactNode> = {
   schematic: <SchematicIcon />,

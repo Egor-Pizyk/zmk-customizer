@@ -1,12 +1,9 @@
-import type { WorkspaceId } from '../../storage/preferences';
-import { IconButton } from '../components/icon-button';
-import { HelpIcon } from '../components/icons/help-icon';
-import { SettingsIcon } from '../components/icons/settings-icon';
-import { usePreferences } from '../preferences-context';
-import { Badge } from '../components/badge';
-import { WORKSPACES } from '../workspaces';
-import { useProject } from '../project-context';
-import { formatIssueCount } from './workspace-issue';
+import type { WorkspaceId } from '@storage/preferences';
+import { IconButton, HelpIcon, SettingsIcon, Badge } from '@ui/components';
+import { usePreferences } from '@ui/preferences';
+import { WORKSPACES } from '@ui/navigation';
+import { useProject } from '@ui/project';
+import { formatIssueCount } from '@ui/issues';
 import { WorkspaceTab } from './workspace-tab';
 
 type TabBarProps = {

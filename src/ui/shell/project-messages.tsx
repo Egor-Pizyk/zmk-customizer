@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import { Button } from '../components/button';
-import { useProject } from '../project-context';
-import type { KeptBackup, SaveStatus } from '../project-state';
+import { Button } from '@ui/components';
+import { useProject } from '@ui/project';
+import type { KeptBackup, SaveStatus } from '@ui/project';
 import { formatProjectFileError } from './format-project-file-error';
 
 const STORAGE_WARNING: Partial<Record<SaveStatus, string>> = {

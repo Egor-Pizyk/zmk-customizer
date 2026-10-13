@@ -1,4 +1,4 @@
-import type { Result } from '../../src/domain/types';
+import type { Result } from '@domain';
 
 export function getResultValue<Value, Failure>(result: Result<Value, Failure>): Value {
   if (!result.ok) {

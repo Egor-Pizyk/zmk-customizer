@@ -1,8 +1,7 @@
 import { useRef, useState } from 'react';
-import type { GeneratedFile } from '../../generators/generated-file';
-import { buildExportZip } from '../../storage/build-export-zip';
-import { downloadBlob } from '../download-blob';
-import { downloadTextFile } from '../download-text-file';
+import type { GeneratedFile } from '@generators';
+import { buildExportZip } from '@storage/export';
+import { downloadBlob, downloadTextFile } from '@ui/downloads';
 
 type ExportActionsInput = {
   readonly files: readonly GeneratedFile[];

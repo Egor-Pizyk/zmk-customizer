@@ -1,11 +1,8 @@
 import { useState } from 'react';
-import type { Theme } from '../../storage/preferences';
-import { Button } from '../components/button';
-import { Dialog } from '../components/dialog';
-import { RadioGroup } from '../components/radio-group';
-import type { RadioOption } from '../components/radio-group';
-import { Switch } from '../components/switch';
-import { usePreferences } from '../preferences-context';
+import type { Theme } from '@storage/preferences';
+import { Button, Dialog, RadioGroup, Switch } from '@ui/components';
+import type { RadioOption } from '@ui/components';
+import { usePreferences } from '@ui/preferences';
 import { GridSizeField } from './grid-size-field';
 
 const THEME_OPTIONS: readonly RadioOption<Theme>[] = [

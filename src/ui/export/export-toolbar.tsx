@@ -1,7 +1,6 @@
-import { getControllerBoard } from '../../catalog/get-controller-board';
-import { SHIELD_TARGET } from '../../catalog/shield-target';
-import { Button } from '../components/button';
-import { DocsLink } from '../components/docs-link';
+import { getControllerBoard } from '@catalog/controllers';
+import { SHIELD_TARGET } from '@catalog/firmware';
+import { Button, DocsLink } from '@ui/components';
 import type { useExportActions } from './use-export-actions';
 
 type ExportToolbarProps = {

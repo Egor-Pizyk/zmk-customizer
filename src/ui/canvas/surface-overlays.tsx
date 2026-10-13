@@ -1,5 +1,5 @@
 import type { RefObject } from 'react';
-import { usePreferences } from '../preferences-context';
+import { usePreferences } from '@ui/preferences';
 import { Rulers } from './rulers';
 import { SurfaceControls } from './surface-controls';
 import { useElementSize } from './use-element-size';

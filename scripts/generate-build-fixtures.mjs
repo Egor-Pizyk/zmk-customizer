@@ -5,17 +5,13 @@ import assert from 'node:assert/strict';
 const directory = '.zmk-build/exports';
 const server = await createServer({ server: { middlewareMode: true } });
 try {
-  const { UNIBODY_PRESET } = await server.ssrLoadModule('/src/catalog/unibody-preset.ts');
-  const { CONTROLLER_BOARDS } = await server.ssrLoadModule('/src/catalog/controller-boards.ts');
-  const { BINDINGS_CATALOG } = await server.ssrLoadModule('/src/catalog/bindings-catalog.ts');
-  const { SHIELD_TARGET } = await server.ssrLoadModule('/src/catalog/shield-target.ts');
-  const { validateShieldProject } = await server.ssrLoadModule(
-    '/src/domain/validate-shield-project.ts',
-  );
-  const { deriveShieldMatrix } = await server.ssrLoadModule('/src/domain/derive-shield-matrix.ts');
-  const { generateRepositoryFiles } = await server.ssrLoadModule(
-    '/src/generators/generate-repository-files.ts',
-  );
+  const { UNIBODY_PRESET } = await server.ssrLoadModule('/src/catalog/presets/index.ts');
+  const { CONTROLLER_BOARDS } = await server.ssrLoadModule('/src/catalog/controllers/index.ts');
+  const { BINDINGS_CATALOG } = await server.ssrLoadModule('/src/catalog/bindings/index.ts');
+  const { SHIELD_TARGET } = await server.ssrLoadModule('/src/catalog/firmware/index.ts');
+  const { validateShieldProject } = await server.ssrLoadModule('/src/domain/index.ts');
+  const { deriveShieldMatrix } = await server.ssrLoadModule('/src/domain/index.ts');
+  const { generateRepositoryFiles } = await server.ssrLoadModule('/src/generators/index.ts');
   await rm(directory, { recursive: true, force: true });
   const targets = [];
   const oldPins = [
@@ -83,8 +79,8 @@ try {
     }
   }
   assert.equal(targets.length, 8);
-  const { createProject } = await server.ssrLoadModule('/src/domain/create-project.ts');
-  const { getKeyPinPosition } = await server.ssrLoadModule('/src/domain/get-key-pin-position.ts');
+  const { createProject } = await server.ssrLoadModule('/src/domain/index.ts');
+  const { getKeyPinPosition } = await server.ssrLoadModule('/src/domain/index.ts');
   const board = CONTROLLER_BOARDS.find((candidate) => candidate.id === 'nice_nano_v2');
   assert.ok(board);
   for (const rotationDeg of [-15, 30]) {
@@ -157,6 +153,64 @@ try {
     targets.push({ id, board: board.id, shield: project.shieldName });
   }
   assert.equal(targets.length, 10);
+  const { editWiring } = await server.ssrLoadModule('/src/domain/index.ts');
+  for (const [kind, topology, direction] of [
+    ['matrix', 'unibody', 'col2row'],
+    ['matrix', 'unibody', 'row2col'],
+    ['direct', 'unibody', 'col2row'],
+    ['matrix', 'split', 'col2row'],
+    ['matrix', 'split', 'row2col'],
+    ['direct', 'split', 'col2row'],
+  ]) {
+    const apply = (project, input) => {
+      const result = editWiring(project, { ...input, board });
+      assert.equal(result.ok, true, result.error);
+      return result.value;
+    };
+    let project = apply(UNIBODY_PRESET, { kind: 'initialize' });
+    project = apply(project, { kind: 'mode', mode: kind });
+    project = apply(project, { kind: 'topology', topology });
+    project = apply(project, { kind: 'direction', direction });
+    for (const half of ['left', 'right']) {
+      const terminals = project.wiring.terminals.filter(
+        (terminal) => terminal.half === half && terminal.kind !== 'ground',
+      );
+      for (const [index, terminal] of terminals.entries()) {
+        project = apply(project, {
+          kind: 'pin',
+          terminalId: terminal.id,
+          boardPin: board.gpioPins[index],
+        });
+      }
+    }
+    const target = { ...SHIELD_TARGET, ...board, boardId: board.id };
+    assert.deepEqual(
+      validateShieldProject(project, { board, target, bindingsCatalog: BINDINGS_CATALOG }),
+      [],
+    );
+    const matrix = deriveShieldMatrix(project, target);
+    assert.equal(matrix.ok, true);
+    const files = generateRepositoryFiles(project, {
+      matrix: matrix.value,
+      target,
+      includeWorkflow: false,
+    });
+    const baseId = `wiring-${kind}-${topology}-${direction}`;
+    for (const suffix of topology === 'split' ? ['_left', '_right'] : ['']) {
+      const id = `${baseId}${suffix}`;
+      for (const file of files) {
+        const destination = path.join(directory, id, file.path);
+        await mkdir(path.dirname(destination), { recursive: true });
+        await writeFile(destination, file.content);
+      }
+      targets.push({
+        id,
+        board: board.id,
+        shield: `${project.shieldName ?? 'unibody_six'}${suffix}`,
+      });
+    }
+  }
+  assert.equal(targets.length, 19);
   await mkdir(directory, { recursive: true });
   await writeFile(path.join(directory, 'targets.json'), `${JSON.stringify(targets, null, 2)}\n`);
   process.stdout.write(`Generated ${targets.length} deterministic actual-export build targets\n`);

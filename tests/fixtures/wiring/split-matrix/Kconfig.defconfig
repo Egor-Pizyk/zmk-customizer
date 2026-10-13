@@ -1,0 +1,16 @@
+if SHIELD_WIRING_SAMPLE_LEFT
+
+config ZMK_KEYBOARD_NAME
+    default "Wiring sample"
+
+config ZMK_SPLIT_ROLE_CENTRAL
+    default y
+
+endif
+
+if SHIELD_WIRING_SAMPLE_LEFT || SHIELD_WIRING_SAMPLE_RIGHT
+
+config ZMK_SPLIT
+    default y
+
+endif

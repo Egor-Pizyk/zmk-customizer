@@ -13,10 +13,10 @@ How `src/ui/` is written. Base rules (function components, `type XProps`, no log
 
 ```
 src/ui/
-  app.tsx               shell: tab bar, project bar, main, problems panel, status region; mounts use-global-shortcuts.ts
-  project-context.tsx   ProjectProvider + useProject
-  preferences-context.tsx  PreferencesProvider + usePreferences (theme, grid, active workspace)
-  error-boundary.tsx    the only class component (observability.md)
+  app/                  app composition, workspace view, global shortcut dispatch and error boundary
+  project/              ProjectProvider + useProject, history, project file actions
+  preferences/          PreferencesProvider + usePreferences (theme, grid, active workspace)
+  shortcuts/ navigation/ dialogs/ downloads/ issues/   shared contracts and browser adapters
   components/           design-system primitives: button.tsx, text-field.tsx, dialog.tsx, …
   shell/                tab bar, project bar, problems panel, settings and help dialogs
   canvas/               work surface, rulers, tool window (shared by canvas workspaces)
@@ -25,7 +25,7 @@ src/ui/
 
 - Folders and primitives are created when the first feature needs them (AGENTS §3.1). No empty folders, no "just in case" primitive.
 - One component per file, file named after it in kebab-case (`key-canvas.tsx` → `KeyCanvas`). A small private subcomponent used only by that file may stay in it, unexported.
-- `components/` never imports from a workspace folder and knows nothing about `Project`; it takes strings, numbers and callbacks. A workspace folder may import from `components/`, `canvas/` and its own folder, not from another workspace. Shared feature pieces (e.g. a key shape used by Schematic and Bindings) move to `canvas/` or `ui/` root when the second user appears.
+- `components/` never imports from a workspace folder and knows nothing about `Project`; it takes strings, numbers and callbacks. A workspace folder may import from `components/`, `canvas/` and its own folder, not from another workspace. Shared feature pieces (e.g. a key shape used by Schematic and Bindings) move to `canvas/` or a shared UI module when the second user appears.
 
 ## Project state
 
@@ -62,21 +62,21 @@ Effects sync with systems outside React. A change that adds, moves or removes an
 
 | Effect | Where |
 |---|---|
-| `document.documentElement.dataset.theme` sync with the theme preference | `preferences-context.tsx` |
-| Focus the workspace `<h1>` when the workspace changes (accessibility.md "Structure") | `workspace-view.tsx` |
+| `document.documentElement.dataset.theme` sync with the theme preference | `preferences/preferences-context.tsx` |
+| Focus the workspace `<h1>` when the workspace changes (accessibility.md "Structure") | `app/workspace-view.tsx` |
 | `ResizeObserver`: panel and container sizes into state from the observer callback (clamp derived in render) | `components/floating-panel.tsx` |
 | Pointer subscriber registration and cleanup for the surface cursor preview | `canvas/work-surface.tsx` |
 | `ResizeObserver`: surface size into state for rulers | `canvas/use-element-size.ts` |
 | Non-passive `wheel` listener: Ctrl/Cmd zoom with `preventDefault`, wheel pan; 200 ms commit timer cleared in cleanup | `canvas/use-surface-viewport.ts` |
 | `showModal()` / `close()` to match `Dialog`'s `open` prop; `close` event → `onClose`; backdrop `click` listener added with `addEventListener` in the same effect and removed in its cleanup (no JSX `onClick` on `<dialog>`, which fails jsx-a11y) | `components/dialog.tsx` |
-| Global `keydown` on `globalThis` for all shortcuts: Alt+Shift globals and canvas-scoped single keys (`shortcuts.ts`) | `use-global-shortcuts.ts` (mounted by `app.tsx`) |
-| Schematic `keydown` on `globalThis` for the Schematic canvas ids (tools, Enter, Delete, Escape) that need workspace state; the app listener has no action for them | `schematic/use-schematic-shortcuts.ts` |
-| Bindings `keydown` on `globalThis`: Mod+C / Mod+V copy and paste a binding on the Bindings canvas or Keys table | `bindings/use-bindings-shortcuts.ts` |
-| `keydown` on `globalThis`: Escape inside `[data-action-panel]` returns focus to the canvas | `bindings/action-panel.tsx` |
+| Global `keydown` on `globalThis` for all shortcuts: Alt+Shift globals and canvas-scoped single keys (`shortcuts/shortcuts.ts`) | `app/use-global-shortcuts.ts` (mounted by `app/app.tsx`) |
+| Schematic `keydown` on `globalThis` for the Schematic canvas ids (tools, Enter, Delete, Escape) that need workspace state; the app listener has no action for them | `schematic/interaction/use-schematic-shortcuts.ts` |
+| Bindings `keydown` on `globalThis`: Mod+C / Mod+V copy and paste a binding on the Bindings canvas or Keys table | `bindings/interaction/use-bindings-shortcuts.ts` |
+| `keydown` on `globalThis`: Escape inside `[data-action-panel]` returns focus to the canvas | `bindings/panel/action-panel.tsx` |
 
 - Autosave is not an effect: `saveProject` runs in the project provider's dispatch, the handler that changes the project (spec 002 research R6), so loading never writes and no effect stores the save result.
 - Page title is `<title>` rendered by the workspace screen (React 19 hoists it), not an effect on `document.title`.
-- Canvas-scoped single keys are matched by the global `keydown` listener in `use-global-shortcuts.ts` when `event.target` is inside `[data-canvas-workspace]` (`onKeyDown` on `role="application"` fails jsx-a11y `no-noninteractive-element-interactions`). Keys of interactive elements (a `<button>` drag handle, a table selection column) use `onKeyDown` on that element.
+- Canvas-scoped single keys are matched by the global `keydown` listener in `app/use-global-shortcuts.ts` when `event.target` is inside `[data-canvas-workspace]` (`onKeyDown` on `role="application"` fails jsx-a11y `no-noninteractive-element-interactions`). Keys of interactive elements (a `<button>` drag handle, a table selection column) use `onKeyDown` on that element.
 - Every listener added in an effect is removed in its cleanup. Dependency arrays are complete (`code-quality/typescript.md`).
 
 ## Inputs and forms

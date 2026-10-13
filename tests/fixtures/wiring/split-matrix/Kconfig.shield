@@ -1,0 +1,5 @@
+config SHIELD_WIRING_SAMPLE_LEFT
+    def_bool $(shields_list_contains,wiring_sample_left)
+
+config SHIELD_WIRING_SAMPLE_RIGHT
+    def_bool $(shields_list_contains,wiring_sample_right)

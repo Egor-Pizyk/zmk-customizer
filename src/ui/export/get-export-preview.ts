@@ -1,9 +1,9 @@
-import { getControllerBoard } from '../../catalog/get-controller-board';
-import { SHIELD_TARGET } from '../../catalog/shield-target';
-import type { analyzeProject } from '../../domain/analyze-project';
-import { getShieldName } from '../../domain/get-shield-name';
-import { generateRepositoryFiles } from '../../generators/generate-repository-files';
-import { toWorkspaceIssues } from '../shell/workspace-issue';
+import { getControllerBoard } from '@catalog/controllers';
+import { SHIELD_TARGET } from '@catalog/firmware';
+import type { analyzeProject } from '@domain';
+import { getShieldName } from '@domain';
+import { generateRepositoryFiles } from '@generators';
+import { toWorkspaceIssues } from '@ui/issues';
 
 export function getExportPreview(
   analysis: ReturnType<typeof analyzeProject>,

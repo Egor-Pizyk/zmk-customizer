@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { useProject } from '../project-context';
-import { IssueButton } from '../shell/issue-button';
-import { PlaceholderFooter } from '../shell/placeholder-footer';
-import type { WorkspaceIssue } from '../shell/workspace-issue';
+import { useProject } from '@ui/project';
+import { IssueButton, PlaceholderFooter } from '@ui/shell';
+import type { WorkspaceIssue } from '@ui/issues';
 import { ExportToolbar } from './export-toolbar';
 import { FilePreview } from './file-preview';
 import { getExportPreview } from './get-export-preview';

@@ -11,6 +11,7 @@
     "promise",
     "vitest"
   ],
+  "jsPlugins": [{ "name": "modules", "specifier": "./scripts/module-imports-plugin.mjs" }],
   "categories": {
     "correctness": "error",
     "suspicious": "error",
@@ -32,6 +33,7 @@
   "rules": {
     // Categories above enable every correctness/suspicious/pedantic/perf rule of the plugins (incl. all jsx-a11y rules, react-hooks + React Compiler rules, type-aware typescript-eslint rules). Below: style/restriction rules ported from typescript-eslint strict+stylistic-type-checked, eslint-plugin-react recommended+jsx-runtime, unicorn recommended, import, promise, vitest recommended, plus project rules.
 
+    "modules/public-api": "error",
     "eslint/no-console": "error",
     "eslint/no-alert": "error",
     "eslint/no-empty": "error",
@@ -285,6 +287,7 @@
     "vitest/no-import-node-test": "error"
   },
   "overrides": [
+    { "files": ["src/**/index.ts"], "rules": { "react/only-export-components": "off" } },
     {
       "files": ["tests/e2e/**"],
       "rules": {
@@ -324,7 +327,7 @@
           {
             "patterns": [
               {
-                "regex": "(^|/)(ui|storage|generators|catalog)(/|$)",
+                "regex": "(^|/|@)(ui|storage|generators|catalog)(/|$)",
                 "message": "domain/ is pure: it must not import ui/, storage/, generators/ or catalog/; catalog data is passed in as arguments (AGENTS.md 3.1)."
               },
               {
@@ -344,7 +347,7 @@
           {
             "patterns": [
               {
-                "regex": "(^|/)(ui|storage)(/|$)",
+                "regex": "(^|/|@)(ui|storage)(/|$)",
                 "message": "generators/ are pure: they must not import ui/ or storage/ (AGENTS.md 3.1)."
               },
               {
@@ -364,7 +367,7 @@
           {
             "patterns": [
               {
-                "regex": "(^|/)ui(/|$)|^react(-dom)?(/|$)",
+                "regex": "(^|/|@)ui(/|$)|^react(-dom)?(/|$)",
                 "message": "storage cannot import UI or React; boundary adapters only."
               }
             ]
@@ -380,11 +383,11 @@
           {
             "patterns": [
               {
-                "regex": "(^|/)(ui|storage|generators)(/|$)",
+                "regex": "(^|/|@)(ui|storage|generators)(/|$)",
                 "message": "catalog/ is static data: it may import only domain types (AGENTS.md 3.1)."
               },
               {
-                "regex": "(^|/)domain(/|$)",
+                "regex": "(^|/|@)domain(/|$)",
                 "allowTypeImports": true,
                 "message": "catalog/ may import domain types only (`import type`)."
               },
@@ -398,7 +401,10 @@
       }
     },
     {
-      "files": ["src/ui/*/**/*.ts", "src/ui/*/**/*.tsx"],
+      "files": [
+        "src/ui/{components,canvas,shell,project,preferences,downloads,navigation,shortcuts,dialogs,issues,schematic,bindings,firmware,export}/**/*.ts",
+        "src/ui/{components,canvas,shell,project,preferences,downloads,navigation,shortcuts,dialogs,issues,schematic,bindings,firmware,export}/**/*.tsx"
+      ],
       "rules": {
         "eslint/no-restricted-imports": [
           "error",
@@ -412,7 +418,7 @@
             ],
             "patterns": [
               {
-                "regex": "(^|/)(schematic|bindings|firmware|export)/",
+                "regex": "^([.][.]/)+(schematic|bindings|firmware|export)/|(^|/)ui/(schematic|bindings|firmware|export)/",
                 "message": "ui/components/ must not import a workspace folder, and a workspace folder must not import another workspace folder; move shared pieces to ui/shell/ or ui/canvas/ (docs/guidelines/frontend/react.md)."
               }
             ]
@@ -435,11 +441,11 @@
             ],
             "patterns": [
               {
-                "regex": "(^|/)(schematic|bindings|firmware|export)/",
+                "regex": "^([.][.]/)+(schematic|bindings|firmware|export)/|(^|/)ui/(schematic|bindings|firmware|export)/",
                 "message": "ui/components/ must not import a workspace folder, and a workspace folder must not import another workspace folder; move shared pieces to ui/shell/ or ui/canvas/ (docs/guidelines/frontend/react.md)."
               },
               {
-                "regex": "(^|/)domain(/|$)",
+                "regex": "(^|/|@)domain(/|$)",
                 "message": "ui/components/ primitives know nothing about Project: take strings, numbers and callbacks (docs/guidelines/frontend/react.md)."
               },
               {
@@ -459,7 +465,7 @@
       }
     },
     {
-      "files": ["src/ui/bindings/action-panel.tsx"],
+      "files": ["src/ui/bindings/panel/action-panel.tsx"],
       "rules": {
         // Dynamic px width from the resize drag; React sets style via CSSOM, which CSP style-src allows (same as floating-panel).
         "react/forbid-dom-props": "off"

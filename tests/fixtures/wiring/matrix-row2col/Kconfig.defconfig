@@ -1,0 +1,6 @@
+if SHIELD_WIRING_SAMPLE
+
+config ZMK_KEYBOARD_NAME
+    default "Wiring sample"
+
+endif

@@ -1,4 +1,4 @@
-import type { ShellDialogs as ShellDialogsState } from '../use-shell-dialogs';
+import type { ShellDialogs as ShellDialogsState } from '@ui/dialogs';
 import { ProjectDialogs } from './project-dialogs';
 import { SettingsDialog } from './settings-dialog';
 import { ShortcutHelpDialog } from './shortcut-help-dialog';

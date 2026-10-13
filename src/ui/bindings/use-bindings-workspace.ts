@@ -1,12 +1,12 @@
-import { usePreferences } from '../preferences-context';
-import { useProject } from '../project-context';
-import { advanceSelection } from './advance-selection';
-import { formatSelectionName } from './format-selection-name';
-import { getProblemsByKeyId } from './get-problems-by-key-id';
-import { useCopiedBinding } from './use-copied-binding';
-import { useKeyPicker } from './use-key-picker';
-import { useKeySelection } from './use-key-selection';
-import { useLayerActions } from './use-layer-actions';
+import { usePreferences } from '@ui/preferences';
+import { useProject } from '@ui/project';
+import { advanceSelection } from './interaction/advance-selection';
+import { formatSelectionName } from './formatting/format-selection-name';
+import { getProblemsByKeyId } from './rendering/get-problems-by-key-id';
+import { useCopiedBinding } from './interaction/use-copied-binding';
+import { useKeyPicker } from './picker/use-key-picker';
+import { useKeySelection } from './interaction/use-key-selection';
+import { useLayerActions } from './interaction/use-layer-actions';
 
 // Bindings UI state (selection, active key, key picker, copied action); the project changes
 // only through domain operations committed via ProjectProvider (react.md "Project state").

@@ -1,9 +1,5 @@
-import { getKeyGeometry } from '../../domain/get-key-geometry';
-import { assertNever } from '../../domain/assert-never';
-import { formatBoardPin } from '../../domain/board-pin';
-import type { getKeyPinWires } from '../../domain/get-key-pin-wires';
-import type { Crossing } from '../../domain/find-crossings';
-import type { KeyPin, Project, WireEnd } from '../../domain/types';
+import { getKeyGeometry, assertNever, formatBoardPin } from '@domain';
+import type { getKeyPinWires, Crossing, KeyPin, Project, WireEnd } from '@domain';
 
 const KEY_PINS: readonly KeyPin[] = [1, 2];
 
@@ -64,6 +60,12 @@ export function formatWireEnd(project: Project, end: WireEnd): string {
       return `wire ${project.wires.findIndex((wire) => wire.id === end.wireId)}`;
     }
     case 'free': {
+      const terminal = project.wiring?.terminals.find((entry) => entry.id === end.terminalId);
+      if (terminal !== undefined) {
+        const pinLabel =
+          terminal.boardPin === undefined ? 'unassigned' : formatBoardPin(terminal.boardPin);
+        return `${terminal.half} ${terminal.kind} ${terminal.id}: ${terminal.kind === 'ground' ? 'GND' : pinLabel}`;
+      }
       return end.boardPin === undefined
         ? 'a free end'
         : `board pin ${formatBoardPin(end.boardPin)}`;

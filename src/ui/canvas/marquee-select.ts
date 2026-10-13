@@ -1,6 +1,5 @@
-import { doPolygonsOverlap } from '../../domain/do-polygons-overlap';
-import { getKeyCorners } from '../../domain/get-key-corners';
-import type { Key, WirePoint } from '../../domain/types';
+import { doPolygonsOverlap, getKeyCorners } from '@domain';
+import type { Key, WirePoint } from '@domain';
 import type { Marquee } from './marquee-layer';
 
 type Position = Pick<

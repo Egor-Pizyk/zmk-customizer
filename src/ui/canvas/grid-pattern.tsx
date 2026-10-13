@@ -1,5 +1,5 @@
 import { useId } from 'react';
-import type { Viewport } from '../../storage/preferences';
+import type { Viewport } from '@storage/preferences';
 import { PX_PER_U, displayGridStep } from './viewport';
 
 type GridPatternProps = {

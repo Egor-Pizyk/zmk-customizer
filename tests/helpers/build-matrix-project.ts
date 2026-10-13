@@ -1,6 +1,5 @@
-import { findCrossings } from '../../src/domain/find-crossings';
-import { getKeyPinPosition } from '../../src/domain/get-key-pin-position';
-import type { Key, KeyDiode, KeyPin, Project, Wire, WireEnd } from '../../src/domain/types';
+import { findCrossings, getKeyPinPosition } from '@domain';
+import type { Key, KeyDiode, KeyPin, Project, Wire, WireEnd } from '@domain';
 import { buildProject } from './build-project';
 
 const DEFAULT_DIODE = { pin: 1, cathode: 'away-switch' } as const;

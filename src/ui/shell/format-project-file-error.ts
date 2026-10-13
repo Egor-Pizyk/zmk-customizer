@@ -1,5 +1,5 @@
-import { assertNever } from '../../domain/assert-never';
-import type { ProjectFileError } from '../../storage/parse-project-file';
+import { assertNever } from '@domain';
+import type { ProjectFileError } from '@storage/project';
 
 const MAX_ISSUE_LINES = 10;
 

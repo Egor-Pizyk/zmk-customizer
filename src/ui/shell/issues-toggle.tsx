@@ -1,7 +1,7 @@
-import { Button } from '../components/button';
-import { usePreferences } from '../preferences-context';
-import { useProject } from '../project-context';
-import { ISSUES_PANEL_ID } from './workspace-issue';
+import { Button } from '@ui/components';
+import { usePreferences } from '@ui/preferences';
+import { useProject } from '@ui/project';
+import { ISSUES_PANEL_ID } from '@ui/issues';
 
 export function IssuesToggle() {
   const { preferences, changePreferences } = usePreferences();

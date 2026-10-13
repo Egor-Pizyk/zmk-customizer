@@ -1,11 +1,12 @@
+import { WiringControls } from './wiring/wiring-controls';
 import { useState } from 'react';
-import { LayoutControls } from './layout-controls';
-import { getSelectedKeyIds } from './get-selected-key-ids';
-import { ControllerPanel } from './controller-panel';
-import { PartsList } from './parts-list';
+import { LayoutControls } from './layout/layout-controls';
+import { getSelectedKeyIds } from './interaction/get-selected-key-ids';
+import { ControllerPanel } from './wiring/controller-panel';
+import { PartsList } from './parts/parts-list';
 import { SchematicCanvas } from './schematic-canvas';
-import { getSchematicMarks } from './schematic-marks';
-import { ToolWindow } from './tool-window';
+import { getSchematicMarks } from './rendering/schematic-marks';
+import { ToolWindow } from './tools/tool-window';
 import { useSchematicWorkspace } from './use-schematic-workspace';
 
 export function SchematicWorkspace() {
@@ -18,6 +19,7 @@ export function SchematicWorkspace() {
       <ControllerPanel project={project} commit={commit} />
       <WorkspaceCanvas workspace={workspace} marks={marks} />
       <WorkspaceLayoutControls workspace={workspace} />
+      <WiringControls {...workspace.wiring} />
       <PartsList
         commit={commit}
         issues={issues}
@@ -53,14 +55,14 @@ function WorkspaceCanvas({
       activeKeyId={getActiveKeyId(project, selection, focusedKeyId)}
       commit={commit}
       hoverPreview={pointer.hoverPreview}
-      hasTransformFrames={activeToolId === 'select' && !workspace.layout.hasPreview}
+      hasTransformFrames={
+        activeToolId === 'select' && !workspace.layout.hasPreview && !workspace.wiring.hasPreview
+      }
       marks={marks}
       marquee={marquee}
       onKeyFocus={handleKeyFocus}
       onKeyKeyDown={workspace.handleKeyKeyDown}
-      project={
-        workspace.layout.hasPreview ? workspace.layout.previewProject : pointer.previewProject
-      }
+      project={getPreviewProject(workspace)}
       selection={selection}
     >
       <ToolWindow
@@ -105,4 +107,13 @@ function getActiveKeyId(
     return selection.keyId;
   }
   return project.keys[0]?.id;
+}
+
+function getPreviewProject(workspace: Workspace) {
+  if (workspace.wiring.hasPreview) {
+    return workspace.wiring.previewProject;
+  }
+  return workspace.layout.hasPreview
+    ? workspace.layout.previewProject
+    : workspace.pointer.previewProject;
 }

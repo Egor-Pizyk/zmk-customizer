@@ -1,4 +1,4 @@
-import { IssuesToggle } from '../shell/issues-toggle';
+import { IssuesToggle } from '@ui/shell';
 import type { WorldPoint } from './viewport';
 
 type StatusBarProps = {

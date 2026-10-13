@@ -44,5 +44,5 @@ zmk-build: ## Compile actual exports in a pinned ZMK v0.3 environment
 test-e2e: ## Run production browser journeys in isolated Chromium/Firefox/WebKit
 	docker compose -f compose.e2e.yaml run --build --rm e2e
 
-test-e2e-mutations: ## Verify six browser regressions (run alone)
+test-e2e-mutations: ## Verify nine browser regressions (run alone)
 	python3 scripts/check-e2e-mutations.py

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { PointerEvent, ReactNode, RefObject } from 'react';
-import type { CanvasWorkspaceId, Viewport } from '../../storage/preferences';
-import { usePreferences } from '../preferences-context';
+import type { CanvasWorkspaceId, Viewport } from '@storage/preferences';
+import { usePreferences } from '@ui/preferences';
 import { SurfaceOverlays } from './surface-overlays';
 import { snapToGrid } from './snap';
 import { StatusBar } from './status-bar';

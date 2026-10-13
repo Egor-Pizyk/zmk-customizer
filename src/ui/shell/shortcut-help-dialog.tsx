@@ -1,8 +1,7 @@
-import { Dialog } from '../components/dialog';
-import { Kbd } from '../components/kbd';
-import { assertNever } from '../../domain/assert-never';
-import { POINTER_GESTURES, SHORTCUTS, formatModifier } from '../shortcuts';
-import type { ModifierLabels, Shortcut } from '../shortcuts';
+import { Dialog, Kbd } from '@ui/components';
+import { assertNever } from '@domain';
+import { POINTER_GESTURES, SHORTCUTS, formatModifier } from '@ui/shortcuts';
+import type { ModifierLabels, Shortcut } from '@ui/shortcuts';
 
 type ShortcutHelpDialogProps = {
   readonly isOpen: boolean;

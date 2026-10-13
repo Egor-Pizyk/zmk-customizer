@@ -1,13 +1,13 @@
 import type { ReactNode } from 'react';
-import { getProjectAnalysis } from '../project-state';
-import { getSchematicGeometry } from './get-schematic-geometry';
-import type { Project } from '../../domain/types';
-import type { ContentPointerHandler, SurfaceContent } from '../canvas/surface-content';
-import { WorkSurface } from '../canvas/work-surface';
-import type { HoverPreview } from './get-hover-preview';
-import { SchematicContent } from './schematic-content';
-import type { SchematicLayerProps } from './schematic-layer-props';
-import { SchematicEditingScreenLayer } from './schematic-editing-screen-layer';
+import { getProjectAnalysis } from '@ui/project';
+import { getSchematicGeometry } from './interaction/get-schematic-geometry';
+import type { Project } from '@domain';
+import type { ContentPointerHandler, SurfaceContent } from '@ui/canvas';
+import { WorkSurface } from '@ui/canvas';
+import type { HoverPreview } from './interaction/get-hover-preview';
+import { SchematicContent } from './rendering/schematic-content';
+import type { SchematicLayerProps } from './rendering/schematic-layer-props';
+import { SchematicEditingScreenLayer } from './rendering/schematic-editing-screen-layer';
 
 type SchematicCanvasProps = Omit<SchematicLayerProps, 'view' | 'paths' | 'crossings'> & {
   readonly hoverPreview: HoverPreview;
