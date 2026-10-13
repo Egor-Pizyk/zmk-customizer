@@ -59,7 +59,7 @@ export function WorkSurface({ workspaceId, children, content }: WorkSurfaceProps
   const forwarding = usePointerForwarding(content, surface);
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
+    <div className="flex min-h-64 flex-1 flex-col">
       <div className="relative min-h-0 flex-1 overflow-hidden">
         <SurfaceSvg
           content={content}

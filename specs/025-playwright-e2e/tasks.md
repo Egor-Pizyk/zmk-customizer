@@ -27,7 +27,7 @@
 
 - [x] T012 Wire documented commands and mandatory CI with retained artifacts in Makefile, docs/testing.md, .github/workflows/ci.yml.
 - [x] T013 Complete specs/025-playwright-e2e/coverage-matrix.md and verification.md with scenario mapping, make check/build, all E2E, three sequential Chromium runs, cross-browser and conditional ZMK build results.
-- [ ] T014 Review diff and commit logical changes with Conventional Commits; no push/PR.
+- [x] T014 Review diff and commit logical changes with Conventional Commits; no push/PR.
 
 ## Dependencies and implementation strategy
 
