@@ -39,7 +39,7 @@ Input: spec.md, plan.md, research.md, data-model.md, contracts/layout.md, quicks
 - [x] T018 Run formatter, relevant regression tests and production build; fix failures within scope; record in specs/012-layout-editor/verification.md.
 - [x] T019 Run make zmk-build, including nonstandard geometry; record actual pinned firmware compilation result in specs/012-layout-editor/verification.md.
 - [x] T020 Run make test-mutations alone after production edits; record sensitivity in specs/012-layout-editor/verification.md.
-- [ ] T021 Complete review, record limitations and remaining manual accessibility checks in specs/012-layout-editor/verification.md; run final make check and commit Conventional Commits (no push/PR).
+- [x] T021 Complete review, record limitations and remaining manual accessibility checks in specs/012-layout-editor/verification.md; run final make check and commit Conventional Commits (no push/PR).
 
 ## Dependencies and delivery
 
