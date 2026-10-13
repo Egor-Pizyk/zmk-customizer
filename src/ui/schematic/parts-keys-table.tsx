@@ -1,26 +1,31 @@
-import { addKey } from '../../domain/add-key';
-import { findFreeKeyPosition } from '../../domain/find-free-key-position';
-import { removeKey } from '../../domain/remove-key';
-import { Button } from '../components/button';
-import { focusAfterDelete } from './focus-after-delete';
+import { useState } from 'react';
 import type { WiresOfPin } from './format-schematic-labels';
-import { RowPinCells } from './key-pin-cell';
-import { KeyPositionCells } from './key-position-cells';
 import type { PartsTableProps } from './parts-list';
 import { PartsTableHead } from './parts-table-head';
+import { PartsKeysTableRows } from './parts-keys-table-rows';
+import { AddKeyButton } from './add-key-button';
 
-const COLUMNS = ['Key', 'X (u)', 'Y (u)', 'Pin 1', 'Pin 2'];
+const COLUMNS = [
+  'Select',
+  'Key',
+  'X (u)',
+  'Y (u)',
+  'Width (u)',
+  'Height (u)',
+  'Rotation (°)',
+  'Origin X (u)',
+  'Origin Y (u)',
+  'Pin 1',
+  'Pin 2',
+];
 
 export function PartsKeysTable(props: PartsTableProps & { readonly wiresOf: WiresOfPin }) {
   const { project, commit, wiresOf } = props;
+  const [activeKeyId, setActiveKeyId] = useState<string | undefined>();
 
-  function handleAddClick() {
-    commit(
-      (current) => addKey(current, { position: findFreeKeyPosition(current) }),
-      `Added key ${project.keys.length}`,
-    );
+  function handleActiveKeyChange(keyId: string) {
+    setActiveKeyId(keyId);
   }
-
   return (
     <div className="flex flex-col gap-2">
       <h3 className="font-semibold">Keys</h3>
@@ -32,117 +37,16 @@ export function PartsKeysTable(props: PartsTableProps & { readonly wiresOf: Wire
         <table className="w-full text-left">
           <PartsTableHead columns={COLUMNS} hasActions />
           <tbody>
-            <KeysTableRows {...props} wiresOf={wiresOf} />
+            <PartsKeysTableRows
+              {...props}
+              activeKeyId={activeKeyId}
+              onActiveKeyChange={handleActiveKeyChange}
+              wiresOf={wiresOf}
+            />
           </tbody>
         </table>
       )}
-      <Button
-        className="self-start"
-        data-parts-add="key"
-        data-issue-path="keys"
-        onClick={handleAddClick}
-        size="sm"
-        variant="secondary"
-      >
-        Add key
-      </Button>
+      <AddKeyButton project={project} commit={commit} />
     </div>
-  );
-}
-
-function KeysTableRows(props: PartsTableProps & { readonly wiresOf: WiresOfPin }) {
-  const { project, wiresOf } = props;
-  return project.keys.map((key, keyIndex) => (
-    <KeyRow {...props} key={key.id} keyIndex={keyIndex} schematicKey={key} wiresOf={wiresOf} />
-  ));
-}
-
-type KeyRowProps = PartsTableProps & {
-  readonly schematicKey: PartsTableProps['project']['keys'][number];
-  readonly keyIndex: number;
-  readonly wiresOf: WiresOfPin;
-};
-
-function KeyRow(props: KeyRowProps) {
-  const { issues, selection, onSelectionChange, commit, schematicKey, keyIndex, wiresOf } = props;
-  const problems = issues.filter((issue) => issue.path.join('.') === `keys.${keyIndex}`);
-  const isSelected =
-    (selection?.kind === 'key' && selection.keyId === schematicKey.id) ||
-    (selection?.kind === 'multi' && selection.keyIds.includes(schematicKey.id));
-
-  function handleFocus() {
-    onSelectionChange({ kind: 'key', keyId: schematicKey.id });
-  }
-
-  function handleDeleteClick() {
-    commit((current) => removeKey(current, { keyId: schematicKey.id }), `Deleted key ${keyIndex}`);
-    onSelectionChange();
-    focusAfterDelete({ table: 'key', index: keyIndex });
-  }
-
-  return (
-    <tr
-      className="data-selected:bg-surface-muted"
-      data-selected={isSelected || undefined}
-      onFocus={handleFocus}
-    >
-      <KeyRowHeader keyIndex={keyIndex} problems={problems} />
-      <KeyPositionCells
-        commit={commit}
-        hasProblem={problems.length > 0}
-        keyIndex={keyIndex}
-        schematicKey={schematicKey}
-      />
-      <RowPinCells
-        commit={commit}
-        schematicKey={schematicKey}
-        keyIndex={keyIndex}
-        wiresOf={wiresOf}
-      />
-      <KeyRowDeleteButton keyIndex={keyIndex} onDeleteClick={handleDeleteClick} />
-    </tr>
-  );
-}
-
-function KeyRowDeleteButton({
-  keyIndex,
-  onDeleteClick,
-}: {
-  keyIndex: number;
-  onDeleteClick: () => void;
-}) {
-  function handleDeleteClick() {
-    onDeleteClick();
-  }
-
-  return (
-    <td>
-      <Button
-        aria-label={`Delete key ${keyIndex}`}
-        data-parts-delete={`key:${keyIndex}`}
-        onClick={handleDeleteClick}
-        size="sm"
-      >
-        Delete
-      </Button>
-    </td>
-  );
-}
-
-type KeyRowHeaderProps = {
-  readonly keyIndex: number;
-  readonly problems: PartsTableProps['issues'];
-};
-
-function KeyRowHeader({ keyIndex, problems }: KeyRowHeaderProps) {
-  return (
-    <th className="pr-2 font-medium" scope="row">
-      {`Key ${keyIndex}`}
-      {problems.map((issue) => (
-        <span className="block text-xs text-danger" key={issue.code}>
-          {issue.message}
-        </span>
-      ))}
-    </th>
   );
 }

@@ -18,3 +18,12 @@ it('finds the nearest key in the pressed direction', () => {
 it('returns nothing when no key lies that way', () => {
   expect(findNearestKey(KEYS, { fromKeyId: 'k1', direction: 'left' })).toBeUndefined();
 });
+
+it('navigates by visible resized and rotated centers', () => {
+  const keys: readonly Key[] = [
+    { id: 'from', xU: 0, yU: 0 },
+    { id: 'rotated', xU: 10, yU: 0, rotationDeg: 180, rotationOriginXU: 6, rotationOriginYU: 0.5 },
+    { id: 'wide', xU: 1, yU: 0, widthU: 10 },
+  ];
+  expect(findNearestKey(keys, { fromKeyId: 'from', direction: 'right' })?.id).toBe('rotated');
+});

@@ -2,7 +2,7 @@ import type { Project } from './types';
 
 export function createProject(input: { readonly controllerId: string }): Project {
   return {
-    schemaVersion: 5,
+    schemaVersion: 6,
     controllerId: input.controllerId,
     name: 'My keyboard',
     keys: [],

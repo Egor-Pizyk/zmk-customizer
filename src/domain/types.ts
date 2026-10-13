@@ -1,5 +1,5 @@
 export type Project = {
-  readonly schemaVersion: 5;
+  readonly schemaVersion: 6;
   readonly controllerId: string;
   readonly name: string;
   /** User override of the technical name; absent = derived from `name` (spec 002 FR-012a). */
@@ -82,7 +82,22 @@ export type Key = {
   readonly id: string;
   readonly xU: number;
   readonly yU: number;
+  readonly widthU?: number;
+  readonly heightU?: number;
+  readonly rotationDeg?: number;
+  readonly rotationOriginXU?: number;
+  readonly rotationOriginYU?: number;
   readonly diode?: KeyDiode;
+};
+
+export type KeyGeometry = {
+  readonly xU: number;
+  readonly yU: number;
+  readonly widthU: number;
+  readonly heightU: number;
+  readonly rotationDeg: number;
+  readonly rotationOriginXU: number;
+  readonly rotationOriginYU: number;
 };
 
 export type KeyDiode = {

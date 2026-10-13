@@ -69,6 +69,13 @@ MUTATIONS += [
  ['incompatible draft accepts hold key', 'src/ui/bindings/pick-value.ts', "draft.behaviorId !== 'mt'", "false", ['src/ui/bindings/pick-slot.test.ts']],
 ]
 
+MUTATIONS += [
+ ['layout rotation reversed', 'src/domain/rotate-point.ts', '(input.rotationDeg * Math.PI)', '(-input.rotationDeg * Math.PI)', ['src/domain/get-key-pin-position.test.ts']],
+ ['layout export loses width', 'src/generators/generate-overlay.ts', 'geometry.widthU,', '1,', ['src/generators/layout-export.test.ts']],
+ ['duplicate loses layer bindings', 'src/domain/duplicate-keys.ts', 'bindings[copy.id] = binding;', '', ['src/domain/duplicate-keys.test.ts']],
+ ['geometry no-op destroys redo', 'src/domain/set-key-geometries.ts', '? project', '? { ...project }', ['src/ui/layout-noops.test.ts']],
+]
+
 def run_mutation(mutation, report_path):
     label, relative, before, after, tests = mutation
     path = ROOT / relative

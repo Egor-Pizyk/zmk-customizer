@@ -1,3 +1,4 @@
+import { getKeyCenter } from '../../domain/get-key-center';
 import type { Key } from '../../domain/types';
 
 export type Direction = 'left' | 'right' | 'up' | 'down';
@@ -12,11 +13,13 @@ export function findNearestKey(
   if (from === undefined) {
     return undefined;
   }
+  const fromCenter = getKeyCenter(from);
   let nearest: Key | undefined;
   let nearestScore = Number.POSITIVE_INFINITY;
   for (const key of keys) {
-    const dx = key.xU - from.xU;
-    const dy = key.yU - from.yU;
+    const center = getKeyCenter(key);
+    const dx = center.xU - fromCenter.xU;
+    const dy = center.yU - fromCenter.yU;
     const isHorizontal = input.direction === 'left' || input.direction === 'right';
     const along = isHorizontal ? dx : dy;
     const sideways = Math.abs(isHorizontal ? dy : dx);

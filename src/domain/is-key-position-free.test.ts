@@ -18,3 +18,11 @@ it('ignores the key being moved', () => {
     true,
   );
 });
+
+it('uses actual sized rotated rectangles, allowing touching edges', () => {
+  const project = buildProject({
+    keys: [{ id: 'k0', xU: 0, yU: 0, widthU: 2, heightU: 1, rotationDeg: 90 }],
+  });
+  expect(isKeyPositionFree(project, { position: { xU: -1, yU: 1.5 } })).toBe(false);
+  expect(isKeyPositionFree(project, { position: { xU: 0, yU: 1 } })).toBe(true);
+});

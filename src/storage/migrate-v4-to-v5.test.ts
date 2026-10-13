@@ -29,7 +29,7 @@ it('maps every exposed legacy raw pin to the same physical connector position', 
   const old = oldProject();
   const parsed = getResultValue(parseProjectFile(JSON.stringify(old)));
   expect(parsed.controllerId).toBe('nice_nano_v2');
-  expect(parsed.schemaVersion).toBe(5);
+  expect(parsed.schemaVersion).toBe(6);
   expect(parsed.wires.map((wire) => getStartBoardPin(wire))).toEqual(CONNECTOR_PINS);
   expect(parsed.wires.map((wire) => wire.end)).toEqual(old.wires.map((wire) => wire.end));
   expect(old.wires.map((wire) => wire.start.boardPin)).toEqual(RAW_PINS);

@@ -4,7 +4,7 @@ import { createProject } from './create-project';
 it('creates an empty project named My keyboard without a technical name override', () => {
   const project = createProject({ controllerId: 'nice_nano_v2' });
   expect(project).toEqual({
-    schemaVersion: 5,
+    schemaVersion: 6,
     controllerId: 'nice_nano_v2',
     name: 'My keyboard',
     keys: [],

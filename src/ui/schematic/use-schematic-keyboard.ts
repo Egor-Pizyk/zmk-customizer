@@ -9,6 +9,7 @@ import { useSchematicShortcuts } from './use-schematic-shortcuts';
 
 type SchematicKeyboardOptions = {
   readonly project: Project;
+  readonly layout: { readonly hasPreview: boolean; readonly handleCancel: () => void };
   readonly commit: Commit;
   readonly gridSizeU: number;
   readonly selection: SchematicSelection;
@@ -24,14 +25,19 @@ export function useSchematicKeyboard(options: SchematicKeyboardOptions) {
   useSchematicShortcuts(
     createShortcutHandlers({
       ...options,
-      hasDraft: pointer.hasDraft,
-      onDraftCancel: pointer.cancelDraft,
+      hasDraft: pointer.hasDraft || options.layout.hasPreview,
+      onDraftCancel: () => {
+        pointer.cancelDraft();
+        options.layout.handleCancel();
+      },
     }),
   );
   const keyKeyboard = createKeyKeyboardHandler({
     project,
     gridSizeU,
     commit,
+    selection: options.selection,
+    onSelectionChange: options.onSelectionChange,
     onFocusKey: focusKeyLater,
   });
   return (keyId: string, event: KeyboardEvent<SVGGElement>) => {

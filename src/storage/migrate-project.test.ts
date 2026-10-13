@@ -1,13 +1,13 @@
 import { expect, it } from 'vitest';
 import { CURRENT_SCHEMA_VERSION, migrateProject } from './migrate-project';
 
-it('is at version 5', () => {
-  expect(CURRENT_SCHEMA_VERSION).toBe(5);
+it('is at version 6', () => {
+  expect(CURRENT_SCHEMA_VERSION).toBe(6);
 });
 
 it('returns current-version data unchanged', () => {
   const data = {
-    schemaVersion: 5,
+    schemaVersion: 6,
     controllerId: 'nice_nano_v2',
     name: 'x',
     keys: [],
@@ -20,7 +20,7 @@ it('returns current-version data unchanged', () => {
 
 it('migrates v1 through v2 and v3 to v4', () => {
   expect(migrateProject({ schemaVersion: 1, name: 'x' }, { fromVersion: 1 })).toEqual({
-    schemaVersion: 5,
+    schemaVersion: 6,
     controllerId: 'nice_nano_v2',
     name: 'x',
     keys: [],

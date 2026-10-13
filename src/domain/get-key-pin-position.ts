@@ -1,3 +1,5 @@
+import { getKeyGeometry } from './get-key-geometry';
+import { rotatePoint } from './rotate-point';
 import { roundU } from './round-u';
 import type { Key, KeyPin, WirePoint } from './types';
 
@@ -11,8 +13,16 @@ const PIN_OFFSET_MM_BY_PIN: Record<KeyPin, { readonly xMm: number; readonly yMm:
 
 export function getKeyPinPosition(key: Key, pin: KeyPin): WirePoint {
   const offset = PIN_OFFSET_MM_BY_PIN[pin];
-  return {
-    xU: roundU(key.xU + 0.5 + offset.xMm / KEY_PITCH_MM),
-    yU: roundU(key.yU + 0.5 + offset.yMm / KEY_PITCH_MM),
-  };
+  const geometry = getKeyGeometry(key);
+  const at = rotatePoint(
+    {
+      xU: key.xU + geometry.widthU / 2 + offset.xMm / KEY_PITCH_MM,
+      yU: key.yU + geometry.heightU / 2 + offset.yMm / KEY_PITCH_MM,
+    },
+    {
+      rotationDeg: geometry.rotationDeg,
+      origin: { xU: geometry.rotationOriginXU, yU: geometry.rotationOriginYU },
+    },
+  );
+  return { xU: roundU(at.xU), yU: roundU(at.yU) };
 }

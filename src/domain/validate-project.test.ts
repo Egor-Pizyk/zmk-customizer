@@ -23,7 +23,7 @@ function codesAndPaths(project: Project) {
 function named(name: string, shieldName?: string): Project {
   return shieldName === undefined
     ? {
-        schemaVersion: 5,
+        schemaVersion: 6,
         controllerId: 'nice_nano_v2',
         keys: [],
         wires: [],
@@ -32,7 +32,7 @@ function named(name: string, shieldName?: string): Project {
         name,
       }
     : {
-        schemaVersion: 5,
+        schemaVersion: 6,
         controllerId: 'nice_nano_v2',
         keys: [],
         wires: [],

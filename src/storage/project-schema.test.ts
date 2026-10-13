@@ -4,7 +4,7 @@ import { projectSchema } from './project-schema';
 const BASE_LAYER = { id: 'l0', name: 'Base', bindings: {} };
 
 const BASE = {
-  schemaVersion: 5,
+  schemaVersion: 6,
   controllerId: 'nice_nano_v2',
   name: 'x',
   keys: [],

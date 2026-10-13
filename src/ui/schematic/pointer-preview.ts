@@ -1,3 +1,4 @@
+import { moveKeys } from '../../domain/move-keys';
 import { moveKey } from '../../domain/move-key';
 import { setWireBends } from '../../domain/set-wire-bends';
 import type { Project } from '../../domain/types';
@@ -15,14 +16,12 @@ export function getPreviewProject(project: Project, drag: Drag | undefined): Pro
     }
     const dx = drag.position.xU - first.start.xU;
     const dy = drag.position.yU - first.start.yU;
-    let next = project;
-    for (const ks of drag.keyStarts) {
-      next = moveKey(next, {
+    return moveKeys(project, {
+      moves: drag.keyStarts.map((ks) => ({
         keyId: ks.keyId,
         position: { xU: ks.start.xU + dx, yU: ks.start.yU + dy },
-      });
-    }
-    return next;
+      })),
+    });
   }
   if (drag?.kind === 'bend') {
     const wire = project.wires.find((candidate) => candidate.id === drag.wireId);

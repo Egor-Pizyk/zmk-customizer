@@ -83,6 +83,80 @@ try {
     }
   }
   assert.equal(targets.length, 8);
+  const { createProject } = await server.ssrLoadModule('/src/domain/create-project.ts');
+  const { getKeyPinPosition } = await server.ssrLoadModule('/src/domain/get-key-pin-position.ts');
+  const board = CONTROLLER_BOARDS.find((candidate) => candidate.id === 'nice_nano_v2');
+  assert.ok(board);
+  for (const rotationDeg of [-15, 30]) {
+    const key = {
+      id: 'k0',
+      xU: 0,
+      yU: 0,
+      widthU: 1.5,
+      heightU: 2,
+      rotationDeg,
+      rotationOriginXU: 0.75,
+      rotationOriginYU: 1,
+      diode: { pin: 1, cathode: 'away-switch' },
+    };
+    const project = {
+      ...createProject({ controllerId: board.id }),
+      name: 'Layout test',
+      shieldName: 'layout_test',
+      keys: [key],
+      wires: [1, 2].map((pin) => {
+        const at = getKeyPinPosition(key, pin);
+        return {
+          id: `w${pin}`,
+          start: { kind: 'key-pin', keyId: key.id, pin },
+          end: {
+            kind: 'free',
+            at: { xU: pin === 1 ? -2 : 3, yU: at.yU },
+            boardPin: pin === 1 ? 2 : 8,
+          },
+          bends: [],
+        };
+      }),
+      layers: [
+        {
+          id: 'l0',
+          name: 'Base',
+          bindings: { k0: { kind: 'kp', key: { keycode: 'A', modifiers: [] } } },
+        },
+      ],
+    };
+    const target = { ...SHIELD_TARGET, ...board, boardId: board.id };
+    assert.deepEqual(
+      validateShieldProject(project, { board, target, bindingsCatalog: BINDINGS_CATALOG }),
+      [],
+    );
+    const matrix = deriveShieldMatrix(project, target);
+    assert.equal(matrix.ok, true);
+    assert.deepEqual(matrix.value.cells, [{ row: 0, col: 0 }]);
+    const files = generateRepositoryFiles(project, {
+      matrix: matrix.value,
+      target,
+      includeWorkflow: false,
+    });
+    assert.deepEqual(
+      files,
+      generateRepositoryFiles(project, { matrix: matrix.value, target, includeWorkflow: false }),
+    );
+    const rotationCell = rotationDeg < 0 ? `(${rotationDeg * 100})` : String(rotationDeg * 100);
+    assert.ok(
+      files
+        .find((file) => file.path.endsWith('.overlay'))
+        .content.includes(`150 200 0 0 ${rotationCell} 75 100`),
+    );
+    const id = `layout-${rotationDeg < 0 ? 'negative' : 'positive'}-rotation`;
+    for (const file of files) {
+      const destination = path.join(directory, id, file.path);
+      await mkdir(path.dirname(destination), { recursive: true });
+      await writeFile(destination, file.content);
+    }
+    targets.push({ id, board: board.id, shield: project.shieldName });
+  }
+  assert.equal(targets.length, 10);
   await mkdir(directory, { recursive: true });
   await writeFile(path.join(directory, 'targets.json'), `${JSON.stringify(targets, null, 2)}\n`);
   process.stdout.write(`Generated ${targets.length} deterministic actual-export build targets\n`);

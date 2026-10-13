@@ -216,7 +216,7 @@ function findCrossingIssues(project: Project): Issue[] {
 // every nested node is strict so a malformed binding, wire or key is rejected at its own path.
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(5),
+    schemaVersion: z.literal(6),
     controllerId: z.enum(CONTROLLER_BOARDS.map((board) => board.id)),
     name: z.string().max(PROJECT_BUDGET.stringLength),
     shieldName: z.string().max(PROJECT_BUDGET.stringLength).exactOptional(),
@@ -229,6 +229,11 @@ export const projectSchema = z
             .regex(/^k\d+$/u),
           xU: z.number(),
           yU: z.number(),
+          widthU: z.number().exactOptional(),
+          heightU: z.number().exactOptional(),
+          rotationDeg: z.number().exactOptional(),
+          rotationOriginXU: z.number().exactOptional(),
+          rotationOriginYU: z.number().exactOptional(),
           diode: z
             .strictObject({
               pin: z.literal([1, 2]),

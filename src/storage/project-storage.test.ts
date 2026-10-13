@@ -56,7 +56,7 @@ describe('loadProject', () => {
 
   it('returns the stored project', () => {
     const project = {
-      schemaVersion: 5,
+      schemaVersion: 6,
       controllerId: 'nice_nano_v2',
       keys: [],
       wires: [],

@@ -1,3 +1,4 @@
+import { validateKeyGeometry } from './validate-key-geometry';
 import { validateSchematic } from './validate-schematic';
 import type { Net } from './get-nets';
 import type { ShieldMatrix, ShieldTarget } from './derive-shield-matrix';
@@ -48,27 +49,6 @@ function validateNames(
   return issues;
 }
 
-function validatePhysicalLayout(
-  project: Project,
-  limits: BindingsCatalog['shieldLimits'],
-): ValidationIssue[] {
-  return project.keys.flatMap((key, keyIndex) => {
-    const cells = [key.xU, key.yU].map((value) => Math.round(value * 100));
-    return cells.some(
-      (cell) =>
-        !Number.isFinite(cell) || cell < limits.minLayoutCell || cell > limits.maxLayoutCell,
-    )
-      ? [
-          {
-            code: 'physical-layout-out-of-range' as const,
-            message: `Key ${keyIndex} is outside ZMK's signed 16-bit layout range. Move it between -327.68u and 327.67u in Schematic.`,
-            path: ['keys', keyIndex],
-          },
-        ]
-      : [];
-  });
-}
-
 export function validateShieldProject(
   project: Project,
   input: {
@@ -89,7 +69,7 @@ export function validateShieldProject(
     ...validateNames(project, input.bindingsCatalog.shieldLimits),
     ...validateControllerPins(project, input.board),
     ...validateControllerBindings(project, input.board),
-    ...validatePhysicalLayout(project, input.bindingsCatalog.shieldLimits),
+    ...validateKeyGeometry(project, input.bindingsCatalog.shieldLimits),
     ...(matrix.ok ? [] : matrix.error),
   ];
   return issues.filter(

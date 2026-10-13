@@ -1,3 +1,5 @@
+import { getKeyGeometry } from '../../domain/get-key-geometry';
+import { formatKeyTransform } from '../canvas/format-key-transform';
 import type { KeyboardEvent } from 'react';
 import type { Key } from '../../domain/types';
 import type { BindingLegend } from './format-binding-legend';
@@ -48,6 +50,7 @@ export function KeycapShape(props: KeycapShapeProps) {
       onKeyDown={handleKeyDown}
       role="graphics-symbol"
       tabIndex={isActive ? 0 : -1}
+      transform={formatKeyTransform(bindingKey)}
     >
       <title>{title}</title>
       <KeycapArt {...props} />
@@ -62,29 +65,35 @@ const SHIFTED_FONT_RATIO = 0.7;
 
 // Seen from above: outer skirt, inner top surface, key number, tap and hold legends (FR-006).
 function KeycapArt({ keyIndex, bindingKey, legend, corner, tag, hasConflict }: KeycapShapeProps) {
-  const { xU, yU } = bindingKey;
+  const { xU, yU, widthU, heightU } = getKeyGeometry(bindingKey);
   return (
     <>
       <rect
         className="fill-surface-muted stroke-border-strong group-focus-visible:stroke-focus group-focus-visible:stroke-3 group-data-conflict:stroke-danger group-data-selected:stroke-accent group-data-selected:stroke-3"
-        height={0.92}
+        height={Math.max(0.01, heightU - 0.08)}
         rx={0.1}
         strokeWidth={1.5}
         vectorEffect="non-scaling-stroke"
-        width={0.92}
+        width={Math.max(0.01, widthU - 0.08)}
         x={xU + 0.04}
         y={yU + 0.04}
       />
       <rect
         className="fill-surface-raised stroke-border"
-        height={0.72}
+        height={Math.max(0.01, heightU - 0.28)}
         rx={0.08}
         vectorEffect="non-scaling-stroke"
-        width={0.76}
+        width={Math.max(0.01, widthU - 0.24)}
         x={xU + 0.12}
         y={yU + 0.08}
       />
-      <KeycapLegend corner={corner} keyIndex={keyIndex} legend={legend} tag={tag} xU={xU} yU={yU} />
+      <CenteredLegend
+        keyIndex={keyIndex}
+        bindingKey={bindingKey}
+        legend={legend}
+        corner={corner}
+        tag={tag}
+      />
       {hasConflict ? (
         <path
           aria-hidden="true"
@@ -209,5 +218,20 @@ function KeycapTap({
         </text>
       )}
     </>
+  );
+}
+
+function CenteredLegend({
+  keyIndex,
+  bindingKey,
+  legend,
+  corner,
+  tag,
+}: Pick<KeycapShapeProps, 'keyIndex' | 'bindingKey' | 'legend' | 'corner' | 'tag'>) {
+  const { xU, yU, widthU, heightU } = getKeyGeometry(bindingKey);
+  return (
+    <g transform={`translate(${(widthU - 1) / 2} ${(heightU - 1) / 2})`}>
+      <KeycapLegend corner={corner} keyIndex={keyIndex} legend={legend} tag={tag} xU={xU} yU={yU} />
+    </g>
   );
 }

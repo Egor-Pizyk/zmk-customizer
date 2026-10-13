@@ -1,3 +1,4 @@
+import { useLayoutPreview } from './use-layout-preview';
 import { useState } from 'react';
 import type { Project } from '../../domain/types';
 import { usePreferences } from '../preferences-context';
@@ -32,31 +33,31 @@ function useCanvasHint(announce: (text: string) => void) {
 }
 
 function useSchematicInteraction(input: InteractionInput) {
-  const { project, commit, gridSizeU } = input;
+  const { project, commit } = input;
   const [activeToolId, setActiveToolId] = useState<ToolId>('select');
   const [selection, setSelection] = useState<SchematicSelection>();
   const { hint, handleHint, handleHintClear } = useCanvasHint(input.announce);
-  const handleSelectionChange = (next?: SchematicSelection) => {
-    setSelection(next);
-  };
-  const pointer = useSchematicPointer({
-    project,
+  const handleSelectionChange = setSelection;
+  const pointer = useWorkspacePointer(input, {
     activeToolId,
-    snapGridU: input.isSnapEnabled ? gridSizeU : undefined,
-    commit,
     selection,
     onSelectionChange: handleSelectionChange,
     onHint: handleHint,
     onHintClear: handleHintClear,
   });
+  const layout = useLayoutPreview(project, selection, commit);
   const handleToolChange = (toolId: ToolId) => {
     pointer.cancelDraft();
+    layout.handleCancel();
     handleHintClear();
     setActiveToolId(toolId);
   };
-  const keyboardOptions = { project, commit, gridSizeU, selection, activeToolId, pointer };
   const handleKeyKeyDown = useSchematicKeyboard({
-    ...keyboardOptions,
+    ...input,
+    selection,
+    activeToolId,
+    pointer,
+    layout,
     onSelectionChange: handleSelectionChange,
     onToolChange: handleToolChange,
   });
@@ -64,7 +65,8 @@ function useSchematicInteraction(input: InteractionInput) {
     selection,
     activeToolId,
     hint,
-    pointer,
+    pointer: getEditingPointer(pointer, layout.hasPreview),
+    layout,
     handleSelectionChange,
     handleToolChange,
     handleKeyKeyDown,
@@ -84,4 +86,33 @@ export function useSchematicWorkspace() {
     isSnapEnabled,
   });
   return { project, issues, commit, ...interaction };
+}
+
+function useWorkspacePointer(
+  input: InteractionInput,
+  handlers: Pick<
+    Parameters<typeof useSchematicPointer>[0],
+    'activeToolId' | 'selection' | 'onSelectionChange' | 'onHint' | 'onHintClear'
+  >,
+) {
+  return useSchematicPointer({
+    project: input.project,
+    commit: input.commit,
+    snapGridU: input.isSnapEnabled ? input.gridSizeU : undefined,
+    ...handlers,
+  });
+}
+
+function getEditingPointer(pointer: ReturnType<typeof useSchematicPointer>, hasPreview: boolean) {
+  return hasPreview
+    ? {
+        ...pointer,
+        surfaceHandlers: {
+          ...pointer.surfaceHandlers,
+          onPointerDown: () => {
+            /* Preview is read-only until Apply or Cancel. */
+          },
+        },
+      }
+    : pointer;
 }

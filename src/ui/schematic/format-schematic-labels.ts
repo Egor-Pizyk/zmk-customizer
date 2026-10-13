@@ -1,3 +1,4 @@
+import { getKeyGeometry } from '../../domain/get-key-geometry';
 import { assertNever } from '../../domain/assert-never';
 import { formatBoardPin } from '../../domain/board-pin';
 import type { getKeyPinWires } from '../../domain/get-key-pin-wires';
@@ -45,7 +46,12 @@ export function formatKeyLabel(
       : `. Diode at pin ${key.diode.pin}, cathode ${key.diode.cathode === 'away-switch' ? 'away from' : 'toward'} switch`;
   const selected = input.isSelected ? ', selected' : '';
   const problems = input.problems.length === 0 ? '' : `. ${input.problems.join(' ')}`;
-  return `Key ${input.keyIndex} at ${key.xU}, ${key.yU}. ${pins.join('. ')}${diode}${selected}${problems}`;
+  const geometry = getKeyGeometry(key);
+  const shape =
+    geometry.widthU === 1 && geometry.heightU === 1 && geometry.rotationDeg === 0
+      ? ''
+      : `, ${geometry.widthU}u × ${geometry.heightU}u, rotated ${geometry.rotationDeg}° around ${geometry.rotationOriginXU}, ${geometry.rotationOriginYU}u`;
+  return `Key ${input.keyIndex} at ${key.xU}, ${key.yU}${shape}. ${pins.join('. ')}${diode}${selected}${problems}`;
 }
 
 export function formatWireEnd(project: Project, end: WireEnd): string {

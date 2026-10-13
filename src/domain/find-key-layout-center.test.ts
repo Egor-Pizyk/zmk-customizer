@@ -29,3 +29,12 @@ it('calculates large layout bounds without exceeding the argument limit', () => 
   }));
   expect(findKeyLayoutCenter(buildProject({ keys }))).toEqual({ xU: 75_000, yU: 0.5 });
 });
+
+it('centers the visible bounds of a rotated wide key', () => {
+  const project = buildProject({
+    keys: [{ id: 'k0', xU: 0, yU: 0, widthU: 2, heightU: 1, rotationDeg: 90 }],
+  });
+  const center = findKeyLayoutCenter(project);
+  expect(center?.xU).toBeCloseTo(-0.5);
+  expect(center?.yU).toBeCloseTo(1);
+});
