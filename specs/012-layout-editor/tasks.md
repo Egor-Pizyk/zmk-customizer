@@ -1,0 +1,50 @@
+# Tasks: Layout editor
+
+Input: spec.md, plan.md, research.md, data-model.md, contracts/layout.md, quickstart.md.
+
+## Phase 1 — Setup and gates
+
+- [x] T001 Audit existing operations and contracts; create artifacts in specs/012-layout-editor/ on isolated branch.
+- [x] T002 Run consistency analysis and project-specific spec-reviewer; record resolution in specs/012-layout-editor/analysis.md before feature code.
+
+## Phase 2 — Foundation
+
+- [x] T003 Write failing geometry/migration tests in src/domain/get-key-geometry.test.ts, get-key-corners.test.ts, get-key-pin-position.test.ts, is-key-position-free.test.ts, find-key-layout-center.test.ts and src/storage/migrate-v5-to-v6.test.ts; test default 1u/0°, transformed pins, edge contact, invalid cells and old round-trip.
+- [x] T004 Implement pure geometry and schema v6/migration in src/domain/types.ts, get-key-geometry.ts, rotate-point.ts, get-key-corners.ts, get-key-center.ts, do-polygons-overlap.ts, get-key-pin-position.ts and src/storage/project-schema.ts, migrate-v5-to-v6.ts, migrate-project.ts; keep finite invalid cells repairable and preserve existing budgets/IDs.
+
+## Phase 3 — US1 geometry editing (MVP)
+
+- [x] T005 [US1] Write failing batch geometry/move/no-op/validation tests in src/domain/set-key-geometries.test.ts, move-keys.test.ts, validate-key-geometry.test.ts; ensure no mutation, bindings/diode/wire references retained, origin translated, batch crossing cleanup and rounded int16/positive cells.
+- [x] T006 [US1] Implement src/domain/set-key-geometries.ts, move-keys.ts, validate-key-geometry.ts; integrate rotated collision in is-key-position-free.ts, schematic overlaps and single project analysis; update find-key-layout-center.ts.
+- [x] T007 [US1] Write real App geometry/history/persistence/preview tests in src/ui/app-layout.test.ts before UI work.
+- [x] T008 [US1] Extend numeric fields in src/ui/schematic/key-position-cells.tsx and selected-layout tool controls with local preview/apply/cancel in src/ui/schematic/layout-controls.tsx and schematic-workspace.tsx; one Apply commit, no stale preview after base changes.
+- [x] T009 [US1] Render dimensions/rotation in src/ui/schematic/key-art.tsx, key-shape.tsx, src/ui/bindings/keycap-shape.tsx; transform switch center/pins/diode anchors consistently; update accessible geometry names in format-schematic-labels.ts.
+
+## Phase 4 — US2 organization
+
+- [x] T010 [US2] Write failing duplicate/renumber/delete contracts in src/domain/duplicate-keys.test.ts, renumber-keys.test.ts, remove-keys.test.ts and add-key.test.ts; IDs exact, 512 budget atomic, layers/diodes copied without wires, rotated center sort stable and no-op identity.
+- [x] T011 [US2] Implement src/domain/duplicate-keys.ts, renumber-keys.ts, remove-keys.ts and cap-aware add-key.ts; update all creation callers with PROJECT_BUDGET.keys argument.
+- [x] T012 [US2] Add behavioral multi-selection/duplicate/delete/renumber UI tests in src/ui/app-layout.test.ts and table selection/actions in src/ui/schematic/parts-keys-table.tsx; reuse existing delete focus contract.
+
+## Phase 5 — US3 keyboard and export
+
+- [x] T013 [US3] Write behavioral selected-cluster nudge/toggle, native numeric arrows/Escape, rotated marquee/navigation tests in src/ui/app-layout.test.ts, src/ui/canvas/marquee-select.test.ts, find-nearest-key.test.ts and geometry tests.
+- [x] T014 [US3] Extend src/ui/schematic/use-key-keyboard.ts, use-schematic-keyboard.ts, schematic-workspace.tsx, pointer-select.ts and pointer-preview.ts; multi-nudge one step, accurate collision, origin translation, shared rotated marquee/center navigation and scoped shortcut help in src/ui/shortcuts.ts.
+- [x] T015 [US3] Write independent seven-cell golden and deterministic tests in src/generators/layout-export.test.ts and tests/fixtures/generated/layout/; document differences in DIFFERENCES.md; include delete→export regression with n−1 bindings/transform/physical entries in matching order; observe failure before generator change.
+- [x] T016 [US3] Emit seven physical attrs in src/generators/generate-overlay.ts using docs/zmk/physical-layout.md; run ZMK reviewer before commit.
+- [x] T017 [US3] Extend scripts/generate-build-fixtures.mjs with valid actual-export nonstandard sized/rotated target while retaining eight board/direction targets; verify emitted geometry and matrix contracts.
+
+## Phase 6 — Verification
+
+- [x] T018 Run formatter, relevant regression tests and production build; fix failures within scope; record in specs/012-layout-editor/verification.md.
+- [x] T019 Run make zmk-build, including nonstandard geometry; record actual pinned firmware compilation result in specs/012-layout-editor/verification.md.
+- [x] T020 Run make test-mutations alone after production edits; record sensitivity in specs/012-layout-editor/verification.md.
+- [ ] T021 Complete review, record limitations and remaining manual accessibility checks in specs/012-layout-editor/verification.md; run final make check and commit Conventional Commits (no push/PR).
+
+## Dependencies and delivery
+
+T001→T002→T003→T004→T005→T006. US1 T007→T008→T009 proves editable geometry. US2 T010→T011→T012 builds organization on geometry. US3 T013→T014; T015→T016→T017 establishes firmware correctness. T018→T019→T020→T021 completes checks. Every implementation task follows its failing contract tests. All user stories integrated before completion, no stop after MVP.
+
+## Parallel opportunities
+
+Read-only review/research can run independently. Within US1 UI tests and domain tests can be authored in separate files after contracts are fixed; within US2 operation test files are independent; within US3 golden fixture review and accessibility test review are independent. Execute production edits sequentially to protect shared files and mutation checks. No deployment.

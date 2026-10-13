@@ -1,0 +1,5 @@
+# Validation guide
+
+Run focused tests with `docker compose run --rm app npm run test -- <test-files>`. Run final `make check` for architecture, guidelines, types, lint, format and coverage. Build with `docker compose run --rm app npm run build`. Run `make zmk-build` (eight legacy controller/direction exports plus two nonstandard geometry actual exports). Run `make test-mutations` separately after all edits/checks finish.
+
+Exercise via real App/providers tests: numeric move/resize/rotate/origin, shared geometry in Bindings, preview/cancel leaves saved project unchanged, apply one Undo, multi selection and nudge, duplicate all layer bindings/no wires, renumber IDs/references, delete/Undo/Redo and saved JSON round-trip. Old v1–v5 fixtures must load with original positions/1u geometry. Boundary cases: edge contact vs rotated interior overlap, signed cells, zero sizes, 512-key refusal, huge IDs and stale selections. Read analysis.md before implementation and verification.md for recorded evidence and manual limits.

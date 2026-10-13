@@ -1,0 +1,95 @@
+# Feature Specification: Layout editor
+
+**Feature Branch**: `012-layout-editor`
+**Created**: 2026-10-13
+**Status**: Implemented; automated verification passed
+**Input**: Complete arbitrary physical layouts in Schematic, preserving the contracts of features 001–011 and 024 and targeting ZMK v0.3.
+
+## User Scenarios & Testing
+
+### User Story 1 — Edit physical geometry (Priority: P1)
+
+A builder edits wide, tall and rotated keys around an absolute origin, using the canvas or numeric fields, and sees the same layout in Bindings.
+
+**Why this priority**: Nonstandard geometry is the remaining core layout capability.
+**Independent Test**: Set a key to 2.25u × 1.5u, 30°, origin (3u, 2u), inspect both workspaces, reload, undo and redo.
+**Acceptance Scenarios**:
+1. Given a 1u key, when width, height, angle or origin is committed, then the visible key uses those values, bindings and diode polarity stay attached to its identity, and one Undo restores each edit.
+2. Given several selected keys, when moved, resized or rotated, then all selected keys change in one Undo step and unselected keys stay unchanged.
+3. Given a draft gesture or field, when cancelled, then saved geometry and Redo stay unchanged.
+4. Given touching or rotated keys, when their interiors overlap, then the affected keys have a repairable overlap problem; touching edges alone are allowed.
+
+### User Story 2 — Build and organize a layout (Priority: P2)
+
+A builder selects, duplicates, deletes and renumbers keys without losing actions or electrical references.
+
+**Why this priority**: Repeating clusters and predictable key order avoid manual reconstruction.
+**Independent Test**: Duplicate a selected cluster, renumber by position, delete a key, undo each operation and inspect all layers.
+**Acceptance Scenarios**:
+1. Given selected keys with bindings and diodes, when duplicated, then new stable identities are appended in source order with matching geometry, bindings on every layer and diode data, translated to the right of the existing layout, without copied wires.
+2. Given reordered keys including a rotated cluster, when renumbered by position, then visible centers order top-to-bottom, then left-to-right, ties retain former order, and IDs, bindings and wire endpoint references stay unchanged.
+3. Given a key deletion, then indices remain contiguous, bindings for that key disappear from all layers, and existing wire cleanup semantics remain intact.
+
+### User Story 3 — Work without a mouse and export (Priority: P1)
+
+A keyboard or screen-reader user edits every property, selects multiple keys and performs every operation through the Keys table and tools; the resulting export describes the same physical layout.
+
+**Why this priority**: Accessibility and correct firmware output are product guarantees.
+**Independent Test**: Complete move/resize/rotate/duplicate/renumber/delete using labeled controls and shortcuts; export a wired nonstandard layout and build it with ZMK v0.3.
+**Acceptance Scenarios**:
+1. Given a focused canvas key, arrows navigate keys, Shift+arrows nudge the selection by the existing grid step, Home/End navigate order, Mod+Space toggles selection, Delete removes selection and Escape cancels a draft before clearing selection.
+2. Given focus in a numeric input, native typing and arrow stepping win; Enter/blur commits and Escape discards.
+3. Given a previously stored project, loading preserves its former 1u, unrotated geometry and all data.
+4. Given valid geometry, physical-layout export contains dimensions, position, clockwise angle and absolute origin in hundredths, in key-index order, identically across repeated exports.
+
+### Edge Cases
+
+Empty/stale selections and unchanged edits do nothing and preserve Redo. Duplication at the 512-key budget is refused atomically with a readable announcement. Zero/negative sizes and values outside ZMK signed 16-bit cell range are repairable problems and block export. Non-finite imported values are rejected. Rotated corners may extend outside the unrotated bounding box. Existing electrical intersections may change when endpoints move: references and bends survive; connectivity is reanalysed and conflicts block export. Extremely large exact IDs retain lossless allocation. No inferred row grouping is used by renumber.
+
+## Requirements
+
+### Functional Requirements
+
+- **FR-001**: Support x/y, width/height in u, clockwise angle in degrees and absolute rotation-origin x/y in u; 1u = 19.05mm. Default size 1u × 1u, angle and origin zero.
+- **FR-002**: Preserve existing blank/preset, create, single/multi-selection, drag, delete, snap and history flows; extend geometry rather than recreate these capabilities.
+- **FR-003**: Provide numeric editing for all seven properties, selection checkboxes and batch move/resize/rotate, duplicate, delete and renumber controls reachable without the canvas.
+- **FR-004**: Move translates rotation origins along with x/y; resize holds unrotated top-left and rotation origin fixed; batch rotation applies a supplied angle and common absolute origin to all selected keys.
+- **FR-005**: Switch bodies and pins rotate with the key, centered on its resized keycap. Attached wire endpoints follow the transformed pins; bends and free ends stay put. Preserve diode pin and polarity and reuse electrical analysis/crossing cleanup.
+- **FR-006**: Detect overlaps using rotated keycap rectangles, allowing edge contact. Numeric edits may create conflicts; pointer placement retains existing conflict refusal with accurate geometry.
+- **FR-007**: Duplicate geometry, bindings across every layer and diode, with fresh exact IDs, no wires, one translated cluster, appended in original key-index order; report budget refusal without a partial change.
+- **FR-008**: Show key indices in both workspaces and renumber by transformed center Y then X at 0.0001u precision, stable on ties; preserve identity and all ID-based references.
+- **FR-009**: Keep one user operation as one history step, transient preview/cancel unsaved, no-op identity and Redo preserved; exact saved/file round-trip and old-project migration preserve geometry.
+- **FR-010**: Extend shared rendering, marquee, navigation and center-layout calculations to sized/rotated geometry in Schematic and Bindings.
+- **FR-011**: Export all seven cells deterministically in key-index order for ZMK v0.3; validate rounded signed 16-bit ranges (−32768…32767), positive size cells, and block invalid export.
+- **FR-012**: Retain the 512-key and existing data limits, exact key identities and protection from an obsolete import replacing newer work.
+
+### Key Entities
+
+- Key: stable identity, key-index position in ordered layout, seven geometry properties, optional diode.
+- Layer binding: attached to key identity, independent of layout order.
+- Wire: endpoint key identity and pin plus fixed world-coordinate bends; never implicitly cloned.
+- Selection/draft: transient editing state, absent from saved project.
+
+## Success Criteria
+
+### Measurable Outcomes
+
+- **SC-001**: Every operation is reachable by keyboard; automated move and rotate flows persist the expected values and Undo/Redo restore exact project data.
+- **SC-002**: Old projects and export/import round-trips preserve 100% of key positions, IDs, bindings, wiring and diode data.
+- **SC-003**: Both workspaces show equal sized/rotated geometry; overlaps, marquee and navigation use the same visible geometry.
+- **SC-004**: Renumber produces contiguous indices with no changed IDs/references; duplication up to 512 keys is atomic and deterministic.
+- **SC-005**: Golden output matches seven physical cells and a real exported layout with nonstandard sizes and positive/negative rotation builds with pinned ZMK v0.3.
+
+## Assumptions
+
+Reuse existing presets and deletion wire cleanup. No KLE import, split, new wiring/kscan, behaviors or firmware settings. Numeric fields are exact; snap applies to pointer positions including selected-cluster dragging, size steps use the shared grid, angles use 1° steps. Existing scoped shortcut policy wins; no new global single-key shortcuts. Geometry rounding to a nonpositive size cell or beyond ZMK range is editable but invalid for export; 0.005u rounds to 1 centi-u and is accepted, 0.004u rounds to zero and is invalid.
+
+## Clarifications
+
+### Session 2026-10-13
+
+- Repository resolves maximum key count: preserve the 024 budget of 512; enforce creation/duplication without exceeding it.
+- Repository resolves shortcuts: existing accessibility arrows navigate, Shift+arrows nudge; typing targets remain native.
+- Chosen default for rotated clusters: transformed visual center, rounded 0.0001u Y then X, former index on ties.
+- Q: Rotate switch and pins with keycap? → A: Yes; rotation transforms switch/pins with keycap, retains world bends and revalidates intersections.
+- Q: Duplicate bindings/diode without wires? → A: Yes; duplication copies bindings and diode but never wires.
