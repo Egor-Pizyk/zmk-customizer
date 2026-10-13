@@ -7,7 +7,7 @@ import type { Commit } from './pointer-types';
 import type { SchematicSelection } from './schematic-selection';
 import type { ToolId } from './tools';
 import { useSchematicKeyboard } from './use-schematic-keyboard';
-import { useSchematicPointer } from './use-schematic-pointer';
+import { useEditingPointer } from './use-editing-pointer';
 
 type InteractionInput = {
   readonly project: Project;
@@ -91,11 +91,11 @@ export function useSchematicWorkspace() {
 function useWorkspacePointer(
   input: InteractionInput,
   handlers: Pick<
-    Parameters<typeof useSchematicPointer>[0],
+    Parameters<typeof useEditingPointer>[0],
     'activeToolId' | 'selection' | 'onSelectionChange' | 'onHint' | 'onHintClear'
   >,
 ) {
-  return useSchematicPointer({
+  return useEditingPointer({
     project: input.project,
     commit: input.commit,
     snapGridU: input.isSnapEnabled ? input.gridSizeU : undefined,
@@ -103,7 +103,7 @@ function useWorkspacePointer(
   });
 }
 
-function getEditingPointer(pointer: ReturnType<typeof useSchematicPointer>, hasPreview: boolean) {
+function getEditingPointer(pointer: ReturnType<typeof useEditingPointer>, hasPreview: boolean) {
   return hasPreview
     ? {
         ...pointer,

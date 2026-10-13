@@ -55,7 +55,13 @@ export function ToolWindow({ activeToolId, hint, onToolChange }: ToolWindowProps
 }
 
 function handleEditClick() {
-  document.querySelector<HTMLInputElement>('[data-layout-controls] input')?.focus();
+  const details = document.querySelector<HTMLDetailsElement>('[data-precise-properties]');
+  if (details !== null) {
+    details.open = true;
+  }
+  requestAnimationFrame(() => {
+    document.querySelector<HTMLInputElement>('[data-layout-controls] input')?.focus();
+  });
 }
 
 function LayoutEditButton() {

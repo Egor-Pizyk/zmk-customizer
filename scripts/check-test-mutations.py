@@ -76,6 +76,14 @@ MUTATIONS += [
  ['geometry no-op destroys redo', 'src/domain/set-key-geometries.ts', '? project', '? { ...project }', ['src/ui/layout-noops.test.ts']],
 ]
 
+MUTATIONS += [
+ ['pointer resize loses fixed anchor', 'src/domain/resize-key-from-pointer.ts', 'input.direction.x === -1 ? geometry.widthU - widthU : 0', '0', ['src/domain/resize-key-from-pointer.test.ts']],
+ ['pointer rotation loses center pivot', 'src/domain/rotate-key-from-pointer.ts', 'rotationOriginXU: center.xU', 'rotationOriginXU: 0', ['src/domain/rotate-key-from-pointer.test.ts']],
+ ['pointer release accepts overlap', 'src/domain/transform-key-from-pointer.ts', "input.phase === 'commit'", 'false', ['src/domain/transform-key-from-pointer.test.ts', 'src/ui/app-key-transforms.test.ts']],
+ ['cancelled numeric geometry resurfaces', 'src/ui/schematic/layout-controls.tsx', 'props.hasPreview &&', '', ['src/ui/app-key-transforms.test.ts']],
+ ['numeric editing loses live preview', 'src/ui/schematic/layout-controls.tsx', 'props.onPreview(next);', '', ['src/ui/app-key-transforms.test.ts']],
+]
+
 def run_mutation(mutation, report_path):
     label, relative, before, after, tests = mutation
     path = ROOT / relative

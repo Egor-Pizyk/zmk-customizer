@@ -17,3 +17,7 @@ Creation and blank/preset: add-key/create-project/UNIBODY_PRESET. Move: move-key
 ## Verification boundaries
 
 Terminal React/jsdom checks establish roles, state, SVG geometry, persistence and bytes, not paint or screen-reader output. Production build and actual ZMK export build required. Read-only project-specific spec review and ZMK review precede completion. No extension hooks file is present.
+
+## Direct-manipulation follow-up
+
+The numeric feedback issue came from staging selected properties until a separate Preview action. Enter/blur now starts the existing transient preview immediately; precise fields remain available in collapsed details, with Apply/Cancel visible outside it. Canvas frames are rendered in screen coordinates so their outline and targets retain their size at different zoom levels. Pure pointer operations inverse-rotate resize deltas and preserve the opposite anchor exactly, without rounding unaffected coordinates. Rotation rebases arbitrary imported origins to the visible center without a visual jump; zero-radius input returns the original project. A domain facade permits overlap preview but refuses an overlapping release. The pointer adapter cancels on changed project/selection/tool, Escape or capture loss. No schema, generator bytes or runtime dependencies change.
