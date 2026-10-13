@@ -304,6 +304,8 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 
 ## 012 — layout-editor
 
+**Specified:** [`specs/012-layout-editor/spec.md`](../specs/012-layout-editor/spec.md). Implementation and verification: [`verification.md`](../specs/012-layout-editor/verification.md).
+
 **Goal.** Build any physical key layout visually in the Schematic workspace, with a table view that exposes every key property for keyboard and screen-reader users.
 
 **In scope**
@@ -322,7 +324,7 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 - After deleting key k from an n-key project: n-1 keys, indices `0..n-2`, every layer has n-1 bindings, generated files still pass golden-style snapshot tests.
 - Renumber by position orders keys top-to-bottom then left-to-right (rule documented in the spec, tested).
 
-**Open.** Renumber rule for rotated thumb clusters; max key count.
+**Resolved (012).** Renumber uses visible rotated centers, rounded to 0.0001u, then Y/X with stable ties. Existing project budget: 512 keys.
 
 **Relevant docs.** `docs/zmk/physical-layout.md`.
 
@@ -508,7 +510,7 @@ Parsing existing ZMK shield files back into a project (Devicetree parsing), cust
 - ~~Schema versioning before first release~~ — resolved: v1 frozen at merge of 002; every later change adds a migration.
 - ~~Undo history~~ — resolved: session only, 100 steps (spec 002).
 - Hosting target for `dist/` and app CI provider (GitHub Actions assumed by the repo layout, not stated).
-- Canvas arrow keys (012 layout-editor): spec 001 makes plain arrows pan the canvas; accessibility.md wants arrows to move focus between keys once keys exist. Decide in 012: e.g. arrows move key focus/selection when a key is focused and pan otherwise, or pan moves to Alt+Shift+arrows.
+- ~~Canvas arrow keys (012 layout-editor)~~ — resolved: plain arrows navigate visible centers when a key is focused, otherwise retain canvas pan; Shift+arrows nudge selected keys. Numeric inputs retain native keys.
 - Charlieplex kscan: own feature or part of 013.
 - Split halves on different boards.
 - Raw "extra Kconfig lines" escape hatch (015).
