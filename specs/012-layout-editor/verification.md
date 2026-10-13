@@ -43,3 +43,7 @@ No feature-scope implementation remains after automated verification. Manual bro
 | Buildable nonstandard layout | layout-negative-rotation and layout-positive-rotation actual-export firmware artifacts |
 
 Code review checked pure domain boundaries, effective-default equality, exact IDs, stable ordering, finite trust-boundary fields, readonly references, no dependency additions and local-only drafts. The final table geometry steps use the current shared grid; angular stepping remains 1°.
+
+## Completion
+
+Final `make check` passed again after the standalone mutation run: 159 files / 951 tests, all gates and coverage floors. T001–T021 are complete; manual limits above remain explicitly unverified. Commits: `5e16358` (feature artifacts and roadmap) and `a4e3294` (implementation, migration, tests, goldens and actual-build fixtures), followed by the documentation completion commit. No push or PR was performed.
