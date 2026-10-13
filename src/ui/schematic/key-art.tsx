@@ -16,7 +16,7 @@ export function KeyArt({ keyIndex, schematicKey, hasConflict }: KeyArtProps) {
   return (
     <>
       <rect
-        className="fill-surface-raised stroke-border-strong group-focus-visible:stroke-focus group-focus-visible:stroke-3 group-data-conflict:stroke-danger group-data-selected:stroke-accent group-data-selected:stroke-3"
+        className="fill-surface-raised stroke-border-strong group-focus-visible:stroke-focus group-focus-visible:stroke-3 group-data-conflict:stroke-danger group-data-selected:stroke-accent"
         height={Math.max(0.01, heightU - 0.08)}
         rx={0.08}
         strokeWidth={1.5}

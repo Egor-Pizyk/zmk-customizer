@@ -53,6 +53,7 @@ function WorkspaceCanvas({
       activeKeyId={getActiveKeyId(project, selection, focusedKeyId)}
       commit={commit}
       hoverPreview={pointer.hoverPreview}
+      hasTransformFrames={activeToolId === 'select' && !workspace.layout.hasPreview}
       marks={marks}
       marquee={marquee}
       onKeyFocus={handleKeyFocus}

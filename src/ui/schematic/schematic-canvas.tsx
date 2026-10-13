@@ -7,7 +7,7 @@ import { WorkSurface } from '../canvas/work-surface';
 import type { HoverPreview } from './get-hover-preview';
 import { SchematicContent } from './schematic-content';
 import type { SchematicLayerProps } from './schematic-layer-props';
-import { SchematicScreenLayer } from './schematic-screen-layer';
+import { SchematicEditingScreenLayer } from './schematic-editing-screen-layer';
 
 type SchematicCanvasProps = Omit<SchematicLayerProps, 'view' | 'paths' | 'crossings'> & {
   readonly hoverPreview: HoverPreview;
@@ -19,6 +19,7 @@ type SchematicCanvasProps = Omit<SchematicLayerProps, 'view' | 'paths' | 'crossi
   readonly commit: (change: (project: Project) => Project) => void;
   /** The tool window overlay. */
   readonly children: ReactNode;
+  readonly hasTransformFrames: boolean;
 };
 
 type ContentInput = Omit<SchematicCanvasProps, 'children' | keyof PointerHandlers>;
@@ -28,7 +29,7 @@ type PointerHandlers = Pick<
 >;
 
 function createSurfaceContent(input: ContentInput, handlers: PointerHandlers): SurfaceContent {
-  const { project, hoverPreview, commit, marquee, ...layerProps } = input;
+  const { project, hoverPreview, commit, marquee, hasTransformFrames, ...layerProps } = input;
   const crossings = getProjectAnalysis(project).crossings;
   const { paths } = getSchematicGeometry(project);
   return {
@@ -46,7 +47,14 @@ function createSurfaceContent(input: ContentInput, handlers: PointerHandlers): S
       />
     ),
     renderScreen: (view) => (
-      <SchematicScreenLayer crossings={crossings} commit={commit} project={project} view={view} />
+      <SchematicEditingScreenLayer
+        crossings={crossings}
+        commit={commit}
+        project={project}
+        view={view}
+        hasTransformFrames={hasTransformFrames}
+        selection={layerProps.selection}
+      />
     ),
   };
 }

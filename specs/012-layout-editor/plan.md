@@ -41,3 +41,11 @@ Feature artifacts: spec.md, research.md, data-model.md, contracts/layout.md, qui
 ## Implementation Strategy
 
 Test migration and geometry contracts first, observe red, implement pure geometry. Test batch mutation and identity contracts before operations. UI tests drive accessible controls and history/persistence, extend existing pointer work without replacing it. Independently write physical-layout golden before modifying generator. Review spec before implementation, ZMK output before commit. Finish gates and record exact results.
+
+## Follow-up architecture
+
+Keep the current branch/spec number. Add pure resize-key-from-pointer and rotate-key-from-pointer operations, both using the immutable gesture base and setKeyGeometries (crossings pruned once). Resize inverse-rotates pointer deltas, clamps/snaps positive dimensions and adjusts local x/y at moving top/left edges; the old absolute origin remains fixed. Rotation uses atan2 delta around visible center and rebases geometry around that center without a visual jump; same-angle/no-motion returns original identity.
+
+Add screen-space selection frames/handles above existing drawing, with per-key oriented frames and pixel-sized hit targets. DOM attributes describe resize/rotate intent; a separate pointer adapter intercepts these targets before the existing pointer handler, captures the SVG pointer, maintains transient base/position and commits only on release. Preview invalidates if saved project, selection or tool changes. Reuse existing Escape path and project analysis, no new effects/providers/dependencies. Numeric selected controls auto-preview; precise fields are collapsed behind native details. No schema/generator changes, output goldens remain unchanged.
+
+Follow-up review resolution: resize/rotate previews may overlap but commit refuses final overlaps through the existing pure polygon query. Rotation output uses equivalent angles in −180°…180°, with optional 15° Shift snap. FR-004 is numeric/batch-only; pointer anchors are governed by FR-014.

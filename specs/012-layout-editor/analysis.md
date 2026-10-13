@@ -41,3 +41,11 @@ ZMK reviewer completed after generator/golden changes: **approve**, no findings;
 The implementation review clarified snap wording: exact numeric values include batch translation; snap applies to pointer positions, including selected-cluster dragging, and keyboard nudge uses the shared grid step. This removes an ambiguity in the earlier phrase “batch movement”; no new user decision is needed because numeric fields were explicitly exact.
 
 Additional regression review found and repaired intermediate crossing pruning in combined move+rotate and multi-key drag preview. Both now analyze the complete geometry once. Behavioral tests also cover mixed selection resetting to the first-key value, roving focus after deletion and asynchronous canvas focus before Mod+Space selection extension.
+
+## Follow-up analysis (before implementation)
+
+FR-013 maps to T024/T025; FR-014/015 to T023–T025; FR-016 to T024/T026. All follow-up criteria map to T027 verification. Supersedes the old manual Preview button (automatic numeric preview), preserves explicit Apply/Cancel and table commits. Individual key resize/rotate is explicitly distinguished from selected-cluster movement. Pointer-only minimum 0.01u does not change schema/old numeric acceptance of 0.005u. Center pivot rebasing preserves visible geometry for imported arbitrary origins. No critical/high inconsistency or constitutional exception; pure domain and real-provider tests precede production edits. No extension hooks file present.
+
+Spec reviewer found overlap-release ambiguity and numeric/pointer resize wording. Resolved before production code: retain pointer overlap refusal, add regression, scope top-left-fixed behavior to numeric/batch edits, mark follow-up pending. Zero remaining major/critical findings.
+
+Final read-only review approved pointer geometry, transient state and requirement coverage after fixing cancelled precise-property drafts. Added failing Cancel/Escape → edit another property → Apply contracts before remediation. No material findings remain; final checks are recorded in verification.md.

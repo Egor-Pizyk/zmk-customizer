@@ -48,3 +48,14 @@ T001→T002→T003→T004→T005→T006. US1 T007→T008→T009 proves editable 
 ## Parallel opportunities
 
 Read-only review/research can run independently. Within US1 UI tests and domain tests can be authored in separate files after contracts are fixed; within US2 operation test files are independent; within US3 golden fixture review and accessibility test review are independent. Execute production edits sequentially to protect shared files and mutation checks. No deployment.
+
+## Follow-up — direct canvas manipulation
+
+- [x] T022 Update scenarios/design, analyze follow-up consistency and complete spec review before implementation.
+- [x] T023 Write failing pure domain pointer resize/rotate contracts; implement snapped positive dimensions, rotated fixed anchors, center pivot/no-op and reference preservation.
+- [x] T024 Write real App failing live-number and pointer feedback/history/cancel tests before UI changes.
+- [x] T025 Implement thin screen-space frame, eight sides/corners and exterior corner rotation targets; intercept pointer gestures with immutable transient preview and one commit, preserve existing gestures and stale/cancel handling.
+- [x] T026 Collapse precise controls and auto-preview numeric changes; keep accessible table/actions and simplify redundant Preview controls.
+- [x] T027 Run full make check/coverage, production build and actual ZMK builds; run mutations separately after production edits; record results and commit without push/PR.
+
+Dependencies: T022 → T023 → T024 → T025 → T026 → T027. No schema/output change; prior migrations/goldens remain regression gates.

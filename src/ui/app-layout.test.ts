@@ -16,6 +16,9 @@ function project() {
   });
 }
 async function edit(user: ReturnType<typeof renderApp>['user'], name: string, value: string) {
+  if (screen.queryByRole('spinbutton', { name }) === null) {
+    await user.click(screen.getByText('Precise properties'));
+  }
   const field = screen.getByRole('spinbutton', { name });
   await user.clear(field);
   await user.type(field, `${value}{Enter}`);
@@ -63,14 +66,14 @@ it('previews a multi-key geometry edit without saving, cancels and applies with 
   await user.click(screen.getByRole('checkbox', { name: 'Select key 1' }));
   await edit(user, 'Selected width (u)', '1.5');
   await edit(user, 'Selected rotation (°)', '-15');
-  await user.click(screen.getByRole('button', { name: 'Preview layout' }));
   expect(loadProject().project).toEqual(before);
   expect(screen.getByRole('graphics-symbol', { name: /^Key 0\b/u }).getAttribute('transform')).toBe(
     'rotate(-15 0 0)',
   );
   await user.click(screen.getByRole('button', { name: 'Cancel preview' }));
   expect(loadProject().project).toEqual(before);
-  await user.click(screen.getByRole('button', { name: 'Preview layout' }));
+  await edit(user, 'Selected width (u)', '1.5');
+  await edit(user, 'Selected rotation (°)', '-15');
   await user.click(screen.getByRole('button', { name: 'Apply layout' }));
   expect(loadProject().project.keys.map((key) => key.widthU)).toEqual([1.5, 1.5]);
   await user.click(historyButton('Undo'));
@@ -149,7 +152,6 @@ it('applies an explicitly entered first-key value to mixed selection and keeps t
   await user.keyboard('{Shift>}{ArrowDown}{/Shift}');
   expect(screen.getByRole('checkbox', { name: 'Select key 1' })).toHaveProperty('checked', true);
   await edit(user, 'Selected width (u)', '1');
-  await user.click(screen.getByRole('button', { name: 'Preview layout' }));
   await user.click(screen.getByRole('button', { name: 'Apply layout' }));
   expect(loadProject().project.keys.map((key) => getKeyGeometry(key).widthU)).toEqual([1, 1]);
   await user.click(screen.getByRole('button', { name: 'Delete key 1' }));

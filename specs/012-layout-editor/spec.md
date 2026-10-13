@@ -2,7 +2,7 @@
 
 **Feature Branch**: `012-layout-editor`
 **Created**: 2026-10-13
-**Status**: Implemented; automated verification passed
+**Status**: Verified, including direct-manipulation follow-up
 **Input**: Complete arbitrary physical layouts in Schematic, preserving the contracts of features 001–011 and 024 and targeting ZMK v0.3.
 
 ## User Scenarios & Testing
@@ -53,7 +53,7 @@ Empty/stale selections and unchanged edits do nothing and preserve Redo. Duplica
 - **FR-001**: Support x/y, width/height in u, clockwise angle in degrees and absolute rotation-origin x/y in u; 1u = 19.05mm. Default size 1u × 1u, angle and origin zero.
 - **FR-002**: Preserve existing blank/preset, create, single/multi-selection, drag, delete, snap and history flows; extend geometry rather than recreate these capabilities.
 - **FR-003**: Provide numeric editing for all seven properties, selection checkboxes and batch move/resize/rotate, duplicate, delete and renumber controls reachable without the canvas.
-- **FR-004**: Move translates rotation origins along with x/y; resize holds unrotated top-left and rotation origin fixed; batch rotation applies a supplied angle and common absolute origin to all selected keys.
+- **FR-004**: Move translates rotation origins along with x/y; numeric/batch resize holds unrotated top-left and rotation origin fixed; batch rotation applies a supplied angle and common absolute origin to all selected keys.
 - **FR-005**: Switch bodies and pins rotate with the key, centered on its resized keycap. Attached wire endpoints follow the transformed pins; bends and free ends stay put. Preserve diode pin and polarity and reuse electrical analysis/crossing cleanup.
 - **FR-006**: Detect overlaps using rotated keycap rectangles, allowing edge contact. Numeric edits may create conflicts; pointer placement retains existing conflict refusal with accurate geometry.
 - **FR-007**: Duplicate geometry, bindings across every layer and diode, with fresh exact IDs, no wires, one translated cluster, appended in original key-index order; report budget refusal without a partial change.
@@ -93,3 +93,14 @@ Reuse existing presets and deletion wire cleanup. No KLE import, split, new wiri
 - Chosen default for rotated clusters: transformed visual center, rounded 0.0001u Y then X, former index on ties.
 - Q: Rotate switch and pins with keycap? → A: Yes; rotation transforms switch/pins with keycap, retains world bends and revalidates intersections.
 - Q: Duplicate bindings/diode without wires? → A: Yes; duplication copies bindings and diode but never wires.
+
+## Follow-up: Direct canvas manipulation (2026-10-15)
+
+User feedback: selected numeric properties were staged without visible feedback, and editing should primarily use familiar canvas manipulation.
+
+- **FR-013**: A selected key displays a thin frame, eight resize handles on sides/corners, and exterior rotation zones at corners. Handles stay a usable screen size across zoom. Existing key/pin/wire gestures remain available outside those targets.
+- **FR-014**: Drag a side to change one dimension; drag a corner to change both. The opposite edge/corner stays visually fixed, including for rotated keys. Dragging never flips the rectangle; minimum pointer size is 0.01u, and snap uses the existing grid. Existing smaller numeric geometry remains loadable.
+- **FR-015**: Resize/rotate preview may overlap, but release refuses final interior overlap with other keys and announces the conflict; numeric edits remain repairable. Drag outside a corner to rotate about the key's visible center; Shift snaps rotation to 15°. The gesture previews continuously, pointer release commits once, Escape/cancel/capture loss discards it. No movement and stale gestures preserve identity/Redo. Multiple selected keys expose individual frames; manipulating a key changes that key, while existing selected-cluster movement remains available.
+- **FR-016**: Simplify the selected-layout panel to actions and a collapsed precise-editing section. Numeric edits preview automatically on Enter/blur, with Apply/Cancel explicitly indicating unsaved state; table edits continue committing directly. Every pointer operation retains its numeric keyboard alternative.
+
+Acceptance: real provider UI tests must show resize/rotate feedback before release, saved data unchanged during preview, saved/exported geometry after release, exact one-step Undo/Redo, Escape/capture cancellation, live numeric feedback, and handles hidden outside the Select tool. Domain tests cover rotated anchors, side/corner snapping/minimum, center rotation rebasing, no-op/unknown IDs, preserved wiring/bindings/diodes. No schema or generator format change.

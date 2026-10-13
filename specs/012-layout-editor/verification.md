@@ -47,3 +47,17 @@ Code review checked pure domain boundaries, effective-default equality, exact ID
 ## Completion
 
 Final `make check` passed again after the standalone mutation run: 159 files / 951 tests, all gates and coverage floors. T001–T021 are complete; manual limits above remain explicitly unverified. Commits: `5e16358` (feature artifacts and roadmap) and `a4e3294` (implementation, migration, tests, goldens and actual-build fixtures), followed by the documentation completion commit. No push or PR was performed.
+
+## Direct-manipulation follow-up (2026-10-13)
+
+Fixed the reported missing numeric feedback: Enter/blur previews precise-property changes automatically. The precise editor starts collapsed; redundant Preview action was removed, while Apply/Cancel, accessible table and batch actions remain. Selected keys have thin frames with eight side/corner resize handles and four exterior corner rotation targets. Resizing honors the shared grid and fixed opposite anchors even for rotated keys; rotation uses the visible center, with Shift snapping to 15°. Preview remains unsaved until release, overlapping release is refused, Escape/capture loss/stale selection cancels, and no-motion gestures preserve Redo. Multi-selection retains group movement; each selected key has its own resize/rotation frame. No schema, migration, generator output or dependencies changed.
+
+Tests-first evidence: missing domain APIs and missing UI handles/live preview failed before implementation; additional failing contracts caught precision loss in fixed coordinates, zero-radius rotation, and cancelled numeric drafts returning during another property edit. All were repaired. Real App/provider tests cover visible SVG preview, saved geometry, one-step Undo/Redo, no-motion Redo, selection invalidation, cancellation, overlaps, and valid exported seven-cell geometry while retaining wires, diode and layer bindings.
+
+- Final `make check`: PASS, 163 files / 968 tests; architecture, guidelines, types, lint, format and coverage floors pass. Coverage: 90.11% statements, 83.69% branches, 91.45% functions, 90.14% lines.
+- Production build after cancellation repair: PASS, 465 modules, approximately 631kB main bundle.
+- `make zmk-build`: PASS, all ten actual-export targets, including nonstandard positive/negative rotations; intentional connector rejection also passed. Same pinned ZMK v0.3 build environment as above.
+- Standalone `make test-mutations` after all production edits/checks: PASS, 29/29 assertion-detected seeds, original files restored. Adds fixed resize anchor, center pivot, overlap release, live numeric preview and cancelled-draft resurrection regressions.
+- Final required read-only review: approve, no material findings after cancellation remediation.
+
+T022–T027 complete. No follow-up scope remains unimplemented. Browser paint, native interaction feel and screen-reader output remain unverified under the terminal-only constraint; automated evidence is not a claim of visual/manual review. No push or PR.

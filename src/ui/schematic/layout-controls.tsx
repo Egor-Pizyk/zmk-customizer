@@ -16,21 +16,23 @@ type LayoutControlsProps = PartsTableProps & {
 type Draft = { readonly base: Project; readonly selectionKey: string; readonly edit: LayoutEdit };
 
 export function LayoutControls(props: LayoutControlsProps) {
-  const { project, selection, onCancel } = props;
+  const { project, selection } = props;
   const keyIds = getSelectedKeyIds(selection).filter((id) =>
     project.keys.some((key) => key.id === id),
   );
   const selectionKey = keyIds.join(',');
   const [draft, setDraft] = useState<Draft | undefined>();
   const current =
-    draft?.base === project && draft.selectionKey === selectionKey ? draft : undefined;
+    props.hasPreview && draft?.base === project && draft.selectionKey === selectionKey
+      ? draft
+      : undefined;
   if (draft !== undefined && current === undefined) {
     setDraft(undefined);
   }
   const edit = current?.edit ?? { keyIds, geometry: {}, offset: { xU: 0, yU: 0 } };
   const first = project.keys.find((key) => key.id === keyIds[0]);
   function handleEditChange(next: LayoutEdit) {
-    onCancel();
+    props.onPreview(next);
     setDraft({ base: project, selectionKey, edit: next });
   }
   return (
@@ -40,8 +42,27 @@ export function LayoutControls(props: LayoutControlsProps) {
       data-layout-controls
     >
       <LayoutActions {...props} />
-      <LayoutEditorBody {...props} first={first} edit={edit} onEditChange={handleEditChange} />
+      {props.hasPreview ? <LayoutPreviewButtons {...props} /> : null}
+      <PreciseProperties {...props} first={first} edit={edit} onEditChange={handleEditChange} />
     </section>
+  );
+}
+
+function PreciseProperties(props: Parameters<typeof LayoutEditorBody>[0]) {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <details
+      data-precise-properties
+      open={isOpen}
+      onToggle={(event) => {
+        setIsOpen(event.currentTarget.open);
+      }}
+    >
+      <summary className="cursor-pointer text-xs focus-visible:outline-2 focus-visible:outline-focus">
+        Precise properties
+      </summary>
+      {isOpen ? <LayoutEditorBody {...props} /> : null}
+    </details>
   );
 }
 
@@ -58,17 +79,15 @@ function LayoutEditorBody(
   }
   return first === undefined ? (
     <p className="text-xs text-text-muted">
-      Select keys to resize, rotate or move them together. Origins are absolute; rotation is
-      clockwise.
+      Select a key, drag its frame to resize, or drag outside a corner to rotate.
     </p>
   ) : (
     <>
       <p className="text-xs text-text-muted">
         {edit.keyIds.length} selected. Fields start with the first selected key’s values. Entered
-        properties apply to every selected key; other properties stay unchanged.
+        properties apply to every selected key. Preview is unsaved until Apply.
       </p>
       <LayoutFields edit={edit} onEditChange={handleEditChange} schematicKey={first} />
-      <LayoutPreviewButtons {...props} edit={edit} />
     </>
   );
 }
