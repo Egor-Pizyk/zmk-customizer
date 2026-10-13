@@ -1,0 +1,6 @@
+FROM node:24-bookworm
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci && npx playwright install --with-deps chromium firefox webkit
+COPY . .
+CMD ["npm", "run", "test:e2e"]

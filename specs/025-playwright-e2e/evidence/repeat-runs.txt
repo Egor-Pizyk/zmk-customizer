@@ -1,0 +1,12 @@
+Run 1: exit 0
+  ✓  39 [chromium] › tests/e2e/product.spec.ts:115:1 › bindings/layers survive switches and reload; downloaded JSON imports and invalid imports preserve project (2.6s)
+
+  39 passed (41.6s)
+Run 2: exit 0
+  ✓  39 [chromium] › tests/e2e/product.spec.ts:115:1 › bindings/layers survive switches and reload; downloaded JSON imports and invalid imports preserve project (2.2s)
+
+  39 passed (41.1s)
+Run 3: exit 0
+  ✓  39 [chromium] › tests/e2e/product.spec.ts:115:1 › bindings/layers survive switches and reload; downloaded JSON imports and invalid imports preserve project (2.3s)
+
+  39 passed (41.3s)

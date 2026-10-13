@@ -40,3 +40,5 @@ What becomes easier, what becomes harder, what we must now keep true.
 | [0012](0012-behavior-testing.md) | Real React/DOM behavior tests and regression coverage floors | Accepted |
 
 - [0013 — Development architecture parser](0013-architecture-parser.md)
+
+- [0014 — Real browser behavioral testing](0014-browser-behavior-testing.md)

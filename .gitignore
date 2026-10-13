@@ -6,3 +6,8 @@ coverage/
 .env*
 
 .zmk-build/
+
+playwright-report/
+test-results/
+
+.e2e-mutations/
