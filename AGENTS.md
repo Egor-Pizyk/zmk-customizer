@@ -143,7 +143,7 @@ Folders are created when the first file needs them, not ahead of time.
 | Styling | Tailwind CSS v4 via `@tailwindcss/vite` ([ADR 0011](docs/decisions/0011-tailwind-design-system.md)) | Semantic tokens in `src/styles.css` `@theme`; no raw palette / arbitrary values in feature code |
 | Lint | oxlint, type-aware via `oxlint-tsgolint` (`.oxlintrc.json`); Tailwind rules via `eslint-plugin-better-tailwindcss` loaded as an oxlint `jsPlugin` (alpha API, no ESLint installed) | Lint errors fail CI |
 | Format | oxfmt (`.oxfmtrc.json`; sorts Tailwind classes; markdown and fixtures excluded) | Not negotiable in review; run the formatter |
-| Tests | Vitest | Unit + golden files; UI tests only for non-trivial interaction logic |
+| Tests | Vitest + Playwright | Unit + golden files; React/jsdom for interaction logic; real-browser E2E for user journeys (see §6.1) |
 | Containers | Docker + docker compose | Dev server and production image |
 | Non-Node commands | `Makefile` | Docker, cleanup, release helpers |
 | Spec workflow | GitHub Spec Kit (`/speckit-*` commands in Claude Code) | See §6 |
@@ -168,7 +168,9 @@ make down        # stop containers
 make logs        # follow dev server logs
 make sh          # shell inside the app container
 make install     # npm ci inside the container (run after dependency changes: node_modules is a Docker volume)
-make check       # agents sync + typecheck + lint + format check + tests inside the container (same as CI)
+make check       # agents sync + typecheck + lint + format check + Vitest coverage inside the container
+make test-e2e    # production build + Chromium suite + focused Firefox/WebKit checks
+make test-e2e-mutations # controlled browser regressions; run alone after make test-e2e
 make image       # build production image (nginx serving dist/)
 make prod        # run production image locally (http://localhost:8080)
 make clean       # remove dist/, coverage, containers, volumes
@@ -176,7 +178,8 @@ make clean       # remove dist/, coverage, containers, volumes
 npm run dev | build | preview
 npm run typecheck | lint | lint:fix | format | format:check
 npm run test | test:watch
-npm run check    # everything CI runs
+npm run test:e2e | test:e2e:types
+npm run check    # static checks + Vitest coverage; browser execution is a separate CI job
 ```
 
 `make help` lists targets. Before finishing any task: `make check` must pass.
@@ -193,9 +196,26 @@ Features are built through GitHub Spec Kit. Do not write feature code without a 
 4. `/speckit-plan` — how, using this file's architecture and stack.
 5. `/speckit-tasks` — ordered task list with tests first.
 6. `/speckit-analyze` — consistency check spec ↔ plan ↔ tasks.
-7. `/speckit-implement` — execute tasks.
+7. `/speckit-implement` — execute tasks, including Playwright coverage for changed user journeys (§6.1).
+8. Verify completion — `make check`, production build and `make test-e2e`; record results and coverage limits in feature artifacts (§6.1).
 
 Feature order and scope: `docs/roadmap.md`. One feature = one branch `NNN-short-name` = one `specs/NNN-short-name/` directory. Numbers are immutable: once a `specs/NNN-*` directory exists, its number is never reused or reassigned.
+
+### 6.1 Playwright E2E coverage
+
+For new or changed user journeys, add or update Playwright E2E tests and include them in the spec, plan and tasks. Keep domain permutations in unit tests; E2E verifies real interaction and agreement across the application. If a feature does not change user behavior and needs no new E2E coverage, record the reason in its artifacts.
+
+- Run the production app in an isolated browser context with a predictable project and real React/providers, storage, domain and generators. Never use or modify an ordinary user browser profile.
+- Assert the expected visible result and, where applicable, the saved project and actual downloaded JSON/ZIP. DOM attributes or absence of errors alone are insufficient.
+- Use accessible roles/names. For canvas interactions use coordinates of displayed elements; perform drags with `mouse.move/down/up` and intermediate movements.
+- Do not mock core services, use `force:true`, dispatch synthetic events, call handlers, change state through `evaluate`, or use arbitrary sleeps. `evaluate` is observation-only; wait for a concrete state.
+- Check screen geometry, including corners of rotated elements rather than only bounding boxes. Add independent visual snapshots where they detect paint errors; justify tolerances and inspect the cause of differences before updating references.
+- For a discovered bug, first reproduce a failing test, then fix its cause in the owning architectural layer. Domain/generator repairs also require their own tests-first contracts.
+- For a substantial new interaction contract, prove test sensitivity with a controlled behavioral regression. Run it separately from checks and production edits, require a user-facing or saved-data assertion failure, and restore exact original files. Do not require every domain permutation or all six existing browser seeds for every feature.
+- The complete Chromium suite is mandatory. Add targeted Firefox/WebKit cases for SVG, foreignObject, pointer capture, native inputs and focus where the feature touches them.
+- Before completion, run `make check`, production build and `make test-e2e`. Verify new or changed E2E tests in three sequential runs without retries. Run `make zmk-build` if generators or exported geometry change.
+- Retain useful failure traces/screenshots. Record scenario → risk → existing coverage → new E2E → visible assertion → saved/exported assertion, verification results and remaining limits in feature artifacts. Commands and artifact handling are documented in `docs/testing.md`.
+- Never weaken assertions to make CI green or claim absence of user problems solely from passing tests.
 
 ---
 
@@ -214,7 +234,7 @@ Feature order and scope: `docs/roadmap.md`. One feature = one branch `NNN-short-
 
 ## 8. Rules for agents
 
-- Не использовать Computer Use, CUA и управление браузером или нативными приложениями без явного запроса пользователя. Проверки выполнять через терминал и автоматические тесты.
+- Не использовать Computer Use, CUA и управление обычным браузером или нативными приложениями без явного запроса пользователя. Автоматические Playwright-тесты через терминал разрешены в изолированном тестовом браузере (§6.1); пользовательский профиль не использовать.
 - Read the relevant `docs/zmk/*.md` page before touching anything that produces ZMK syntax. Do not write Devicetree/Kconfig from memory. Target is ZMK v0.3 — never emit anything marked "main only".
 - Stay inside the task. No drive-by refactors, no renaming unrelated code, no new dependencies without §4 approval.
 - Write the test first for domain logic and generators; watch it fail; then implement. Tests sit next to the code as `*.test.ts(x)`.
