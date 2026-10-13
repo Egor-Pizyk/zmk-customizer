@@ -1,6 +1,7 @@
+import { getKeyCorners } from './get-key-corners';
 import type { Project, WirePoint } from './types';
 
-// Keys are currently 1u squares; use outer bounds so uneven key counts do not bias the camera.
+// Use visible outer bounds so wide keys and rotated clusters fit the camera.
 export function findKeyLayoutCenter(project: Project): WirePoint | undefined {
   if (project.keys.length === 0) {
     return undefined;
@@ -9,11 +10,11 @@ export function findKeyLayoutCenter(project: Project): WirePoint | undefined {
   let maxX = -Infinity;
   let minY = Infinity;
   let maxY = -Infinity;
-  for (const key of project.keys) {
-    minX = Math.min(minX, key.xU);
-    maxX = Math.max(maxX, key.xU);
-    minY = Math.min(minY, key.yU);
-    maxY = Math.max(maxY, key.yU);
+  for (const point of project.keys.flatMap((key) => getKeyCorners(key))) {
+    minX = Math.min(minX, point.xU);
+    maxX = Math.max(maxX, point.xU);
+    minY = Math.min(minY, point.yU);
+    maxY = Math.max(maxY, point.yU);
   }
-  return { xU: (minX + maxX + 1) / 2, yU: (minY + maxY + 1) / 2 };
+  return { xU: (minX + maxX) / 2, yU: (minY + maxY) / 2 };
 }

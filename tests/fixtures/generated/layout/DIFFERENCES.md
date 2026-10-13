@@ -1,0 +1,3 @@
+# Layout golden differences
+
+Independently authored from the node structure of the existing unibody golden (derived from pinned upstream reviung41) and docs/zmk/physical-layout.md / upstream v0.3 physical-layout attrs contract. No upstream fixture edited. One matrix key uses width 2.25u, height 1.5u, x −1.235u → Math.round=−124 centi-u, y −0.5u, clockwise angle −30° and absolute origin (1u,2u). The exact seven cells are 225 150 (−124) (−50) (−3000) 100 200. GPIO connector pins 2/8, 1×1 matrix and default chosen physical layout retain existing shield conventions. This output was written before generator implementation, never generated to establish expectations.

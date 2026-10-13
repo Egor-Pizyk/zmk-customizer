@@ -5,6 +5,8 @@ import { INPUT_CLASSES } from './input-classes';
 type NumberInputProps = {
   /** Accessible name, e.g. "Key 3 X (u)"; tables show the column header visually. */
   readonly label: string;
+  readonly id?: string;
+  readonly shouldCommitUnchanged?: boolean;
   readonly value: number;
   readonly step?: number;
   /** Space-separated issue paths the problems panel may focus (`[data-issue-path~=…]`). */
@@ -14,12 +16,21 @@ type NumberInputProps = {
 };
 
 // Draft while editing; commits a finite number on blur or Enter, Escape restores (react.md "Inputs").
-function useNumberDraft(value: number, onCommit: (value: number) => void) {
+function useNumberDraft(
+  value: number,
+  onCommit: (value: number) => void,
+  shouldCommitUnchanged: boolean,
+) {
   const [draft, setDraft] = useState<string | undefined>();
 
   function commitDraft() {
     const parsed = Number(draft);
-    if (draft !== undefined && draft.trim() !== '' && Number.isFinite(parsed) && parsed !== value) {
+    if (
+      draft !== undefined &&
+      draft.trim() !== '' &&
+      Number.isFinite(parsed) &&
+      (parsed !== value || shouldCommitUnchanged)
+    ) {
       onCommit(parsed);
     }
     setDraft(undefined);
@@ -44,9 +55,10 @@ function useNumberDraft(value: number, onCommit: (value: number) => void) {
 
 export function NumberInput(props: NumberInputProps) {
   const { label, value, step = 0.25, issuePath, isInvalid = false, onCommit } = props;
-  const draft = useNumberDraft(value, onCommit);
+  const draft = useNumberDraft(value, onCommit, props.shouldCommitUnchanged ?? false);
   return (
     <input
+      id={props.id}
       aria-invalid={isInvalid || undefined}
       aria-label={label}
       className={INPUT_CLASSES}

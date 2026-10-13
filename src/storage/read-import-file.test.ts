@@ -6,7 +6,7 @@ it('reads a valid project file', async () => {
   await expect(readImportFile(file)).resolves.toEqual({
     ok: true,
     value: {
-      schemaVersion: 5,
+      schemaVersion: 6,
       controllerId: 'nice_nano_v2',
       name: 'Corne',
       keys: [],

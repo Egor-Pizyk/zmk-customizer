@@ -10,7 +10,7 @@ export function buildProject(input: {
   readonly layers?: Project['layers'];
 }): Project {
   return {
-    schemaVersion: 5,
+    schemaVersion: 6,
     controllerId: 'nice_nano_v2',
     name: 'Test',
     keys: input.keys ?? [],

@@ -3,7 +3,7 @@ import type { Project } from './types';
 import { renameProject } from './rename-project';
 
 const PROJECT: Project = {
-  schemaVersion: 5,
+  schemaVersion: 6,
   controllerId: 'nice_nano_v2',
   keys: [],
   wires: [],
@@ -15,7 +15,7 @@ const PROJECT: Project = {
 
 it('sets the name exactly as typed and keeps the override', () => {
   expect(renameProject(PROJECT, { name: '  New  ' })).toEqual({
-    schemaVersion: 5,
+    schemaVersion: 6,
     controllerId: 'nice_nano_v2',
     keys: [],
     wires: [],

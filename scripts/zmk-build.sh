@@ -62,4 +62,4 @@ if ! grep -q 'audit_missing_connector' /logs/negative-connector.log; then
   echo 'ERROR: negative build failed without the intended connector diagnostic' >&2
   exit 1
 fi
-echo 'PASS: eight actual-export builds and intentional connector rejection'
+echo 'PASS: all actual-export targets and intentional connector rejection'

@@ -13,7 +13,8 @@ function validateKeyOverlaps(project: Project): ValidationIssue[] {
   return project.keys.flatMap((key, keyIndex) => {
     const otherIndex = project.keys.findIndex(
       (other) =>
-        other.id !== key.id && !isKeyPositionFree({ ...project, keys: [other] }, { position: key }),
+        other.id !== key.id &&
+        !isKeyPositionFree({ ...project, keys: [other] }, { position: key, key }),
     );
     return otherIndex === -1
       ? []

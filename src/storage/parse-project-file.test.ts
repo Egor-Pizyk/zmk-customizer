@@ -27,7 +27,7 @@ function issuePathsOf(raw: string): readonly string[] {
 
 function projectJson(binding: unknown) {
   return JSON.stringify({
-    schemaVersion: 5,
+    schemaVersion: 6,
     controllerId: 'nice_nano_v2',
     name: 'x',
     keys: [{ id: 'k1', xU: 0, yU: 0 }],
@@ -78,7 +78,7 @@ describe('parseProjectFile', () => {
     expect(parseProjectFile('{"schemaVersion":1,"name":"x","extra":true}')).toEqual({
       ok: true,
       value: {
-        schemaVersion: 5,
+        schemaVersion: 6,
         controllerId: 'nice_nano_v2',
         name: 'x',
         keys: [],
@@ -93,7 +93,7 @@ describe('parseProjectFile', () => {
     expect(parseProjectFile(fixtureV1)).toEqual({
       ok: true,
       value: {
-        schemaVersion: 5,
+        schemaVersion: 6,
         controllerId: 'nice_nano_v2',
         name: 'My Corne v2!',
         shieldName: 'corne',

@@ -1,9 +1,9 @@
+import { getSelectedKeyIds } from './get-selected-key-ids';
 import type { PointerEvent } from 'react';
 import { isKeyPositionFree } from '../../domain/is-key-position-free';
 import { moveKeys } from '../../domain/move-keys';
-import { moveKey } from '../../domain/move-key';
 import { setWireBends } from '../../domain/set-wire-bends';
-import type { Wire, WireEnd, WirePoint } from '../../domain/types';
+import type { Key, Wire, WireEnd, WirePoint } from '../../domain/types';
 import { isKeyCellInMarquee, isPointInMarquee } from '../canvas/marquee-select';
 import type { PointerState } from './pointer-types';
 import type { CanvasHit } from './read-canvas-hit';
@@ -27,10 +27,7 @@ function focusBoardPinSelect(input: { readonly wireId: string; readonly side: st
   });
 }
 
-function isKeyInMarquee(
-  key: { xU: number; yU: number },
-  marquee: { start: WirePoint; end: WirePoint },
-): boolean {
+function isKeyInMarquee(key: Key, marquee: { start: WirePoint; end: WirePoint }): boolean {
   return isKeyCellInMarquee(key, marquee);
 }
 
@@ -110,6 +107,14 @@ function startSingleKeyDrag(
 
 export function pressSelectTool(state: PointerState, { hit, world, event }: Press) {
   if (hit.kind === 'key' || hit.kind === 'pin') {
+    if (event.ctrlKey || event.metaKey || event.shiftKey) {
+      const selected = getSelectedKeyIds(state.selection);
+      const keyIds = selected.includes(hit.keyId)
+        ? selected.filter((id) => id !== hit.keyId)
+        : [...selected, hit.keyId];
+      state.onSelectionChange({ kind: 'multi', keyIds, wireIds: [] });
+      return;
+    }
     if (state.selection?.kind === 'multi' && state.selection.keyIds.includes(hit.keyId)) {
       startMultiKeyDrag(state, world, event);
       return;
@@ -211,7 +216,11 @@ function endMultiKeyDrag(state: PointerState, project: PointerState['project']) 
   }));
   const movingKeyIds = targetPositions.map((tp) => tp.keyId);
   const allFree = targetPositions.every((tp) =>
-    isKeyPositionFree(project, { position: tp.position, ignoreKeyIds: movingKeyIds }),
+    isKeyPositionFree(project, {
+      position: tp.position,
+      key: project.keys.find((key) => key.id === tp.keyId),
+      ignoreKeyIds: movingKeyIds,
+    }),
   );
   if (!allFree) {
     state.onHint('There is already a key here.');
@@ -237,7 +246,7 @@ function endSingleKeyDrag(state: PointerState, project: PointerState['project'])
     state.onHint('There is already a key here.');
     return;
   }
-  state.commit((current) => moveKey(current, { keyId, position }));
+  state.commit((current) => moveKeys(current, { moves: [{ keyId, position }] }));
 }
 
 export function endSelectDrag(state: PointerState) {

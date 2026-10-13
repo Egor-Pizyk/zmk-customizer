@@ -1,3 +1,4 @@
+import { formatKeyTransform } from '../canvas/format-key-transform';
 import type { KeyboardEvent } from 'react';
 import type { Key } from '../../domain/types';
 import { KeyArt } from './key-art';
@@ -40,6 +41,7 @@ export function KeyShape(props: KeyShapeProps) {
       onKeyDown={handleKeyDown}
       role="graphics-symbol"
       tabIndex={isActive ? 0 : -1}
+      transform={formatKeyTransform(schematicKey)}
     >
       <KeyArt hasConflict={hasConflict} keyIndex={keyIndex} schematicKey={schematicKey} />
     </g>

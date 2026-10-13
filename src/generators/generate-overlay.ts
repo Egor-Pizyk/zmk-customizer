@@ -1,3 +1,4 @@
+import { getKeyGeometry } from '../domain/get-key-geometry';
 import { getShieldName } from '../domain/get-shield-name';
 import type { ShieldMatrix } from '../domain/derive-shield-matrix';
 import type { ControllerBoard, Project } from '../domain/types';
@@ -43,10 +44,19 @@ function renderPhysicalCell(valueU: number): string {
 
 function renderPhysicalLayout(project: Project): string {
   const keys = project.keys
-    .map(
-      (key) =>
-        `<&key_physical_attrs 100 100 ${renderPhysicalCell(key.xU)} ${renderPhysicalCell(key.yU)} 0 0 0>`,
-    )
+    .map((key) => {
+      const geometry = getKeyGeometry(key);
+      const values = [
+        geometry.widthU,
+        geometry.heightU,
+        geometry.xU,
+        geometry.yU,
+        geometry.rotationDeg,
+        geometry.rotationOriginXU,
+        geometry.rotationOriginYU,
+      ];
+      return `<&key_physical_attrs ${values.map((value) => renderPhysicalCell(value)).join(' ')}>`;
+    })
     .join(',\n            ');
   return `    default_layout: default_layout {
         compatible = "zmk,physical-layout";

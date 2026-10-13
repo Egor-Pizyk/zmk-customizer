@@ -1,3 +1,4 @@
+import { PROJECT_BUDGET } from '../../storage/project-budget';
 import { addKey } from '../../domain/add-key';
 import { createEntityId } from '../../domain/create-entity-id';
 import { findFreeKeyPosition } from '../../domain/find-free-key-position';
@@ -76,9 +77,13 @@ function deleteSelection(input: ShortcutHandlerInput) {
 
 function placeKey(input: ShortcutHandlerInput) {
   const { project, commit, onSelectionChange } = input;
+  if (project.keys.length >= PROJECT_BUDGET.keys) {
+    return;
+  }
   const keyId = createEntityId({ prefix: 'k', existingIds: project.keys.map((key) => key.id) });
   commit(
-    (current) => addKey(current, { position: findFreeKeyPosition(current) }),
+    (current) =>
+      addKey(current, { position: findFreeKeyPosition(current), maxKeyCount: PROJECT_BUDGET.keys }),
     `Added key ${project.keys.length}`,
   );
   onSelectionChange({ kind: 'key', keyId });

@@ -4,7 +4,8 @@ import type { WirePoint } from '../../domain/types';
 import { getHoverPreview } from './get-hover-preview';
 import type { Hover } from './get-hover-preview';
 import { getPreviewProject } from './pointer-preview';
-import { clickWireTool, placeKeyAt } from './pointer-create';
+import { clickWireTool } from './pointer-create';
+import { placeKeyAt } from './place-key-at';
 import { endSelectDrag, moveSelectDrag, pressSelectTool } from './pointer-select';
 import type { Drag, PointerState, SchematicPointerOptions } from './pointer-types';
 import { readCanvasHit } from './read-canvas-hit';
@@ -55,9 +56,10 @@ export function useSchematicPointer(options: SchematicPointerOptions) {
     },
     previewProject: getPreviewProject(options.project, drag),
     hoverPreview: getHoverPreview(options.project, { activeToolId, hover, snapGridU, draft }),
-    hasDraft: draft !== undefined,
+    hasDraft: draft !== undefined || drag !== undefined,
     cancelDraft: () => {
       setDraft(undefined);
+      setDrag(undefined);
     },
   };
 }

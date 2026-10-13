@@ -1,26 +1,11 @@
-import { addKey } from '../../domain/add-key';
 import { addWire } from '../../domain/add-wire';
 import { createEntityId } from '../../domain/create-entity-id';
-import { isKeyPositionFree } from '../../domain/is-key-position-free';
 import type { WirePoint } from '../../domain/types';
 import type { PointerState } from './pointer-types';
 import type { CanvasHit } from './read-canvas-hit';
 import { reduceWireDraft } from './reduce-wire-draft';
 import { snapPoint } from './snap-point';
 import { toDraftTarget } from './to-draft-target';
-
-// Key tool: a key centered on the pointer, its top-left on the grid (003 R9).
-export function placeKeyAt(state: PointerState, world: WirePoint) {
-  const position = snapPoint({ xU: world.xU - 0.5, yU: world.yU - 0.5 }, state.snapGridU);
-  if (!isKeyPositionFree(state.project, { position })) {
-    state.onHint('There is already a key here.');
-    return;
-  }
-  const existingIds = state.project.keys.map((key) => key.id);
-  const keyId = createEntityId({ prefix: 'k', existingIds });
-  state.commit((project) => addKey(project, { position }), `Added key ${existingIds.length}`);
-  state.onSelectionChange({ kind: 'key', keyId });
-}
 
 export function clickWireTool(
   state: PointerState,
