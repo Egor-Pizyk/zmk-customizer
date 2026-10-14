@@ -1,7 +1,7 @@
+import { moveLayer } from '@domain/layers';
+import type { Binding, Layer, Project } from '@domain';
 import { describe, expect, it } from 'vitest';
 import { buildProject } from '../../../helpers/build-project';
-import { moveLayer } from '@domain';
-import type { Binding, Layer, Project } from '@domain';
 
 const KEYS = ['k1', 'k2', 'k3', 'k4', 'k5'].map((id, index) => ({ id, xU: index, yU: 0 }));
 const NAMES = ['Base', 'Nav', 'Sym', 'Fn'];

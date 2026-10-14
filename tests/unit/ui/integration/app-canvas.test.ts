@@ -1,11 +1,11 @@
+import { loadProject } from '@storage/project';
+import { loadPreferences } from '@storage/preferences';
 // @vitest-environment jsdom
 import { screen, fireEvent, waitFor, within } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
 import { getDefinedValue } from '../../../helpers/defined-value';
 import { renderApp } from '../../../helpers/render-app';
 import { buildProject } from '../../../helpers/build-project';
-import { loadProject } from '@storage/project';
-import { loadPreferences } from '@storage/preferences';
 
 function simpleProject() {
   return buildProject({

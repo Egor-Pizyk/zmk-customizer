@@ -11,7 +11,10 @@ test('Oxlint rejects private imports and re-exports but accepts module APIs', ()
   const file = path.join(directory, 'probe.ts');
   try {
     for (const [source, valid] of [
-      ["export { addKey } from '@domain';", true],
+      ["export { useSurfaceViewport } from '@ui/canvas/logic';", true],
+      ["export { WorkSurface } from '@ui/canvas/components';", true],
+      ["export { WorkSurface } from '@ui/canvas/components/work-surface';", false],
+      ["export { addKey } from '@domain/keys';", true],
       ["export { addKey } from '@domain/keys/add-key';", false],
       ["import { addKey } from '@domain/keys/add-key'; export const add = addKey;", false],
       ["export const load = () => import('@domain/keys/add-key');", false],

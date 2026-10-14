@@ -1,5 +1,5 @@
 import { getKeyPinPosition } from './get-key-pin-position';
-import type { Key, KeyPin, WirePoint } from '../types';
+import type { Key, KeyPin, WirePoint } from '@domain';
 
 // MX pins are only ~0.36u apart, so pointer hit areas overlap; the pin is decided by distance,
 // not by which hit circle is drawn on top.

@@ -1,6 +1,6 @@
+import { findBinding } from '@domain/bindings';
 import { expect, it } from 'vitest';
 import { buildProject } from '../../../helpers/build-project';
-import { findBinding } from '@domain';
 
 const KEYS = [{ id: 'k1', xU: 0, yU: 0 }];
 

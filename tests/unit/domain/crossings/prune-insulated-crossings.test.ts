@@ -1,5 +1,8 @@
+import { moveKey } from '@domain/keys';
+import { pruneInsulatedCrossings } from '@domain/crossings';
+import { setWireBends } from '@domain/wires/editing';
 import { expect, it } from 'vitest';
-import { moveKey, pruneInsulatedCrossings, setWireBends } from '@domain';
+
 import { buildProject, freeEnd, keyPin } from '../../../helpers/build-project';
 
 const PROJECT = buildProject({

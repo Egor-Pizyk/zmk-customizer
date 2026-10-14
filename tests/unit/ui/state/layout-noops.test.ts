@@ -1,7 +1,13 @@
+import {
+  duplicateKeys,
+  editLayout,
+  removeKeys,
+  renumberKeys,
+  setKeyGeometries,
+} from '@domain/keys';
+import { applyHistoryAction, createInitialState } from '@ui/project/logic';
 import { expect, it } from 'vitest';
 import { buildProject } from '../../../helpers/build-project';
-import { duplicateKeys, editLayout, removeKeys, renumberKeys, setKeyGeometries } from '@domain';
-import { applyHistoryAction, createInitialState } from '@ui/project';
 
 it('retains history identity and redo for effective-default, capped and unknown layout operations', () => {
   const project = buildProject({ keys: [{ id: 'k0', xU: 0, yU: 0 }] });

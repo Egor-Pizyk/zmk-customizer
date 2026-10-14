@@ -1,6 +1,6 @@
+import { countGraphemes } from './format-binding-legend';
 // The tap glyph shrinks past four graphemes so seven fit the 0.76u keycap top
 // (spec 004 FR-006). Counted in graphemes so symbols and emoji count once.
-import { countGraphemes } from './format-binding-legend';
 
 const BASE_TAP_FONT_U = 0.28;
 const TAP_MAX_WIDTH_U = 0.72;

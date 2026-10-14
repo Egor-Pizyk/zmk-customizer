@@ -1,6 +1,6 @@
-import { getKeyGeometry } from '../geometry/get-key-geometry';
-import { pruneInsulatedCrossings } from '../crossings/prune-insulated-crossings';
-import type { Project, WirePoint } from '../types';
+import { getKeyGeometry } from '@domain/geometry';
+import { pruneInsulatedCrossings } from '@domain/crossings';
+import type { Project, WirePoint } from '@domain';
 
 export function moveKeys(
   project: Project,

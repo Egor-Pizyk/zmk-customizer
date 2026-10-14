@@ -1,9 +1,9 @@
+import { SHIELD_TARGET } from '@catalog/firmware';
+import { deriveShieldMatrix } from '@domain/wiring/matrix';
+import { generateRepositoryFiles } from '@generators/repository';
 import { expect, it } from 'vitest';
 import { buildUnibodyProject } from '../../../helpers/build-unibody-project';
 import { getResultValue } from '../../../helpers/result';
-import { SHIELD_TARGET } from '@catalog/firmware';
-import { deriveShieldMatrix } from '@domain';
-import { generateRepositoryFiles } from '@generators';
 
 const root = '../../../fixtures/generated/repository/';
 const goldenFiles = import.meta.glob<string>(

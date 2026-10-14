@@ -1,7 +1,7 @@
 import type { KeyboardEvent } from 'react';
 import type { Project } from '@domain';
-import { findNearestKey } from '@ui/canvas';
-import type { Direction } from '@ui/canvas';
+import { findNearestKey } from '@ui/canvas/logic';
+import type { Direction } from '@ui/canvas/logic';
 import { matchKeyShortcut } from '@ui/shortcuts';
 import type { ShortcutId } from '@ui/shortcuts';
 import { focusKeycap } from './focus-keycap';

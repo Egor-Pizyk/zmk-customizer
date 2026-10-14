@@ -1,9 +1,12 @@
+import { changeController } from '@domain/project';
+import { setWireEndBoardPin } from '@domain/wires/editing';
+import { deriveWiring } from '@domain/wiring/matrix';
+import { editWiring } from '@domain/wiring/editing';
 import { expect, it } from 'vitest';
 import { buildWiringProject, wiringBoard } from '../../../helpers/wiring-project';
 import { getControllerFixtures } from '../../../helpers/controller-fixtures';
 import { getDefinedValue } from '../../../helpers/defined-value';
 import { getResultValue } from '../../../helpers/result';
-import { changeController, setWireEndBoardPin, deriveWiring, editWiring } from '@domain';
 
 it('Parts pin edits change shared terminals for every connected branch and clear dropped pins', () => {
   const project = buildWiringProject();

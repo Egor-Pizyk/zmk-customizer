@@ -1,7 +1,8 @@
-import { expect, it } from 'vitest';
 import type { Project } from '@domain';
+import { validateKeyGeometry } from '@domain/validation';
+import { expect, it } from 'vitest';
+
 import { buildProject } from '../../../helpers/build-project';
-import { validateKeyGeometry } from '@domain';
 
 it('accepts rounded positive dimension cells and all signed int16 geometry bounds', () => {
   expect(

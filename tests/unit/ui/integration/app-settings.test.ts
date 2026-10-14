@@ -1,9 +1,9 @@
+import { loadProject } from '@storage/project';
+import { loadPreferences } from '@storage/preferences';
 // @vitest-environment jsdom
 import { screen, within, fireEvent } from '@testing-library/react';
 import { expect, it } from 'vitest';
 import { renderApp } from '../../../helpers/render-app';
-import { loadProject } from '@storage/project';
-import { loadPreferences } from '@storage/preferences';
 
 it('applies theme and grid settings, rejects invalid grid input and resets settings without touching the project or workspace', async () => {
   const { user } = renderApp(undefined, { activeWorkspaceId: 'export' });

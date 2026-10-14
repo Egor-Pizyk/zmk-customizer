@@ -1,12 +1,13 @@
+import { loadProject, serializeProject } from '@storage/project';
+import type { Project } from '@domain';
 // @vitest-environment jsdom
 import { screen, within, waitFor } from '@testing-library/react';
 import { expect, it, vi } from 'vitest';
 import { unzipSync, strFromU8 } from 'fflate';
 import { getDefinedValue } from '../../../helpers/defined-value';
 import { renderApp } from '../../../helpers/render-app';
-import { loadProject, serializeProject } from '@storage/project';
+
 import { getResultValue } from '../../../helpers/result';
-import type { Project } from '@domain';
 
 function captureDownloads() {
   const blobs: Blob[] = [];

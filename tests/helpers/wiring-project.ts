@@ -1,8 +1,8 @@
+import { editWiring } from '@domain/wiring/editing';
+import type { Project } from '@domain';
 import { getControllerFixtures } from './controller-fixtures';
 import { getDefinedValue } from './defined-value';
 import { getResultValue } from './result';
-import { editWiring } from '@domain';
-import type { Project } from '@domain';
 
 export function wiringBoard() {
   return getDefinedValue(getControllerFixtures().boards[0]);

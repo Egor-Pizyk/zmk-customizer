@@ -1,5 +1,5 @@
+import { createEntityId } from '@domain/project';
 import { expect, it } from 'vitest';
-import { createEntityId } from '@domain';
 
 it('starts at 1 when nothing exists', () => {
   expect(createEntityId({ prefix: 'k', existingIds: [] })).toBe('k1');

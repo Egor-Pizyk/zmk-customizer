@@ -1,5 +1,5 @@
+import { BOARD_PIN_COUNT, formatBoardPin } from '@domain/wires';
 import { expect, it } from 'vitest';
-import { BOARD_PIN_COUNT, formatBoardPin } from '@domain';
 
 it('has 32 generic pins and no GND', () => {
   expect(BOARD_PIN_COUNT).toBe(32);

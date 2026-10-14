@@ -1,5 +1,5 @@
+import { toLayerNodeName } from '@domain/layers';
 import { expect, it } from 'vitest';
-import { toLayerNodeName } from '@domain';
 
 it.each([
   ['Nav & Sym', 'nav_sym_layer'],

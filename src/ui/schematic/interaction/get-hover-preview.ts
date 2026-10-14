@@ -1,10 +1,11 @@
-import { getWirePath, isKeyPositionFree } from '@domain';
+import { getWirePath } from '@domain/wires';
+import { isKeyPositionFree } from '@domain/geometry';
 import type { Project, WirePoint } from '@domain';
 import type { CanvasHit } from './read-canvas-hit';
 import type { WireDraft } from './reduce-wire-draft';
 import { snapPoint } from './snap-point';
 import { toDraftTarget } from './to-draft-target';
-import type { ToolId } from '../tools/tools';
+import type { ToolId } from '@ui/schematic/tools/logic';
 
 export type Hover = { readonly world: WirePoint; readonly hit: CanvasHit };
 

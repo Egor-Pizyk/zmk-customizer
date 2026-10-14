@@ -1,9 +1,11 @@
-import { editWiring } from '@domain';
+import { editWiring } from '@domain/wiring/editing';
 import { getControllerBoard } from '@catalog/controllers';
-import { getDefinedValue } from '../../../helpers/defined-value';
-import { expect, it } from 'vitest';
 import { UNIBODY_PRESET } from '@catalog/presets';
 import { parseProjectFile } from '@storage/project';
+
+import { getDefinedValue } from '../../../helpers/defined-value';
+import { expect, it } from 'vitest';
+
 import { getResultValue } from '../../../helpers/result';
 
 it('loads v6 without rerouting or changing bindings and round-trips v7', () => {

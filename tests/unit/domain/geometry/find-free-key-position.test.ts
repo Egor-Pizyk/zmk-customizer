@@ -1,5 +1,6 @@
+import { findFreeKeyPosition } from '@domain/geometry';
 import { expect, it } from 'vitest';
-import { findFreeKeyPosition } from '@domain';
+
 import { buildProject } from '../../../helpers/build-project';
 
 it('starts at the origin', () => {

@@ -15,7 +15,7 @@ How types are designed in this codebase. Naming lives in `naming/`; error surfac
 - Variants are discriminated unions on a `kind` field (never `type`, which reads as a TS keyword). Applies to kscan, bindings, behaviors, pin refs.
 - All domain data is `readonly` (`readonly` props, `readonly T[]`). Changes create new values (`control-flow.md`).
 - Absence is `undefined` / optional props. No `null` in domain types.
-- `Project` is plain JSON (AGENTS §3.2): no classes, `Date`, `Map`, `Set` or functions inside it; an absent optional field is omitted, not stored as a sentinel.
+- `Project` is plain JSON (docs/architecture.md): no classes, `Date`, `Map`, `Set` or functions inside it; an absent optional field is omitted, not stored as a sentinel.
 - No enums. Use string-literal unions, or an `as const` object when values need to be iterated.
 
 ```ts
@@ -110,7 +110,7 @@ export function assertNever(value: never): never {
 - Named exports only; no default exports (tool config files excepted). Each module exposes an `index.ts` with explicit named value and `export type` declarations; no wildcard exports.
 - `import type` for type-only imports.
 - `domain/` and `generators/`: one exported function (plus its input/output types) per implementation file, named after the function (`add-key.ts` exports `addKey`). Public `index.ts` files list multiple explicit exports. Shared domain types live in `domain/types.ts` or a file per concept when it grows.
-- No classes outside `ui/app/error-boundary.tsx` (React still needs a class for error boundaries). Domain = plain data + functions.
+- No classes outside `ui/app/components/error-boundary.tsx` (React still needs a class for error boundaries). Domain = plain data + functions.
 
 Production files are grouped by responsibility inside each layer. Tests live in `tests/unit/<layer>/<group>/`, mirroring production groups, rather than beside production modules. Node tooling tests live in `tests/tooling/`. Keep existing layer boundaries across nested folders. Cross-module imports use exact aliases that resolve to the public `index.ts`; direct relative imports are allowed only within the same module. Never import a module’s own index from its implementation files.
 
@@ -130,10 +130,10 @@ Production files are grouped by responsibility inside each layer. Tests live in 
 
 ## Resolved architecture gate exceptions
 
-The dependency matrix in AGENTS §3.1 is checked by scripts/check-architecture.mjs, including alias resolution, normalized paths, exports and dynamic imports. Pure layers accept no external packages. React/react-dom/fflate are allowed in UI composition; zod/fflate in storage. Catalog raw assets stay in catalog. Tests may read fixtures and use test helpers; production cannot import either tests or test helpers.
+The dependency matrix in docs/architecture.md is checked by scripts/check-architecture.mjs, including alias resolution, normalized paths, exports and dynamic imports. Pure layers accept no external packages. React/react-dom/fflate are allowed in UI composition; zod/fflate in storage. Catalog raw assets stay in catalog. Tests may read fixtures and use test helpers; production cannot import either tests or test helpers.
 
 - Shared UI modules allowed from workspaces/shared UI: project, preferences, navigation, shortcuts, dialogs, downloads and issues. Owner: shared UI. Reason: project/preferences/actions and shared contracts. App composition stays in ui/app and is not imported by workspaces. The shortcut event reader lives in ui/shortcuts so workspaces do not depend on app composition.
-- src/ui/export/get-export-preview.ts is the only runtime UI→generators bridge. Owner: Export. Reason: prepare deterministic generated previews from the shared analysis. Remove only if preview preparation moves to another named composition boundary. GeneratedFile type-only imports through @generators are allowed in export consumers; the gate resolves the symbol’s defining file rather than treating the entire barrel as one permission.
+- src/ui/export/logic/get-export-preview.ts is the only runtime UI→generators bridge. Owner: Export. Reason: prepare deterministic generated previews from the shared analysis. Remove only if preview preparation moves to another named composition boundary. GeneratedFile type-only imports through @generators are allowed in export consumers; the gate resolves the symbol’s defining file rather than treating the entire barrel as one permission.
 - src/main.tsx may import src/styles.css. Owner: composition root. Reason: Vite entry styles. Remove if the stylesheet entry moves.
 - Low-level electrical runtime APIs get-nets, find-wire-contacts, find-crossings, derive-shield-matrix, validate-project, validate-schematic and validate-shield-project are unavailable to UI imports. Use getProjectAnalysis; domain type imports remain allowed.
 

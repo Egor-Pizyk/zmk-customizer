@@ -1,6 +1,6 @@
+import { getKeyPinWires } from '@domain/wires';
 import { expect, it } from 'vitest';
 import { buildProject, freeEnd, keyPin } from '../../../helpers/build-project';
-import { getKeyPinWires } from '@domain';
 
 const KEYS = [
   { id: 'k1', xU: 0, yU: 0 },

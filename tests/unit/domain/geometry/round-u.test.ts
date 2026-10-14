@@ -1,5 +1,5 @@
+import { roundU } from '@domain/geometry';
 import { expect, it } from 'vitest';
-import { roundU } from '@domain';
 
 it('drops float noise and negative zero', () => {
   expect(roundU(0.1 + 0.2)).toBe(0.3);

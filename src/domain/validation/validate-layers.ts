@@ -1,5 +1,5 @@
-import { toLayerNodeName } from '../layers/to-layer-node-name';
-import type { Layer, Project, ValidationIssue } from '../types';
+import { toLayerNodeName } from '@domain/layers';
+import type { Layer, Project, ValidationIssue } from '@domain';
 import type { BindingsCatalog } from './validate-bindings';
 
 // Kept out of the display-name string until escaping is verified (spec 007 R4): quote,

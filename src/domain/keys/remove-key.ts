@@ -1,7 +1,6 @@
-import { getKeyPinPosition } from '../wires/get-key-pin-position';
-import { pruneInsulatedCrossings } from '../crossings/prune-insulated-crossings';
-import { removeOrphanWires } from '../wires/remove-orphan-wires';
-import type { Key, Project, WireEnd } from '../types';
+import { getKeyPinPosition, removeOrphanWires } from '@domain/wires';
+import { pruneInsulatedCrossings } from '@domain/crossings';
+import type { Key, Project, WireEnd } from '@domain';
 
 function freeKeyPin(end: WireEnd, key: Key): WireEnd {
   return end.kind === 'key-pin' && end.keyId === key.id

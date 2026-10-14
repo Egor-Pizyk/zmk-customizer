@@ -1,5 +1,5 @@
-import { MODIFIERS } from '../types';
-import type { Modifier } from '../types';
+import { MODIFIERS } from '@domain';
+import type { Modifier } from '@domain';
 
 /** Unique modifiers in MODIFIERS order, so equal strokes are deep-equal (spec 004). */
 export function normalizeModifiers(modifiers: readonly Modifier[]): readonly Modifier[] {

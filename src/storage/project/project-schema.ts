@@ -1,9 +1,11 @@
 import { wiringSchema, findTerminalIssues } from './wiring-schema';
-import * as z from 'zod';
 import { PROJECT_BUDGET } from './project-budget';
 import { CONTROLLER_BOARDS } from '@catalog/controllers';
-import { BOARD_PIN_COUNT, MODIFIERS } from '@domain';
+import { BOARD_PIN_COUNT } from '@domain/wires';
+import { MODIFIERS } from '@domain';
 import type { Project, Wire, WireEnd, WireEndSide } from '@domain';
+
+import * as z from 'zod';
 
 const pointSchema = z.strictObject({ xU: z.number(), yU: z.number() });
 

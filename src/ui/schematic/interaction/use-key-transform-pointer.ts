@@ -1,11 +1,13 @@
-import type { ContentPointerHandler } from '@ui/canvas';
-import { useState } from 'react';
-import { transformKeyFromPointer } from '@domain';
-import type { KeyPointerTransform, Project } from '@domain';
+import type { ContentPointerHandler } from '@ui/canvas/logic';
+import { transformKeyFromPointer } from '@domain/geometry/transforms';
+import type { KeyPointerTransform } from '@domain/geometry/transforms';
+import type { Project } from '@domain';
 import { getSelectedKeyIds } from './get-selected-key-ids';
 import type { SchematicPointerOptions } from './pointer-types';
 import { readTransformTarget } from './read-transform-target';
 import type { useSchematicPointer } from './use-schematic-pointer';
+
+import { useState } from 'react';
 
 type Pointer = ReturnType<typeof useSchematicPointer>;
 type TransformHandlers = Omit<Pointer['surfaceHandlers'], 'onPointerUp'> & {

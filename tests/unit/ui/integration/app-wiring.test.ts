@@ -1,11 +1,11 @@
+import { UNIBODY_PRESET } from '@catalog/presets';
+import { loadProject } from '@storage/project';
 // @vitest-environment jsdom
 import { getDefinedValue } from '../../../helpers/defined-value';
 import { buildWiringProject } from '../../../helpers/wiring-project';
 import { screen, within, waitFor } from '@testing-library/react';
 import { expect, it } from 'vitest';
 import { renderApp } from '../../../helpers/render-app';
-import { UNIBODY_PRESET } from '@catalog/presets';
-import { loadProject } from '@storage/project';
 
 it('previews a row pin edit without saving, then applies once and undoes the actual circuit', async () => {
   const { user } = renderApp(UNIBODY_PRESET);

@@ -1,4 +1,4 @@
-import type { WirePoint } from '../types';
+import type { WirePoint } from '@domain';
 
 function projectOntoAxis(points: readonly WirePoint[], axis: WirePoint) {
   let minimum = Infinity;

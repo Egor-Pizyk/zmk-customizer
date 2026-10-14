@@ -1,12 +1,14 @@
+import { loadProject, PROJECT_STORAGE_KEY, PROJECT_BACKUP_STORAGE_KEY } from '@storage/project';
+import { createProject } from '@domain/project';
+import { ProjectProvider } from '@ui/project/components';
+import { useProject } from '@ui/project/logic';
+import { ProjectBar, ProjectMessages } from '@ui/shell/components';
 // @vitest-environment jsdom
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { loadProject, PROJECT_STORAGE_KEY, PROJECT_BACKUP_STORAGE_KEY } from '@storage/project';
+
 import { renderApp } from '../../../helpers/render-app';
 import { expect, it, vi } from 'vitest';
-import { createProject } from '@domain';
-import { ProjectProvider, useProject } from '@ui/project';
-import { ProjectBar, ProjectMessages } from '@ui/shell';
 
 function handleUnusedClick() {
   /* No modal is needed in the storage contract harness. */

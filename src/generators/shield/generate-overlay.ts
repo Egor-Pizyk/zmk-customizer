@@ -1,7 +1,9 @@
-import { getKeyGeometry, getShieldName } from '@domain';
-import type { ShieldMatrix, ControllerBoard, Project } from '@domain';
-import { escapeString } from '../escape-string';
-import type { GeneratedFile } from '../generated-file';
+import { getKeyGeometry } from '@domain/geometry';
+import { getShieldName } from '@domain/project';
+import type { ShieldMatrix } from '@domain/wiring/matrix';
+import type { ControllerBoard, Project } from '@domain';
+import { escapeString } from '@generators';
+import type { GeneratedFile } from '@generators';
 
 function renderPins(
   pins: readonly number[],

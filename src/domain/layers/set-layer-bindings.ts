@@ -1,5 +1,5 @@
-import { isSameBinding } from '../bindings/is-same-binding';
-import type { Layer, Project } from '../types';
+import { isSameBinding } from '@domain/bindings';
+import type { Layer, Project } from '@domain';
 
 /** Low-level layer setter; drops bindings for keys that no longer exist (data-model.md). */
 export function setLayerBindings(

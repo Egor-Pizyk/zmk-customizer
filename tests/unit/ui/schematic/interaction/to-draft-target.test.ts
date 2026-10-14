@@ -1,6 +1,6 @@
+import { toDraftTarget } from '@ui/schematic/interaction';
 import { expect, it } from 'vitest';
 import { buildProject } from '../../../../helpers/build-project';
-import { toDraftTarget } from '@ui/schematic';
 
 const PROJECT = buildProject({ keys: [{ id: 'k1', xU: 0, yU: 0 }] });
 

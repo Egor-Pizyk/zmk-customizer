@@ -1,6 +1,6 @@
-import { findWireContacts } from '../wires/find-wire-contacts';
+import { findWireContacts } from '@domain/wires';
 import { isSameCrossing } from './is-same-crossing';
-import type { Project } from '../types';
+import type { Project } from '@domain';
 
 // FR-017: insulation lives only while its two wires still cross there. Returns the same object
 // when nothing is dropped, so callers can compare cheaply.

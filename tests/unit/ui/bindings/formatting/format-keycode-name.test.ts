@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest';
 import { KEYCODES } from '@catalog/bindings';
-import { formatKeycodeName } from '@ui/bindings';
+import { formatKeycodeName } from '@ui/bindings/formatting';
+import { describe, expect, it } from 'vitest';
 
 describe('formatKeycodeName', () => {
   it('keeps unique names as they are', () => {

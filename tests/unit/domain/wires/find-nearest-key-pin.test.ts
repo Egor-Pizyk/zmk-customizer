@@ -1,5 +1,5 @@
+import { findNearestKeyPin } from '@domain/wires';
 import { expect, it } from 'vitest';
-import { findNearestKeyPin } from '@domain';
 
 const KEY = { id: 'k1', xU: 0, yU: 0 };
 

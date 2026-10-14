@@ -1,7 +1,7 @@
+import { getWiringConnections } from '@domain/wiring';
 import { expect, it } from 'vitest';
 import { getDefinedValue } from '../../../helpers/defined-value';
 import { buildWiringProject } from '../../../helpers/wiring-project';
-import { getWiringConnections } from '@domain';
 
 it('only emits existing axes for incomplete assignments and respects swapped contact pins', () => {
   const wiring = getDefinedValue(buildWiringProject().wiring);

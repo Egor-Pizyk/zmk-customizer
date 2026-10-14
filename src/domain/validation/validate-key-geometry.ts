@@ -1,5 +1,5 @@
-import { getKeyGeometry } from '../geometry/get-key-geometry';
-import type { Project, ValidationIssue } from '../types';
+import { getKeyGeometry } from '@domain/geometry';
+import type { Project, ValidationIssue } from '@domain';
 
 export function validateKeyGeometry(
   project: Project,

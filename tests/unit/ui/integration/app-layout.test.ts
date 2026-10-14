@@ -1,10 +1,10 @@
+import { getKeyGeometry } from '@domain/geometry';
+import { loadProject } from '@storage/project';
 // @vitest-environment jsdom
 import { fireEvent, screen, within, waitFor } from '@testing-library/react';
 import { expect, it } from 'vitest';
 import { renderApp } from '../../../helpers/render-app';
 import { buildProject } from '../../../helpers/build-project';
-import { getKeyGeometry } from '@domain';
-import { loadProject } from '@storage/project';
 
 function project() {
   return buildProject({

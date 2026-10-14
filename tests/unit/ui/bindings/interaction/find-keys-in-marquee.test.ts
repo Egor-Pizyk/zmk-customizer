@@ -1,5 +1,5 @@
+import { findKeysInMarquee } from '@ui/bindings/interaction';
 import { expect, it } from 'vitest';
-import { findKeysInMarquee } from '@ui/bindings';
 
 const KEYS = [
   { id: 'k1', xU: 0, yU: 0 },

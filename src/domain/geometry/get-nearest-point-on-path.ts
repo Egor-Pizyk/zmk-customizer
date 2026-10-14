@@ -1,5 +1,5 @@
 import { roundU } from './round-u';
-import type { WirePoint } from '../types';
+import type { WirePoint } from '@domain';
 
 function clamp(value: number, bounds: readonly [number, number]): number {
   return Math.min(Math.max(value, Math.min(bounds[0], bounds[1])), Math.max(bounds[0], bounds[1]));

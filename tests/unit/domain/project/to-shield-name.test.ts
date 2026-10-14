@@ -1,5 +1,5 @@
+import { toShieldName } from '@domain/project';
 import { expect, it } from 'vitest';
-import { toShieldName } from '@domain';
 
 it.each([
   ['My Corne v2!', 'my_corne_v2'],

@@ -1,4 +1,4 @@
-import type { Project } from '../types';
+import type { Project } from '@domain';
 
 export function createProject(input: { readonly controllerId: string }): Project {
   return {

@@ -1,6 +1,6 @@
+import { validateBindings } from '@domain/validation';
 import { expect, it } from 'vitest';
 import { buildProject } from '../../../helpers/build-project';
-import { validateBindings } from '@domain';
 
 const CATALOG = {
   keycodeNames: new Set(['A', 'SPACE', 'LSHIFT']),

@@ -1,8 +1,10 @@
-import { describe, expect, it } from 'vitest';
-import fixtureSmall from '../../../fixtures/schematic/small.json?raw';
-import { addKey, addWire, createProject, moveKey, moveKeys } from '@domain';
+import { addKey, moveKey, moveKeys } from '@domain/keys';
+import { addWire } from '@domain/wires/editing';
+import { createProject } from '@domain/project';
 import type { Project } from '@domain';
 import { projectSchema, serializeProject } from '@storage/project';
+import { describe, expect, it } from 'vitest';
+import fixtureSmall from '../../../fixtures/schematic/small.json?raw';
 
 function expectSerializedText(project: Project): string {
   const serialized = serializeProject(project);

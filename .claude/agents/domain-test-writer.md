@@ -8,7 +8,7 @@ You write tests before implementation for ZMK Customizer. You never write or cha
 
 ## Before writing
 1. Read the task in `specs/<feature>/tasks.md`, plus `spec.md` (acceptance criteria) and `plan.md` (function names, file locations, types). Test exactly what the task names; no extra cases for other tasks.
-2. Read AGENTS.md §2 invariants and §3.2–§3.3; read the `docs/zmk/*.md` page for any ZMK output being tested.
+2. Read docs/domain-model.md invariants and §3.2–§3.3; read the `docs/zmk/*.md` page for any ZMK output being tested.
 3. Find the test convention already in the repo: `git ls-files '*.test.ts' '*.test.tsx'` and the Vitest config. Follow it (location, naming, import style). If no test exists yet and `plan.md` does not say where tests go, stop and report that the location is undecided (see `docs/roadmap.md` open decisions).
 
 ## What to write

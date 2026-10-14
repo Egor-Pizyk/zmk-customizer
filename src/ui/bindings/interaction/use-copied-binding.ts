@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { findBinding, isSameBinding, setBindings } from '@domain';
+import { findBinding, isSameBinding } from '@domain/bindings';
+import { setBindings } from '@domain/bindings/editing';
 import type { Binding } from '@domain';
-import { useProject } from '@ui/project';
-import { formatBindingName } from '../formatting/format-binding-name';
+import { useProject } from '@ui/project/logic';
+import { formatBindingName } from '@ui/bindings/formatting';
+import { useState } from 'react';
 
 type CopiedBindingOptions = {
   /** The open layer and the selected keys (spec 007 FR-007). */

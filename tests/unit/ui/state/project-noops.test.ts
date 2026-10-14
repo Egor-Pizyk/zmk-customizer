@@ -1,6 +1,8 @@
+import { moveKeys } from '@domain/keys';
+import { setWireBends } from '@domain/wires/editing';
+import { createProject } from '@domain/project';
+import { applyHistoryAction, createInitialState } from '@ui/project/logic';
 import { afterEach, it, expect, vi } from 'vitest';
-import { moveKeys, setWireBends, createProject } from '@domain';
-import { applyHistoryAction, createInitialState } from '@ui/project';
 
 const RENAME = {
   kind: 'commit',

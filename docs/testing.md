@@ -47,7 +47,7 @@ normally. jsdom shims model missing native APIs, not business behavior.
 ## Commands and regression floors
 
 `make check` runs typecheck, lint, formatting and the full suite **with V8 coverage**,
-just like CI. `docker compose run --rm app npm run test -- <file>` runs focused tests.
+just like CI. `docker compose -p zmk-customizer -f infra/compose.yaml run --rm app npm run test -- <file>` runs focused tests.
 `coverage/index.html` is the generated local report; it is not committed.
 
 Coverage includes executable domain, generators, storage, UI and catalog lookup/
@@ -57,7 +57,7 @@ are not useful coverage targets; their runtime contracts are tested through cons
 or exclude executable files merely to make checks pass. Missing branches guide new
 behavioral scenarios; a percentage alone is not evidence of assertion quality.
 
-`make test-mutations` runs ten seeded business regressions and requires a failing
+`make test-mutations` runs 29 seeded business regressions and requires a failing
 behavioral test for each. Run it **alone**: it temporarily changes production files,
 restores their exact original bytes including uncommitted work, and refuses to
 overwrite a concurrently changed file. It detects changes in controller retention,
@@ -82,7 +82,7 @@ Production build passed. The seeded mutation run detected 10/10 regressions.
 These Vitest tests verify semantic DOM, displayed text/state, event wiring, SVG geometry,
 persistence and output bytes. jsdom has no layout/paint engine: tests do not prove
 pixel appearance, responsive clipping, contrast, native modal focus trapping or
-screen-reader behavior. They do not compile firmware. Ten seeded mutations are
+screen-reader behavior. They do not compile firmware. Seeded mutations are
 not an exhaustive mutation score, and no finite suite guarantees detecting every bug.
 Remaining untested branches stay visible in the coverage report.
 
@@ -145,3 +145,26 @@ all desktop sizes/themes, physical keyboard firmware behavior, or absence of all
 ## File organization
 
 Production modules live in responsibility groups under `src/<layer>/`. Vitest tests live in `tests/unit/<layer>/<group>/`, mirroring these groups; application integration tests live in `tests/unit/ui/integration/`. Shared UI tests mirror their module folders (project, app, shortcuts, downloads and issues). Shared test builders and setup stay in `tests/helpers/`, golden inputs and outputs in `tests/fixtures/`, Playwright journeys in `tests/e2e/`, and Node tooling tests in `tests/tooling/`. Tests import each module through its public index.ts alias. Internal implementation files use relative peer imports; the module lint rule also covers tests. Re-export indexes are excluded from coverage because implementation contracts and compiler checks cover them.
+
+## Mandatory browser coverage rules
+
+
+For new or changed user journeys, add or update Playwright E2E tests and include them in the spec, plan and tasks. Keep domain permutations in unit tests; E2E verifies real interaction and agreement across the application. If a feature does not change user behavior and needs no new E2E coverage, record the reason in its artifacts.
+
+- Run the production app in an isolated browser context with a predictable project and real React/providers, storage, domain and generators. Never use or modify an ordinary user browser profile.
+- Assert the expected visible result and, where applicable, the saved project and actual downloaded JSON/ZIP. DOM attributes or absence of errors alone are insufficient.
+- Use accessible roles/names. For canvas interactions use coordinates of displayed elements; perform drags with `mouse.move/down/up` and intermediate movements.
+- Do not mock core services, use `force:true`, dispatch synthetic events, call handlers, change state through `evaluate`, or use arbitrary sleeps. `evaluate` is observation-only; wait for a concrete state.
+- Check screen geometry, including corners of rotated elements rather than only bounding boxes. Add independent visual snapshots where they detect paint errors; justify tolerances and inspect the cause of differences before updating references.
+- For a discovered bug, first reproduce a failing test, then fix its cause in the owning architectural layer. Domain/generator repairs also require their own tests-first contracts.
+- For a substantial new interaction contract, prove test sensitivity with a controlled behavioral regression. Run it separately from checks and production edits, require a user-facing or saved-data assertion failure, and restore exact original files. Do not require every domain permutation or all six existing browser seeds for every feature.
+- The complete Chromium suite is mandatory. Add targeted Firefox/WebKit cases for SVG, foreignObject, pointer capture, native inputs and focus where the feature touches them.
+- Before completion, run `make check`, production build and `make test-e2e`. Verify new or changed E2E tests in three sequential runs without retries. Run `make zmk-build` if generators or exported geometry change.
+- Retain useful failure traces/screenshots. Record scenario → risk → existing coverage → new E2E → visible assertion → saved/exported assertion, verification results and remaining limits in feature artifacts. Commands and artifact handling are documented in `docs/testing.md`.
+- Never weaken assertions to make CI green or claim absence of user problems solely from passing tests.
+
+## Mutation runner implementation
+
+Both mutation orchestrators are Node ES modules under scripts/. Root Makefile delegates to npm run test:mutations and npm run test:e2e:mutations. These orchestration commands run on host Node 24 and invoke isolated Docker test containers; they do not require host Python. Run them sequentially and alone. Unit mutation subprocesses retain the 120-second timeout. Shared byte mutation/restoration code refuses concurrent edits.
+
+Migration parity was demonstrated with Node first, then unchanged Python originals: all 29 Vitest and nine browser seeds matched failed-test identities, counts, process results and browser summary. Source SHA-256 manifests matched before/after all four runs. See [migration verification](../specs/030-node-mutation-runners/verification.md). Tooling contracts for restoration, concurrent edits, missing/duplicate anchors, timeout and report acceptance run through npm run check:mutation-runners in make check.

@@ -1,5 +1,6 @@
 import { DEFAULT_CONTROLLER_ID, getControllerBoard } from '@catalog/controllers';
-import type { ControllerBoard, ShieldTarget } from '@domain';
+import type { ControllerBoard } from '@domain';
+import type { ShieldTarget } from '@domain/wiring/matrix';
 
 // Release/workflow metadata plus the default controller; production selects the project board.
 export const SHIELD_TARGET = {

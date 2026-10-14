@@ -23,9 +23,11 @@ src/ui/
   schematic/ bindings/ firmware/ export/   one folder per workspace, feature screens
 ```
 
-- Folders and primitives are created when the first feature needs them (AGENTS §3.1). No empty folders, no "just in case" primitive.
+- Folders and primitives are created when the first feature needs them (docs/architecture.md). No empty folders, no "just in case" primitive.
 - One component per file, file named after it in kebab-case (`key-canvas.tsx` → `KeyCanvas`). A small private subcomponent used only by that file may stay in it, unexported.
 - `components/` never imports from a workspace folder and knows nothing about `Project`; it takes strings, numbers and callbacks. A workspace folder may import from `components/`, `canvas/` and its own folder, not from another workspace. Shared feature pieces (e.g. a key shape used by Schematic and Bindings) move to `canvas/` or a shared UI module when the second user appears.
+
+Mixed UI groups split .ts functions/hooks/contracts into `logic/` and .tsx rendering into `components/`, with separate public indexes and exact aliases. Pure responsibility groups retain their existing structure. See [folder ownership](../../folder-structure.md).
 
 ## Project state
 
@@ -63,20 +65,20 @@ Effects sync with systems outside React. A change that adds, moves or removes an
 | Effect | Where |
 |---|---|
 | `document.documentElement.dataset.theme` sync with the theme preference | `preferences/preferences-context.tsx` |
-| Focus the workspace `<h1>` when the workspace changes (accessibility.md "Structure") | `app/workspace-view.tsx` |
-| `ResizeObserver`: panel and container sizes into state from the observer callback (clamp derived in render) | `components/floating-panel.tsx` |
-| Pointer subscriber registration and cleanup for the surface cursor preview | `canvas/work-surface.tsx` |
-| `ResizeObserver`: surface size into state for rulers | `canvas/use-element-size.ts` |
-| Non-passive `wheel` listener: Ctrl/Cmd zoom with `preventDefault`, wheel pan; 200 ms commit timer cleared in cleanup | `canvas/use-surface-viewport.ts` |
-| `showModal()` / `close()` to match `Dialog`'s `open` prop; `close` event → `onClose`; backdrop `click` listener added with `addEventListener` in the same effect and removed in its cleanup (no JSX `onClick` on `<dialog>`, which fails jsx-a11y) | `components/dialog.tsx` |
-| Global `keydown` on `globalThis` for all shortcuts: Alt+Shift globals and canvas-scoped single keys (`shortcuts/shortcuts.ts`) | `app/use-global-shortcuts.ts` (mounted by `app/app.tsx`) |
+| Focus the workspace `<h1>` when the workspace changes (accessibility.md "Structure") | `app/components/workspace-view.tsx` |
+| `ResizeObserver`: panel and container sizes into state from the observer callback (clamp derived in render) | `components/components/floating-panel.tsx` |
+| Pointer subscriber registration and cleanup for the surface cursor preview | `canvas/components/work-surface.tsx` |
+| `ResizeObserver`: surface size into state for rulers | `canvas/logic/use-element-size.ts` |
+| Non-passive `wheel` listener: Ctrl/Cmd zoom with `preventDefault`, wheel pan; 200 ms commit timer cleared in cleanup | `canvas/logic/use-surface-viewport.ts` |
+| `showModal()` / `close()` to match `Dialog`'s `open` prop; `close` event → `onClose`; backdrop `click` listener added with `addEventListener` in the same effect and removed in its cleanup (no JSX `onClick` on `<dialog>`, which fails jsx-a11y) | `components/components/dialog.tsx` |
+| Global `keydown` on `globalThis` for all shortcuts: Alt+Shift globals and canvas-scoped single keys (`shortcuts/shortcuts.ts`) | `app/logic/use-global-shortcuts.ts` (mounted by `app/components/app.tsx`) |
 | Schematic `keydown` on `globalThis` for the Schematic canvas ids (tools, Enter, Delete, Escape) that need workspace state; the app listener has no action for them | `schematic/interaction/use-schematic-shortcuts.ts` |
 | Bindings `keydown` on `globalThis`: Mod+C / Mod+V copy and paste a binding on the Bindings canvas or Keys table | `bindings/interaction/use-bindings-shortcuts.ts` |
-| `keydown` on `globalThis`: Escape inside `[data-action-panel]` returns focus to the canvas | `bindings/panel/action-panel.tsx` |
+| `keydown` on `globalThis`: Escape inside `[data-action-panel]` returns focus to the canvas | `bindings/panel/components/action-panel.tsx` |
 
 - Autosave is not an effect: `saveProject` runs in the project provider's dispatch, the handler that changes the project (spec 002 research R6), so loading never writes and no effect stores the save result.
 - Page title is `<title>` rendered by the workspace screen (React 19 hoists it), not an effect on `document.title`.
-- Canvas-scoped single keys are matched by the global `keydown` listener in `app/use-global-shortcuts.ts` when `event.target` is inside `[data-canvas-workspace]` (`onKeyDown` on `role="application"` fails jsx-a11y `no-noninteractive-element-interactions`). Keys of interactive elements (a `<button>` drag handle, a table selection column) use `onKeyDown` on that element.
+- Canvas-scoped single keys are matched by the global `keydown` listener in `app/logic/use-global-shortcuts.ts` when `event.target` is inside `[data-canvas-workspace]` (`onKeyDown` on `role="application"` fails jsx-a11y `no-noninteractive-element-interactions`). Keys of interactive elements (a `<button>` drag handle, a table selection column) use `onKeyDown` on that element.
 - Every listener added in an effect is removed in its cleanup. Dependency arrays are complete (`code-quality/typescript.md`).
 
 ## Inputs and forms

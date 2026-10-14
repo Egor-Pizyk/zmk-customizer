@@ -1,4 +1,4 @@
-import type { Project } from '../types';
+import type { Project } from '@domain';
 
 export function renameProject(project: Project, input: { readonly name: string }): Project {
   if (project.name === input.name) {

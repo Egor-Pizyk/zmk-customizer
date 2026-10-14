@@ -6,15 +6,22 @@ The top-level source folders define architectural layers. Nested folders group r
 |---|---|
 | `src/domain/project/` | Project creation, naming, identifiers and controller changes |
 | `src/domain/keys/` | Adding, moving, duplicating and deleting physical keys |
-| `src/domain/geometry/` | Coordinates, shapes, overlap and pointer transforms |
+| `src/domain/geometry/` | Coordinates, shapes and overlap |
+| `src/domain/geometry/transforms/` | Pointer resize and rotation operations |
 | `src/domain/layers/` | Layer creation, ordering, names and binding maps |
-| `src/domain/bindings/` | Binding queries, policies and behavior edits |
-| `src/domain/wires/` | Drawn wires, endpoints, pin contacts and wire edits |
+| `src/domain/bindings/` | Binding queries and policies |
+| `src/domain/bindings/editing/` | Behavior and binding edits |
+| `src/domain/wires/` | Endpoints, pin contacts and wire queries |
+| `src/domain/wires/editing/` | Wire edits |
+| `src/domain/wires/nets/` | Electrical net derivation |
 | `src/domain/crossings/` | Wire intersections and insulation |
 | `src/domain/diodes/` | Diode presence, pin and polarity |
-| `src/domain/wiring/` | Electrical matrix cells, terminals, topology and routing |
-| `src/domain/analysis/` | Nets, shield matrix derivation and combined project analysis |
+| `src/domain/wiring/` | Terminals, halves and cell assignment |
+| `src/domain/wiring/matrix/` | Matrix cells and shield matrix derivation |
+| `src/domain/wiring/editing/` | Wiring initialization, edits and routing |
+| `src/domain/analysis/` | Combined project analysis |
 | `src/domain/validation/` | Project and feature invariant checks |
+| `src/domain/validation/shield/` | Complete shield export validation |
 | `src/catalog/controllers/` | Boards, controller lookup and wiring choices |
 | `src/catalog/bindings/` | Keycodes, behaviors, modifiers and command catalogs |
 | `src/catalog/presets/` | Preset keyboard definitions |
@@ -27,6 +34,7 @@ The top-level source folders define architectural layers. Nested folders group r
 | `src/storage/migrations/` | Versioned project migrations |
 | `src/storage/preferences/` | Application preferences |
 | `src/storage/export/` | ZIP construction |
+| `src/ui/schematic/formatting/` | Schematic labels and wire issue text |
 | `src/ui/schematic/rendering/` | SVG keys, wires, diodes, markers and preview layers |
 | `src/ui/schematic/interaction/` | Pointer/keyboard input, selection, hit detection and drafts |
 | `src/ui/schematic/layout/` | Physical layout controls and previews |
@@ -39,25 +47,25 @@ The top-level source folders define architectural layers. Nested folders group r
 | `src/ui/bindings/interaction/` | Selection, shortcuts, copy/paste and layer actions |
 | `src/ui/bindings/rendering/` | Binding canvas, keycaps, layers and table |
 
-Workspace roots hold composition and shared workspace contracts. UI composition lives in `src/ui/app/`; shared contracts live in the dedicated modules below. Existing shared folders (`components`, `canvas`, `shell`) and the smaller `firmware` and `export` workspaces retain their ownership.
+Workspace folders group composition and shared contracts in their child modules. Application rendering lives in `src/ui/app/components/` and global shortcut logic in `src/ui/app/logic/`. Shared folders (`components`, `canvas`, `shell`) and workspaces retain their architectural ownership after extension grouping.
 
 ## Public module APIs
 
 `tsconfig.json` is the source of truth for exact alias-to-index paths; wildcard aliases are not exposed. Vite and Vitest use the built-in tsconfig paths resolver. The lint rule and architecture checker read the same alias registry.
 
-- `@domain`: Pure domain operations and types. Geometry, keys, wiring, validation and other responsibility folders remain internal groups in this module; their existing mutual dependencies do not become barrel cycles.
-- `@generators`: Deterministic file generators and generated-file types; shield, keymap and repository folders remain internal groups.
+- `@domain`: Shared types and exhaustiveness helper only. Each responsibility group has its own exact API: `@domain/keys`, `@domain/geometry`, `@domain/project`, `@domain/wires`, `@domain/wiring`, `@domain/bindings`, `@domain/layers`, `@domain/analysis`, `@domain/crossings`, `@domain/diodes`, `@domain/validation`.
+- `@generators`: Shared generated-file type, string escaping and user configuration generator. File generators use `@generators/shield`, `@generators/keymap` and `@generators/repository`.
 - `@catalog/bindings`, `@catalog/controllers`, `@catalog/firmware`, `@catalog/presets`: Independent catalog modules.
 - `@storage/project`, `@storage/migrations`, `@storage/preferences`, `@storage/export`: Storage boundary modules.
-- `@ui/app`: Application composition, workspace switching, global shortcut dispatch and the error boundary.
-- `@ui/project`, `@ui/preferences`, `@ui/downloads`, `@ui/navigation`, `@ui/shortcuts`, `@ui/dialogs`, `@ui/issues`: Shared state, browser adapters and contracts.
-- `@ui/components`, `@ui/canvas`, `@ui/shell`: Shared UI modules.
-- `@ui/schematic`, `@ui/bindings`, `@ui/firmware`, `@ui/export`: Workspace modules; their nested responsibility folders are private implementation groups.
+- `@ui/app/logic`: Global shortcut dispatch. `@ui/app/components`: Application composition, workspace switching and the error boundary.
+- `@ui/project/logic`, `@ui/project/components`, `@ui/preferences`, `@ui/downloads`, `@ui/navigation`, `@ui/shortcuts`, `@ui/dialogs`, `@ui/issues`: Shared state, provider rendering, browser adapters and contracts.
+- `@ui/components/{logic,components}`, `@ui/components/icons`, `@ui/canvas/{logic,components}`, `@ui/shell/{logic,components}`: Shared UI modules (braces denote separate exact aliases, not wildcard aliases).
+- `@ui/schematic/{logic,components}`, `@ui/bindings/{logic,components}`, `@ui/firmware`, `@ui/export/{logic,components}`: Workspace modules; nested responsibility folders expose their own exact APIs and split mixed implementations the same way.
 
 ```ts
-import { addKey } from '@domain';
+import { addKey } from '@domain/keys';
 import type { Project } from '@domain';
-import { Button } from '@ui/components';
+import { Button } from '@ui/components/components';
 ```
 
 A consumer uses the module alias, never `@domain/keys/add-key` or a relative path to another module’s implementation. Internal files import their peers directly with relative paths and never import their own index. Pinned raw assets, CSS and test fixtures retain their file paths. Module aliases do not relax the layer matrix: the architecture checker follows named re-exports to the defining file, including intermediate re-exports and locally imported symbols that are re-exported.
@@ -74,3 +82,13 @@ A consumer uses the module alias, never `@domain/keys/add-key` or a relative pat
 - `tests/fixtures/`: Project inputs, independent golden files and upstream references.
 
 Tests consume the same public module aliases as production consumers. `make check` discovers, typechecks and lints the relocated tests, enforces coverage floors and rejects test files in `src/`. Split a growing group when it contains distinct responsibilities; avoid arbitrary numbered folders, generic `utils` groups and one folder per function.
+
+Nested modules own files under their most specific registered root. Parent indexes expose only files owned by that root, not the entire subtree. Cross-group imports use the exact owning alias; within a group use relative implementation imports. Every populated source responsibility group has an explicit named index; raw upstream catalog assets are exempt.
+
+Infrastructure lives in `infra/`; root Makefile selects its Compose files explicitly. Build contexts and project mounts still point to the repository root. Dockerfile-specific ignore files live beside each Dockerfile.
+
+To keep barrels acyclic, query/policy modules are below editing modules, net derivation is below matrix derivation, and shield validation composes lower validators. Schematic formatting is below rendering and interaction; workspace composition is above all groups.
+
+## Logic and component groups
+
+Every UI responsibility group that contains both .ts and .tsx implementations is split into logic/ and components/. Functions, hooks and shared types live in logic/; JSX lives in components/. Each child has its own explicit index.ts and exact alias, for example @ui/bindings/picker/logic and @ui/bindings/picker/components. Index files are the extension exception. Pure groups are retained; no empty folders or parent compatibility barrels are created. Tests mirror the source owner, including .test.ts contracts for .tsx components. The source architecture gate rejects mixed implementation extensions and misplaced files in logic/components.

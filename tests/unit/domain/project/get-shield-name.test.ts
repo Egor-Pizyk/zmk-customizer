@@ -1,5 +1,5 @@
+import { getShieldName } from '@domain/project';
 import { expect, it } from 'vitest';
-import { getShieldName } from '@domain';
 
 it('returns the override as typed when present', () => {
   expect(

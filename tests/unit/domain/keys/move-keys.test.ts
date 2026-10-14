@@ -1,6 +1,6 @@
+import { moveKeys } from '@domain/keys';
 import { expect, it } from 'vitest';
 import { buildProject } from '../../../helpers/build-project';
-import { moveKeys } from '@domain';
 
 it('moves a group of adjacent keys together', () => {
   const before = buildProject({

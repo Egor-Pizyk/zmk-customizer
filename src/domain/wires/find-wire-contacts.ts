@@ -1,6 +1,6 @@
-import { getWireHalf } from '../wiring/get-wire-half';
+import { getWireHalf } from '@domain/wiring';
 import { getWirePath } from './get-wire-path';
-import type { Project, Wire, WirePoint } from '../types';
+import type { Project, Wire, WirePoint } from '@domain';
 
 type Segment = { readonly from: WirePoint; readonly to: WirePoint; readonly isHorizontal: boolean };
 

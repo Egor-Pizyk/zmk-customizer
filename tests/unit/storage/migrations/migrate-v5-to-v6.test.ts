@@ -1,10 +1,10 @@
+import { getKeyGeometry } from '@domain/geometry';
+import { parseProjectFile, projectSchema } from '@storage/project';
+import { migrateV5ToV6 } from '@storage/migrations';
 import { getDefinedValue } from '../../../helpers/defined-value';
 import { expect, it } from 'vitest';
 import { buildProject } from '../../../helpers/build-project';
 import { getResultValue } from '../../../helpers/result';
-import { getKeyGeometry } from '@domain';
-import { parseProjectFile, projectSchema } from '@storage/project';
-import { migrateV5ToV6 } from '@storage/migrations';
 
 it('loads a v5 project with unchanged keys, bindings, wiring and default old geometry', () => {
   const old = {

@@ -1,7 +1,7 @@
 import { getKeyPinPosition } from './get-key-pin-position';
-import { assertNever } from '../assert-never';
-import { getNearestPointOnPath } from '../geometry/get-nearest-point-on-path';
-import type { Project, Wire, WireEnd, WirePoint } from '../types';
+import { assertNever } from '@domain';
+import type { Project, Wire, WireEnd, WirePoint } from '@domain';
+import { getNearestPointOnPath } from '@domain/geometry';
 
 function isSamePoint(first: WirePoint, second: WirePoint): boolean {
   return first.xU === second.xU && first.yU === second.yU;

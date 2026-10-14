@@ -1,4 +1,5 @@
-import { addWire, createEntityId } from '@domain';
+import { addWire } from '@domain/wires/editing';
+import { createEntityId } from '@domain/project';
 import type { WirePoint } from '@domain';
 import type { PointerState } from './pointer-types';
 import type { CanvasHit } from './read-canvas-hit';

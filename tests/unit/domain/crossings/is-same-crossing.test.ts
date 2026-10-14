@@ -1,5 +1,5 @@
+import { isSameCrossing } from '@domain/crossings';
 import { expect, it } from 'vitest';
-import { isSameCrossing } from '@domain';
 
 it('compares both wire ids and the ordinal', () => {
   const ref = { wireIds: ['w1', 'w2'] as const, ordinal: 0 };

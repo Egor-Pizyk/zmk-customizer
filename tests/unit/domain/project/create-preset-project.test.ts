@@ -1,6 +1,6 @@
+import { createPresetProject } from '@domain/project';
 import { expect, it } from 'vitest';
 import { buildUnibodyProject } from '../../../helpers/build-unibody-project';
-import { createPresetProject } from '@domain';
 
 it('creates fresh project objects without sharing nested preset data', () => {
   const preset = buildUnibodyProject();

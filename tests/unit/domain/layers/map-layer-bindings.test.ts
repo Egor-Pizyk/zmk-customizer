@@ -1,7 +1,7 @@
+import type { Project } from '@domain';
+import { mapLayerBindings } from '@domain/layers';
 import { expect, it } from 'vitest';
 import { buildProject } from '../../../helpers/build-project';
-import type { Project } from '@domain';
-import { mapLayerBindings } from '@domain';
 
 const PROJECT = buildProject({
   keys: [

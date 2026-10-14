@@ -1,6 +1,4 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
-import { getResultError } from '../../../helpers/result';
-import { createProject } from '@domain';
+import { createProject } from '@domain/project';
 import {
   PROJECT_STORAGE_KEY,
   backupDamagedProject,
@@ -11,6 +9,8 @@ import {
   serializeProject,
 } from '@storage/project';
 import type { SaveError } from '@storage/project';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { getResultError } from '../../../helpers/result';
 
 function saveReason(error: SaveError) {
   if (error.kind !== 'invalid-project') {

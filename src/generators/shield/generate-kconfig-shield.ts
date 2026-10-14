@@ -1,6 +1,6 @@
-import { getShieldName } from '@domain';
+import { getShieldName } from '@domain/project';
 import type { Project } from '@domain';
-import type { GeneratedFile } from '../generated-file';
+import type { GeneratedFile } from '@generators';
 
 export function generateKconfigShield(project: Project): GeneratedFile {
   const shieldName = getShieldName(project);

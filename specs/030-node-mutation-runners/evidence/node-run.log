@@ -1,0 +1,62 @@
+STAGE: Node unit mutations
+Detected: cross-family pin retention (1 failing tests)
+Detected: lost same-family pin retention (2 failing tests)
+Detected: deleted key keeps layer bindings (1 failing tests)
+Detected: undo restores current state (1 failing tests)
+Detected: new edit retains redo history (1 failing tests)
+Detected: keymap shifts layer target (3 failing tests)
+Detected: export ignores validation (2 failing tests)
+Detected: controller select loses change handler (2 failing tests)
+Detected: reverse diode button loses handler (1 failing tests)
+Detected: explicit shield name ignored (1 failing tests)
+Detected: backup discard leaves damaged bytes (1 failing tests)
+Detected: imprecise entity IDs (4 failing tests)
+Detected: stale imports replace newest request (3 failing tests)
+Detected: import overwrites edited project (3 failing tests)
+Detected: empty move destroys redo (1 failing tests)
+Detected: identical bends creates a new project (1 failing tests)
+Detected: geometry argument stack overflow (1 failing tests)
+Detected: oversized wire bends accepted (1 failing tests)
+Detected: invalid project mislabeled as unavailable (1 failing tests)
+Detected: incompatible draft accepts hold key (1 failing tests)
+Detected: layout rotation reversed (1 failing tests)
+Detected: layout export loses width (1 failing tests)
+Detected: duplicate loses layer bindings (1 failing tests)
+Detected: geometry no-op destroys redo (1 failing tests)
+Detected: pointer resize loses fixed anchor (1 failing tests)
+Detected: pointer rotation loses center pivot (1 failing tests)
+Detected: pointer release accepts overlap (2 failing tests)
+Detected: cancelled numeric geometry resurfaces (2 failing tests)
+Detected: numeric editing loses live preview (3 failing tests)
+Detected 29/29 seeded regressions; original files restored.
+STAGE: Node browser mutations
+time="2026-10-14T14:49:24+03:00" level=warning msg="Found orphan containers ([zmk-customizer-app-1]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+ Container zmk-customizer-e2e-run-2dc2bfe501b4 Creating 
+ Container zmk-customizer-e2e-run-2dc2bfe501b4 Created 
+[WebServer] [plugin builtin:vite-reporter] 
+[WebServer] (!) Some chunks are larger than 500 kB after minification. Consider:
+[WebServer] - Using dynamic import() to code-split the application
+[WebServer] - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+[WebServer] - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+Running 6 tests using 1 worker
+
+  ✓  1 [chromium] › tests/e2e/layout-data.spec.ts:22:3 › precise numeric Enter shows unsaved preview, Cancel/Escape cannot resurrect another value @cross-browser (1.1s)
+  ✓  2 [chromium] › tests/e2e/layout-gestures.spec.ts:33:5 › resize right at 0° preserves opposite anchor (805ms)
+  ✓  3 [chromium] › tests/e2e/layout-gestures.spec.ts:146:1 › handles remain aligned after zoom and pan; grid snap and keyboard nudge @cross-browser (1.7s)
+  ✓  4 [chromium] › tests/e2e/layout-paint.spec.ts:34:1 › reviewed rotated selection frame and live preview paint (774ms)
+  ✓  5 [chromium] › tests/e2e/wiring.spec.ts:22:1 › matrix preview, conflict repair, history and actual JSON/ZIP agree @cross-browser (1.5s)
+  ✓  6 [chromium] › tests/e2e/wiring.spec.ts:96:1 › BLE split uses separate GPIO namespaces and full key order in downloaded shields @cross-browser (1.4s)
+
+  6 passed (17.6s)
+PASS disabled-resize: user assertion toBeCloseTo detected regression
+PASS invisible-preview: user assertion toHaveScreenshot detected regression
+PASS shifted-hit-area: user assertion toBeLessThan detected regression
+PASS lost-save: user assertion toBe detected regression
+PASS extra-undo: user assertion toEqual detected regression
+PASS cancelled-value: user assertion toHaveValue detected regression
+PASS lost-wiring-route: user assertion toBeVisible detected regression
+PASS saved-wiring-preview: user assertion toEqual detected regression
+PASS wrong-split-offset: user assertion toContain detected regression
+Detected 9/9 regressions; exact original production bytes restored.
+STAGE: Node runners completed; exact source hashes restored

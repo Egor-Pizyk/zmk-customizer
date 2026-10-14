@@ -1,7 +1,6 @@
-import { BINDING_POLICY } from '../bindings/binding-policy';
-import { isValidTappingTerm } from '../bindings/is-valid-tapping-term';
-import { assertNever } from '../assert-never';
-import type { Binding, KeyStroke, Layer, Project, ValidationIssue } from '../types';
+import { BINDING_POLICY, isValidTappingTerm } from '@domain/bindings';
+import { assertNever } from '@domain';
+import type { Binding, KeyStroke, Layer, Project, ValidationIssue } from '@domain';
 
 /** ZMK facts from src/catalog/, passed in so domain imports nothing (AGENTS §3.1, spec 004 R8). */
 export type BindingsCatalog = {

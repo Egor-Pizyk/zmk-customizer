@@ -1,12 +1,8 @@
+import { findKeyCurrentFlow } from '@domain/wires';
+import { reverseKeyDiode, toggleKeyDiode } from '@domain/diodes';
+import { createProject } from '@domain/project';
+import { moveKey, removeKey } from '@domain/keys';
 import { expect, it } from 'vitest';
-import {
-  findKeyCurrentFlow,
-  reverseKeyDiode,
-  toggleKeyDiode,
-  createProject,
-  moveKey,
-  removeKey,
-} from '@domain';
 
 it.each([
   { pin: 1, otherPin: 2 },

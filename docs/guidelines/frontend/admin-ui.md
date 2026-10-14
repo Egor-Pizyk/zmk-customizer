@@ -65,7 +65,7 @@ No icon set (ADR 0009): the few icons needed are inline SVG components in `compo
 
 ## ZMK option pattern
 
-Every catalog-backed control (behavior, keycode, Kconfig option) shows label, one-line description and a docs link from the entry's `docsUrl` (AGENTS §3.4: v0.3 docs, `https://v0-3-branch.zmk.dev/docs/`). Components never hand-write a docs URL.
+Every catalog-backed control (behavior, keycode, Kconfig option) shows label, one-line description and a docs link from the entry's `docsUrl` (docs/architecture.md: v0.3 docs, `https://v0-3-branch.zmk.dev/docs/`). Components never hand-write a docs URL.
 
 ```tsx
 // ✅

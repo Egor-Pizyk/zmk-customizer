@@ -1,5 +1,5 @@
 import { findBinding } from './find-binding';
-import type { Project } from '../types';
+import type { Project } from '@domain';
 
 const KEY_SENDING_KINDS = new Set(['kp', 'sk', 'kt', 'mt', 'lt']);
 

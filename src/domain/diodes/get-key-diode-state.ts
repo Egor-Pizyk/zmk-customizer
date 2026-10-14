@@ -1,4 +1,4 @@
-import type { Key, KeyPin } from '../types';
+import type { Key, KeyPin } from '@domain';
 
 export function getKeyDiodeState(key: Key | undefined, pin: KeyPin) {
   return {

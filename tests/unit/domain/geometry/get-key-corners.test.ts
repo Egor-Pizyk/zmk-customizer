@@ -1,6 +1,6 @@
+import { getKeyCorners, getKeyCenter } from '@domain/geometry';
 import { getDefinedValue } from '../../../helpers/defined-value';
 import { expect, it } from 'vitest';
-import { getKeyCorners, getKeyCenter } from '@domain';
 
 it('rotates a sized rectangle clockwise around an absolute point', () => {
   const key = {

@@ -1,5 +1,6 @@
+import { addKey } from '@domain/keys';
 import { expect, it } from 'vitest';
-import { addKey } from '@domain';
+
 import { buildProject } from '../../../helpers/build-project';
 
 it('appends a key with the next id', () => {

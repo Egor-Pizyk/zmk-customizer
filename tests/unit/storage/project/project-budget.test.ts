@@ -1,8 +1,9 @@
 import { serializeProject, parseProjectFile } from '@storage/project';
+import type { ProjectFileError } from '@storage/project';
+import { createProject } from '@domain/project';
+
 import { expect, it } from 'vitest';
 import { getResultError } from '../../../helpers/result';
-import { createProject } from '@domain';
-import type { ProjectFileError } from '@storage/project';
 
 function issuePaths(error: ProjectFileError) {
   if (error.kind !== 'not-project') {

@@ -1,5 +1,5 @@
+import { createProject } from '@domain/project';
 import { expect, it } from 'vitest';
-import { createProject } from '@domain';
 
 it('creates an empty project named My keyboard without a technical name override', () => {
   const project = createProject({ controllerId: 'nice_nano_v2' });

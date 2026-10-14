@@ -1,9 +1,9 @@
+import { loadProject } from '@storage/project';
 // @vitest-environment jsdom
 import { screen, within, waitFor } from '@testing-library/react';
 import { expect, it } from 'vitest';
 import { getDefinedValue } from '../../../helpers/defined-value';
 import { renderApp } from '../../../helpers/render-app';
-import { loadProject } from '@storage/project';
 
 it('commits a name once on Enter, cancels a draft, and restores persisted undo/redo after reload', async () => {
   const { user, unmount, mount } = renderApp();

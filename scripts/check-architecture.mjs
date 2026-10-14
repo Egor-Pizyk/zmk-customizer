@@ -103,7 +103,7 @@ function allowedEdge(file, target, typeOnly) {
   }
   if (targetLayer === 'generators') {
     return (
-      file === 'src/ui/export/get-export-preview.ts' ||
+      file === 'src/ui/export/logic/get-export-preview.ts' ||
       (group === 'export' &&
         typeOnly &&
         target.replace(/\.ts$/u, '') === 'src/generators/generated-file')
@@ -339,10 +339,50 @@ export function sourceFiles(directory = 'src') {
   });
 }
 
+export function checkUiFolderLayout(files) {
+  const groups = new Map();
+  const issues = [];
+  for (const file of files) {
+    if (!file.startsWith('src/ui/') || file.endsWith('/index.ts')) continue;
+    const directory = path.posix.dirname(file);
+    const extension = path.posix.extname(file);
+    const group = path.posix.basename(directory);
+    if (
+      (group === 'logic' && extension === '.tsx') ||
+      (group === 'components' && extension === '.ts')
+    ) {
+      issues.push({
+        file,
+        line: 1,
+        rule: 'ui-folder-layout',
+        message: 'UI logic/ contains .ts; components/ contains .tsx (index.ts is exempt)',
+      });
+    }
+    const extensions = groups.get(directory) ?? new Set();
+    extensions.add(extension);
+    groups.set(directory, extensions);
+  }
+  for (const [file, extensions] of groups) {
+    if (extensions.has('.ts') && extensions.has('.tsx')) {
+      issues.push({
+        file,
+        line: 1,
+        rule: 'ui-folder-layout',
+        message: 'Split mixed UI implementation files into logic/ and components/',
+      });
+    }
+  }
+  return issues;
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
-  const issues = [...sourceFiles(), ...sourceFiles('tests/unit')].flatMap((file) =>
-    checkSource(file, readFileSync(file, 'utf8')),
-  );
+  const files = sourceFiles();
+  const issues = [
+    ...checkUiFolderLayout(files),
+    ...[...files, ...sourceFiles('tests/unit')].flatMap((file) =>
+      checkSource(file, readFileSync(file, 'utf8')),
+    ),
+  ];
   for (const issue of issues) {
     process.stderr.write(`${issue.file}:${issue.line} ${issue.rule}: ${issue.message}\n`);
   }

@@ -1,8 +1,8 @@
+import { loadProject } from '@storage/project';
 // @vitest-environment jsdom
 import { screen, within } from '@testing-library/react';
 import { expect, it } from 'vitest';
 import { renderApp } from '../../../helpers/render-app';
-import { loadProject } from '@storage/project';
 
 it('toggles key modifiers through the UI and exports the changed binding', async () => {
   const { user } = renderApp(undefined, {

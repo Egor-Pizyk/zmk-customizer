@@ -1,5 +1,5 @@
+import { formatLegendTitle } from '@ui/bindings/formatting';
 import { describe, expect, it } from 'vitest';
-import { formatLegendTitle } from '@ui/bindings';
 
 describe('formatLegendTitle', () => {
   it('shows the full legend with the full name in parentheses', () => {

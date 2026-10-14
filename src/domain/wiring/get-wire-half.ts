@@ -1,4 +1,4 @@
-import type { Half, Project, Wire } from '../types';
+import type { Half, Project, Wire } from '@domain';
 
 export function getWireHalf(project: Project, wire: Wire): Half {
   if (project.wiring?.topology !== 'split') {

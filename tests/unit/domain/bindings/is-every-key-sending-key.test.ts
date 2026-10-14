@@ -1,6 +1,6 @@
+import { isEveryKeySendingKey } from '@domain/bindings';
 import { expect, it } from 'vitest';
 import { buildProject } from '../../../helpers/build-project';
-import { isEveryKeySendingKey } from '@domain';
 
 const KEYS = ['k1', 'k2', 'k3', 'k4', 'k5'].map((id, index) => ({ id, xU: index, yU: 0 }));
 const KEY_A = { keycode: 'A', modifiers: [] } as const;

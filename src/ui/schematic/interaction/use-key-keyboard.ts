@@ -1,12 +1,13 @@
-import type { KeyboardEvent } from 'react';
-import { isKeyPositionFree, moveKeys } from '@domain';
+import { isKeyPositionFree } from '@domain/geometry';
+import { moveKeys } from '@domain/keys';
 import { getSelectedKeyIds } from './get-selected-key-ids';
 import type { SchematicSelection, SelectionChange } from './schematic-selection';
 import type { Project } from '@domain';
 import { matchKeyShortcut } from '@ui/shortcuts';
 import type { ShortcutId } from '@ui/shortcuts';
-import { findNearestKey } from '@ui/canvas';
-import type { Direction } from '@ui/canvas';
+import { findNearestKey } from '@ui/canvas/logic';
+import type { Direction } from '@ui/canvas/logic';
+import type { KeyboardEvent } from 'react';
 
 type KeyKeyboardOptions = {
   readonly project: Project;

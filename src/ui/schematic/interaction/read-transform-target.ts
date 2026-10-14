@@ -1,4 +1,5 @@
-import type { KeyPointerTransform, WirePoint } from '@domain';
+import type { KeyPointerTransform } from '@domain/geometry/transforms';
+import type { WirePoint } from '@domain';
 import { TRANSFORM_HANDLES } from './transform-handles';
 
 export function readTransformTarget(

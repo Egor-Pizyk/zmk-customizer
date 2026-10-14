@@ -1,5 +1,5 @@
 import { BINDINGS_CATALOG } from '@catalog/bindings';
-import { addLayer, moveLayer, removeLayer, renameLayer } from '@domain';
+import { addLayer, moveLayer, removeLayer, renameLayer } from '@domain/layers';
 import type { Project, ValidationIssue } from '@domain';
 import { usePreferences } from '@ui/preferences';
 

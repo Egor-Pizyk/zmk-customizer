@@ -1,4 +1,4 @@
-import type { Project } from '../types';
+import type { Project } from '@domain';
 
 // A keymap keeps at least one layer. Keys that point at the removed layer keep their layerId and
 // are reported until fixed or the removal is undone (spec 007 FR-012).

@@ -1,6 +1,8 @@
+import { changeController } from '@domain/project';
+import { validateControllerPins } from '@domain/validation';
+import { setWireEndBoardPin } from '@domain/wires/editing';
 import { getControllerFixtures } from '../../../helpers/controller-fixtures';
 import { expect, it } from 'vitest';
-import { changeController, validateControllerPins, setWireEndBoardPin } from '@domain';
 
 const {
   getBoard: getControllerBoard,

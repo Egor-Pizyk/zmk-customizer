@@ -1,4 +1,10 @@
 export {
+  findCanvas,
+  canvasIdOf,
+  readShortcutInput,
+  shortcutInputFrom,
+} from './read-shortcut-input';
+export {
   SHORTCUTS,
   matchShortcut,
   matchKeyShortcut,
@@ -7,9 +13,3 @@ export {
   isRepeatableShortcut,
 } from './shortcuts';
 export type { Shortcut, ShortcutId, ShortcutInput, ModifierLabels } from './shortcuts';
-export {
-  findCanvas,
-  canvasIdOf,
-  shortcutInputFrom,
-  readShortcutInput,
-} from './read-shortcut-input';

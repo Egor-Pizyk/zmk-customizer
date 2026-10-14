@@ -1,11 +1,11 @@
-import type { KeyboardEvent } from 'react';
 import type { Project } from '@domain';
 import type { Commit } from './pointer-types';
 import type { SchematicSelection, SelectionChange } from './schematic-selection';
 import { createShortcutHandlers, focusKeyLater } from './schematic-shortcut-handlers';
-import type { ToolId } from '../tools/tools';
+import type { ToolId } from '@ui/schematic/tools/logic';
 import { createKeyKeyboardHandler } from './use-key-keyboard';
 import { useSchematicShortcuts } from './use-schematic-shortcuts';
+import type { KeyboardEvent } from 'react';
 
 type SchematicKeyboardOptions = {
   readonly wiring?: { readonly hasPreview: boolean; readonly handleCancel: () => void };

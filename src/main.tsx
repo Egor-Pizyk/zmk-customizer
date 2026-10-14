@@ -2,9 +2,9 @@ import './styles.css';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { loadProject } from '@storage/project';
-import { App, ErrorBoundary } from '@ui/app';
+import { App, ErrorBoundary } from '@ui/app/components';
 import { PreferencesProvider } from '@ui/preferences';
-import { ProjectProvider } from '@ui/project';
+import { ProjectProvider } from '@ui/project/components';
 
 const rootElement = document.querySelector('#root');
 if (rootElement === null) {

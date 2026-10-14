@@ -1,12 +1,10 @@
-import { getWireHalf } from '../wiring/get-wire-half';
+import { getWireHalf } from '@domain/wiring';
 import { validateNetsWithoutBoardPin } from './validate-nets-without-board-pin';
-import { getKeyPinPosition } from '../wires/get-key-pin-position';
-import { formatBoardPin } from '../wires/board-pin';
-import { getKeyPinWires } from '../wires/get-key-pin-wires';
-import { getNets } from '../analysis/get-nets';
-import type { Net, NetBoardPin } from '../analysis/get-nets';
-import { isKeyPositionFree } from '../geometry/is-key-position-free';
-import type { KeyPin, Project, ValidationIssue } from '../types';
+import { getKeyPinPosition, formatBoardPin, getKeyPinWires } from '@domain/wires';
+import { getNets } from '@domain/wires/nets';
+import type { Net, NetBoardPin } from '@domain/wires/nets';
+import { isKeyPositionFree } from '@domain/geometry';
+import type { KeyPin, Project, ValidationIssue } from '@domain';
 
 const KEY_PINS: readonly KeyPin[] = [1, 2];
 

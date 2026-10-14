@@ -1,7 +1,6 @@
-import { getKeyGeometry } from '../geometry/get-key-geometry';
-import { rotatePoint } from '../geometry/rotate-point';
-import type { Half, Project } from '../types';
-import type { WiringCell } from './get-wiring-cells';
+import { getKeyGeometry, rotatePoint } from '@domain/geometry';
+import type { Half, Project } from '@domain';
+import type { WiringCell } from '@domain/wiring/matrix';
 
 export function autoAssignCells(
   project: Project,

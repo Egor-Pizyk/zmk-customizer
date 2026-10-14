@@ -1,7 +1,7 @@
 import { doPolygonsOverlap } from './do-polygons-overlap';
 import { getKeyCorners } from './get-key-corners';
 import { getKeyGeometry } from './get-key-geometry';
-import type { Key, Project, WirePoint } from '../types';
+import type { Key, Project, WirePoint } from '@domain';
 
 export function isKeyPositionFree(
   project: Project,

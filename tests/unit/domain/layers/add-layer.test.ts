@@ -1,6 +1,8 @@
+import { addLayer, removeLayer } from '@domain/layers';
+import { validateBindings } from '@domain/validation';
+import { setBindings } from '@domain/bindings/editing';
 import { expect, it } from 'vitest';
 import { buildProject } from '../../../helpers/build-project';
-import { addLayer, removeLayer, validateBindings, setBindings } from '@domain';
 
 const KEYS = [
   { id: 'k2', xU: 0, yU: 0 },

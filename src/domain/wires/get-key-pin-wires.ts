@@ -1,6 +1,6 @@
 import { getKeyPinPosition } from './get-key-pin-position';
 import { getWirePath } from './get-wire-path';
-import type { KeyPin, Project, WirePoint } from '../types';
+import type { KeyPin, Project, WirePoint } from '@domain';
 
 const KEY_PINS: readonly KeyPin[] = [1, 2];
 const EPSILON_U = 1e-4;

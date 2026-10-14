@@ -1,5 +1,5 @@
 import { removeKey } from './remove-key';
-import type { Project } from '../types';
+import type { Project } from '@domain';
 
 export function removeKeys(
   project: Project,

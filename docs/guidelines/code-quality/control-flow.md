@@ -42,7 +42,7 @@ const label = isLayer ? (isToggle ? 'tog' : 'mo') : isMod ? 'mt' : 'kp';
 - `domain/` and `generators/` are pure: output depends only on arguments. No `Date.now`, `Math.random`, `localStorage`, DOM, module-level mutable state.
 - Never mutate inputs; never reassign parameters. Return new objects with spread / `map` / `toSorted` / `toSpliced` / `with`.
 - Mutating a value created inside the same function (e.g. pushing lines into a local array) is fine; it must not escape before it is complete.
-- Generators sort explicitly before emitting anything whose order comes from user actions (combos, macros, Kconfig options) — see determinism in AGENTS §3.3.
+- Generators sort explicitly before emitting anything whose order comes from user actions (combos, macros, Kconfig options) — see determinism in docs/architecture.md.
 
 ```ts
 // ✅

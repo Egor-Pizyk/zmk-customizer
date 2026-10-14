@@ -1,5 +1,5 @@
-import { createEntityId } from '../project/create-entity-id';
-import type { Project, WirePoint } from '../types';
+import { createEntityId } from '@domain/project';
+import type { Project, WirePoint } from '@domain';
 
 export function addKey(
   project: Project,

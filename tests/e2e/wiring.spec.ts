@@ -1,6 +1,8 @@
-import { expect, test } from '@playwright/test';
 import { UNIBODY_PRESET } from '@catalog/presets';
-import { getNets, getWiringCells } from '@domain';
+import { getNets } from '@domain/wires/nets';
+import { getWiringCells } from '@domain/wiring/matrix';
+import { expect, test } from '@playwright/test';
+
 import {
   downloadJson,
   downloadZip,

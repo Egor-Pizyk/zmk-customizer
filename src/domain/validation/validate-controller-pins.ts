@@ -1,4 +1,4 @@
-import type { ControllerBoard, Project, ValidationIssue, WireEnd, WireEndSide } from '../types';
+import type { ControllerBoard, Project, ValidationIssue, WireEnd, WireEndSide } from '@domain';
 
 function validateEnd(
   end: WireEnd,

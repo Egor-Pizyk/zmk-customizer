@@ -13,11 +13,11 @@ The feature directory given by the caller, or the one matching the current branc
 - Scope equals the roadmap entry: every "in scope" item covered, nothing from "out of scope" or from a later feature pulled in.
 - Each roadmap acceptance criterion appears as a testable requirement or scenario.
 - No technology (no React, Vite, zod, file paths, function names) — that belongs in plan.md.
-- ZMK terms match AGENTS.md §2 (shield, kscan, matrix transform, physical layout, behavior, combo).
+- ZMK terms match docs/domain-model.md (shield, kscan, matrix transform, physical layout, behavior, combo).
 - Remaining `[NEEDS CLARIFICATION]` markers listed; roadmap "Open" items for this feature are either resolved or marked.
 
 ## plan.md
-- Files land in the right layer (AGENTS.md §3.1): rules in `src/domain/`, ZMK facts in `src/catalog/` with `docsUrl`, generators pure in `src/generators/`, untrusted parsing only in `src/storage/`, no business rules in `src/ui/`. Dependency direction `ui → storage → generators → domain ← catalog`.
+- Files land in the right layer (docs/architecture.md): rules in `src/domain/`, ZMK facts in `src/catalog/` with `docsUrl`, generators pure in `src/generators/`, untrusted parsing only in `src/storage/`, no business rules in `src/ui/`. Dependency direction `ui → storage → generators → domain ← catalog`.
 - State stays one plain-JSON `Project`; schema changes bump `schemaVersion` and include a migration + old-file test (§3.2).
 - No dependency outside §4's approved list without a new ADR in `docs/decisions/`.
 - No folders, helpers or abstractions for a single use (§7.6). Flag each speculative one.

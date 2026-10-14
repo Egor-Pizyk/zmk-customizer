@@ -1,5 +1,5 @@
-import type { Net } from '../analysis/get-nets';
-import type { Project, ValidationIssue } from '../types';
+import type { Net } from '@domain/wires/nets';
+import type { Project, ValidationIssue } from '@domain';
 
 export function validateNetsWithoutBoardPin(
   project: Project,

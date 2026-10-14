@@ -9,9 +9,13 @@ try {
   const { CONTROLLER_BOARDS } = await server.ssrLoadModule('/src/catalog/controllers/index.ts');
   const { BINDINGS_CATALOG } = await server.ssrLoadModule('/src/catalog/bindings/index.ts');
   const { SHIELD_TARGET } = await server.ssrLoadModule('/src/catalog/firmware/index.ts');
-  const { validateShieldProject } = await server.ssrLoadModule('/src/domain/index.ts');
-  const { deriveShieldMatrix } = await server.ssrLoadModule('/src/domain/index.ts');
-  const { generateRepositoryFiles } = await server.ssrLoadModule('/src/generators/index.ts');
+  const { validateShieldProject } = await server.ssrLoadModule(
+    '/src/domain/validation/shield/index.ts',
+  );
+  const { deriveShieldMatrix } = await server.ssrLoadModule('/src/domain/wiring/matrix/index.ts');
+  const { generateRepositoryFiles } = await server.ssrLoadModule(
+    '/src/generators/repository/index.ts',
+  );
   await rm(directory, { recursive: true, force: true });
   const targets = [];
   const oldPins = [
@@ -79,8 +83,8 @@ try {
     }
   }
   assert.equal(targets.length, 8);
-  const { createProject } = await server.ssrLoadModule('/src/domain/index.ts');
-  const { getKeyPinPosition } = await server.ssrLoadModule('/src/domain/index.ts');
+  const { createProject } = await server.ssrLoadModule('/src/domain/project/index.ts');
+  const { getKeyPinPosition } = await server.ssrLoadModule('/src/domain/wires/index.ts');
   const board = CONTROLLER_BOARDS.find((candidate) => candidate.id === 'nice_nano_v2');
   assert.ok(board);
   for (const rotationDeg of [-15, 30]) {
@@ -153,7 +157,7 @@ try {
     targets.push({ id, board: board.id, shield: project.shieldName });
   }
   assert.equal(targets.length, 10);
-  const { editWiring } = await server.ssrLoadModule('/src/domain/index.ts');
+  const { editWiring } = await server.ssrLoadModule('/src/domain/wiring/editing/index.ts');
   for (const [kind, topology, direction] of [
     ['matrix', 'unibody', 'col2row'],
     ['matrix', 'unibody', 'row2col'],

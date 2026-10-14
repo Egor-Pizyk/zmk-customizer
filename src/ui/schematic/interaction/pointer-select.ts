@@ -1,11 +1,14 @@
 import { getSelectedKeyIds } from './get-selected-key-ids';
-import type { PointerEvent } from 'react';
-import { isKeyPositionFree, moveKeys, setWireBends } from '@domain';
+import { isKeyPositionFree } from '@domain/geometry';
+import { moveKeys } from '@domain/keys';
+import { setWireBends } from '@domain/wires/editing';
 import type { Key, Wire, WireEnd, WirePoint } from '@domain';
-import { isKeyCellInMarquee, isPointInMarquee } from '@ui/canvas';
+import { isKeyCellInMarquee, isPointInMarquee } from '@ui/canvas/logic';
 import type { PointerState } from './pointer-types';
 import type { CanvasHit } from './read-canvas-hit';
 import { snapPoint } from './snap-point';
+
+import type { PointerEvent } from 'react';
 
 type Press = {
   readonly hit: CanvasHit;

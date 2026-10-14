@@ -1,6 +1,6 @@
-import type { Wiring } from '../types';
-import type { WiringCell } from './get-wiring-cells';
-import type { WiringConnection } from './route-wiring';
+import type { Wiring } from '@domain';
+import type { WiringCell } from '@domain/wiring/matrix';
+import type { WiringConnection } from '@domain/wiring/editing';
 
 export function getWiringConnections(
   wiring: Wiring,

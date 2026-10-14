@@ -1,5 +1,5 @@
 import { SHIELD_TARGET } from '@catalog/firmware';
-import { createProject } from '@domain';
+import { createProject } from '@domain/project';
 import type { Project, Result } from '@domain';
 import { parseProjectFile } from './parse-project-file';
 import type { ProjectFileError } from './parse-project-file';
