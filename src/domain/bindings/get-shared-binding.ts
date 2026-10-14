@@ -1,6 +1,6 @@
 import { findBinding } from './find-binding';
 import { isSameBinding } from './is-same-binding';
-import type { Binding, Project } from '../types';
+import type { Binding, Project } from '@domain';
 
 export type SharedBinding =
   | { readonly kind: 'unassigned' }

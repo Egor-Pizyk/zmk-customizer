@@ -1,7 +1,8 @@
-import { getShieldName, toLayerNodeName } from '@domain';
+import { getShieldName } from '@domain/project';
+import { toLayerNodeName } from '@domain/layers';
 import type { Layer, Project } from '@domain';
-import { escapeString } from '../escape-string';
-import type { GeneratedFile } from '../generated-file';
+import { escapeString } from '@generators';
+import type { GeneratedFile } from '@generators';
 import { renderBinding } from './render-binding';
 import { renderCustomBehaviors } from './render-custom-behaviors';
 

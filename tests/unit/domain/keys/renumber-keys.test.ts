@@ -1,6 +1,6 @@
+import { renumberKeys } from '@domain/keys';
 import { expect, it } from 'vitest';
 import { buildProject } from '../../../helpers/build-project';
-import { renumberKeys } from '@domain';
 
 it('orders transformed centers by Y then X with stable ties and preserves references', () => {
   const project = buildProject({

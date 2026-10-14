@@ -1,7 +1,7 @@
 import type { Project, WirePoint } from '@domain';
 import type { WireDraft } from './reduce-wire-draft';
 import type { SchematicSelection, SelectionChange } from './schematic-selection';
-import type { ToolId } from '../tools/tools';
+import type { ToolId } from '@ui/schematic/tools/logic';
 
 export type Drag =
   | {

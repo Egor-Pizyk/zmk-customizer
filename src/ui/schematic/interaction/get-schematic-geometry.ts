@@ -1,4 +1,5 @@
-import { getKeyPinPosition, getWirePath, roundU } from '@domain';
+import { getKeyPinPosition, getWirePath } from '@domain/wires';
+import { roundU } from '@domain/geometry';
 import type { Key, Project, WireEnd, WirePoint } from '@domain';
 
 export type DiodePlacement = {

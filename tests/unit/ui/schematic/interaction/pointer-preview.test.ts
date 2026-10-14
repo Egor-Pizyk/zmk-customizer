@@ -1,6 +1,6 @@
+import { getPreviewProject } from '@ui/schematic/interaction';
 import { expect, it } from 'vitest';
 import { buildProject, keyPin } from '../../../../helpers/build-project';
-import { getPreviewProject } from '@ui/schematic';
 
 it('evaluates multi-key crossings after the complete preview move', () => {
   const project = buildProject({

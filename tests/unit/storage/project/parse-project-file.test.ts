@@ -1,12 +1,13 @@
 import { migrateProject } from '@storage/migrations';
+import { createProject } from '@domain/project';
+import type { Binding, Project } from '@domain';
+import { parseProjectFile, serializeProject } from '@storage/project';
+
 import { describe, expect, it } from 'vitest';
 import fixtureV1 from '../../../fixtures/project/v1.json?raw';
 import fixtureV2 from '../../../fixtures/project/v2.json?raw';
 import fixtureSmall from '../../../fixtures/schematic/small.json?raw';
 import { getResultError } from '../../../helpers/result';
-import { createProject } from '@domain';
-import type { Binding, Project } from '@domain';
-import { parseProjectFile, serializeProject } from '@storage/project';
 
 function serializedText(project: Project): string {
   const serialized = serializeProject(project);

@@ -1,9 +1,5 @@
-import {
-  findFreeEndPosition,
-  getKeyPinPosition,
-  getNearestPointOnPath,
-  getWirePath,
-} from '@domain';
+import { findFreeEndPosition, getKeyPinPosition, getWirePath } from '@domain/wires';
+import { getNearestPointOnPath } from '@domain/geometry';
 import type { KeyPin, Project, WireEnd } from '@domain';
 
 export const FREE_END_VALUE = 'free';

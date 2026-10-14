@@ -1,6 +1,6 @@
+import { editLayout } from '@domain/keys';
 import { expect, it } from 'vitest';
 import { buildProject, freeEnd, keyPin } from '../../../helpers/build-project';
-import { editLayout } from '@domain';
 
 it('moves and patches the selected cluster in one pure operation, retaining unrelated keys', () => {
   const project = buildProject({

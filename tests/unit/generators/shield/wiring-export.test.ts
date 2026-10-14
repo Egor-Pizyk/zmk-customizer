@@ -1,9 +1,12 @@
-import { readFile, readdir } from 'node:fs/promises';
-import type { Project, ShieldMatrix } from '@domain';
-import { expect, it } from 'vitest';
-import { generateRepositoryFiles, generateShieldFiles } from '@generators';
+import type { Project } from '@domain';
+import type { ShieldMatrix } from '@domain/wiring/matrix';
+import { generateRepositoryFiles } from '@generators/repository';
+import { generateShieldFiles } from '@generators/shield';
 import { SHIELD_TARGET } from '@catalog/firmware';
 import { getControllerBoard } from '@catalog/controllers';
+import { readFile, readdir } from 'node:fs/promises';
+
+import { expect, it } from 'vitest';
 
 const board = getControllerBoard('nice_nano_v2');
 it.each([

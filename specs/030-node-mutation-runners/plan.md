@@ -1,0 +1,3 @@
+# Plan
+
+Implement Node .mjs runners using standard filesystem and child-process APIs. Preserve byte-level first replacement and restoration, report validation and script outputs. Keep Python originals until sequential real execution comparison completes. Capture seed configuration, failed assertion identities, exit results and source hashes; normalize volatile report timing and artifact prefixes. Add tooling contracts for failure/restoration behavior. Run all Node runners before all original Python runners; never run mutations alongside checks or source edits. Switch Makefile to Node and remove Python only after parity. Finish with make check, production build and full production browser suite.

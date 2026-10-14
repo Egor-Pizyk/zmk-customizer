@@ -1,10 +1,10 @@
-import { createPickHandlers } from '../picker/create-pick-handlers';
+import { createPickHandlers } from '@ui/bindings/picker/logic';
 import { createKeycapKeyboardHandler } from './create-keycap-keyboard-handler';
-import { focusActionPanel } from '../panel/focus-action-panel';
+import { focusActionPanel } from '@ui/bindings/panel/logic';
 import { focusKeycap } from './focus-keycap';
 import { useBindingsPointer } from './use-bindings-pointer';
 import { useBindingsShortcuts } from './use-bindings-shortcuts';
-import type { BindingsWorkspaceState } from '../use-bindings-workspace';
+import type { BindingsWorkspaceState } from '@ui/bindings/logic';
 
 // Props for the canvas, Action panel and Keys table, built from the workspace state.
 export function useBindingsInteraction(workspace: BindingsWorkspaceState) {

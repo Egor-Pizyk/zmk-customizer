@@ -1,4 +1,4 @@
-import type { Binding } from '../types';
+import type { Binding } from '@domain';
 
 // Bindings are plain JSON; comparing with sorted keys ignores property order. Key order uses
 // code-unit comparison so the result never depends on the runtime locale (deterministic output).

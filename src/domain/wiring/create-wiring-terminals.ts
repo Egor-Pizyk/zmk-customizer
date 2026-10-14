@@ -1,6 +1,6 @@
-import { createEntityId } from '../project/create-entity-id';
-import type { WiringCell } from './get-wiring-cells';
-import type { Project, Wiring, WiringTerminal, Half } from '../types';
+import { createEntityId } from '@domain/project';
+import type { WiringCell } from '@domain/wiring/matrix';
+import type { Project, Wiring, WiringTerminal, Half } from '@domain';
 
 export function createWiringTerminals(
   project: Project,

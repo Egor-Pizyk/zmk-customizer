@@ -1,6 +1,6 @@
+import { findKeyLayoutCenter } from '@domain/geometry';
 import { expect, it } from 'vitest';
 import { buildProject } from '../../../helpers/build-project';
-import { findKeyLayoutCenter } from '@domain';
 
 it('centers between extreme key bounds rather than averaging the keys', () => {
   const project = buildProject({

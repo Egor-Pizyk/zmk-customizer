@@ -1,7 +1,8 @@
-import type { ShieldMatrix, Project } from '@domain';
-import { getShieldName } from '@domain';
-import type { GeneratedFile } from '../generated-file';
-import { generateShieldFiles } from '../shield/generate-shield-files';
+import type { ShieldMatrix } from '@domain/wiring/matrix';
+import type { Project } from '@domain';
+import { getShieldName } from '@domain/project';
+import type { GeneratedFile } from '@generators';
+import { generateShieldFiles } from '@generators/shield';
 
 type RepositoryOptions = {
   readonly matrix: ShieldMatrix;

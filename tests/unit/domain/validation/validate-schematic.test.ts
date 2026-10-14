@@ -1,7 +1,7 @@
+import type { Key, Project, Wire } from '@domain';
+import { validateSchematic } from '@domain/validation';
 import { describe, expect, it } from 'vitest';
 import { buildProject, freeEnd, keyPin } from '../../../helpers/build-project';
-import type { Key, Project, Wire } from '@domain';
-import { validateSchematic } from '@domain';
 
 const KEYS: readonly Key[] = [
   { id: 'k1', xU: 0, yU: 0 },

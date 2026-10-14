@@ -1,4 +1,4 @@
-import type { Project } from '../types';
+import type { Project } from '@domain';
 
 // Stored as typed; validateLayers reports names the keymap cannot use (spec 007 FR-005, FR-006).
 export function renameLayer(

@@ -1,10 +1,11 @@
+import { CONTROLLER_BOARDS } from '@catalog/controllers';
+import { loadProject } from '@storage/project';
 // @vitest-environment jsdom
 import { screen, within, waitFor } from '@testing-library/react';
 import { expect, it } from 'vitest';
 import { getDefinedValue } from '../../../helpers/defined-value';
 import { renderApp } from '../../../helpers/render-app';
-import { CONTROLLER_BOARDS } from '@catalog/controllers';
-import { loadProject } from '@storage/project';
+
 import { buildProject } from '../../../helpers/build-project';
 
 it.each(CONTROLLER_BOARDS)(

@@ -1,0 +1,25 @@
+# Feature specifications
+
+This index is loaded at startup. Read only the spec, plan, tasks and evidence relevant to the current task; do not recursively load specs or Spec Kit templates. Directory numbers are immutable.
+
+- [001-app-shell-ui](001-app-shell-ui/)
+- [002-project-foundation](002-project-foundation/)
+- [003-schematic-switches-wires](003-schematic-switches-wires/)
+- [004-bindings-keycaps](004-bindings-keycaps/)
+- [005-key-behaviors](005-key-behaviors/)
+- [006-action-panel-rework](006-action-panel-rework/)
+- [007-layers](007-layers/)
+- [008-schematic-diodes](008-schematic-diodes/)
+- [009-shield-generators](009-shield-generators/)
+- [010-export-download](010-export-download/)
+- [011-controller-boards](011-controller-boards/)
+- [012-layout-editor](012-layout-editor/)
+- [013-matrix-wiring-editor](013-matrix-wiring-editor/)
+- [023-build-verification](023-build-verification/)
+- [024-codebase-health-audit](024-codebase-health-audit/)
+- [025-playwright-e2e](025-playwright-e2e/)
+- [026-folder-organization](026-folder-organization/)
+- [027-module-imports](027-module-imports/)
+- [028-repository-structure](028-repository-structure/)
+- [029-ui-logic-components](029-ui-logic-components/)
+- [030-node-mutation-runners](030-node-mutation-runners/)

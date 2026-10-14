@@ -1,7 +1,5 @@
-import { getKeyGeometry } from '../geometry/get-key-geometry';
-import { rotatePoint } from '../geometry/rotate-point';
-import { roundU } from '../geometry/round-u';
-import type { Key, KeyPin, WirePoint } from '../types';
+import { getKeyGeometry, rotatePoint, roundU } from '@domain/geometry';
+import type { Key, KeyPin, WirePoint } from '@domain';
 
 const KEY_PITCH_MM = 19.05;
 

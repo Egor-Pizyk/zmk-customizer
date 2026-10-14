@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import type { PointerEvent } from 'react';
 import type { Project } from '@domain';
-import type { Marquee, WorldPoint } from '@ui/canvas';
+import type { Marquee } from '@ui/canvas/components';
+import type { WorldPoint } from '@ui/canvas/logic';
 import { findKeysInMarquee } from './find-keys-in-marquee';
 
 type BindingsPointerOptions = {

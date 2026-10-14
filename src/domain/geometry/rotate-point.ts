@@ -1,4 +1,4 @@
-import type { WirePoint } from '../types';
+import type { WirePoint } from '@domain';
 
 export function rotatePoint(
   point: WirePoint,

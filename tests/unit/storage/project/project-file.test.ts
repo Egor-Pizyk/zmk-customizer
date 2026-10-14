@@ -1,8 +1,10 @@
+import { addKey } from '@domain/keys';
+import { addWire } from '@domain/wires/editing';
+import { addLayer } from '@domain/layers';
+import { parseProjectFile, serializeProject } from '@storage/project';
 import { expect, it } from 'vitest';
 import { buildProject, freeEnd, keyPin } from '../../../helpers/build-project';
 import { getResultValue } from '../../../helpers/result';
-import { addKey, addWire, addLayer } from '@domain';
-import { parseProjectFile, serializeProject } from '@storage/project';
 
 it('edits and round trips imported large entity ids and dangling layer references', () => {
   const original = buildProject({

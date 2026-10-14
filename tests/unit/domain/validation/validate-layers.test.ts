@@ -1,6 +1,6 @@
+import { validateLayers } from '@domain/validation';
 import { expect, it } from 'vitest';
 import { buildProject } from '../../../helpers/build-project';
-import { validateLayers } from '@domain';
 
 const CATALOG = {
   maxLayerCount: 32,

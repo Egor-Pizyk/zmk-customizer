@@ -1,4 +1,4 @@
-import type { ControllerBoard, Project, ValidationIssue } from '../types';
+import type { ControllerBoard, Project, ValidationIssue } from '@domain';
 
 export function validateControllerBindings(
   project: Project,

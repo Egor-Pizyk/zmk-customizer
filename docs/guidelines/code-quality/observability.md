@@ -83,7 +83,7 @@ try { localStorage.setItem(PROJECT_STORAGE_KEY, json); } catch {}
 ## Debug aids
 
 - The bug-report artifact is the exported project JSON: it fully reproduces any state. Bug reports and fixture tests start from it.
-- Generators are deterministic (AGENTS §3.3), so the diff between generated output and a golden file is the debugging tool. A generator bug gets a fixture that shows the wrong diff first.
+- Generators are deterministic (docs/architecture.md), so the diff between generated output and a golden file is the debugging tool. A generator bug gets a fixture that shows the wrong diff first.
 - Validation issues are pure data: reproduce by calling `validateProject` on the exported JSON in a test.
 
 ## Privacy

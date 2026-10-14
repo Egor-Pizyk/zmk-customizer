@@ -1,5 +1,5 @@
 import { getWirePath } from './get-wire-path';
-import type { Project, WirePoint } from '../types';
+import type { Project, WirePoint } from '@domain';
 
 const STEP_U = 1;
 const SNAP_U = 0.25;

@@ -1,6 +1,6 @@
-import { getKeyGeometry } from '../geometry/get-key-geometry';
+import { getKeyGeometry } from '@domain/geometry';
 import { setKeyGeometries } from './set-key-geometries';
-import type { KeyGeometry, Project, WirePoint } from '../types';
+import type { KeyGeometry, Project, WirePoint } from '@domain';
 
 export type LayoutEdit = {
   readonly keyIds: readonly string[];

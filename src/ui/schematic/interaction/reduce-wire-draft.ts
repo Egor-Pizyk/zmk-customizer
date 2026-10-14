@@ -1,6 +1,7 @@
-import { assertNever, canAddWire } from '@domain';
+import { assertNever } from '@domain';
 import type { KeyPin, Project, WireEnd, WirePoint } from '@domain';
-import { formatWireCheck } from '../format-wire-check';
+import { canAddWire } from '@domain/wires';
+import { formatWireCheck } from '@ui/schematic/formatting';
 
 /** What the pointer hit; `point` is the pin position, the nearest wire point or the snapped spot. */
 export type DraftTarget =

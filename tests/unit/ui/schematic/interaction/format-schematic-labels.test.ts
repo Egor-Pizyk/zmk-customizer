@@ -1,7 +1,7 @@
+import { getKeyPinWires } from '@domain/wires';
+import { formatCrossingLabel, formatKeyLabel, formatWireLabel } from '@ui/schematic/formatting';
 import { describe, expect, it } from 'vitest';
 import { buildProject, freeEnd, keyPin } from '../../../../helpers/build-project';
-import { getKeyPinWires } from '@domain';
-import { formatCrossingLabel, formatKeyLabel, formatWireLabel } from '@ui/schematic';
 
 const PROJECT = buildProject({
   keys: [

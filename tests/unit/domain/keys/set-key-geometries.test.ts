@@ -1,6 +1,6 @@
+import { setKeyGeometries, moveKeys } from '@domain/keys';
 import { expect, it } from 'vitest';
 import { buildProject } from '../../../helpers/build-project';
-import { setKeyGeometries, moveKeys } from '@domain';
 
 it('patches selected keys atomically without losing identity, layers or electrical references', () => {
   const project = buildProject({

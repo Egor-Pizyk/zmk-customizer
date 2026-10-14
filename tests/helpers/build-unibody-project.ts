@@ -1,5 +1,7 @@
 import type { Project, Key, Wire } from '@domain';
-import { findCrossings, getKeyPinPosition } from '@domain';
+import { findCrossings } from '@domain/crossings';
+import { getKeyPinPosition } from '@domain/wires';
+
 import { buildProject } from './build-project';
 
 const LAYERS: Project['layers'] = [

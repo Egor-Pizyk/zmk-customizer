@@ -1,5 +1,5 @@
 import { getKeyDiodeState } from './get-key-diode-state';
-import type { Project, KeyPin } from '../types';
+import type { Project, KeyPin } from '@domain';
 
 export function toggleKeyDiode(
   project: Project,

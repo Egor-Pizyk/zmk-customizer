@@ -1,5 +1,6 @@
+import { findFreeEndPosition } from '@domain/wires';
 import { expect, it } from 'vitest';
-import { findFreeEndPosition } from '@domain';
+
 import { buildProject, freeEnd, keyPin } from '../../../helpers/build-project';
 
 it('places a free end 1u below the start, on the 0.25u grid', () => {

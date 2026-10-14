@@ -1,4 +1,5 @@
-import { moveKeys, moveKey, setWireBends } from '@domain';
+import { moveKeys, moveKey } from '@domain/keys';
+import { setWireBends } from '@domain/wires/editing';
 import type { Project } from '@domain';
 import type { Drag } from './pointer-types';
 

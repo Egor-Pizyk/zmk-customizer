@@ -1,7 +1,6 @@
-import { createEntityId } from '../project/create-entity-id';
-import { getKeyCorners } from '../geometry/get-key-corners';
-import { getKeyGeometry } from '../geometry/get-key-geometry';
-import type { Key, Project } from '../types';
+import { createEntityId } from '@domain/project';
+import { getKeyCorners, getKeyGeometry } from '@domain/geometry';
+import type { Key, Project } from '@domain';
 
 export function duplicateKeys(
   project: Project,

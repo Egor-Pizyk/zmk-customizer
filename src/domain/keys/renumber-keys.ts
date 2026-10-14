@@ -1,6 +1,5 @@
-import { getKeyCenter } from '../geometry/get-key-center';
-import { roundU } from '../geometry/round-u';
-import type { Project } from '../types';
+import { getKeyCenter, roundU } from '@domain/geometry';
+import type { Project } from '@domain';
 
 export function renumberKeys(project: Project): Project {
   const keys = project.keys

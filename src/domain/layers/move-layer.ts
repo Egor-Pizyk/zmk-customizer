@@ -1,4 +1,4 @@
-import type { Project } from '../types';
+import type { Project } from '@domain';
 
 // Layer behaviors point at Layer.id, so moving rewrites no binding (spec 007 FR-011, R1).
 export function moveLayer(

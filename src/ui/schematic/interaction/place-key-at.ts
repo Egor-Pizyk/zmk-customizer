@@ -1,5 +1,7 @@
 import { PROJECT_BUDGET } from '@storage/project';
-import { addKey, createEntityId, isKeyPositionFree } from '@domain';
+import { addKey } from '@domain/keys';
+import { createEntityId } from '@domain/project';
+import { isKeyPositionFree } from '@domain/geometry';
 import type { WirePoint } from '@domain';
 import type { PointerState } from './pointer-types';
 import { snapPoint } from './snap-point';

@@ -1,7 +1,8 @@
 import { matchShortcut, readShortcutInput } from '@ui/shortcuts';
-import { useEffect, useEffectEvent } from 'react';
 import type { ShortcutId } from '@ui/shortcuts';
-import type { ToolId } from '../tools/tools';
+import type { ToolId } from '@ui/schematic/tools/logic';
+
+import { useEffect, useEffectEvent } from 'react';
 
 type SchematicShortcutHandlers = {
   readonly onWiringCancel?: (() => void) | undefined;

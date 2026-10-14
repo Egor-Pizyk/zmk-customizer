@@ -1,6 +1,6 @@
+import { findWireContacts } from '@domain/wires';
 import { describe, expect, it } from 'vitest';
 import { buildProject, freeEnd, keyPin } from '../../../helpers/build-project';
-import { findWireContacts } from '@domain';
 
 describe('findWireContacts', () => {
   it('does not treat a wire end resting on another wire as a crossing (T-touch)', () => {

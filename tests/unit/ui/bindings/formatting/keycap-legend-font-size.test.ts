@@ -1,5 +1,5 @@
+import { cornerLegendFontSize, tapLegendFontSize } from '@ui/bindings/formatting';
 import { describe, expect, it } from 'vitest';
-import { cornerLegendFontSize, tapLegendFontSize } from '@ui/bindings';
 
 describe('tapLegendFontSize', () => {
   it('keeps short legends at the base size', () => {

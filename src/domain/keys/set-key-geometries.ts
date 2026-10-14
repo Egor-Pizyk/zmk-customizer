@@ -1,6 +1,6 @@
-import { getKeyGeometry } from '../geometry/get-key-geometry';
-import { pruneInsulatedCrossings } from '../crossings/prune-insulated-crossings';
-import type { KeyGeometry, Project } from '../types';
+import { getKeyGeometry } from '@domain/geometry';
+import { pruneInsulatedCrossings } from '@domain/crossings';
+import type { KeyGeometry, Project } from '@domain';
 
 export type KeyGeometryChange = { readonly keyId: string; readonly geometry: Partial<KeyGeometry> };
 

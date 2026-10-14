@@ -1,0 +1,14 @@
+node_modules
+dist
+coverage
+.git
+.env*
+*.local
+.DS_Store
+
+.zmk-build/
+
+playwright-report/
+test-results/
+
+.e2e-mutations/

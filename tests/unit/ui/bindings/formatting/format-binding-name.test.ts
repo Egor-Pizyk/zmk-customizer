@@ -1,6 +1,6 @@
-import { expect, it } from 'vitest';
 import type { Binding, Layer } from '@domain';
-import { formatBindingName } from '@ui/bindings';
+import { formatBindingName } from '@ui/bindings/formatting';
+import { expect, it } from 'vitest';
 
 const SPACE = { keycode: 'SPACE', modifiers: [] } as const;
 const LAYERS: readonly Layer[] = [

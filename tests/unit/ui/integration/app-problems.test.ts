@@ -1,9 +1,9 @@
+import { createProject } from '@domain/project';
+import { loadProject } from '@storage/project';
 // @vitest-environment jsdom
 import { screen, within } from '@testing-library/react';
 import { expect, it } from 'vitest';
 import { renderApp } from '../../../helpers/render-app';
-import { createProject } from '@domain';
-import { loadProject } from '@storage/project';
 
 it('opens Problems, navigates an issue and returns focus to its toggle when closed', async () => {
   const { user } = renderApp(createProject({ controllerId: 'nice_nano_v2' }));

@@ -1,7 +1,8 @@
-import { getShieldName } from '@domain';
-import type { ShieldMatrix, ControllerBoard, Project } from '@domain';
+import { getShieldName } from '@domain/project';
+import type { ShieldMatrix } from '@domain/wiring/matrix';
+import type { ControllerBoard, Project } from '@domain';
 import { generateOverlay } from './generate-overlay';
-import type { GeneratedFile } from '../generated-file';
+import type { GeneratedFile } from '@generators';
 
 export function generateSplitOverlays(
   project: Project,

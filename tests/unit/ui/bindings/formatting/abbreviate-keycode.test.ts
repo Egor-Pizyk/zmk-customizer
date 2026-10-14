@@ -1,5 +1,5 @@
+import { abbreviateKeycodeNames } from '@ui/bindings/formatting';
 import { describe, expect, it } from 'vitest';
-import { abbreviateKeycodeNames } from '@ui/bindings';
 
 describe('abbreviateKeycodeNames', () => {
   it('keeps the prefix and merges the rest without separators', () => {

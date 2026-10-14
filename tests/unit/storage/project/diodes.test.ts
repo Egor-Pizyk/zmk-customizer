@@ -1,6 +1,6 @@
-import { expect, it } from 'vitest';
-import { createProject } from '@domain';
+import { createProject } from '@domain/project';
 import { parseProjectFile, serializeProject } from '@storage/project';
+import { expect, it } from 'vitest';
 
 it.each([1, 2] as const)('round-trips both polarities at pin %s', (pin) => {
   for (const cathode of ['toward-switch', 'away-switch'] as const) {

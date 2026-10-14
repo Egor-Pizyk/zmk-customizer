@@ -1,10 +1,12 @@
+import { deriveShieldMatrix } from '@domain/wiring/matrix';
+import { reverseKeyDiode } from '@domain/diodes';
+import { moveLayer } from '@domain/layers';
+import type { Binding, Project } from '@domain';
+import { generateShieldFiles } from '@generators/shield';
 import { getResultValue } from '../../../helpers/result';
 import { expect, it } from 'vitest';
 import { buildUnibodyProject } from '../../../helpers/build-unibody-project';
 import { buildMatrixProject } from '../../../helpers/build-matrix-project';
-import { deriveShieldMatrix, reverseKeyDiode, moveLayer } from '@domain';
-import type { Binding, Project } from '@domain';
-import { generateShieldFiles } from '@generators';
 
 const goldens = import.meta.glob<string>('../../../fixtures/generated/unibody/*', {
   query: '?raw',

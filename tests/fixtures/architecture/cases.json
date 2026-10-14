@@ -35,12 +35,12 @@
     "diagnostic": "layer-import"
   },
   {
-    "file": "src/ui/components/probe.ts",
-    "code": "export { useProject } from '@ui/project';",
+    "file": "src/ui/components/logic/probe.ts",
+    "code": "export { useProject } from '@ui/project/logic';",
     "diagnostic": "layer-import"
   },
   {
-    "file": "src/ui/components/probe.ts",
+    "file": "src/ui/components/logic/probe.ts",
     "code": "import type { ControllerBoard } from '../../catalog/../domain/types';",
     "diagnostic": "layer-import"
   },
@@ -86,12 +86,12 @@
   },
   {
     "file": "src/ui/app/probe.ts",
-    "code": "import { createProject } from '@domain';",
+    "code": "import { createProject } from '@domain/project';",
     "diagnostic": null
   },
   {
-    "file": "src/ui/components/probe.ts",
-    "code": "export { Button } from './button';",
+    "file": "src/ui/components/logic/probe.ts",
+    "code": "export { Button } from '@ui/components/components';",
     "diagnostic": null
   },
   {
@@ -106,12 +106,12 @@
   },
   {
     "file": "src/ui/schematic/probe.ts",
-    "code": "import { getNets } from '@domain';",
+    "code": "import { getNets } from '@domain/wires/nets';",
     "diagnostic": "layer-import"
   },
   {
     "file": "src/ui/schematic/probe.ts",
-    "code": "import type { Net } from '@domain';",
+    "code": "import type { Net } from '@domain/wires/nets';",
     "diagnostic": null
   },
   {
@@ -120,8 +120,8 @@
     "diagnostic": "react-mock"
   },
   {
-    "file": "src/ui/export/get-export-preview.ts",
-    "code": "import { generateRepositoryFiles } from '@generators';",
+    "file": "src/ui/export/logic/get-export-preview.ts",
+    "code": "import { generateRepositoryFiles } from '@generators/repository';",
     "diagnostic": null
   },
   {
@@ -131,7 +131,7 @@
   },
   {
     "file": "src/ui/schematic/probe.ts",
-    "code": "import { useProject } from '@ui/project';",
+    "code": "import { useProject } from '@ui/project/logic';",
     "diagnostic": null
   },
   {
@@ -181,7 +181,7 @@
   },
   {
     "file": "src/ui/bindings/picker/probe.ts",
-    "code": "import { formatBindingName } from '../formatting/format-binding-name';",
+    "code": "import { formatBindingName } from '@ui/bindings/formatting';",
     "diagnostic": null
   },
   {
@@ -195,33 +195,33 @@
     "diagnostic": null
   },
   {
-    "file": "src/ui/components/probe.ts",
+    "file": "src/ui/components/logic/probe.ts",
     "code": "export { keys } from '../../catalog/bindings/keycodes';",
     "diagnostic": "layer-import"
   },
   {
     "file": "src/ui/schematic/probe.ts",
-    "code": "import { getNets } from '@domain';",
+    "code": "import { getNets } from '@domain/wires/nets';",
     "diagnostic": "layer-import"
   },
   {
     "file": "src/ui/schematic/probe.ts",
-    "code": "import type { Net } from '@domain';",
+    "code": "import type { Net } from '@domain/wires/nets';",
     "diagnostic": null
   },
   {
     "file": "src/ui/schematic/probe.ts",
-    "code": "import * as domain from '@domain';",
+    "code": "import * as domain from '@domain/wires/nets';",
     "diagnostic": "layer-import"
   },
   {
     "file": "src/ui/schematic/probe.ts",
-    "code": "export { validateProject as validate } from '@domain';",
+    "code": "export { validateProject as validate } from '@domain/validation';",
     "diagnostic": "layer-import"
   },
   {
     "file": "src/ui/schematic/probe.ts",
-    "code": "export const load = () => import('@domain');",
+    "code": "export const load = () => import('@domain/wires/nets');",
     "diagnostic": "layer-import"
   },
   {
@@ -231,7 +231,7 @@
   },
   {
     "file": "src/catalog/probe.ts",
-    "code": "import { createProject } from '@domain';",
+    "code": "import { createProject } from '@domain/project';",
     "diagnostic": "layer-import"
   },
   {
@@ -240,13 +240,13 @@
     "diagnostic": null
   },
   {
-    "file": "src/ui/components/probe.ts",
-    "code": "import { useProject } from '@ui/project';",
+    "file": "src/ui/components/logic/probe.ts",
+    "code": "import { useProject } from '@ui/project/logic';",
     "diagnostic": "layer-import"
   },
   {
     "file": "src/ui/schematic/probe.ts",
-    "code": "import { generateRepositoryFiles } from '@generators';",
+    "code": "import { generateRepositoryFiles } from '@generators/repository';",
     "diagnostic": "layer-import"
   },
   {
@@ -265,7 +265,7 @@
     "diagnostic": null
   },
   {
-    "file": "src/ui/components/probe.ts",
+    "file": "src/ui/components/logic/probe.ts",
     "code": "export type Value = import('@domain').Project;",
     "diagnostic": "layer-import"
   },

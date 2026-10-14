@@ -1,5 +1,5 @@
 import { getKeyCorners } from './get-key-corners';
-import type { Project, WirePoint } from '../types';
+import type { Project, WirePoint } from '@domain';
 
 // Use visible outer bounds so wide keys and rotated clusters fit the camera.
 export function findKeyLayoutCenter(project: Project): WirePoint | undefined {

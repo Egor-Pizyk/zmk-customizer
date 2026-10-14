@@ -1,11 +1,12 @@
 import { generateSplitOverlays } from './generate-split-overlays';
-import type { ShieldMatrix, ControllerBoard, Project } from '@domain';
-import { generateConf } from '../repository/generate-conf';
+import type { ShieldMatrix } from '@domain/wiring/matrix';
+import type { ControllerBoard, Project } from '@domain';
+import { generateConf } from '@generators';
+import type { GeneratedFile } from '@generators';
 import { generateKconfigDefconfig } from './generate-kconfig-defconfig';
 import { generateKconfigShield } from './generate-kconfig-shield';
-import { generateKeymap } from '../keymap/generate-keymap';
+import { generateKeymap } from '@generators/keymap';
 import { generateOverlay } from './generate-overlay';
-import type { GeneratedFile } from '../generated-file';
 
 // Project and matrix have passed domain validation; generators never perform validation.
 export function generateShieldFiles(

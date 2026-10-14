@@ -1,5 +1,5 @@
+import { getKeyGeometry } from '@domain/geometry';
 import { expect, it } from 'vitest';
-import { getKeyGeometry } from '@domain';
 
 it('resolves legacy geometry without altering its saved data', () => {
   const key = Object.freeze({ id: 'k0', xU: 2, yU: -1 });

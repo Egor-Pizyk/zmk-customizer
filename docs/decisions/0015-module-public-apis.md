@@ -1,6 +1,6 @@
 # ADR 0015: Module public APIs and exact import aliases
 
-Status: accepted. Date: 2026-10-13.
+Status: Superseded by 0016. Date: 2026-10-13.
 
 The user requested module indexes, shorter aliased imports and lint enforcement of public entry points. This supersedes the earlier no-barrel rule. Modules expose explicit named value and type exports in index.ts. Exact compilerOptions.paths aliases point to these entries; there are no wildcard aliases to private source files.
 

@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest';
 import type { Binding, Modifier } from '@domain';
-import { formatKeycapCorner } from '@ui/bindings';
+import { formatKeycapCorner } from '@ui/bindings/formatting';
+import { describe, expect, it } from 'vitest';
 
 function kp(keycode: string, modifiers: readonly Modifier[] = []): Binding {
   return { kind: 'kp', key: { keycode, modifiers } };

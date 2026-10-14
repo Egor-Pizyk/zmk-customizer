@@ -1,6 +1,7 @@
-import { expect, it } from 'vitest';
-import { createProject, validateProject } from '@domain';
+import { createProject } from '@domain/project';
+import { validateProject } from '@domain/validation';
 import type { Project } from '@domain';
+import { expect, it } from 'vitest';
 
 const CATALOG = {
   keycodeNames: new Set(['A']),

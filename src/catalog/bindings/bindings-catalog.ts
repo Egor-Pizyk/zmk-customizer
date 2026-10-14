@@ -1,4 +1,4 @@
-import type { BindingsCatalog } from '@domain';
+import type { BindingsCatalog } from '@domain/validation';
 import { BLUETOOTH_PROFILE_COUNT } from './bluetooth-commands';
 import { ZMK_LIMITS } from '@catalog/firmware';
 import { keycodeByName } from './keycodes';

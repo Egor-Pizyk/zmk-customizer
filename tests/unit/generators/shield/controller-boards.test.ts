@@ -1,10 +1,11 @@
-import { expect, it } from 'vitest';
 import { CONTROLLER_BOARDS } from '@catalog/controllers';
 import { SHIELD_TARGET } from '@catalog/firmware';
+import { deriveShieldMatrix } from '@domain/wiring/matrix';
+import { generateRepositoryFiles } from '@generators/repository';
+import { expect, it } from 'vitest';
+
 import { buildUnibodyProject } from '../../../helpers/build-unibody-project';
 import { getResultValue } from '../../../helpers/result';
-import { deriveShieldMatrix } from '@domain';
-import { generateRepositoryFiles } from '@generators';
 
 const variants = import.meta.glob<string>('../../../fixtures/generated/controllers/**/*', {
   query: '?raw',

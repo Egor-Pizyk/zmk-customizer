@@ -1,7 +1,11 @@
-import { expect, it } from 'vitest';
 import { KEYCODES } from '@catalog/bindings';
 import type { Binding, Layer, Modifier } from '@domain';
-import { countGraphemes, formatBindingLegend, formatFullBindingLegend } from '@ui/bindings';
+import {
+  countGraphemes,
+  formatBindingLegend,
+  formatFullBindingLegend,
+} from '@ui/bindings/formatting';
+import { expect, it } from 'vitest';
 
 const LAYERS: readonly Layer[] = [
   { id: 'l0', name: 'Base', bindings: {} },

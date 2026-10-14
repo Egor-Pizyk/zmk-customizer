@@ -1,9 +1,9 @@
+import { loadProject } from '@storage/project';
 // @vitest-environment jsdom
 import { screen, within, waitFor } from '@testing-library/react';
 import { expect, it } from 'vitest';
 import { getDefinedValue } from '../../../helpers/defined-value';
 import { renderApp } from '../../../helpers/render-app';
-import { loadProject } from '@storage/project';
 
 it('searches and changes a key through the Action panel, shows the new legend and supports undo', async () => {
   const { user } = renderApp(undefined, {

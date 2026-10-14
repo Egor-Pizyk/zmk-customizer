@@ -2,7 +2,7 @@
 
 One file per decision: `NNNN-short-title.md`, ≤30 lines, never rewritten after acceptance. To change a decision, add a new ADR that supersedes the old one and set the old one's status to `Superseded by NNNN`.
 
-A new runtime dependency always needs an ADR (AGENTS.md §4). Undecided questions live in `docs/roadmap.md` → "Open decisions" until an ADR settles them.
+A new runtime dependency always needs an ADR (docs/tooling.md). Undecided questions live in `docs/roadmap.md` → "Open decisions" until an ADR settles them.
 
 ## Template
 
@@ -44,3 +44,7 @@ What becomes easier, what becomes harder, what we must now keep true.
 - [0014 — Real browser behavioral testing](0014-browser-behavior-testing.md)
 
 - [0015 — Module public APIs and exact import aliases](0015-module-public-apis.md)
+
+- [0016 — Nested module APIs, infrastructure and agent context](0016-nested-modules-and-agent-context.md)
+
+- [0017 — Separate UI logic and React components](0017-ui-logic-and-components.md)

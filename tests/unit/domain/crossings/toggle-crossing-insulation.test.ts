@@ -1,6 +1,6 @@
+import { toggleCrossingInsulation } from '@domain/crossings';
 import { expect, it } from 'vitest';
 import { buildProject, freeEnd, keyPin } from '../../../helpers/build-project';
-import { toggleCrossingInsulation } from '@domain';
 
 it('adds, then removes, the insulation of one crossing', () => {
   const ref = { wireIds: ['w1', 'w2'] as const, ordinal: 0 };

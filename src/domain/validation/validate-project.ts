@@ -1,9 +1,9 @@
-import { toShieldName } from '../project/to-shield-name';
+import { toShieldName } from '@domain/project';
 import { validateBindings } from './validate-bindings';
 import type { BindingsCatalog } from './validate-bindings';
 import { validateLayers } from './validate-layers';
 import { validateSchematic } from './validate-schematic';
-import type { Project, ValidationIssue } from '../types';
+import type { Project, ValidationIssue } from '@domain';
 
 const SHIELD_NAME_PATTERN = /^[a-z_][a-z0-9_]*$/u;
 

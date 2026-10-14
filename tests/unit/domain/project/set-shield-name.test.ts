@@ -1,6 +1,6 @@
-import { expect, it } from 'vitest';
-import { setShieldName } from '@domain';
+import { setShieldName } from '@domain/project';
 import type { Project } from '@domain';
+import { expect, it } from 'vitest';
 
 const PROJECT: Project = {
   schemaVersion: 7,

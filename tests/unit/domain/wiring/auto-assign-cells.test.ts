@@ -1,7 +1,7 @@
+import { autoAssignCells } from '@domain/wiring';
 import { expect, it } from 'vitest';
 import { getControllerFixtures } from '../../../helpers/controller-fixtures';
 import { buildProject } from '../../../helpers/build-project';
-import { autoAssignCells } from '@domain';
 
 it('assigns every electrical preset independently to its documented cells', () => {
   const cells = autoAssignCells(getControllerFixtures().project, {

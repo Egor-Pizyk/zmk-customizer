@@ -1,10 +1,12 @@
+import { removeKey } from '@domain/keys';
+import { deriveShieldMatrix } from '@domain/wiring/matrix';
+import type { Project } from '@domain';
+import { generateShieldFiles } from '@generators/shield';
 import layoutGolden from '../../../fixtures/generated/layout/layout.overlay?raw';
-import { removeKey, deriveShieldMatrix } from '@domain';
+
 import { getResultValue } from '../../../helpers/result';
 import { expect, it } from 'vitest';
 import { buildMatrixProject } from '../../../helpers/build-matrix-project';
-import type { Project } from '@domain';
-import { generateShieldFiles } from '@generators';
 
 const target = {
   boardId: 'nice_nano_v2',

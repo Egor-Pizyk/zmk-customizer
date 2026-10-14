@@ -1,5 +1,5 @@
-import { EmptyState } from '@ui/components';
-import { PlaceholderFooter } from '@ui/shell';
+import { EmptyState } from '@ui/components/components';
+import { PlaceholderFooter } from '@ui/shell/components';
 
 export function FirmwareWorkspace() {
   return (

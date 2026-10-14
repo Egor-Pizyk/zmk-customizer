@@ -1,6 +1,6 @@
+import { renameLayer } from '@domain/layers';
 import { expect, it } from 'vitest';
 import { buildProject } from '../../../helpers/build-project';
-import { renameLayer } from '@domain';
 
 const PROJECT = buildProject({});
 

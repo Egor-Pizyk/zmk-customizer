@@ -1,8 +1,8 @@
+import { findBoardPinUser } from '@domain/wires';
 import { buildWiringProject } from '../../../helpers/wiring-project';
 import { getDefinedValue } from '../../../helpers/defined-value';
 import { expect, it } from 'vitest';
 import { buildProject, freeEnd, keyPin } from '../../../helpers/build-project';
-import { findBoardPinUser } from '@domain';
 
 const PROJECT = buildProject({
   keys: [{ id: 'k1', xU: 0, yU: 0 }],

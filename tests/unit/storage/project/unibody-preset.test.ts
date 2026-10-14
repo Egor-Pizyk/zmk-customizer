@@ -1,11 +1,14 @@
-import { getResultValue } from '../../../helpers/result';
-import { expect, it } from 'vitest';
 import { BINDINGS_CATALOG } from '@catalog/bindings';
 import { SHIELD_TARGET } from '@catalog/firmware';
-import { getControllerFixtures } from '../../../helpers/controller-fixtures';
 import { serializeProject, parseProjectFile } from '@storage/project';
+import { createPresetProject } from '@domain/project';
+import { validateShieldProject } from '@domain/validation/shield';
+import { getResultValue } from '../../../helpers/result';
+import { expect, it } from 'vitest';
+
+import { getControllerFixtures } from '../../../helpers/controller-fixtures';
+
 import { buildUnibodyProject } from '../../../helpers/build-unibody-project';
-import { createPresetProject, validateShieldProject } from '@domain';
 
 const { project: UNIBODY_PRESET, getBoard: getControllerBoard } = getControllerFixtures();
 

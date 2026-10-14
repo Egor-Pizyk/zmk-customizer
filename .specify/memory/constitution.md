@@ -1,10 +1,11 @@
+<!-- 1.1.2: Replace moved AGENTS section references with explicit documentation paths. Principles unchanged. -->
 <!--
 Sync Impact Report
 - Version change: 1.1.0 → 1.1.1 (Development Workflow now points to AGENTS.md §6/§8 instead of
   copying them; command names fixed to /speckit-*; Constraints cite all of docs/guidelines/)
 - Previous: 1.0.0 → 1.1.0 (added Constraints item: target ZMK v0.3, ADR 0010)
 - Previous: template (unversioned) → 1.0.0
-- Modified principles: all template placeholders replaced by AGENTS.md §7 items I–VIII
+- Modified principles: all template placeholders replaced by docs/principles.md items I–VIII
 - Added sections: Core Principles (8), Constraints, Development Workflow, Governance
 - Removed sections: none
 - Templates: .specify/templates/* not modified (read constitution at runtime; scope guard)
@@ -21,7 +22,7 @@ source of truth (see Governance).
 ### I. Correct Output Over Features
 
 A generated file that does not build is worse than a missing feature. Every generator change
-MUST come with a golden-file test (AGENTS.md §3.3).
+MUST come with a golden-file test (docs/architecture.md).
 
 Test: a change under `src/generators/` without a new or updated golden test is rejected.
 
@@ -32,7 +33,7 @@ Rationale: the product promise is ZMK files that build with upstream ZMK without
 Rules MUST live in `src/domain/` as pure functions with tests. UI only displays and dispatches;
 components contain no ZMK rules.
 
-Test: every invariant in AGENTS.md §2 is enforced by a tested domain function; no business
+Test: every invariant in docs/domain-model.md is enforced by a tested domain function; no business
 condition appears inline in `src/ui/`.
 
 Rationale: rules in one pure layer are testable without a browser and cannot diverge between
@@ -45,7 +46,7 @@ No backend, no runtime network calls. The app MUST work offline after load.
 Test: `src/` contains no `fetch`, `XMLHttpRequest`, `WebSocket`, `sendBeacon` or analytics SDK;
 export works with the network disabled.
 
-Rationale: no accounts, no server storage, no telemetry (AGENTS.md §1.4); user data never
+Rationale: no accounts, no server storage, no telemetry (docs/product.md); user data never
 leaves the browser.
 
 ### IV. User Data Is Untrusted
@@ -102,19 +103,18 @@ Rationale: the tool must work without a mouse and with a screen reader.
 
 ## Constraints
 
-- Architecture layers and dependency direction: AGENTS.md §3.1
-  (`ui → storage → generators → domain ← catalog`). State model: §3.2. Generators: §3.3.
-  Catalog data: §3.4.
-- Tech stack and approved runtime dependencies: AGENTS.md §4. Any other dependency requires an
+- Architecture layers and dependency direction: docs/architecture.md
+  (`ui → storage → generators → domain ← catalog`). State model, generators and catalog rules are in the same document.
+- Tech stack and approved runtime dependencies: docs/tooling.md. Any other dependency requires an
   ADR in `docs/decisions/`.
-- Code-quality and frontend rules: files listed in AGENTS.md §10 (`docs/guidelines/`).
+- Code-quality and frontend rules: all files explicitly imported from `docs/guidelines/` in AGENTS.md.
 - `make check` (typecheck + lint + format check + tests) MUST pass before any task is done.
 - Generated output MUST target ZMK v0.3.0 ([ADR 0010](../../docs/decisions/0010-target-zmk-v0-3.md)).
   Anything marked "main only" in `docs/zmk/` MUST NOT be generated or offered in the UI.
 
 ## Development Workflow
 
-AGENTS.md §6 (Spec Kit flow, branch and spec numbering) and §8 (rules for agents) apply
+docs/workflow.md (Spec Kit flow, branch and spec numbering) and docs/agent-rules.md (rules for agents) apply
 verbatim. They are not copied here, so they cannot drift.
 
 ## Governance
@@ -128,4 +128,4 @@ verbatim. They are not copied here, so they cannot drift.
   constitution before `/speckit-implement`; `zmk-reviewer` checks generator and catalog changes;
   code review verifies the "review only" rules in the code-quality guidelines.
 
-**Version**: 1.1.1 | **Ratified**: 2026-09-27 | **Last Amended**: 2026-09-29
+**Version**: 1.1.2 | **Ratified**: 2026-09-27 | **Last Amended**: 2026-10-14

@@ -1,11 +1,11 @@
+import { SHIELD_TARGET } from '@catalog/firmware';
+import { deriveShieldMatrix } from '@domain/wiring/matrix';
+import { generateRepositoryFiles } from '@generators/repository';
+import { buildExportZip } from '@storage/export';
 import { strFromU8, unzipSync } from 'fflate';
 import { afterEach, expect, it, vi } from 'vitest';
 import { buildUnibodyProject } from '../../../helpers/build-unibody-project';
 import { getResultValue } from '../../../helpers/result';
-import { SHIELD_TARGET } from '@catalog/firmware';
-import { deriveShieldMatrix } from '@domain';
-import { generateRepositoryFiles } from '@generators';
-import { buildExportZip } from '@storage/export';
 
 function files(includeWorkflow: boolean) {
   const project = buildUnibodyProject();

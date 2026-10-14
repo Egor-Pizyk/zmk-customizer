@@ -1,4 +1,4 @@
-import type { CrossingRef } from '../types';
+import type { CrossingRef } from '@domain';
 
 export function isSameCrossing(first: CrossingRef, second: CrossingRef): boolean {
   return (

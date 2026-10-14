@@ -1,4 +1,4 @@
-import type { Binding, Project } from '../types';
+import type { Binding, Project } from '@domain';
 
 /** Undefined = unassigned, which behaves as &none (spec 004 FR-021). */
 export function findBinding(

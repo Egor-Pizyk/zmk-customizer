@@ -1,5 +1,6 @@
+import { createProject } from '@domain/project';
+import { getKeyDiodeState, toggleKeyDiode } from '@domain/diodes';
 import { expect, it } from 'vitest';
-import { createProject, getKeyDiodeState, toggleKeyDiode } from '@domain';
 
 const project = {
   ...createProject({ controllerId: 'nice_nano_v2' }),

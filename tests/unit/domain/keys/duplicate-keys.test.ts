@@ -1,6 +1,6 @@
+import { duplicateKeys } from '@domain/keys';
 import { expect, it } from 'vitest';
 import { buildProject, freeEnd, keyPin } from '../../../helpers/build-project';
-import { duplicateKeys } from '@domain';
 
 it('clones source-order geometry, diode and all bindings with exact fresh IDs and no wires', () => {
   const project = buildProject({

@@ -1,6 +1,6 @@
+import { validateControllerBindings } from '@domain/validation';
 import { getControllerFixtures } from '../../../helpers/controller-fixtures';
 import { expect, it } from 'vitest';
-import { validateControllerBindings } from '@domain';
 
 const { project: UNIBODY_PRESET, getBoard: getControllerBoard } = getControllerFixtures();
 

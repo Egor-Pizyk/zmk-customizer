@@ -1,6 +1,6 @@
+import { removeOrphanWires } from '@domain/wires';
 import { expect, it } from 'vitest';
 import { buildProject, freeEnd, keyPin } from '../../../helpers/build-project';
-import { removeOrphanWires } from '@domain';
 
 it('removes the given wires and frees junctions onto them at their drawn point', () => {
   const trunk = { id: 'w1', start: freeEnd(0, 0), end: freeEnd(0, 4), bends: [] };

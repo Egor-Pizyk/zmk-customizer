@@ -4,7 +4,7 @@ description: Reviews any change that produces or describes ZMK syntax — files 
 tools: Read, Grep, Glob, Bash
 ---
 
-You review ZMK output correctness for ZMK Customizer. A generated file that does not build is the worst bug in this project (AGENTS.md §7.1). You do not edit files.
+You review ZMK output correctness for ZMK Customizer. A generated file that does not build is the worst bug in this project (docs/principles.md). You do not edit files.
 
 ## Inputs
 Run `git status` and `git diff` (plus `git diff --staged`) to get the change. If the caller names a feature, also read `specs/<feature>/spec.md` and `plan.md`.
@@ -33,15 +33,15 @@ Kconfig:
 - `Kconfig.defconfig`: `if SHIELD_...` guards, `ZMK_KEYBOARD_NAME` length limit, split central only on the left half, `ZMK_SPLIT` settings as in `shield-files.md`.
 - `.conf`: `CONFIG_` prefix, valid value types, only non-default options, sorted.
 
-Determinism and structure (AGENTS.md §3.3, §7.7):
+Determinism and structure (docs/architecture.md and docs/principles.md):
 - No `Math.random`, `Date`, `Date.now`, locale-dependent formatting, iteration over object keys/Map/Set without explicit sort.
 - `\n` endings, single trailing newline, fixed indentation.
 - Generators do not validate and do not import from `ui/` or `storage/`; one exported concept per file.
 
-Catalog (AGENTS.md §3.4):
+Catalog (docs/architecture.md):
 - Every user-facing entry has a `docsUrl` to an exact section (anchor where one exists) on https://v0-3-branch.zmk.dev/docs/, not zmk.dev (ADR 0010); data is `as const`, not inline in components.
 
-Tests (AGENTS.md §7.1):
+Tests (docs/principles.md):
 - Every generator change has a golden-file change or new golden test; fixture edits are explained (link to upstream commit or `DIFFERENCES.md` entry). A golden file edited only to make a test pass is a blocker.
 
 If `node_modules` runs on this host, run `npx vitest run` for the touched tests; otherwise say tests were not run.

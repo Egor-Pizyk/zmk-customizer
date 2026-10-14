@@ -1,6 +1,6 @@
+import { canAddWire } from '@domain/wires';
 import { expect, it } from 'vitest';
 import { buildProject, freeEnd, keyPin } from '../../../helpers/build-project';
-import { canAddWire } from '@domain';
 
 const PROJECT = buildProject({
   keys: [

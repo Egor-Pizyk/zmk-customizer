@@ -1,7 +1,7 @@
-import * as z from 'zod';
 import { PROJECT_BUDGET } from './project-budget';
-import { BOARD_PIN_COUNT } from '@domain';
+import { BOARD_PIN_COUNT } from '@domain/wires';
 import type { Project, WiringTerminal } from '@domain';
+import * as z from 'zod';
 
 export const wiringSchema = z
   .strictObject({

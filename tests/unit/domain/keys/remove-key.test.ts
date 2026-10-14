@@ -1,5 +1,7 @@
+import { getKeyPinPosition } from '@domain/wires';
+import { removeKey } from '@domain/keys';
 import { expect, it } from 'vitest';
-import { getKeyPinPosition, removeKey } from '@domain';
+
 import { buildProject, freeEnd, keyPin } from '../../../helpers/build-project';
 
 const KEYS = [

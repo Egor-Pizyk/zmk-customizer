@@ -1,9 +1,10 @@
-import { expect, it } from 'vitest';
-import fixtureLarge from '../../../fixtures/schematic/large.json?raw';
 import { BINDINGS_CATALOG } from '@catalog/bindings';
-import { findCrossings, validateProject } from '@domain';
+import { findCrossings } from '@domain/crossings';
+import { validateProject } from '@domain/validation';
 import { migrateProject } from '@storage/migrations';
 import { parseProjectFile, projectSchema } from '@storage/project';
+import { expect, it } from 'vitest';
+import fixtureLarge from '../../../fixtures/schematic/large.json?raw';
 
 // SC-005 fixture (100 keys, 300 wires); browser profiling uses the same file (quickstart 7).
 it('loads the large schematic and derives crossings and problems', () => {

@@ -1,12 +1,12 @@
-import { deriveShieldMatrix } from './derive-shield-matrix';
-import type { ShieldTarget } from './derive-shield-matrix';
-import { findCrossings } from '../crossings/find-crossings';
-import { findWireContacts } from '../wires/find-wire-contacts';
-import { getNets } from './get-nets';
-import type { ControllerBoard, Project } from '../types';
-import type { BindingsCatalog } from '../validation/validate-bindings';
-import { validateSchematic } from '../validation/validate-schematic';
-import { validateShieldProject } from '../validation/validate-shield-project';
+import { deriveShieldMatrix } from '@domain/wiring/matrix';
+import type { ShieldTarget } from '@domain/wiring/matrix';
+import { findCrossings } from '@domain/crossings';
+import { findWireContacts } from '@domain/wires';
+import { getNets } from '@domain/wires/nets';
+import type { ControllerBoard, Project } from '@domain';
+import { validateSchematic } from '@domain/validation';
+import type { BindingsCatalog } from '@domain/validation';
+import { validateShieldProject } from '@domain/validation/shield';
 
 export function analyzeProject(
   project: Project,

@@ -1,5 +1,5 @@
 import { isSameCrossing } from './is-same-crossing';
-import type { CrossingRef, Project } from '../types';
+import type { CrossingRef, Project } from '@domain';
 
 export function toggleCrossingInsulation(
   project: Project,

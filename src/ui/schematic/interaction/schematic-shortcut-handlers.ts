@@ -1,9 +1,12 @@
 import { PROJECT_BUDGET } from '@storage/project';
-import { addKey, createEntityId, findFreeKeyPosition, removeKey, removeWire } from '@domain';
+import { addKey, removeKey } from '@domain/keys';
+import { createEntityId } from '@domain/project';
+import { findFreeKeyPosition } from '@domain/geometry';
+import { removeWire } from '@domain/wires/editing';
 import type { Project } from '@domain';
 import type { Commit } from './pointer-types';
 import type { SchematicSelection, SelectionChange } from './schematic-selection';
-import type { ToolId } from '../tools/tools';
+import type { ToolId } from '@ui/schematic/tools/logic';
 
 export function focusKeyLater(keyId: string) {
   requestAnimationFrame(() => {

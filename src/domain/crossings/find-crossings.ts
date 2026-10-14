@@ -1,7 +1,7 @@
-import type { WireContacts } from '../wires/find-wire-contacts';
-import { findWireContacts } from '../wires/find-wire-contacts';
+import { findWireContacts } from '@domain/wires';
+import type { WireContacts } from '@domain/wires';
 import { isSameCrossing } from './is-same-crossing';
-import type { CrossingRef, Project, WirePoint } from '../types';
+import type { CrossingRef, Project, WirePoint } from '@domain';
 
 export type Crossing = {
   readonly ref: CrossingRef;

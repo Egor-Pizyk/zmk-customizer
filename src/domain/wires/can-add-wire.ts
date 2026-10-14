@@ -1,4 +1,4 @@
-import type { Project, WireEnd } from '../types';
+import type { Project, WireEnd } from '@domain';
 
 export type WireCheck = 'ok' | 'no-key-pin' | 'same-pin' | 'missing-reference';
 

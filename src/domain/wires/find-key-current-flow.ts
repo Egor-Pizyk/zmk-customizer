@@ -1,4 +1,4 @@
-import type { Key, KeyPin } from '../types';
+import type { Key, KeyPin } from '@domain';
 
 // Anode → cathode through the closed switch; row/column names are assigned later (docs/zmk/kscan.md).
 export function findKeyCurrentFlow(

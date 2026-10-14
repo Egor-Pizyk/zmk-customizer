@@ -1,6 +1,6 @@
+import { removeLayer } from '@domain/layers';
 import { expect, it } from 'vitest';
 import { buildProject } from '../../../helpers/build-project';
-import { removeLayer } from '@domain';
 
 const KEYS = [{ id: 'k1', xU: 0, yU: 0 }];
 const PROJECT = buildProject({

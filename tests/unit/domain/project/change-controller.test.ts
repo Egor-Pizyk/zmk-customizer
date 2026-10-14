@@ -1,6 +1,7 @@
+import { changeController } from '@domain/project';
+import { setWireEndBoardPin } from '@domain/wires/editing';
 import { getControllerFixtures } from '../../../helpers/controller-fixtures';
 import { expect, it } from 'vitest';
-import { changeController, setWireEndBoardPin } from '@domain';
 
 const { boards: CONTROLLER_BOARDS, project: UNIBODY_PRESET } = getControllerFixtures();
 

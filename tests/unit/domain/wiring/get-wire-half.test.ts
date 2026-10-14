@@ -1,7 +1,10 @@
-import { findWireContacts, getNets, getWireHalf } from '@domain';
+import { findWireContacts } from '@domain/wires';
+import { getNets } from '@domain/wires/nets';
+import { getWireHalf } from '@domain/wiring';
+import type { Wire } from '@domain';
+
 import { expect, it } from 'vitest';
 import { buildProject, freeEnd } from '../../../helpers/build-project';
-import type { Wire } from '@domain';
 
 it('inherits the right half through junction branches and terminates on cycles', () => {
   const root: Wire = {

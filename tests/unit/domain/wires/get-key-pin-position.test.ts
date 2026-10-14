@@ -1,5 +1,5 @@
+import { getKeyPinPosition } from '@domain/wires';
 import { expect, it } from 'vitest';
-import { getKeyPinPosition } from '@domain';
 
 // MX footprint from the switch center: pin 1 (-3.81, -2.54) mm, pin 2 (+2.54, -5.08) mm; 1u = 19.05 mm.
 it('places the pins of a key at (2, 1) like an MX switch', () => {

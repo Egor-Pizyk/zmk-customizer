@@ -1,11 +1,11 @@
+import { getExportPreview } from '@ui/export/logic';
+import { getProjectAnalysis } from '@ui/project/logic';
+import { loadProject } from '@storage/project';
 // @vitest-environment jsdom
 import { fireEvent, screen, within } from '@testing-library/react';
 import { expect, it } from 'vitest';
 import { buildProject, freeEnd, keyPin } from '../../../helpers/build-project';
 import { renderApp } from '../../../helpers/render-app';
-import { getExportPreview } from '@ui/export';
-import { getProjectAnalysis } from '@ui/project';
-import { loadProject } from '@storage/project';
 
 function project() {
   return buildProject({

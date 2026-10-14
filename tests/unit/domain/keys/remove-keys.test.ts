@@ -1,6 +1,6 @@
+import { removeKeys } from '@domain/keys';
 import { expect, it } from 'vitest';
 import { buildProject } from '../../../helpers/build-project';
-import { removeKeys } from '@domain';
 
 it('removes all selected key identities and their bindings while keeping unrelated data', () => {
   const project = buildProject({

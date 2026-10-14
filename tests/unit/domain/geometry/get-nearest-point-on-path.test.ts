@@ -1,5 +1,5 @@
+import { getNearestPointOnPath } from '@domain/geometry';
 import { expect, it } from 'vitest';
-import { getNearestPointOnPath } from '@domain';
 
 const PATH = [
   { xU: 0, yU: 0 },

@@ -1,7 +1,8 @@
+import type { Binding } from '@domain';
+import { getSharedBinding } from '@domain/bindings';
+import type { SharedBinding } from '@domain/bindings';
 import { expect, it } from 'vitest';
 import { buildProject } from '../../../helpers/build-project';
-import type { Binding, SharedBinding } from '@domain';
-import { getSharedBinding } from '@domain';
 
 const KEYS = [
   { id: 'k1', xU: 0, yU: 0 },

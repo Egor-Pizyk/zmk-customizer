@@ -1,10 +1,10 @@
+import { createProject } from '@domain/project';
+import { loadProject } from '@storage/project';
 // @vitest-environment jsdom
 import { act, screen, waitFor } from '@testing-library/react';
 import { expect, it } from 'vitest';
 import { renderApp } from '../../../helpers/render-app';
 import { getDefinedValue } from '../../../helpers/defined-value';
-import { createProject } from '@domain';
-import { loadProject } from '@storage/project';
 
 function pendingFile(name: string) {
   let finish: ((text: string) => void) | undefined;

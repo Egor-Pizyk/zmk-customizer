@@ -1,7 +1,8 @@
-import { describe, expect, it } from 'vitest';
-import { findCrossings } from '@domain';
-import { buildProject, freeEnd } from '../../../helpers/build-project';
+import { findCrossings } from '@domain/crossings';
 import type { Wire } from '@domain';
+import { describe, expect, it } from 'vitest';
+
+import { buildProject, freeEnd } from '../../../helpers/build-project';
 
 function line(id: string, from: [number, number], to: [number, number]): Wire {
   return { id, start: freeEnd(from[0], from[1]), end: freeEnd(to[0], to[1]), bends: [] };

@@ -4,7 +4,7 @@ Features in implementation order. One feature = one Spec Kit branch `NNN-short-n
 
 Ordering rule: every feature ends with something a user can load, see and download. Generators come before editors: feature 009 generates real files from preset keyboards, so each later editor changes a project whose output is already visible in the export preview and covered by golden tests. Exceptions, added on user request: 003 schematic, the 004/005 bindings editors, the 006 Action panel rework, 007 layers and 008 diodes come before 009; they store project data only, and 009 generates files from it.
 
-Each `/speckit-specify` prompt below describes what and why only. Technology choices go into `/speckit-plan`, which reads AGENTS.md §3–§4.
+Each `/speckit-specify` prompt below describes what and why only. Technology choices go into `/speckit-plan`, which reads docs/architecture.md and docs/tooling.md.
 
 ---
 
@@ -21,7 +21,7 @@ Each `/speckit-specify` prompt below describes what and why only. Technology cho
 3. In Claude Code, run:
 
    ```
-   /speckit-constitution Derive the constitution from AGENTS.md in this repository; do not invent principles. Turn each item of AGENTS.md §7 "Principles" into one numbered, testable constitution principle with its rationale, keeping the original order and wording as close as possible: correct output over features (every generator change has a golden-file test), domain first, static only (no backend, no runtime network calls), user data is untrusted (schema-parsed imports that never corrupt the current project), every ZMK option explains itself with a docs link, minimal code, deterministic generators, accessible UI with a non-canvas alternative. Add a "Development workflow" section from AGENTS.md §8 "Rules for agents": read docs/zmk/ before producing ZMK syntax, stay inside the task, tests first for domain and generators, one exported concept per file in domain/ and generators/, no comments that repeat code, Conventional Commits, say when ZMK behavior is unclear instead of guessing. Add a "Constraints" section that references (not copies) AGENTS.md §3 architecture layers and dependency direction, §4 approved dependencies, and states that `make check` must pass before any task is done. Governance: AGENTS.md is the source of truth; when the constitution and AGENTS.md disagree, AGENTS.md wins and the constitution is amended in the same change. Version 1.0.0, ratified today.
+   /speckit-constitution Derive the constitution from AGENTS.md in this repository; do not invent principles. Turn each item of docs/principles.md "Principles" into one numbered, testable constitution principle with its rationale, keeping the original order and wording as close as possible: correct output over features (every generator change has a golden-file test), domain first, static only (no backend, no runtime network calls), user data is untrusted (schema-parsed imports that never corrupt the current project), every ZMK option explains itself with a docs link, minimal code, deterministic generators, accessible UI with a non-canvas alternative. Add a "Development workflow" section from docs/agent-rules.md "Rules for agents": read docs/zmk/ before producing ZMK syntax, stay inside the task, tests first for domain and generators, one exported concept per file in domain/ and generators/, no comments that repeat code, Conventional Commits, say when ZMK behavior is unclear instead of guessing. Add a "Constraints" section that references (not copies) docs/architecture.md architecture layers and dependency direction, docs/tooling.md approved dependencies, and states that `make check` must pass before any task is done. Governance: AGENTS.md is the source of truth; when the constitution and AGENTS.md disagree, AGENTS.md wins and the constitution is amended in the same change. Version 1.0.0, ratified today.
    ```
 
 4. Per feature: `/speckit-specify <prompt from below>` → `/speckit-clarify` → `/speckit-plan` → `/speckit-tasks` → `/speckit-analyze` → `/speckit-implement`. Before `/speckit-implement`, run the `spec-reviewer` agent on the feature directory. After generator or catalog tasks, run `zmk-reviewer`.
@@ -170,7 +170,7 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 - Maximum number of layers in ZMK v0.3: not in `docs/zmk/` yet; verify and add it there before deciding.
 - How layer names map to the generated node name and the `display-name` (`docs/zmk/keymap.md` §2).
 - Whether a pass-through key shows the legend of the layer below on the canvas.
-- Schema change: new binding kinds and a layer reference; check how spec 005 handled `schemaVersion` and migrations, and follow AGENTS.md §3.2.
+- Schema change: new binding kinds and a layer reference; check how spec 005 handled `schemaVersion` and migrations, and follow docs/architecture.md.
 
 **Out of scope.** Conditional layers (017), layer locking (main only), tuning `&lt`/`&sl` properties (016), encoders' sensor bindings (019), generating files (009).
 
@@ -285,7 +285,7 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 - Pin picker showing board labels.
 - Board selection in the Schematic workspace; dropped pins listed in the problems panel.
 
-**Out of scope.** Custom boards (AGENTS.md §1.4 non-goal), editing pin assignments (013).
+**Out of scope.** Custom boards (docs/product.md non-goal), editing pin assignments (013).
 
 **Acceptance criteria**
 - Every catalog entry has a `docsUrl`; a test fails if one is missing.
@@ -353,7 +353,7 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 
 **Acceptance criteria**
 - Auto-assign on each preset layout reproduces the preset's matrix (or a documented equivalent), tested.
-- Each conflict type from AGENTS.md §2 appears in the problems panel and on the affected key/pin.
+- Each conflict type from docs/domain-model.md appears in the problems panel and on the affected key/pin.
 - Switching diode direction regenerates the kscan node per `docs/zmk/kscan.md`; golden tests for both directions.
 - Direct-kscan project generates a valid `gpio-direct` node (golden test).
 
@@ -503,7 +503,7 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 ```
 
 ### Not planned
-Parsing existing ZMK shield files back into a project (Devicetree parsing), custom board definitions (§1.4), in-browser compilation or flashing (§1.4).
+Parsing existing ZMK shield files back into a project (Devicetree parsing), custom board definitions, in-browser compilation or flashing (docs/product.md).
 
 ---
 

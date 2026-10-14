@@ -1,6 +1,7 @@
 import { getSchematicGeometry } from './get-schematic-geometry';
 import type { DiodePlacement } from './get-schematic-geometry';
-import { getKeyPinPosition, getNearestPointOnPath, getWirePath } from '@domain';
+import { getKeyPinPosition, getWirePath } from '@domain/wires';
+import { getNearestPointOnPath } from '@domain/geometry';
 import type { Key, Project, WirePoint } from '@domain';
 import type { CanvasHit } from './read-canvas-hit';
 import type { DraftTarget } from './reduce-wire-draft';

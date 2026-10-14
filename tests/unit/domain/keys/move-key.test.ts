@@ -1,5 +1,6 @@
+import { moveKey } from '@domain/keys';
 import { expect, it } from 'vitest';
-import { moveKey } from '@domain';
+
 import { buildProject } from '../../../helpers/build-project';
 
 it('moves only the given key', () => {

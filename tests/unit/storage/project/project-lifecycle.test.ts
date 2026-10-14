@@ -1,9 +1,11 @@
+import { addKey, removeKey } from '@domain/keys';
+import { addLayer } from '@domain/layers';
+import { setBindings } from '@domain/bindings/editing';
+import { parseProjectFile, serializeProject } from '@storage/project';
+import type { Project } from '@domain';
 import { expect, it } from 'vitest';
 import { getControllerFixtures } from '../../../helpers/controller-fixtures';
 import { getResultValue } from '../../../helpers/result';
-import { addKey, addLayer, removeKey, setBindings } from '@domain';
-import { parseProjectFile, serializeProject } from '@storage/project';
-import type { Project } from '@domain';
 
 function roundTrip(project: Project): Project {
   return getResultValue(parseProjectFile(getResultValue(serializeProject(project))));

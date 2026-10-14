@@ -1,8 +1,8 @@
+import { analyzeProject } from '@domain/analysis';
 import { expect, it } from 'vitest';
 import { buildMatrixProject } from '../../../helpers/build-matrix-project';
 import { getResultValue } from '../../../helpers/result';
 import { createAnalysisInput } from '../../../helpers/analysis-input';
-import { analyzeProject } from '@domain';
 
 const input = createAnalysisInput();
 it('returns the electrical matrix, nets and issues for the same project revision', () => {

@@ -1,6 +1,7 @@
+import { reduceWireDraft } from '@ui/schematic/interaction';
+import type { DraftTarget, WireDraft } from '@ui/schematic/interaction';
 import { describe, expect, it } from 'vitest';
-import { reduceWireDraft } from '@ui/schematic';
-import type { DraftTarget, WireDraft } from '@ui/schematic';
+
 import { buildProject } from '../../../../helpers/build-project';
 
 const PROJECT = buildProject({

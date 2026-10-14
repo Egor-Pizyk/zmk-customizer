@@ -1,5 +1,5 @@
 import { moveKeys } from './move-keys';
-import type { Project, WirePoint } from '../types';
+import type { Project, WirePoint } from '@domain';
 
 export function moveKey(
   project: Project,

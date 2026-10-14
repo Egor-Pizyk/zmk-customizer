@@ -1,4 +1,4 @@
-import type { Key, KeyGeometry } from '../types';
+import type { Key, KeyGeometry } from '@domain';
 
 export function getKeyGeometry(key: Key): KeyGeometry {
   return {

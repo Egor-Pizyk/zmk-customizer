@@ -1,6 +1,6 @@
 import { getKeyGeometry } from './get-key-geometry';
 import { rotatePoint } from './rotate-point';
-import type { Key, WirePoint } from '../types';
+import type { Key, WirePoint } from '@domain';
 
 export function getKeyCenter(key: Key): WirePoint {
   const geometry = getKeyGeometry(key);

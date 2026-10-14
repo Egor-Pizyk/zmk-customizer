@@ -1,5 +1,5 @@
 import { isKeyPositionFree } from './is-key-position-free';
-import type { Project, WirePoint } from '../types';
+import type { Project, WirePoint } from '@domain';
 
 // Keyboard placement (Enter, "Add key"): the first free cell right of the last key, same row.
 export function findFreeKeyPosition(project: Project): WirePoint {

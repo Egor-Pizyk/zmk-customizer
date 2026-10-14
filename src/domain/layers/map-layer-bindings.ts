@@ -1,6 +1,6 @@
-import { isSameBinding } from '../bindings/is-same-binding';
+import { isSameBinding } from '@domain/bindings';
 import { setLayerBindings } from './set-layer-bindings';
-import type { Binding, Project } from '../types';
+import type { Binding, Project } from '@domain';
 
 /**
  * Applies `change` to the binding of each listed key; `undefined` from `change` keeps it. The

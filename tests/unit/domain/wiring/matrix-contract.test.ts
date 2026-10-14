@@ -1,9 +1,10 @@
+import { deriveShieldMatrix } from '@domain/wiring/matrix';
+import { reverseKeyDiode } from '@domain/diodes';
 import { expect, it } from 'vitest';
 import { buildMatrixProject } from '../../../helpers/build-matrix-project';
 import { getControllerFixtures } from '../../../helpers/controller-fixtures';
 import { getDefinedValue } from '../../../helpers/defined-value';
 import { getResultValue } from '../../../helpers/result';
-import { deriveShieldMatrix, reverseKeyDiode } from '@domain';
 
 const DIMENSIONS = [1, 2, 3, 4].flatMap((rows) => [1, 2, 3].map((cols) => [rows, cols] as const));
 

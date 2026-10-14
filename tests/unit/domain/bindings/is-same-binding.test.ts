@@ -1,5 +1,5 @@
+import { isSameBinding } from '@domain/bindings';
 import { expect, it } from 'vitest';
-import { isSameBinding } from '@domain';
 
 it('compares bindings by value, ignoring property order', () => {
   expect(

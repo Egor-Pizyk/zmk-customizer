@@ -1,6 +1,6 @@
-import { roundU } from '@domain';
+import { roundU } from '@domain/geometry';
 import type { WirePoint } from '@domain';
-import { snapToGrid } from '@ui/canvas';
+import { snapToGrid } from '@ui/canvas/logic';
 
 /** `gridU` is the grid step while snapping is on, else undefined. */
 export function snapPoint(point: WirePoint, gridU: number | undefined): WirePoint {

@@ -1,4 +1,4 @@
-import type { Project, KeyDiode } from '../types';
+import type { Project, KeyDiode } from '@domain';
 
 export function reverseKeyDiode(project: Project, input: { readonly keyId: string }): Project {
   const key = project.keys.find((candidate) => candidate.id === input.keyId);

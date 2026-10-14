@@ -4,11 +4,13 @@ import { fileURLToPath } from 'node:url';
 
 export const PROJECT_ROOT = fileURLToPath(new URL('../', import.meta.url));
 const config = JSON.parse(readFileSync(new URL('../tsconfig.json', import.meta.url), 'utf8'));
-const modules = Object.entries(config.compilerOptions.paths).map(([alias, targets]) => ({
-  alias,
-  entry: path.posix.normalize(targets[0]),
-  root: path.posix.dirname(path.posix.normalize(targets[0])),
-}));
+const modules = Object.entries(config.compilerOptions.paths)
+  .map(([alias, targets]) => ({
+    alias,
+    entry: path.posix.normalize(targets[0]),
+    root: path.posix.dirname(path.posix.normalize(targets[0])),
+  }))
+  .toSorted((left, right) => right.root.length - left.root.length);
 
 export function getModule(file) {
   return modules.find((module) => file === module.entry || file.startsWith(`${module.root}/`));

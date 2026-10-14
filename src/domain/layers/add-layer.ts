@@ -1,6 +1,6 @@
-import { createEntityId } from '../project/create-entity-id';
+import { createEntityId } from '@domain/project';
 import { toLayerNodeName } from './to-layer-node-name';
-import type { Binding, Project } from '../types';
+import type { Binding, Project } from '@domain';
 
 const PASS_THROUGH: Binding = { kind: 'trans' };
 

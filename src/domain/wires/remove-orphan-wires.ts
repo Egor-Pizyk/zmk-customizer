@@ -1,6 +1,6 @@
-import { getNearestPointOnPath } from '../geometry/get-nearest-point-on-path';
+import { getNearestPointOnPath } from '@domain/geometry';
 import { getWirePath } from './get-wire-path';
-import type { Project, Wire, WireEnd } from '../types';
+import type { Project, Wire, WireEnd } from '@domain';
 
 function hasKeyPin(wire: Wire): boolean {
   return wire.start.kind === 'key-pin' || wire.end.kind === 'key-pin';

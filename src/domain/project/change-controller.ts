@@ -1,4 +1,4 @@
-import type { ControllerBoard, Project, WireEnd } from '../types';
+import type { ControllerBoard, Project, WireEnd } from '@domain';
 
 function changeEnd(
   end: WireEnd,

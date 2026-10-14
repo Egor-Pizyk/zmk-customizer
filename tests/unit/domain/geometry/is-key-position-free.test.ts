@@ -1,5 +1,6 @@
+import { isKeyPositionFree } from '@domain/geometry';
 import { expect, it } from 'vitest';
-import { isKeyPositionFree } from '@domain';
+
 import { buildProject } from '../../../helpers/build-project';
 
 const PROJECT = buildProject({ keys: [{ id: 'k1', xU: 1, yU: 1 }] });

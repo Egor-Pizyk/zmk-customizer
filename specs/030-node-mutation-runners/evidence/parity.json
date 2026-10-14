@@ -1,0 +1,344 @@
+{
+  "unitSeeds": 29,
+  "browserSeeds": 9,
+  "seedInputsIdentical": true,
+  "unitFailedAssertionsIdentical": true,
+  "browserFailedTestsIdentical": true,
+  "browserSummaryIdentical": true,
+  "sourceBytesRestored": true,
+  "unit": [
+    {
+      "label": "cross-family pin retention",
+      "status": 1,
+      "failures": [
+        "changes controller families, shows every dropped assignment, blocks export and recovers with undo"
+      ]
+    },
+    {
+      "label": "lost same-family pin retention",
+      "status": 1,
+      "failures": [
+        "preserves exact wiring and all non-controller content within a connector family",
+        "drops a pin absent from a new board even within the same family"
+      ]
+    },
+    {
+      "label": "deleted key keeps layer bindings",
+      "status": 1,
+      "failures": [
+        "deleting a key removes its bindings from all layers and connected wires; undo restores them"
+      ]
+    },
+    {
+      "label": "undo restores current state",
+      "status": 1,
+      "failures": ["reduceProjectHistory moves present between the stacks on undo and redo"]
+    },
+    {
+      "label": "new edit retains redo history",
+      "status": 1,
+      "failures": ["reduceProjectHistory pushes the present to past and clears future on commit"]
+    },
+    {
+      "label": "keymap shifts layer target",
+      "status": 1,
+      "failures": [
+        "matches all five independently approved golden files byte for byte",
+        "resolves layer ids after reordering and retains key order and missing none",
+        "covers every supported built-in binding and BT macro/profile parameter forms"
+      ]
+    },
+    {
+      "label": "export ignores validation",
+      "status": 1,
+      "failures": [
+        "returns no generated files for a valid matrix with incompatible Bluetooth bindings",
+        "blocks repairable invalid geometry even when the electrical matrix is valid"
+      ]
+    },
+    {
+      "label": "controller select loses change handler",
+      "status": 1,
+      "failures": [
+        "changes controller families, shows every dropped assignment, blocks export and recovers with undo",
+        "keeps compatible connector assignments and reports incompatible Bluetooth bindings on USB controllers"
+      ]
+    },
+    {
+      "label": "reverse diode button loses handler",
+      "status": 1,
+      "failures": [
+        "reverses/removes a diode with real buttons, prevents a second diode and restores exact state"
+      ]
+    },
+    {
+      "label": "explicit shield name ignored",
+      "status": 1,
+      "failures": ["returns the override as typed when present"]
+    },
+    {
+      "label": "backup discard leaves damaged bytes",
+      "status": 1,
+      "failures": [
+        "keeps damaged bytes through cancelled discard and resumes saving after confirmed discard"
+      ]
+    },
+    {
+      "label": "imprecise entity IDs",
+      "status": 1,
+      "failures": [
+        "allocates k ids beyond Number precision without exponent notation",
+        "allocates w ids beyond Number precision without exponent notation",
+        "allocates l ids beyond Number precision without exponent notation",
+        "edits and round trips imported large entity ids and dangling layer references"
+      ]
+    },
+    {
+      "label": "stale imports replace newest request",
+      "status": 1,
+      "failures": [
+        "keeps the latest Open request when older completes first: 0",
+        "keeps the latest Open request when older completes first: 1",
+        "ignores an old failure after a successful Open and allows retry"
+      ]
+    },
+    {
+      "label": "import overwrites edited project",
+      "status": 1,
+      "failures": [
+        "does not replace New with a pending Open",
+        "keeps edits made during Open and announces the cancellation",
+        "invalidates a pending Open even when edit followed by Undo returns to the same project object"
+      ]
+    },
+    {
+      "label": "empty move destroys redo",
+      "status": 1,
+      "failures": [
+        "keeps redo and avoids autosave for empty move and unknown bends domain operations"
+      ]
+    },
+    {
+      "label": "identical bends creates a new project",
+      "status": 1,
+      "failures": ["preserves identity for unknown wires and equal bend values"]
+    },
+    {
+      "label": "geometry argument stack overflow",
+      "status": 1,
+      "failures": ["calculates large layout bounds without exceeding the argument limit"]
+    },
+    {
+      "label": "oversized wire bends accepted",
+      "status": 1,
+      "failures": [
+        "accepts the wires.0.bends resource boundary and rejects excess without truncation"
+      ]
+    },
+    {
+      "label": "invalid project mislabeled as unavailable",
+      "status": 1,
+      "failures": [
+        "shows the structural save reason, keeps the current project in memory, and repairs it with Undo"
+      ]
+    },
+    {
+      "label": "incompatible draft accepts hold key",
+      "status": 1,
+      "failures": [
+        "rejects a hold-slot pick for a key-press draft rather than retaining an incompatible hold"
+      ]
+    },
+    {
+      "label": "layout rotation reversed",
+      "status": 1,
+      "failures": ["centers the fixed MX footprint in a resized cap then rotates pins with it"]
+    },
+    {
+      "label": "layout export loses width",
+      "status": 1,
+      "failures": ["exports all seven sized rotated physical cells against an independent golden"]
+    },
+    {
+      "label": "duplicate loses layer bindings",
+      "status": 1,
+      "failures": [
+        "clones source-order geometry, diode and all bindings with exact fresh IDs and no wires"
+      ]
+    },
+    {
+      "label": "geometry no-op destroys redo",
+      "status": 1,
+      "failures": [
+        "retains history identity and redo for effective-default, capped and unknown layout operations"
+      ]
+    },
+    {
+      "label": "pointer resize loses fixed anchor",
+      "status": 1,
+      "failures": [
+        "snaps corner dimensions while holding the opposite corner fixed and retains electrical data"
+      ]
+    },
+    {
+      "label": "pointer rotation loses center pivot",
+      "status": 1,
+      "failures": [
+        "rotates about visible center and rebases arbitrary origins without a center jump"
+      ]
+    },
+    {
+      "label": "pointer release accepts overlap",
+      "status": 1,
+      "failures": [
+        "refuses an overlapping release, cancels capture loss, and hides handles in wiring mode",
+        "shows overlapping resize previews but refuses conflicting release"
+      ]
+    },
+    {
+      "label": "cancelled numeric geometry resurfaces",
+      "status": 1,
+      "failures": [
+        "discards cancelled numeric values after Cancel preview before editing another property",
+        "discards cancelled numeric values after Escape before editing another property"
+      ]
+    },
+    {
+      "label": "numeric editing loses live preview",
+      "status": 1,
+      "failures": [
+        "shows numeric changes immediately in the collapsed precise editor without a Preview button",
+        "discards cancelled numeric values after Cancel preview before editing another property",
+        "discards cancelled numeric values after Escape before editing another property"
+      ]
+    }
+  ],
+  "browser": [
+    {
+      "seed": "disabled-resize",
+      "assertion": "toBeCloseTo",
+      "detected": true,
+      "failedTests": [
+        {
+          "title": "layout-gestures.spec.ts / resize right at 0° preserves opposite anchor",
+          "file": "layout-gestures.spec.ts",
+          "project": "chromium",
+          "status": "failed",
+          "errorCount": 1
+        }
+      ]
+    },
+    {
+      "seed": "invisible-preview",
+      "assertion": "toHaveScreenshot",
+      "detected": true,
+      "failedTests": [
+        {
+          "title": "layout-paint.spec.ts / reviewed rotated selection frame and live preview paint",
+          "file": "layout-paint.spec.ts",
+          "project": "chromium",
+          "status": "failed",
+          "errorCount": 1
+        }
+      ]
+    },
+    {
+      "seed": "shifted-hit-area",
+      "assertion": "toBeLessThan",
+      "detected": true,
+      "failedTests": [
+        {
+          "title": "layout-gestures.spec.ts / handles remain aligned after zoom and pan; grid snap and keyboard nudge @cross-browser",
+          "file": "layout-gestures.spec.ts",
+          "project": "chromium",
+          "status": "failed",
+          "errorCount": 1
+        }
+      ]
+    },
+    {
+      "seed": "lost-save",
+      "assertion": "toBe",
+      "detected": true,
+      "failedTests": [
+        {
+          "title": "layout-gestures.spec.ts / resize right at 0° preserves opposite anchor",
+          "file": "layout-gestures.spec.ts",
+          "project": "chromium",
+          "status": "failed",
+          "errorCount": 1
+        }
+      ]
+    },
+    {
+      "seed": "extra-undo",
+      "assertion": "toEqual",
+      "detected": true,
+      "failedTests": [
+        {
+          "title": "layout-gestures.spec.ts / resize right at 0° preserves opposite anchor",
+          "file": "layout-gestures.spec.ts",
+          "project": "chromium",
+          "status": "failed",
+          "errorCount": 1
+        }
+      ]
+    },
+    {
+      "seed": "cancelled-value",
+      "assertion": "toHaveValue",
+      "detected": true,
+      "failedTests": [
+        {
+          "title": "layout-data.spec.ts / precise numeric Enter shows unsaved preview, Cancel/Escape cannot resurrect another value @cross-browser",
+          "file": "layout-data.spec.ts",
+          "project": "chromium",
+          "status": "failed",
+          "errorCount": 1
+        }
+      ]
+    },
+    {
+      "seed": "lost-wiring-route",
+      "assertion": "toBeVisible",
+      "detected": true,
+      "failedTests": [
+        {
+          "title": "wiring.spec.ts / matrix preview, conflict repair, history and actual JSON/ZIP agree @cross-browser",
+          "file": "wiring.spec.ts",
+          "project": "chromium",
+          "status": "failed",
+          "errorCount": 1
+        }
+      ]
+    },
+    {
+      "seed": "saved-wiring-preview",
+      "assertion": "toEqual",
+      "detected": true,
+      "failedTests": [
+        {
+          "title": "wiring.spec.ts / matrix preview, conflict repair, history and actual JSON/ZIP agree @cross-browser",
+          "file": "wiring.spec.ts",
+          "project": "chromium",
+          "status": "failed",
+          "errorCount": 1
+        }
+      ]
+    },
+    {
+      "seed": "wrong-split-offset",
+      "assertion": "toContain",
+      "detected": true,
+      "failedTests": [
+        {
+          "title": "wiring.spec.ts / BLE split uses separate GPIO namespaces and full key order in downloaded shields @cross-browser",
+          "file": "wiring.spec.ts",
+          "project": "chromium",
+          "status": "failed",
+          "errorCount": 1
+        }
+      ]
+    }
+  ]
+}

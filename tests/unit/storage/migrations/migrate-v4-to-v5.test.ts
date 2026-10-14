@@ -1,10 +1,11 @@
-import { getDefinedValue } from '../../../helpers/defined-value';
-import { getResultValue } from '../../../helpers/result';
 import type { Wire } from '@domain';
-import { expect, it } from 'vitest';
-import { createProject } from '@domain';
+import { createProject } from '@domain/project';
 import { parseProjectFile, serializeProject } from '@storage/project';
 import { migrateV4ToV5 } from '@storage/migrations';
+import { getDefinedValue } from '../../../helpers/defined-value';
+import { getResultValue } from '../../../helpers/result';
+
+import { expect, it } from 'vitest';
 
 const RAW_PINS = [8, 6, 17, 20, 22, 24, 11, 9, 10, 2, 29, 31];
 const CONNECTOR_PINS = [0, 1, 2, 3, 4, 5, 7, 10, 16, 19, 20, 21];

@@ -1,7 +1,7 @@
+import { getWirePath } from '@domain/wires';
+import { getSchematicGeometry } from '@ui/schematic/interaction';
 import { expect, it } from 'vitest';
 import { buildProject, freeEnd, keyPin } from '../../../../helpers/build-project';
-import { getWirePath } from '@domain';
-import { getSchematicGeometry } from '@ui/schematic';
 
 it.each([
   { x: 2, y: 0.3667, angle: 0, frontX: 0.62, frontY: 0.3667 },

@@ -1,4 +1,4 @@
-import type { ResizeDirection } from '@domain';
+import type { ResizeDirection } from '@domain/geometry/transforms';
 
 export const TRANSFORM_HANDLES = [
   { name: 'top left', x: -1, y: -1, cursor: 'cursor-nwse-resize' },
