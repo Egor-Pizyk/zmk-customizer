@@ -22,7 +22,17 @@ npm run test:e2e | test:e2e:types
 npm run check    # static checks + Vitest coverage; browser execution is a separate CI job
 ```
 
-`make help` lists targets. Before finishing any task: `make check` must pass.
+`make help` lists targets. Choose checks by change type:
+
+| Change | Completion checks |
+|---|---|
+| Prose-only docs / analysis | Content, local links and instruction consistency; no product suite required |
+| Production code / refactor | `make check`, production build and `make test-e2e` |
+| Changed user journeys | Above plus changed E2E scenarios in three sequential runs without retries; see `docs/testing.md` |
+| Generators / exported geometry | Above plus `make zmk-build` |
+| Tooling / configuration | `make check` and focused affected tool checks; build/browser checks when their pipeline or product output is affected |
+
+Build command inside Docker: `docker compose -p zmk-customizer -f infra/compose.yaml run --rm app npm run build`. Do not run destructive cleanup to prepare checks. Record failures and unavailable checks accurately.
 
 Container definitions and the pinned ZMK runner live in `infra/`; Makefile selects them with explicit paths and the stable `zmk-customizer` Compose project name. Build contexts and app mounts remain at the repository root. Docker ignore rules are Dockerfile-specific files beside the Dockerfiles, so no root `.dockerignore` is needed.
 

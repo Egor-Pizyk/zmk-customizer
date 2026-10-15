@@ -4,49 +4,46 @@ Static browser application for custom keyboard design and ready-to-build ZMK v0.
 
 ## Required startup context
 
-Read every file explicitly imported below before starting work. These `@path` imports are expanded by Claude Code; agents without import expansion must open each listed file themselves. AGENTS.md and these documents form the mandatory project instructions. All guidelines and ADRs are mandatory startup context, even when their path-scoped implementation rules do not apply to the current task.
+Read these imports before starting work. Claude Code expands `@path`; other agents must open the same files manually. Linked documents elsewhere are loaded only under the routing rules below.
 
 @docs/product.md
-@docs/domain-model.md
-@docs/architecture.md
-@docs/tooling.md
-@docs/commands.md
-@docs/workflow.md
 @docs/principles.md
+@docs/workflow.md
 @docs/agent-rules.md
-@docs/repository-map.md
-@docs/folder-structure.md
-@docs/testing.md
-@docs/guidelines/code-quality/control-flow.md
-@docs/guidelines/code-quality/naming/functions.md
-@docs/guidelines/code-quality/naming/variables.md
-@docs/guidelines/code-quality/observability.md
-@docs/guidelines/code-quality/typescript.md
-@docs/guidelines/frontend/accessibility.md
-@docs/guidelines/frontend/admin-ui.md
-@docs/guidelines/frontend/react.md
-@docs/guidelines/frontend/tailwind.md
-@docs/decisions/README.md
-@docs/decisions/0001-static-spa-no-backend.md
-@docs/decisions/0002-react-19-vite.md
-@docs/decisions/0003-single-project-state.md
-@docs/decisions/0004-oxlint-oxfmt.md
-@docs/decisions/0005-docker-makefile.md
-@docs/decisions/0006-spec-kit.md
-@docs/decisions/0007-golden-file-tests.md
-@docs/decisions/0008-svg-layout-editor.md
-@docs/decisions/0009-runtime-dependencies.md
-@docs/decisions/0010-target-zmk-v0-3.md
-@docs/decisions/0011-tailwind-design-system.md
-@docs/decisions/0012-behavior-testing.md
-@docs/decisions/0013-architecture-parser.md
-@docs/decisions/0014-browser-behavior-testing.md
-@docs/decisions/0015-module-public-apis.md
-@docs/decisions/0016-nested-modules-and-agent-context.md
-@docs/decisions/0017-ui-logic-and-components.md
 
-## Feature context on demand
+## Critical implementation constraints
 
-@specs/README.md
+- Target pinned ZMK v0.3.0; never offer or emit main-only features. Read relevant verified `docs/zmk/` notes before changing ZMK syntax; do not generate it from memory.
+- One serializable `Project`; domain operations are pure and immutable. Schema changes require migrations and old-file tests.
+- Business rules belong in domain, ZMK facts in catalog, untrusted parsing in storage. UI renders and dispatches. Generators are pure and deterministic.
+- Preserve keyboard access, undo/redo and existing user data. New runtime dependencies require an ADR.
 
-The feature index links each specification directory. Read relevant feature artifacts when needed. Do not import all specs, `.specify/` templates or Spec Kit skills at startup. Workflow rules live in the mandatory docs/workflow.md import above.
+These are reminders; the routed documents own the detailed rules.
+
+## Load context for the task
+
+Before editing, identify the change type using `docs/workflow.md`, inspect the working tree, and resolve the intended feature from the user request and Spec Kit feature resolver. Check the resolved directory against the task; do not assume a remembered feature or branch is current.
+
+Read all matching rows before working in that area. Conditional reading is mandatory when its trigger applies; expand the set if the task crosses boundaries.
+
+| Task / area | Required context |
+|---|---|
+| Find files or feature ownership | `docs/repository-map.md`, `specs/README.md`; relevant roadmap entry for scope |
+| Plan or change production code | `docs/architecture.md`, `docs/folder-structure.md`, `docs/tooling.md` |
+| Implement existing feature work | Relevant `spec.md`, `plan.md`, `tasks.md` and contracts; other artifacts only when cited or needed |
+| Domain / TypeScript code | `docs/domain-model.md`, `docs/guidelines/code-quality/typescript.md`, `control-flow.md`, and both `naming/*.md` in that directory |
+| Errors, validation, storage / migrations | Above code-quality rules, `docs/guidelines/code-quality/observability.md`, relevant storage and compatibility contracts |
+| React / UI behavior | Code-quality rules, `docs/guidelines/frontend/react.md`, `accessibility.md`, `admin-ui.md` |
+| Styles / design tokens | `docs/guidelines/frontend/tailwind.md`, `accessibility.md`, existing `src/styles.css` tokens |
+| ZMK output / catalog facts | `docs/zmk/README.md`, relevant reference pages, generator/catalog contracts and independent fixtures |
+| Tests or code verification | `docs/testing.md`, `docs/commands.md` |
+| Dependencies / infrastructure / tooling | `docs/tooling.md`, `docs/commands.md`, relevant ADRs |
+| Change a project decision | `docs/decisions/README.md` and affected ADRs |
+
+Do not recursively load all specs, ADRs, guidelines, templates or skills. Load a Spec Kit skill only for its stage. `.claude/rules` provides path-scoped adapters to the same guidelines; agents without this mechanism follow the table explicitly.
+
+## Rule ownership
+
+`docs/principles.md` owns principles; `docs/workflow.md` owns SDD and completion gates; `docs/architecture.md` owns dependency rules; `docs/folder-structure.md` owns placement; guidelines own implementation conventions. ADRs explain decisions and their history; current normative rules live in the owning documents. `tsconfig.json` owns the exact module alias registry.
+
+Feature specs define behavior; plans define its implementation; tasks track execution; verification records evidence. When sources disagree, do not silently choose whichever permits the change: preserve the user's explicit scope, resolve the conflict in the owning documents, and update affected derived artifacts. `.specify/memory/constitution.md` is a compact Spec Kit projection of project principles, not a separate policy source.

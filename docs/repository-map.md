@@ -1,13 +1,15 @@
 # Repository map
 
 ```
-AGENTS.md              entry point with explicit mandatory documentation imports
+AGENTS.md              startup context and mandatory task-based reading router
 CLAUDE.md              imports AGENTS.md for Claude Code
 docs/
-  guidelines/          mandatory code-quality rules
+  guidelines/          implementation rules, mandatory when their task/path scope applies
   zmk/                 verified ZMK reference notes with links
   roadmap.md           feature list in implementation order
   decisions/           ADRs (index in docs/decisions/README.md)
+  context-verification.md  context-routing review and validation limits
+  testing-history.md   archived testing measurements, not current verification
 specs/                 Spec Kit feature specs (created by /speckit-specify)
 .specify/              Spec Kit templates, scripts, constitution
 .claude/               Claude Code settings, hooks/format-lint.sh (PostToolUse on Edit|Write), agents/ (zmk-reviewer, domain-test-writer, spec-reviewer), skills/ (/speckit-* commands), rules/ (symlinks to docs/guidelines)

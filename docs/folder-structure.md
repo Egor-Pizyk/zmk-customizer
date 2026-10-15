@@ -53,14 +53,7 @@ Workspace folders group composition and shared contracts in their child modules.
 
 `tsconfig.json` is the source of truth for exact alias-to-index paths; wildcard aliases are not exposed. Vite and Vitest use the built-in tsconfig paths resolver. The lint rule and architecture checker read the same alias registry.
 
-- `@domain`: Shared types and exhaustiveness helper only. Each responsibility group has its own exact API: `@domain/keys`, `@domain/geometry`, `@domain/project`, `@domain/wires`, `@domain/wiring`, `@domain/bindings`, `@domain/layers`, `@domain/analysis`, `@domain/crossings`, `@domain/diodes`, `@domain/validation`.
-- `@generators`: Shared generated-file type, string escaping and user configuration generator. File generators use `@generators/shield`, `@generators/keymap` and `@generators/repository`.
-- `@catalog/bindings`, `@catalog/controllers`, `@catalog/firmware`, `@catalog/presets`: Independent catalog modules.
-- `@storage/project`, `@storage/migrations`, `@storage/preferences`, `@storage/export`: Storage boundary modules.
-- `@ui/app/logic`: Global shortcut dispatch. `@ui/app/components`: Application composition, workspace switching and the error boundary.
-- `@ui/project/logic`, `@ui/project/components`, `@ui/preferences`, `@ui/downloads`, `@ui/navigation`, `@ui/shortcuts`, `@ui/dialogs`, `@ui/issues`: Shared state, provider rendering, browser adapters and contracts.
-- `@ui/components/{logic,components}`, `@ui/components/icons`, `@ui/canvas/{logic,components}`, `@ui/shell/{logic,components}`: Shared UI modules (braces denote separate exact aliases, not wildcard aliases).
-- `@ui/schematic/{logic,components}`, `@ui/bindings/{logic,components}`, `@ui/firmware`, `@ui/export/{logic,components}`: Workspace modules; nested responsibility folders expose their own exact APIs and split mixed implementations the same way.
+The exact alias registry is `tsconfig.json`; do not copy it into documentation. Root APIs expose shared contracts, responsibility groups expose their own named indexes, and mixed UI groups expose separate logic/component APIs. Examples:
 
 ```ts
 import { addKey } from '@domain/keys';

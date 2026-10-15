@@ -7,7 +7,15 @@ paths:
 
 # React
 
-How `src/ui/` is written. Base rules (function components, `type XProps`, no logic in components, no effects for derived state, stable list keys) are in `code-quality/typescript.md` → "React"; handler and component names in `code-quality/naming/functions.md`. This file adds the rest. Styling: `tailwind.md`. Screens and primitives: `admin-ui.md`. Keyboard and ARIA: `accessibility.md`.
+How `src/ui/` is written. Type conventions are in `code-quality/typescript.md`; naming in `code-quality/naming/functions.md`. Styling: `tailwind.md`; screen patterns: `admin-ui.md`; keyboard and ARIA: `accessibility.md`.
+
+## Component fundamentals
+
+- Function components, props as a `type <Component>Props` next to the component, destructured in the signature. No `React.FC`.
+- Components contain no ZMK rules: they call domain queries/operations and render the result. A condition like "is this pin already used" is a domain function, not inline JSX logic.
+- Derive during render; `useEffect` is only for syncing with the outside world (localStorage, `document` listeners), never for computing state from other state.
+- List `key` props use stable identity, never the array index of a reorderable list.
+- Hooks follow the rules of hooks; dependency arrays are complete, not silenced.
 
 ## Where components live
 
@@ -98,7 +106,7 @@ Effects sync with systems outside React. A change that adds, moves or removes an
 
 ## Lists and keys
 
-- `key={key.keyIndex}` for keys, `key={`${cell.row}:${cell.col}`}` for matrix cells, `key={layer.id}` / `key={combo.id}` for user entities. If a reorderable entity has no stable id, that is a domain gap: add the id to the type, do not key by array position.
+- `key={key.id}` for keys (stable identity, not the reorderable key index), `key={`${cell.row}:${cell.col}`}` for matrix cells, `key={layer.id}` / `key={combo.id}` for user entities. If a reorderable entity has no stable id, that is a domain gap: add the id to the type, do not key by array position.
 
 ## React 19
 

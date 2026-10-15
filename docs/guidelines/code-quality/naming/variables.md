@@ -26,7 +26,7 @@ Names are nouns from the glossary below; one term per concept across code, tests
 | `row` / `col` | Matrix row / column number | `column`, `r`, `c` |
 | `pin` (`PinRef`) | A GPIO pin reference, via connector (`&pro_micro 4`) or direct (`&gpio0 8`) | `gpio` (as a noun), `port`, `wire` |
 | `keyPin` (`KeyPin`) | Contact 1 or 2 of a key's switch on the Schematic (spec 003) | `leg`, `contact`, `pin` (alone, when a GPIO pin could be meant) |
-| `boardPin` | Placeholder controller pin 0–31, shown `P<n>`, until controller boards replace it with `PinRef` (spec 003) | `gpio`, `port` |
+| `boardPin` | Controller contact in schematic wiring; resolve board-specific GPIO syntax through the controller catalog | `gpio`, `port` |
 | `wire` | A drawn connection on the Schematic: two ends plus bend points | `line`, `trace`, `link` |
 | `junction` | A wire end that joins another wire | `tee`, `node` |
 | `crossing` | Two wires crossing at a point; connected (default) or insulated | `intersection`, `bridge` |

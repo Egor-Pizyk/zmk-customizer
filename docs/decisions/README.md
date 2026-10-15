@@ -1,6 +1,6 @@
 # Architecture decisions
 
-One file per decision: `NNNN-short-title.md`, ≤30 lines, never rewritten after acceptance. To change a decision, add a new ADR that supersedes the old one and set the old one's status to `Superseded by NNNN`.
+One file per decision: `NNNN-short-title.md`, ≤30 lines, never rewritten after acceptance. To change a decision, add a new ADR that supersedes the old one and set the old one's status to `Superseded by NNNN` (or `Partially superseded by NNNN` with the affected scope).
 
 A new runtime dependency always needs an ADR (docs/tooling.md). Undecided questions live in `docs/roadmap.md` → "Open decisions" until an ADR settles them.
 
@@ -9,7 +9,7 @@ A new runtime dependency always needs an ADR (docs/tooling.md). Undecided questi
 ```
 # NNNN. Title
 
-Status: Accepted | Superseded by NNNN
+Status: Accepted | Superseded by NNNN | Partially superseded by NNNN
 Date: YYYY-MM-DD
 
 ## Context
@@ -48,3 +48,5 @@ What becomes easier, what becomes harder, what we must now keep true.
 - [0016 — Nested module APIs, infrastructure and agent context](0016-nested-modules-and-agent-context.md)
 
 - [0017 — Separate UI logic and React components](0017-ui-logic-and-components.md)
+
+- [0018 — Task-scoped agent context and proportional SDD](0018-task-scoped-agent-context.md)

@@ -114,27 +114,8 @@ export function assertNever(value: never): never {
 
 Production files are grouped by responsibility inside each layer. Tests live in `tests/unit/<layer>/<group>/`, mirroring production groups, rather than beside production modules. Node tooling tests live in `tests/tooling/`. Keep existing layer boundaries across nested folders. Cross-module imports use exact aliases that resolve to the public `index.ts`; direct relative imports are allowed only within the same module. Never import a module’s own index from its implementation files.
 
-## React
-
-- Function components, props as a `type <Component>Props` next to the component, destructured in the signature. No `React.FC`.
-- Components contain no ZMK rules: they call domain queries/operations and render the result. A condition like "is this pin already used" is a domain function, not inline JSX logic.
-- Derive during render; `useEffect` is only for syncing with the outside world (localStorage, `document` listeners), never for computing state from other state.
-- List `key` props use stable identity, never the array index of a reorderable list.
-- Hooks follow the rules of hooks; dependency arrays are complete, not silenced.
-
 ## Enforced by
 
 - tsconfig: `strict`, `noUncheckedIndexedAccess`, `verbatimModuleSyntax` (type-only imports), `erasableSyntaxOnly` (bans enums, namespaces, parameter properties).
 - oxlint: `modules/public-api` (module indexes and aliases), `typescript/no-explicit-any`, `typescript/no-non-null-assertion`, `typescript/consistent-type-definitions` (type), `typescript/consistent-type-imports`, `typescript/ban-ts-comment`, `import/no-default-export`, `react/rules-of-hooks`, `react/exhaustive-deps`, `typescript/switch-exhaustiveness-check` (type-aware, if enabled).
 - Review only: no brands, `kind` discriminant, `readonly` everywhere, `satisfies` on catalog, return-vs-throw rule, one concept per file, no logic in components, no effects for derived state.
-
-## Resolved architecture gate exceptions
-
-The dependency matrix in docs/architecture.md is checked by scripts/check-architecture.mjs, including alias resolution, normalized paths, exports and dynamic imports. Pure layers accept no external packages. React/react-dom/fflate are allowed in UI composition; zod/fflate in storage. Catalog raw assets stay in catalog. Tests may read fixtures and use test helpers; production cannot import either tests or test helpers.
-
-- Shared UI modules allowed from workspaces/shared UI: project, preferences, navigation, shortcuts, dialogs, downloads and issues. Owner: shared UI. Reason: project/preferences/actions and shared contracts. App composition stays in ui/app and is not imported by workspaces. The shortcut event reader lives in ui/shortcuts so workspaces do not depend on app composition.
-- src/ui/export/logic/get-export-preview.ts is the only runtime UI→generators bridge. Owner: Export. Reason: prepare deterministic generated previews from the shared analysis. Remove only if preview preparation moves to another named composition boundary. GeneratedFile type-only imports through @generators are allowed in export consumers; the gate resolves the symbol’s defining file rather than treating the entire barrel as one permission.
-- src/main.tsx may import src/styles.css. Owner: composition root. Reason: Vite entry styles. Remove if the stylesheet entry moves.
-- Low-level electrical runtime APIs get-nets, find-wire-contacts, find-crossings, derive-shield-matrix, validate-project, validate-schematic and validate-shield-project are unavailable to UI imports. Use getProjectAnalysis; domain type imports remain allowed.
-
-These static checks do not establish semantic purity or complete alias/data-flow analysis; tests and review remain required.

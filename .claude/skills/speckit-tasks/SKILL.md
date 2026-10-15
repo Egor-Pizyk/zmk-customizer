@@ -11,6 +11,10 @@ disable-model-invocation: false
 ---
 
 
+## Project context
+
+Before this stage, read docs/workflow.md and follow AGENTS.md task-based routing. Verify the resolved feature directory matches the requested task. Use project templates, preserve requirement identifiers, and load only relevant supporting artifacts. Project test requirements apply even if generic examples call tests optional. Keep plan.md Relevant context and a single requirement → task → check → evidence mapping current. Do not regenerate completed stages without a relevant change.
+
 ## User Input
 
 ```text
@@ -142,7 +146,7 @@ The tasks.md should be immediately executable - each task must be specific enoug
 
 **CRITICAL**: Tasks MUST be organized by user story to enable independent implementation and testing.
 
-**Tests are OPTIONAL**: Only generate test tasks if explicitly requested in the feature specification or if user requests TDD approach.
+**Project test policy**: Follow docs/workflow.md and docs/testing.md. Tests-first is mandatory for domain, storage and generators, and for bug regressions, even when the feature prompt does not repeat it. Include required browser coverage and requirement-to-evidence mapping.
 
 ### Checklist Format (REQUIRED)
 

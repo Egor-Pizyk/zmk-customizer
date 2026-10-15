@@ -1,0 +1,35 @@
+# Agent context verification
+
+Reviewed 2026-10-15 for [ADR 0018](decisions/0018-task-scoped-agent-context.md). This records documentation checks, not product verification.
+
+## Startup budget
+
+Direct startup imports plus AGENTS.md contain approximately 1,933 whitespace-separated words, down from approximately 18,671 before this change. This is not a token measurement and excludes platform instructions, skill descriptions, client-specific automatic rules and task context. Aim for 1,500–2,500 words; preserve critical constraints rather than optimizing the count alone.
+
+## Routing walkthroughs
+
+These are static reviews of instructions, not trials of independent agent sessions.
+
+| Example task | Additional required context | Expected route and evidence |
+|---|---|---|
+| Fix key deletion violating an existing requirement | Relevant spec/contracts/tasks; architecture, folder ownership, domain model, TypeScript/control flow/naming, testing and commands | Existing-requirement bug; failing regression before repair; preserved identity/layers/undo; applicable code checks |
+| Add a UI gesture | Relevant feature artifacts, architecture/tooling, UI and code-quality guidelines, accessibility, testing and commands | Full SDD or existing-feature extension; keyboard alternative, one gesture/undo step, real-browser assertions and repeated changed E2E runs |
+| Change generated shield syntax | Architecture/domain/tooling, relevant feature artifacts, ZMK index and construct pages, fixtures, testing and commands | Independent golden contract before implementation; pinned-version source, deterministic output and ZMK build evidence |
+| Improve prose documentation | Startup context and affected documents; decision index/ADR if changing policy | Direct documentation route; links/content/consistency checks, no product suite required |
+
+Cross-area tasks take the union of matching rows. ADR history and unrelated feature artifacts are not required by these routes.
+
+## Checks performed
+
+- `git diff --check`: passed.
+- `npm run check:guidelines`: passed (7 tooling tests and the current effect registry/rule/link gate).
+- Local Markdown target check across changed project documentation: 72 links, no missing targets before this verification page was added; final links checked again after addition.
+- Spec Kit `resolve-template.sh <spec|plan|tasks>-template --json`: selects the updated project templates.
+- YAML parsing, skill names/descriptions and single project-routing section: passed for plan, tasks and implement. `.agents/skills` resolves to the same skill files as `.claude/skills`.
+- The skill-creator `quick_validate.py` rejects pre-existing Claude metadata fields (`argument-hint`, `compatibility`, `disable-model-invocation`, `user-invocable`). Those provider fields were preserved; this validator did not pass.
+
+## Limits and future evaluation
+
+No product code was changed for this documentation task. Product/browser/firmware suites were not run. Existing unrelated working-tree changes were preserved. Historical ADR bodies retain old section references as decision history; active agent instructions use current document paths.
+
+Observe the four routes in subsequent real tasks: does the agent find the owning requirement, read applicable rules before editing, preserve contracts and record actual evidence? Record missed routing or unnecessary reads here before adding more mandatory startup material. Client-specific import/rule deduplication and actual context token savings have not been measured.

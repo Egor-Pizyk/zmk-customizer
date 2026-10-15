@@ -30,7 +30,6 @@ Tailwind CSS v4 is the design system (ADR 0011). Tokens live only in `src/styles
 ## Dark mode
 
 - Each token holds its light and dark value via `light-dark()` in `src/styles.css`; the theme (System / Light / Dark) is picked by `color-scheme` on `<html>` (`data-theme`). Feature code never writes `dark:`; if something looks wrong in dark mode, fix the token.
-- No theme toggle until a feature asks for it.
 
 ## Variants in primitives
 
