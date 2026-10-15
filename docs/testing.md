@@ -1,6 +1,6 @@
 # Behavioral regression testing
 
-Vitest protects features 001–012. Feature 025 adds real browser interaction and paint coverage below.
+This document owns behavioral test policy and browser verification. Completion commands by change type live in [commands.md](commands.md). Historical measurements are in [testing history](testing-history.md); they are not current-tree verification.
 
 ## Contracts and test boundaries
 
@@ -33,17 +33,6 @@ Mock OS/browser boundaries only: file reads, downloads, clipboard denial and ZIP
 failure injection. React, its hooks, providers, domain functions and generators run
 normally. jsdom shims model missing native APIs, not business behavior.
 
-## Cleanup performed
-
-- Removed the schema/Project `expectTypeOf` test; the compiler owns type checking.
-- Replaced mocked `Field`/`Button` callback capture and static Export HTML checks
-  with rendered application actions and persisted/exported outcomes.
-- Replaced React `useState`/`useRef` mocks in picker/export hook tests with real hooks.
-- Replaced the mocked copied-layer test with the complete copy/delete/add/paste UI flow.
-- Removed exact Tailwind class checks for endpoint markers and diode hit circles.
-- Kept data validation tests, catalog documentation/version/pin constraints and
-  deterministic/golden exports: these are runtime/product requirements, not lint.
-
 ## Commands and regression floors
 
 `make check` runs typecheck, lint, formatting and the full suite **with V8 coverage**,
@@ -64,18 +53,6 @@ overwrite a concurrently changed file. It detects changes in controller retentio
 key deletion, undo/redo, layer indices in generated keymaps, export validation,
 controller/diode UI handlers and explicit shield naming. Update mutation anchors
 after a refactor; they are test-quality probes, not product contracts.
-
-## Verified result
-
-The final `make check` passed: 138 files, 859 tests, including coverage floors.
-Production build passed. The seeded mutation run detected 10/10 regressions.
-
-| Coverage | Result |
-|---|---:|
-| Lines | 88.42% |
-| Statements | 88.40% |
-| Functions | 89.82% |
-| Branches | 81.43% |
 
 ## Limits
 
@@ -159,7 +136,7 @@ For new or changed user journeys, add or update Playwright E2E tests and include
 - For a discovered bug, first reproduce a failing test, then fix its cause in the owning architectural layer. Domain/generator repairs also require their own tests-first contracts.
 - For a substantial new interaction contract, prove test sensitivity with a controlled behavioral regression. Run it separately from checks and production edits, require a user-facing or saved-data assertion failure, and restore exact original files. Do not require every domain permutation or all six existing browser seeds for every feature.
 - The complete Chromium suite is mandatory. Add targeted Firefox/WebKit cases for SVG, foreignObject, pointer capture, native inputs and focus where the feature touches them.
-- Before completion, run `make check`, production build and `make test-e2e`. Verify new or changed E2E tests in three sequential runs without retries. Run `make zmk-build` if generators or exported geometry change.
+- Apply the change-specific completion checks in [commands.md](commands.md). New or changed E2E tests require three sequential runs without retries.
 - Retain useful failure traces/screenshots. Record scenario → risk → existing coverage → new E2E → visible assertion → saved/exported assertion, verification results and remaining limits in feature artifacts. Commands and artifact handling are documented in `docs/testing.md`.
 - Never weaken assertions to make CI green or claim absence of user problems solely from passing tests.
 
@@ -167,4 +144,8 @@ For new or changed user journeys, add or update Playwright E2E tests and include
 
 Both mutation orchestrators are Node ES modules under scripts/. Root Makefile delegates to npm run test:mutations and npm run test:e2e:mutations. These orchestration commands run on host Node 24 and invoke isolated Docker test containers; they do not require host Python. Run them sequentially and alone. Unit mutation subprocesses retain the 120-second timeout. Shared byte mutation/restoration code refuses concurrent edits.
 
-Migration parity was demonstrated with Node first, then unchanged Python originals: all 29 Vitest and nine browser seeds matched failed-test identities, counts, process results and browser summary. Source SHA-256 manifests matched before/after all four runs. See [migration verification](../specs/030-node-mutation-runners/verification.md). Tooling contracts for restoration, concurrent edits, missing/duplicate anchors, timeout and report acceptance run through npm run check:mutation-runners in make check.
+Tooling contracts for restoration, concurrent edits, missing/duplicate anchors, timeout and report acceptance run through npm run check:mutation-runners in make check. Historical migration evidence is linked below.
+
+## Historical evidence
+
+See [testing history](testing-history.md), [browser verification](../specs/025-playwright-e2e/verification.md) and [mutation migration verification](../specs/030-node-mutation-runners/verification.md).

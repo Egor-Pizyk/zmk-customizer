@@ -11,6 +11,10 @@ disable-model-invocation: false
 ---
 
 
+## Project context
+
+Before this stage, read docs/workflow.md and follow AGENTS.md task-based routing. Verify the resolved feature directory matches the requested task. Use project templates, preserve requirement identifiers, and load only relevant supporting artifacts. Project test requirements apply even if generic examples call tests optional. Keep plan.md Relevant context and a single requirement → task → check → evidence mapping current. Do not regenerate completed stages without a relevant change.
+
 ## User Input
 
 ```text

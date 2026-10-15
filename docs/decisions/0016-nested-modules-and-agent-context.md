@@ -1,6 +1,6 @@
 # ADR 0016: Nested module APIs, infrastructure and agent context
 
-Status: Accepted
+Status: Partially superseded by 0018 (agent context only); module APIs and infrastructure remain accepted
 Date: 2026-10-14
 
 ## Context

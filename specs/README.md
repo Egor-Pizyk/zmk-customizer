@@ -1,6 +1,6 @@
 # Feature specifications
 
-This index is loaded at startup. Read only the spec, plan, tasks and evidence relevant to the current task; do not recursively load specs or Spec Kit templates. Directory numbers are immutable.
+Read this index when locating feature ownership. Read only the spec, plan, tasks and evidence relevant to the current task; do not recursively load specs or Spec Kit templates. Directory numbers are immutable.
 
 - [001-app-shell-ui](001-app-shell-ui/)
 - [002-project-foundation](002-project-foundation/)

@@ -29,7 +29,7 @@ Production imports follow this matrix; catalog values enter domain operations as
 | ui/app | composition of UI/domain/catalog/storage; no generator calls |
 | main.tsx | UI/storage/catalog and styles.css |
 
-Enforced by scripts/check-architecture.mjs (resolved imports, re-exports, dynamic imports, separate test locations), oxlint no-restricted-imports overrides and import/no-cycle. Exact root contracts and exceptions are documented in docs/guidelines/code-quality/typescript.md.
+Enforced by scripts/check-architecture.mjs (resolved imports, re-exports, dynamic imports, separate test locations), oxlint no-restricted-imports overrides and import/no-cycle. Exact root contracts and exceptions are documented below.
 
 See [folder ownership](folder-structure.md) for the concrete groups and test locations.
 
@@ -54,3 +54,14 @@ Group related files inside each layer by responsibility (project, geometry, keys
 - Every catalog entry that the user can toggle carries `docsUrl` pointing to the exact section of the **v0.3 docs, https://v0-3-branch.zmk.dev/docs/** (not zmk.dev, which describes `main`). An entry without a link is a bug.
 - Catalog targets one pinned ZMK version (see `docs/zmk/README.md`). Updating ZMK = updating catalog + fixtures in one change. Target version is v0.3 (ADR 0010); version-dependent values (board ids, board overlay names, `west.yml` revision) are catalog data, not generator code.
 - Keycode data: generate from `dt-bindings/zmk/keys.h` (MIT). Do not bundle `docs/src/data/hid.js` (CC-BY-NC-SA).
+
+## Resolved architecture gate exceptions
+
+The dependency matrix in docs/architecture.md is checked by scripts/check-architecture.mjs, including alias resolution, normalized paths, exports and dynamic imports. Pure layers accept no external packages. React/react-dom/fflate are allowed in UI composition; zod/fflate in storage. Catalog raw assets stay in catalog. Tests may read fixtures and use test helpers; production cannot import either tests or test helpers.
+
+- Shared UI modules allowed from workspaces/shared UI: project, preferences, navigation, shortcuts, dialogs, downloads and issues. Owner: shared UI. Reason: project/preferences/actions and shared contracts. App composition stays in ui/app and is not imported by workspaces. The shortcut event reader lives in ui/shortcuts so workspaces do not depend on app composition.
+- src/ui/export/logic/get-export-preview.ts is the only runtime UI→generators bridge. Owner: Export. Reason: prepare deterministic generated previews from the shared analysis. Remove only if preview preparation moves to another named composition boundary. GeneratedFile type-only imports through @generators are allowed in export consumers; the gate resolves the symbol’s defining file rather than treating the entire barrel as one permission.
+- src/main.tsx may import src/styles.css. Owner: composition root. Reason: Vite entry styles. Remove if the stylesheet entry moves.
+- Low-level electrical runtime APIs get-nets, find-wire-contacts, find-crossings, derive-shield-matrix, validate-project, validate-schematic and validate-shield-project are unavailable to UI imports. Use getProjectAnalysis; domain type imports remain allowed.
+
+These static checks do not establish semantic purity or complete alias/data-flow analysis; tests and review remain required.

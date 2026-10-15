@@ -12,7 +12,7 @@ Verified 2026-09-27. **Target: ZMK v0.3.0** — decision in [docs/decisions/0010
 | Zephyr used by `v0.3.0` | `v3.5.0+zmk-fixes` (zmkfirmware/zephyr branch head `dacab4875df72109b96cc8977547a0dc04875bcd`), from `app/west.yml`. **HWMv1** board model (flat board ids, `app/boards/arm/<board>/`) |
 | v0.3.0 docs | rendered at https://v0-3-branch.zmk.dev/docs/ (built from `v0.3-branch`); source https://github.com/zmkfirmware/zmk/tree/v0.3.0/docs/docs. Hardware-integration pages live under `docs/development/hardware-integration/` there |
 | zmk.dev docs | built from `main`. All `https://zmk.dev/docs/...` links in these notes describe `main`; where v0.3.0 differs, pages link the file at the `v0.3.0` tag |
-| Catalog `docsUrl` from a zmk.dev link | replace `https://zmk.dev/docs/` with `https://v0-3-branch.zmk.dev/docs/`; `docs/hardware-integration/…` becomes `docs/development/hardware-integration/…`. Check the anchor against the heading in `docs/docs/**` at `v0.3.0` before committing (AGENTS.md §3.4) |
+| Catalog `docsUrl` from a zmk.dev link | replace `https://zmk.dev/docs/` with `https://v0-3-branch.zmk.dev/docs/`; `docs/hardware-integration/…` becomes `docs/development/hardware-integration/…`. Check the anchor against the heading in `docs/docs/**` at `v0.3.0` before committing (docs/architecture.md → Catalog data) |
 | ZMK `main` (reference for upcoming v0.4) | `5b51501fead672c41b5cfb396f3dafe0894bf4e9` (2026-09-26, "fix(split): Use our managed queue for input report to avoid deadlock (#3110)"), Zephyr `v4.1.0+zmk-fixes` (`10ba6d0cb38bc3d258775d27982f707599320085`), HWMv2. No `v0.4` tag yet |
 | unified-zmk-config-template | `09fce009cdf2f38fc3ae786e24c95b22cf78c79a` (pins `revision: v0.3`, workflow `@v0.3`) |
 | zmk-cli (templates) | `db5a225d8b49fa29dfb9965a6fda8c69ceff98e7` |
@@ -37,7 +37,7 @@ Golden fixtures: `tests/fixtures/upstream/{corne,reviung41}/` (byte-for-byte cop
 
 ## Glossary: ZMK term → our domain term
 
-| ZMK / Zephyr term | Our domain (AGENTS.md §2) | Notes |
+| ZMK / Zephyr term | Our domain (docs/domain-model.md) | Notes |
 |---|---|---|
 | shield | Shield / project keyboard | the generated keyboard; id `[a-z_][a-z0-9_]*` |
 | board (controller) | controller board | e.g. `nice_nano_v2` (v0.3.0), `nice_nano//zmk` (main); we never generate boards |
@@ -89,7 +89,7 @@ grep -rn --include='Kconfig*' '^config ZMK_' zmk-new/app | wc -l
 
 # 4. Refresh fixtures: curl raw.githubusercontent.com/zmkfirmware/zmk/<sha>/app/... for every file listed in SOURCE.md,
 #    then `diff -r -x SOURCE.md` against the clone; update SHA and the main-only section
-# 5. Update the "Pinned version" table, then catalog + fixtures in the same change (AGENTS.md §3.4)
+# 5. Update the "Pinned version" table, then catalog + fixtures in the same change (docs/architecture.md → Catalog data)
 ```
 
 Link check used for these notes: every `https://zmk.dev/docs/...#anchor` was resolved against headings in `docs/docs/**` of the pinned commit (Docusaurus slug: lowercase, punctuation stripped, spaces → `-`, `{#id}` overrides). Every `github.com/zmkfirmware/zmk/blob/main/...` path was checked to exist at `5b51501`; every `blob/v0.3.0/...` path at `edf5c08`.

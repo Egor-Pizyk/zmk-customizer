@@ -1,15 +1,53 @@
 # How work is done (Spec-Driven Development)
 
-Features are built through GitHub Spec Kit. Do not write feature code without a spec.
+New capabilities and changes to user-visible contracts require a specification before feature code. Read only the artifacts needed for the current stage; reuse completed, current stages rather than restarting the workflow.
 
-1. `/speckit-constitution` — once; project principles (source: docs/principles.md and docs/agent-rules.md).
-2. `/speckit-specify <feature>` — what and why, no tech. Creates `specs/NNN-name/spec.md`.
-3. `/speckit-clarify` — resolve open questions before planning.
-4. `/speckit-plan` — how, using docs/architecture.md and docs/tooling.md.
-5. `/speckit-tasks` — ordered task list with tests first.
-6. `/speckit-analyze` — consistency check spec ↔ plan ↔ tasks.
-7. `/speckit-implement` — execute tasks, including Playwright coverage for changed user journeys (docs/testing.md).
-8. Verify completion — `make check`, production build and `make test-e2e`; record results and coverage limits in feature artifacts (docs/testing.md).
+## Choose the change route
 
-Feature order and scope: `docs/roadmap.md`. One feature = one branch `NNN-short-name` = one `specs/NNN-short-name/` directory. Numbers are immutable: once a `specs/NNN-*` directory exists, its number is never reused or reassigned.
+| Change | Required route |
+|---|---|
+| New capability / changed product contract | Full Spec Kit flow below |
+| Extension of an existing feature | Amend its affected requirements, plan and tasks, then analyze and implement |
+| Bug against an existing requirement | Cite the requirement; reproduce a failing regression, fix the owning layer, record verification. Amend artifacts if a requirement or task was missing |
+| Refactor with unchanged behavior | Record scope, preserved contracts, implementation tasks and verification in the owning feature; a separate spec is needed only for a distinct feature/change initiative |
+| Documentation / analysis | Edit or report directly; verify content, links and instruction consistency. No product test run is required for prose-only changes |
+| Dependency / tooling maintenance | Use focused scope and checks; add an ADR when dependency policy or another accepted decision changes. A new developer capability follows full SDD |
 
+Do not use the smaller routes to hide new behavior. For mixed work, apply the stronger route to the affected behavior. Tests-first is mandatory for domain, storage and generator behavior, and for bug regressions. UI testing and browser gates are owned by `docs/testing.md`.
+
+## Full feature flow
+
+1. `/speckit-constitution` — initialize or amend only when principles change; project principles come from `docs/principles.md`.
+2. `/speckit-specify <feature>` — what and why, no implementation design. Creates `specs/NNN-name/spec.md`.
+3. `/speckit-clarify` — resolve material uncertainty before planning.
+4. `/speckit-plan` — how, applying architecture and tooling; list task-relevant context.
+5. `/speckit-tasks` — requirement-linked tasks, tests before their implementation.
+6. `/speckit-analyze` — consistency across spec, plan, tasks and project rules.
+7. `/speckit-implement` — execute tasks and maintain their status.
+8. Verify and record evidence using `docs/testing.md` and `docs/commands.md`.
+
+Feature order and initial scope: `docs/roadmap.md`. Approved feature specs capture refinements; if roadmap and spec disagree, reconcile the affected entry instead of enforcing stale scope. One new feature = one branch `NNN-short-name` = one `specs/NNN-short-name/` directory. Existing directory numbers are immutable and never reused.
+
+Resolve the feature using the installed Spec Kit scripts when invoking its commands. Verify the selected directory against the user's task; persisted `.specify/feature.json` is selection state, not evidence that a feature is active or complete.
+
+## Stage gates
+
+- Before planning: scope, non-goals and acceptance scenarios are clear; material open questions are resolved.
+- Before implementation: requirements are testable, plan respects architecture, tasks cover requirements and appropriate tests, and blocking analysis findings are resolved.
+- Before completion: affected requirements have evidence, required checks passed, task status is accurate, and unverified/manual checks and remaining limits are explicit.
+- If implementation reveals a missing requirement or changes a contract, amend the relevant artifacts before expanding implementation. Do not check off work based only on code existing.
+
+## Task brief and continuity
+
+Capture these in the user request or existing feature artifacts; do not create another document when those already suffice:
+
+- Goal: the observable result and why it matters.
+- Basis: feature directory and relevant FR / acceptance scenario identifiers.
+- Scope and non-goals: what this change includes and excludes.
+- Preserved contracts: data compatibility, undo/redo, export, accessibility as applicable.
+- Verification: observable assertions, commands and manual checks.
+- Uncertainty: material questions versus implementation choices the agent can decide.
+
+In `plan.md`, keep a short Relevant context section with exact docs, contracts and owning modules. Link requirement → task → test/check → evidence in tasks or verification; maintain one mapping, not duplicate tables across artifacts. Research, data-model, contracts and quickstart files are needed only when they carry distinct useful content.
+
+For a resumed session, read the relevant spec, plan and pending tasks, inspect the actual diff, and use recorded evidence with its date/scope. Historical success is not a check of the current tree.
