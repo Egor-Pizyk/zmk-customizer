@@ -13,7 +13,7 @@
     "format:check": "oxfmt --check",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check": "npm run check:architecture && npm run check:guidelines && npm run check:mutation-runners && npm run typecheck && npm run test:e2e:types && npm run lint && npm run format:check && npm run test:coverage",
+    "check": "npm run check:architecture && npm run check:guidelines && npm run check:mutation-runners && npm run check:release && npm run typecheck && npm run test:e2e:types && npm run lint && npm run format:check && npm run test:coverage",
     "test:coverage": "vitest run --coverage",
     "check:architecture": "node --test tests/tooling/check-architecture.test.mjs tests/tooling/module-imports.test.mjs tests/tooling/module-imports-lint.test.mjs tests/tooling/public-api-origins.test.mjs && node scripts/check-architecture.mjs",
     "check:guidelines": "node --test tests/tooling/check-guidelines.test.mjs && node scripts/check-guidelines.mjs",
@@ -21,7 +21,8 @@
     "test:e2e:types": "tsc --project tsconfig.e2e.json --noEmit",
     "check:mutation-runners": "node --test tests/tooling/mutation-runners.test.mjs",
     "test:mutations": "node scripts/check-test-mutations.mjs",
-    "test:e2e:mutations": "node scripts/check-e2e-mutations.mjs"
+    "test:e2e:mutations": "node scripts/check-e2e-mutations.mjs",
+    "check:release": "node --test tests/tooling/create-release.test.mjs"
   },
   "dependencies": {
     "fflate": "0.8.2",
