@@ -22,6 +22,8 @@
 | Move left / Move right | `button` | `moveLayer` by one (one undo step, status "Moved layer Nav to position 0"); the moved layer stays open. Unavailable at the ends, hint "Already the first layer" / "Already the last layer". |
 | Delete layer | `button` "Delete layer" (`danger`) | `removeLayer` at once, status "Deleted layer Nav. Undo"; the same position opens (clamped). With one layer `aria-disabled`, hint "A keymap needs at least one layer". |
 
+The tab strip occupies a separate single row; Add layer is pinned outside horizontal scrolling. A reserved scrollbar gutter keeps its height stable. Name/order controls occupy a second row and wrap only with viewport width, independent of layer count. Tab labels are bounded and truncated visually, with full accessible text and tooltip. The selected tab scrolls into view on selection/project changes without moving keyboard focus.
+
 ## Open layer
 
 - `Preferences.bindingsLayerIndex`, clamped to the last layer in render. Keycaps, Keys table, Action panel, copy/paste and auto-advance read and write `layers[openIndex]`.

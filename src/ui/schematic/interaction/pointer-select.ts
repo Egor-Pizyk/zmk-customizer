@@ -1,7 +1,7 @@
 import { getSelectedKeyIds } from './get-selected-key-ids';
 import { isKeyPositionFree } from '@domain/geometry';
 import { moveKeys } from '@domain/keys';
-import { setWireBends } from '@domain/wires/editing';
+import { setWireBends, getWireBendsResourceError } from '@domain/wires/editing';
 import type { Key, Wire, WireEnd, WirePoint } from '@domain';
 import { isKeyCellInMarquee, isPointInMarquee } from '@ui/canvas/logic';
 import type { PointerState } from './pointer-types';
@@ -256,7 +256,13 @@ export function endSelectDrag(state: PointerState) {
   if (drag?.kind === 'bend') {
     const bends = project.wires.find((wire) => wire.id === drag.wireId)?.bends ?? [];
     const next = bends.with(drag.bendIndex, drag.point);
-    state.commit((current) => setWireBends(current, { wireId: drag.wireId, bends: next }));
+    const input = { wireId: drag.wireId, bends: next };
+    const resourceError = getWireBendsResourceError(project, input);
+    if (resourceError !== undefined) {
+      state.onHint(resourceError);
+      return;
+    }
+    state.commit((current) => setWireBends(current, input));
     return;
   }
   if (drag?.kind === 'marquee') {

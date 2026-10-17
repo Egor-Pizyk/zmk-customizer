@@ -1,5 +1,6 @@
+import { useProject } from '@ui/project/logic';
 import { getWirePath } from '@domain/wires';
-import { setWireBends } from '@domain/wires/editing';
+import { setWireBends, getWireBendsResourceError } from '@domain/wires/editing';
 import { roundU } from '@domain/geometry';
 import type { Wire, WirePoint } from '@domain';
 import { Button, NumberInput } from '@ui/components/components';
@@ -14,18 +15,18 @@ type WireBendsEditorProps = Pick<PartsTableProps, 'project' | 'commit'> & {
 // Keyboard path for bend points (FR-011, FR-028); the canvas drags the same values. A new bend
 // goes halfway along the last segment, where it is visible and does not change the shape.
 export function WireBendsEditor({ project, commit, wire, wireIndex }: WireBendsEditorProps) {
+  const { announce } = useProject();
   function handleBendsChange(bends: readonly WirePoint[]) {
+    const resourceError = getWireBendsResourceError(project, { wireId: wire.id, bends });
+    if (resourceError !== undefined) {
+      announce(resourceError);
+      return;
+    }
     commit((current) => setWireBends(current, { wireId: wire.id, bends }));
   }
 
   function handleAddClick() {
-    const path = getWirePath(project, wire);
-    const end = path.at(-1) ?? { xU: 0, yU: 0 };
-    const previous = path.at(-2) ?? end;
-    const middle = {
-      xU: roundU((previous.xU + end.xU) / 2),
-      yU: roundU((previous.yU + end.yU) / 2),
-    };
+    const middle = getNewBend(project, wire);
     handleBendsChange([...wire.bends, middle]);
   }
 
@@ -85,4 +86,14 @@ function BendRow({ bends, bend, bendIndex, wireIndex, onBendsChange }: BendRowPr
       </Button>
     </div>
   );
+}
+
+function getNewBend(project: WireBendsEditorProps['project'], wire: Wire): WirePoint {
+  const path = getWirePath(project, wire);
+  const end = path.at(-1) ?? { xU: 0, yU: 0 };
+  const previous = path.at(-2) ?? end;
+  return {
+    xU: roundU((previous.xU + end.xU) / 2),
+    yU: roundU((previous.yU + end.yU) / 2),
+  };
 }

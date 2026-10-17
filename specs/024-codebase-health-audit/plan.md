@@ -43,3 +43,11 @@
 ## Complexity Tracking
 
 Нарушений constitution и новых framework abstractions нет. Внешний firmware build — tooling, не runtime network приложения.
+
+## Follow-up implementation — 2026-10-15
+
+Centralize the existing resource constants and resource query in domain/project; retain storage's public budget re-export and schema validation. Guard wire creation/bend edits/routing and reject any remaining resource-exceeding commit at the history boundary without Zod parsing. Keep accepted semantic conflicts editable. The allocator falls back to a free bounded decimal ID only when incrementing the highest imported ID would exceed the persisted limit.
+
+Pass real BLE capability and precomputed nets through matrix/wiring derivation; UI wiring tables/grids consume the shared project analysis. Restrict engine modules plus explicitly permitted contracts in mixed query modules; shared modules cannot depend on workspaces/app composition. Document the effect gate as a file inventory.
+
+No JSX-folder reorganization, runtime dependency, migration, generated syntax, geometry transform, golden fixture or coverage-floor changes. Existing output golden contracts protect byte equivalence; a fresh firmware compilation is unnecessary because no generated output/geometry changes. Extend the existing browser journey for bend budget refusal, exact storage/history preservation, recovery and JSON round trip. Run the full browser suite, three sequential executions of the new journey without retries, and an isolated controlled regression with exact restoration.

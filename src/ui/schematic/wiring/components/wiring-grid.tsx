@@ -1,4 +1,4 @@
-import { getWiringCells } from '@domain/wiring/matrix';
+import { getProjectAnalysis } from '@ui/project/logic';
 import type { Half, Project } from '@domain';
 import { Button, Field } from '@ui/components/components';
 import { INPUT_CLASSES } from '@ui/components/logic';
@@ -50,7 +50,7 @@ function MatrixCells({
   selectedKeyId,
   onAssignCell: handleAssignCell,
 }: Parameters<typeof WiringGrid>[0] & { readonly selectedKeyId: string }) {
-  const cells = getWiringCells(project);
+  const cells = getProjectAnalysis(project).wiringCells;
   const terminals = project.wiring?.terminals.filter((terminal) => terminal.half === half) ?? [];
   const rows =
     project.wiring?.kind === 'direct'
@@ -96,7 +96,7 @@ function MatrixCell({
 }: Parameters<typeof MatrixCells>[0] & {
   readonly row: number;
   readonly col: number;
-  readonly cells: ReturnType<typeof getWiringCells>;
+  readonly cells: ReturnType<typeof getProjectAnalysis>['wiringCells'];
 }) {
   const occupants = cells
     .filter((cell) => cell.half === half && (cell.row ?? 0) === row && cell.col === col)

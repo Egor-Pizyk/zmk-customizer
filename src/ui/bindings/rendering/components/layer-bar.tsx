@@ -23,7 +23,7 @@ export function LayerBar(props: LayerBarProps) {
   return (
     <section
       aria-labelledby={headingId}
-      className="flex shrink-0 flex-wrap items-end gap-x-6 gap-y-2 border-b border-border bg-surface-raised px-4 py-2"
+      className="flex shrink-0 flex-col gap-2 border-b border-border bg-surface-raised px-4 py-2"
       data-layer-bar
     >
       <h2 className="sr-only" id={headingId}>
@@ -49,7 +49,7 @@ function LayerTabs({ layers, actions, tabIdPrefix, panelId }: LayerBarProps) {
     issuePath: `layers.${layerIndex}`,
   }));
   return (
-    <div className="flex min-w-0 items-center gap-2">
+    <div className="flex w-full min-w-0 items-start gap-2">
       <Tabs
         idPrefix={tabIdPrefix}
         items={items}
@@ -58,10 +58,12 @@ function LayerTabs({ layers, actions, tabIdPrefix, panelId }: LayerBarProps) {
         panelId={panelId}
         selectedIndex={actions.layerIndex}
       />
-      <LayerButton onClick={actions.handleLayerAdd} reason={actions.blockReasons.add}>
-        <PlusIcon />
-        Add layer
-      </LayerButton>
+      <div className="shrink-0 py-1">
+        <LayerButton onClick={actions.handleLayerAdd} reason={actions.blockReasons.add}>
+          <PlusIcon />
+          Add layer
+        </LayerButton>
+      </div>
     </div>
   );
 }
@@ -74,9 +76,14 @@ type LayerNameFieldProps = {
 // Keyed by layer: switching layers drops an uncommitted draft of the previous name.
 function LayerNameField({ layer, actions }: LayerNameFieldProps) {
   const nodeName = toLayerNodeName(layer?.name ?? '');
+  const description = `Keymap node: ${nodeName === '' ? 'none' : nodeName}`;
   return (
     <DraftTextField
-      description={`Keymap node: ${nodeName === '' ? 'none' : nodeName}`}
+      description={
+        <span className="block truncate" title={description}>
+          {description}
+        </span>
+      }
       error={actions.nameError}
       issuePath={`layers.${actions.layerIndex}.name`}
       key={layer?.id}
@@ -99,7 +106,7 @@ function LayerOrderButtons({ actions }: { readonly actions: LayerActions }) {
   }
 
   return (
-    <>
+    <div className="flex flex-wrap items-center gap-2">
       <LayerButton onClick={handleMoveLeftClick} reason={blockReasons.moveLeft}>
         Move left
       </LayerButton>
@@ -113,7 +120,7 @@ function LayerOrderButtons({ actions }: { readonly actions: LayerActions }) {
       >
         Delete layer
       </LayerButton>
-    </>
+    </div>
   );
 }
 

@@ -170,3 +170,33 @@ test('bindings/layers survive switches and reload; downloaded JSON imports and i
   await page.getByRole('tab', { name: '1 Nav', exact: true }).click();
   await expect(page.getByRole('cell', { name: 'Space', exact: true })).toBeVisible();
 });
+
+test('refused bend overflow keeps saved project and redo, then a repaired edit round trips', async ({
+  page,
+}) => {
+  const project = {
+    ...wiredFixture,
+    wires: wiredFixture.wires.map((wire, index) =>
+      index === 0
+        ? { ...wire, bends: Array.from({ length: 64 }, () => ({ xU: 4, yU: 5.3667 })) }
+        : wire,
+    ),
+  };
+  await openProject(page, project);
+  const name = page.getByRole('textbox', { name: 'Name', exact: true });
+  await name.fill('Renamed');
+  await name.press('Enter');
+  await history(page, 'Undo').click();
+  await expect(history(page, 'Redo')).toBeEnabled();
+  await page.getByRole('button', { name: 'Add a bend to wire 0', exact: true }).click();
+  await expect(page.getByRole('status')).toContainText('at most 64 bends');
+  expect(await saved(page)).toEqual(project);
+  await expect(history(page, 'Redo')).toBeEnabled();
+  await page.getByRole('button', { name: 'Remove wire 0 bend 63', exact: true }).click();
+  await expect.poll(async () => (await saved(page)).wires[0]?.bends.length).toBe(63);
+  await page.getByRole('button', { name: 'Add a bend to wire 0', exact: true }).click();
+  await expect.poll(async () => (await saved(page)).wires[0]?.bends.length).toBe(64);
+  const expected = await saved(page);
+  await importText(page, await downloadJson(page));
+  await expect.poll(() => saved(page)).toEqual(expected);
+});

@@ -10,6 +10,7 @@ import { buildMatrixProject } from '../../../helpers/build-matrix-project';
 
 const target = {
   boardId: 'nice_nano_v2',
+  ble: true,
   connector: 'pro_micro' as const,
   gpioPins: [2, 8, 9, 10],
 };

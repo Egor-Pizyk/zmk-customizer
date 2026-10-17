@@ -1,4 +1,4 @@
-import { createEntityId } from '@domain/project';
+import { createEntityId, getProjectResourceError, PROJECT_BUDGET } from '@domain/project';
 import { findWireContacts, getKeyPinPosition } from '@domain/wires';
 import { getNets } from '@domain/wires/nets';
 import type { Key, KeyPin, Project, Result, Wire } from '@domain';
@@ -41,16 +41,30 @@ export function routeWiring(
   if (routeError !== undefined) {
     return { ok: false, error: routeError };
   }
-  if (wires.length > 600) {
-    return { ok: false, error: 'Routing exceeds 600 wires. Simplify the circuit.' };
+  if (wires.length > PROJECT_BUDGET.wires) {
+    return {
+      ok: false,
+      error: `Routing exceeds ${PROJECT_BUDGET.wires} wires. Simplify the circuit.`,
+    };
   }
   const candidate = { ...project, wires };
   const insulatedCrossings = getRouteInsulation(project, candidate);
-  if (insulatedCrossings.length > 8192) {
+  if (insulatedCrossings.length > PROJECT_BUDGET.crossings) {
     return { ok: false, error: 'Routing exceeds the crossing limit. Simplify the circuit.' };
   }
   const routedProject = { ...candidate, insulatedCrossings };
-  if (!connectionsMatch(routedProject, input.connections)) {
+  const resourceError = getProjectResourceError(routedProject);
+  if (resourceError !== undefined) {
+    return { ok: false, error: resourceError };
+  }
+  return finishRoutes(routedProject, input.connections);
+}
+
+function finishRoutes(
+  routedProject: Project,
+  connections: readonly WiringConnection[],
+): Result<Project, string> {
+  if (!connectionsMatch(routedProject, connections)) {
     return {
       ok: false,
       error:

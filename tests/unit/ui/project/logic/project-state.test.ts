@@ -139,3 +139,23 @@ it('autosaves controller selection, dropped endpoints and exact undo/redo states
   });
   expect(redone.history.present).toEqual(after.history.present);
 });
+
+it('refuses an unsaveable resource edit with a reason while preserving history and redo', () => {
+  const writes = vi.fn<(key: string, value: string) => void>();
+  stubSetItem(writes);
+  const edited = applyHistoryAction(initial({ kind: 'ok' }), { action: RENAME });
+  const undone = applyHistoryAction(edited, { action: { kind: 'undo' } });
+  writes.mockClear();
+  const refused = applyHistoryAction(undone, {
+    action: {
+      kind: 'commit',
+      update: (project) => renameProject(project, { name: 'x'.repeat(4097) }),
+    },
+  });
+  expect(refused.history).toBe(undone.history);
+  expect(refused.announcement?.text).toContain('4096 characters');
+  expect(writes).not.toHaveBeenCalled();
+  const redone = applyHistoryAction(refused, { action: { kind: 'redo' } });
+  expect(redone.history.present.name).toBe('B');
+  expect(writes).toHaveBeenCalledOnce();
+});

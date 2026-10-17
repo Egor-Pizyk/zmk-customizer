@@ -9,7 +9,8 @@ export function initializeWiring(
   if (hasWiring(project)) {
     return project;
   }
-  const matrix = deriveShieldMatrix(project, { boardId: board.id, gpioPins: board.gpioPins });
+  const target = { boardId: board.id, ...board };
+  const matrix = deriveShieldMatrix(project, target);
   const terminals: WiringTerminal[] = [];
   if (matrix.ok) {
     for (const kind of ['row', 'col'] as const) {

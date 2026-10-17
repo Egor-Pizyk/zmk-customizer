@@ -17,7 +17,7 @@ it.each(DIMENSIONS)(
     const colPins = [8, 9, 10].slice(0, cols);
     const pairs = rowPins.flatMap((row) => colPins.map((col) => [row, col] as const));
     const project = buildMatrixProject(pairs);
-    const target = { boardId: board.id, gpioPins: board.gpioPins };
+    const target = { boardId: board.id, ble: board.ble, gpioPins: board.gpioPins };
     const matrix = getResultValue(deriveShieldMatrix(project, target));
     expect(matrix.cells).toHaveLength(pairs.length);
     expect(new Set(matrix.cells.map((cell) => `${cell.row}:${cell.col}`)).size).toBe(pairs.length);

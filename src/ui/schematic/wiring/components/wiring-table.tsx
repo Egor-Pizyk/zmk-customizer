@@ -1,4 +1,4 @@
-import { getWiringCells } from '@domain/wiring/matrix';
+import { getProjectAnalysis } from '@ui/project/logic';
 import type { WiringCell } from '@domain/wiring/matrix';
 import type { Half, Project } from '@domain';
 import { NumberInput } from '@ui/components/components';
@@ -11,7 +11,7 @@ export function WiringTable({
   readonly project: Project;
   readonly onAssignCell: (input: { keyId: string; row: number; col: number; half: Half }) => void;
 }) {
-  const cells = getWiringCells(project);
+  const cells = getProjectAnalysis(project).wiringCells;
   return (
     <div className="overflow-auto">
       <table className="w-full text-left">

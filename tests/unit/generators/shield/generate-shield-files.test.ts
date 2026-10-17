@@ -15,6 +15,7 @@ const goldens = import.meta.glob<string>('../../../fixtures/generated/unibody/*'
 });
 const target = {
   boardId: 'nice_nano_v2',
+  ble: true,
   connector: 'pro_micro' as const,
   gpioPins: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15, 16, 18, 19, 20, 21],
 };

@@ -5,6 +5,7 @@ import type { ShieldTarget } from '@domain/wiring/matrix';
 // Release/workflow metadata plus the default controller; production selects the project board.
 export const SHIELD_TARGET = {
   boardId: DEFAULT_CONTROLLER_ID,
+  ble: getControllerBoard(DEFAULT_CONTROLLER_ID).ble,
   connector: 'pro_micro',
   zmkVersion: 'v0.3.0',
   revision: 'v0.3',

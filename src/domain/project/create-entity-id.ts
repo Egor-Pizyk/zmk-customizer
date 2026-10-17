@@ -1,3 +1,5 @@
+import { PROJECT_BUDGET } from './project-budget';
+
 // Only the allocator interprets decimal suffixes; bigint never enters the serialized Project.
 export function createEntityId(input: {
   readonly prefix: 'k' | 'w' | 'l' | 't';
@@ -13,5 +15,15 @@ export function createEntityId(input: {
       }
     }
   }
-  return `${input.prefix}${highest + 1n}`;
+  const next = `${input.prefix}${highest + 1n}`;
+  if (next.length <= PROJECT_BUDGET.idLength) {
+    return next;
+  }
+  // Imported maximum-length IDs must leave room for future edits. Existing references stay intact.
+  const taken = new Set(input.existingIds);
+  let suffix = 1n;
+  while (taken.has(`${input.prefix}${suffix}`)) {
+    suffix += 1n;
+  }
+  return `${input.prefix}${suffix}`;
 }

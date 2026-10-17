@@ -73,3 +73,20 @@ for (const [index, fixture] of cases.entries()) {
     );
   });
 }
+
+test('effect registry inventories files, leaving additional effect semantics to review', () => {
+  assert.deepEqual(
+    checkGuidelines({
+      sources: new Map([
+        [
+          'src/ui/probe.ts',
+          "import {useEffect} from 'react'; useEffect(()=>{},[]); useEffect(()=>{},[]);",
+        ],
+      ]),
+      registry: '| effects | `probe.ts` |',
+      manifest: '',
+      rules: {},
+    }),
+    [],
+  );
+});

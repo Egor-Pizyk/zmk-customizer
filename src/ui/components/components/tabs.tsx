@@ -1,5 +1,5 @@
 import type { KeyboardEvent } from 'react';
-import { toTabId } from '@ui/components/logic';
+import { toTabId, useTabVisibility } from '@ui/components/logic';
 
 export type TabItem = {
   /** Stable id of the entity the tab shows, unique among the items. */
@@ -42,6 +42,8 @@ export function Tabs({
   panelId,
   onSelect: handleSelect,
 }: TabsProps) {
+  const listRef = useTabVisibility({ items, selectedIndex });
+
   function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
     const targetIndex = findTargetIndex(event.key, { index, count: items.length });
     const target = targetIndex === undefined ? undefined : items[targetIndex];
@@ -53,7 +55,12 @@ export function Tabs({
   }
 
   return (
-    <div aria-label={label} className="flex min-w-0 gap-1 overflow-x-auto" role="tablist">
+    <div
+      aria-label={label}
+      className="flex h-14 min-w-0 flex-1 gap-1 overflow-x-auto p-1"
+      ref={listRef}
+      role="tablist"
+    >
       {items.map((item, index) => (
         <Tab
           id={toTabId(idPrefix, item.id)}
@@ -103,9 +110,10 @@ function Tab({ id, item, index, isSelected, panelId, onSelect, onKeyDown }: TabP
       onKeyDown={handleKeyDown}
       role="tab"
       tabIndex={isSelected ? 0 : -1}
+      title={item.label}
       type="button"
     >
-      {item.label}
+      <span className="max-w-48 truncate">{item.label}</span>
       {item.detail === undefined ? undefined : (
         <span className="text-xs font-normal text-text-muted">{item.detail}</span>
       )}

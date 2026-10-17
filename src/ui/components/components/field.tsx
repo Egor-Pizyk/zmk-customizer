@@ -9,7 +9,7 @@ export type FieldControlProps = {
 
 type FieldProps = {
   readonly label: string;
-  readonly description?: string | undefined;
+  readonly description?: ReactNode;
   readonly error?: string | undefined;
   /** Renders the control; spread the given props onto it so label and messages are linked. */
   readonly renderControl: (controlProps: FieldControlProps) => ReactNode;

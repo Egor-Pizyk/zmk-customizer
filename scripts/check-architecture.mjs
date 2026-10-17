@@ -5,6 +5,21 @@ import { pathToFileURL } from 'node:url';
 import { checkModuleImport, resolveProjectImport } from './module-imports.mjs';
 import { resolvePublicExports } from './resolve-public-exports.mjs';
 
+// Mixed query modules grant UI access only to these public, non-analysis contracts.
+const UI_WIRE_FILES = new Set([
+  'board-pin',
+  'can-add-wire',
+  'find-board-pin-user',
+  'find-free-end-position',
+  'find-key-current-flow',
+  'find-nearest-key-pin',
+  'get-key-pin-position',
+  'get-key-pin-wires',
+  'get-wire-path',
+  'remove-orphan-wires',
+]);
+const UI_CROSSING_FILES = new Set(['toggle-crossing-insulation']);
+
 const PURE_LAYERS = new Set(['domain', 'catalog', 'generators']);
 const IO_NAMES = new Set([
   'window',
@@ -65,15 +80,22 @@ export function walk(node, visit, parent) {
 function allowedEdge(file, target, typeOnly) {
   const [, layer, group] = file.split('/');
   const [, targetLayer, targetGroup] = target.split('/');
-  if (
-    layer === 'ui' &&
-    targetLayer === 'domain' &&
-    /\/(?:get-nets|find-wire-contacts|find-crossings|derive-shield-matrix|validate-(?:project|schematic|shield-project))(?:\.ts)?$/u.test(
-      target,
-    ) &&
-    !typeOnly
-  )
-    return false;
+  if (layer === 'ui' && targetLayer === 'domain' && !typeOnly) {
+    const engineModule =
+      target.startsWith('src/domain/wiring/matrix/') ||
+      target.startsWith('src/domain/wires/nets/') ||
+      target.startsWith('src/domain/validation/');
+    const mixedQueryModule = path.posix.dirname(target);
+    const name = path.posix.basename(target, '.ts');
+    if (mixedQueryModule === 'src/domain/wires' && !UI_WIRE_FILES.has(name)) return false;
+    if (mixedQueryModule === 'src/domain/crossings' && !UI_CROSSING_FILES.has(name)) return false;
+    if (
+      target.startsWith('src/domain/analysis/') &&
+      file !== 'src/ui/project/logic/project-state.ts'
+    )
+      return false;
+    if (engineModule) return false;
+  }
   if (layer === 'domain') {
     return targetLayer === 'domain';
   }
@@ -113,7 +135,7 @@ function allowedEdge(file, target, typeOnly) {
     return false;
   }
   if (!FEATURES.has(group) && !['canvas', 'shell'].includes(group)) {
-    return true;
+    return group === 'app' || (!FEATURES.has(targetGroup) && targetGroup !== 'app');
   }
   if (FEATURES.has(targetGroup)) {
     return group === targetGroup;

@@ -13,6 +13,19 @@ try {
   const { validateShieldProject } = await server.ssrLoadModule(
     '/src/domain/validation/shield/index.ts',
   );
+  if (process.argv.includes('--analysis')) {
+    const { buildWiringProject } = await server.ssrLoadModule('/tests/helpers/wiring-project.ts');
+    for (const kind of ['matrix', 'direct']) {
+      for (const topology of ['unibody', 'split']) {
+        const project = buildWiringProject(kind, topology);
+        const started = performance.now();
+        const analysis = analyzeProject(project, analysisInput);
+        process.stdout.write(
+          `${kind}/${topology}: ${Math.round(performance.now() - started)}ms (${project.keys.length} keys, ${project.wires.length} wires, ${analysis.issues.length} issues)\n`,
+        );
+      }
+    }
+  }
   for (const [wireCount, bendCount] of process.argv.includes('--analysis')
     ? [[300, 4]]
     : [

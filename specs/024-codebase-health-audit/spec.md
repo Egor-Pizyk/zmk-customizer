@@ -180,3 +180,14 @@ CUA/браузер не использовались. Прошивка не ко
 | US7 | P3 | Инструкции отражают выполняемые проверки | effect registry/enforcement fixtures и agent sync | A12 |
 
 US6 имеет собственный номер 023 по roadmap. Полное завершение 024 требует её evidence; отсутствие этой feature не считается выполнением A09.
+
+## Follow-up audit corrections — 2026-10-15
+
+The follow-up closes remaining A01/A03/A05/A06/A12 gaps without a schema or product-feature expansion:
+
+- Accepted edits remain within the persisted resource contract. Exceeding a resource limit is refused with a readable explanation and preserves the current project, storage, undo and redo. Electrical/semantic conflicts remain editable and are reported normally.
+- Maximum-length imported entity IDs do not prevent future key/wire/layer/terminal allocation; existing IDs and reserved dangling layer references remain intact.
+- Matrix derivation receives real controller capabilities, and explicit wiring reuses the contacts/nets from the shared analysis.
+- UI cannot invoke engine modules or import workspace/app composition from shared modules; newly added engine exports inherit the restriction.
+- The effect registry guarantees a file inventory only; individual effect purpose and cleanup remain review responsibilities.
+- Verification includes resource-boundary/round-trip domain tests, meaningful UI refusal/recovery and actual JSON download/import, architecture fixtures, and isolated browser regression sensitivity.

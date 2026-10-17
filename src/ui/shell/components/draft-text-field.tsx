@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { ChangeEvent, KeyboardEvent } from 'react';
+import type { ChangeEvent, KeyboardEvent, ReactNode } from 'react';
 import { Field } from '@ui/components/components';
 import { INPUT_CLASSES } from '@ui/components/logic';
 
@@ -7,7 +7,7 @@ type DraftTextFieldProps = {
   readonly label: string;
   readonly value: string;
   readonly placeholder?: string;
-  readonly description?: string;
+  readonly description?: ReactNode;
   /** Joined issue path; the problems panel focuses `[data-issue-path]` (research R14). */
   readonly issuePath: string;
   readonly error?: string | undefined;

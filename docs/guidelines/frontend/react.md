@@ -68,10 +68,11 @@ dispatch({ type: 'resize-key', keyIndex, widthU });
 
 ## Effects
 
-Effects sync with systems outside React. A change that adds, moves or removes an effect updates this table in the same commit; `npm run check:guidelines` compares parsed production effect calls with the files below (tests and useEffectEvent are excluded).
+Effects sync with systems outside React. A change that adds, moves or removes an effect updates this table in the same commit; `npm run check:guidelines` checks the set of files containing production effects against the file inventory below (tests and useEffectEvent are excluded). This is a file inventory, not a count or semantic approval of individual effects: additional effects in a listed file still require review for purpose and cleanup.
 
 | Effect | Where |
 |---|---|
+| Reveal the selected tab inside its horizontal strip after selection, rename, reorder or project history changes; preserves focus and only scrolls the strip | `components/logic/use-tab-visibility.ts` |
 | `document.documentElement.dataset.theme` sync with the theme preference | `preferences/preferences-context.tsx` |
 | Focus the workspace `<h1>` when the workspace changes (accessibility.md "Structure") | `app/components/workspace-view.tsx` |
 | `ResizeObserver`: panel and container sizes into state from the observer callback (clamp derived in render) | `components/components/floating-panel.tsx` |
