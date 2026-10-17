@@ -1,6 +1,12 @@
-import type { Project, WireEnd } from '@domain';
+import { getProjectResourceError, createEntityId } from '@domain/project';
+import type { Project, WireEnd, WirePoint } from '@domain';
 
-export type WireCheck = 'ok' | 'no-key-pin' | 'same-pin' | 'missing-reference';
+export type WireCheck =
+  | 'ok'
+  | 'no-key-pin'
+  | 'same-pin'
+  | 'missing-reference'
+  | { readonly resourceError: string };
 
 function isResolved(project: Project, end: WireEnd): boolean {
   if (end.kind === 'key-pin') {
@@ -16,7 +22,7 @@ function isResolved(project: Project, end: WireEnd): boolean {
 // must never produce a wire the schema would reject on reload (003 review M1).
 export function canAddWire(
   project: Project,
-  input: { readonly start: WireEnd; readonly end: WireEnd },
+  input: { readonly start: WireEnd; readonly end: WireEnd; readonly bends?: readonly WirePoint[] },
 ): WireCheck {
   const { start, end } = input;
   if (start.kind !== 'key-pin' && end.kind !== 'key-pin') {
@@ -30,5 +36,20 @@ export function canAddWire(
     end.kind === 'key-pin' &&
     start.keyId === end.keyId &&
     start.pin === end.pin;
-  return isSamePin ? 'same-pin' : 'ok';
+  if (isSamePin) {
+    return 'same-pin';
+  }
+  const resourceError = getProjectResourceError({
+    ...project,
+    wires: [
+      ...project.wires,
+      {
+        id: createEntityId({ prefix: 'w', existingIds: project.wires.map((wire) => wire.id) }),
+        start,
+        end,
+        bends: input.bends ?? [],
+      },
+    ],
+  });
+  return resourceError === undefined ? 'ok' : { resourceError };
 }

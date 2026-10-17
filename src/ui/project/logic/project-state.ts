@@ -1,3 +1,4 @@
+import { getProjectResourceError } from '@domain/project';
 import { BINDINGS_CATALOG } from '@catalog/bindings';
 import type { Project, ValidationIssue } from '@domain';
 import { getControllerBoard } from '@catalog/controllers';
@@ -125,6 +126,11 @@ export function applyHistoryAction(
   const history = reduceProjectHistory(state.history, input.action);
   if (history === state.history) {
     return state;
+  }
+  const resourceError =
+    input.action.kind === 'commit' ? getProjectResourceError(history.present) : undefined;
+  if (resourceError !== undefined && input.action.kind === 'commit') {
+    return withAnnouncement(state, resourceError);
   }
   const next: ProjectState = { ...state, history, saveError: autosave(state, history.present) };
   const text = describeChange({

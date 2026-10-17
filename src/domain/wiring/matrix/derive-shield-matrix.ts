@@ -7,6 +7,7 @@ import type { KeyPin, Project, Result, ValidationIssue } from '@domain';
 
 export type ShieldTarget = {
   readonly boardId: string;
+  readonly ble: boolean;
   readonly gpioPins: readonly number[];
 };
 export type ShieldMatrix = {
@@ -230,22 +231,13 @@ export function deriveShieldMatrix(
   } = {},
 ): Result<ShieldMatrix, readonly ValidationIssue[]> {
   if (project.wiring !== undefined) {
-    return deriveWiring(project, { id: target.boardId, gpioPins: target.gpioPins, ble: true });
+    const board = { id: target.boardId, gpioPins: target.gpioPins, ble: target.ble };
+    return deriveWiring(project, board, input);
   }
   const nets = input.nets ?? getNets(project);
   const schematicIssues = input.schematicIssues ?? validateSchematic(project, nets);
   if (project.keys.length === 0) {
-    return {
-      ok: false,
-      error: [
-        {
-          code: 'shield-empty',
-          message:
-            'The project has no keys. Add keys in Schematic or start from the unibody preset in New.',
-          path: ['keys'],
-        },
-      ],
-    };
+    return emptyMatrixResult();
   }
   const edges = project.keys.map((key, keyIndex) => ({
     keyIndex,
@@ -260,4 +252,18 @@ export function deriveShieldMatrix(
   return colored.ok
     ? deriveMatrix(project, { nets, edges, isRowByNet: colored.value })
     : { ok: false, error: [...colored.error, ...validateMissingDiodes(project)] };
+}
+
+function emptyMatrixResult(): Result<ShieldMatrix, readonly ValidationIssue[]> {
+  return {
+    ok: false,
+    error: [
+      {
+        code: 'shield-empty',
+        message:
+          'The project has no keys. Add keys in Schematic or start from the unibody preset in New.',
+        path: ['keys'],
+      },
+    ],
+  };
 }

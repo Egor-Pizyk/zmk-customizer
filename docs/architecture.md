@@ -29,7 +29,7 @@ Production imports follow this matrix; catalog values enter domain operations as
 | ui/app | composition of UI/domain/catalog/storage; no generator calls |
 | main.tsx | UI/storage/catalog and styles.css |
 
-Enforced by scripts/check-architecture.mjs (resolved imports, re-exports, dynamic imports, separate test locations), oxlint no-restricted-imports overrides and import/no-cycle. Exact root contracts and exceptions are documented below.
+Enforced by scripts/check-architecture.mjs (resolved imports, re-exports, dynamic imports, separate test locations), oxlint no-restricted-imports overrides and import/no-cycle. Electrical engine modules (wiring/matrix, wires/nets, validation) have no runtime UI API. Mixed wire/crossing query modules grant only explicit UI-safe contracts; new engine exports are private to domain consumers by default. Only project-state calls domain analysis; UI consumers read its shared result. Shared UI modules cannot import workspaces or app composition. Exact root contracts and exceptions are documented below.
 
 See [folder ownership](folder-structure.md) for the concrete groups and test locations.
 
@@ -62,6 +62,6 @@ The dependency matrix in docs/architecture.md is checked by scripts/check-archit
 - Shared UI modules allowed from workspaces/shared UI: project, preferences, navigation, shortcuts, dialogs, downloads and issues. Owner: shared UI. Reason: project/preferences/actions and shared contracts. App composition stays in ui/app and is not imported by workspaces. The shortcut event reader lives in ui/shortcuts so workspaces do not depend on app composition.
 - src/ui/export/logic/get-export-preview.ts is the only runtime UI→generators bridge. Owner: Export. Reason: prepare deterministic generated previews from the shared analysis. Remove only if preview preparation moves to another named composition boundary. GeneratedFile type-only imports through @generators are allowed in export consumers; the gate resolves the symbol’s defining file rather than treating the entire barrel as one permission.
 - src/main.tsx may import src/styles.css. Owner: composition root. Reason: Vite entry styles. Remove if the stylesheet entry moves.
-- Low-level electrical runtime APIs get-nets, find-wire-contacts, find-crossings, derive-shield-matrix, validate-project, validate-schematic and validate-shield-project are unavailable to UI imports. Use getProjectAnalysis; domain type imports remain allowed.
+- Electrical engine modules wiring/matrix, wires/nets and validation (including shield) expose no runtime UI API. Mixed wire/crossing modules grant UI access only to explicit non-analysis query/edit contracts; newly added exports are unavailable by default. Only ui/project/logic/project-state.ts calls domain analysis. New engine exports inherit the module restriction. Shared UI modules do not import workspaces or app composition; only app composes workspaces. Use getProjectAnalysis; domain type imports remain allowed.
 
 These static checks do not establish semantic purity or complete alias/data-flow analysis; tests and review remain required.

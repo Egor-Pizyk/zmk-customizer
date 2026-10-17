@@ -135,7 +135,7 @@
 - [X] T048 Confirm `grep -rln useEffect src/ui` is unchanged against the table in `docs/guidelines/frontend/react.md` (no effect added or removed; update the table if one was)
 - [X] T049 Run the `zmk-reviewer` agent on `src/catalog/behaviors.ts`, `src/catalog/bindings-catalog.ts` and `docs/zmk/keymap.md`; fix findings
 - [X] T050 Final `npm run check` (and `make check` when Docker is running, AGENTS.md §5); full browser pass of quickstart.md (light + dark, keyboard only), then stop the dev server
-- [ ] T051 Manual accessibility pass for the project owner (not automated): screen reader smoke test (VoiceOver + Safari: tab list, layer name field, layer slot rows, problem activation) and 200% zoom at 1280 px (layer bar wraps, nothing clipped) — `docs/guidelines/frontend/accessibility.md` items 8 and 10
+- [ ] T051 Manual accessibility pass for the project owner (not automated): screen reader smoke test (VoiceOver + Safari: tab list, layer name field, layer slot rows, problem activation) and 200% zoom at 1280 px (editing controls reflow, the tab strip scrolls, nothing clipped) — `docs/guidelines/frontend/accessibility.md` items 8 and 10
 
 ---
 
@@ -168,3 +168,11 @@ T013 remove-layer.test.ts  T014 to-layer-node-name.test.ts  T015 validate-layers
 
 - [X] T052 Permanently reset picker drafts on layer changes, including replacement at the same position; cover switching away and back, deletion, and hook state persistence.
 - [X] T053 Reserve the copied binding target id when adding a layer; cover delete, replace the last project reference, add and paste in domain and UI handler tests.
+
+## Layer bar stability extension (2026-10-15)
+
+- [X] T054 (FR-001/FR-016) Add real-browser regression for fixed control/canvas positions during layer additions through 32, long labels and keyboard overflow navigation.
+- [X] T055 (FR-001/FR-016) Separate navigation and editing rows; pin Add layer, reserve overflow height, bound labels and reveal selected tabs without moving focus. Update UI contract and effect inventory.
+- [X] T056 Verify T054 three sequential runs, full checks/build/browser suite and record results and limits in verification.md.
+
+Extension evidence and manual limits: [verification.md](verification.md). T051 remains open; no screen-reader or actual browser zoom check is claimed.

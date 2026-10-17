@@ -132,3 +132,22 @@ it('keeps a junction attachment on the electrical wire while its preview uses di
     at: { xU: 2.8, yU: 0.2333 },
   });
 });
+
+it('explains an oversized pointer route and never finishes an unsaveable wire', () => {
+  const bends = Array.from({ length: 65 }, (_, index) => ({ xU: index, yU: 2 }));
+  const draft: WireDraft = {
+    start: { kind: 'key-pin', keyId: 'k1', pin: 1 },
+    startPoint: PIN_A.point,
+    bends,
+    lastClick: { point: { xU: 64, yU: 2 }, timeMs: 65_000 },
+  };
+  const result = reduceWireDraft(draft, {
+    kind: 'click',
+    target: PIN_B,
+    timeMs: 66_000,
+    project: PROJECT,
+  });
+  expect(result.finished).toBeUndefined();
+  expect(result.hint).toContain('at most 64 bends');
+  expect(PROJECT.wires).toHaveLength(1);
+});

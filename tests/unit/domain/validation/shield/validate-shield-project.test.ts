@@ -7,7 +7,11 @@ const { getBoard: getControllerBoard } = getControllerFixtures();
 
 const options = {
   board: getControllerBoard('nice_nano_v2'),
-  target: { boardId: 'nice_nano_v2', gpioPins: [2, 6, 8, 9, 10, 11, 17, 20, 22, 24, 29, 31] },
+  target: {
+    boardId: 'nice_nano_v2',
+    ble: true,
+    gpioPins: [2, 6, 8, 9, 10, 11, 17, 20, 22, 24, 29, 31],
+  },
   bindingsCatalog: {
     keycodeNames: new Set(['A']),
     bluetoothProfileCount: 5,

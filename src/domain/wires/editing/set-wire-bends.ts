@@ -1,3 +1,4 @@
+import { getProjectResourceError } from '@domain/project';
 import { pruneInsulatedCrossings } from '@domain/crossings';
 import type { Project, WirePoint } from '@domain';
 
@@ -16,7 +17,9 @@ export function setWireBends(
       ? { ...wire, bends: input.bends }
       : wire,
   );
-  return wires.every((wire, index) => wire === project.wires[index])
+  const candidate = { ...project, wires };
+  return getProjectResourceError(candidate) !== undefined ||
+    wires.every((wire, index) => wire === project.wires[index])
     ? project
     : pruneInsulatedCrossings({ ...project, wires });
 }

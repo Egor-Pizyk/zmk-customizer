@@ -6,3 +6,5 @@ export { getShieldName } from './get-shield-name';
 export { renameProject } from './rename-project';
 export { setShieldName } from './set-shield-name';
 export { toShieldName } from './to-shield-name';
+export { PROJECT_BUDGET } from './project-budget';
+export { getProjectResourceError } from './get-project-resource-error';

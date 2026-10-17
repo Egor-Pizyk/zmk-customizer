@@ -273,5 +273,25 @@
     "file": "tests/unit/ui/probe.test.ts",
     "code": "export type Value = import('/src/domain/types').Project;",
     "diagnostic": "public-api"
+  },
+  {
+    "file": "src/ui/firmware/probe.ts",
+    "code": "import { deriveWiring } from '@domain/wiring/matrix';",
+    "diagnostic": "layer-import"
+  },
+  {
+    "file": "src/ui/preferences/probe.ts",
+    "code": "import { useLayoutPreview } from '@ui/schematic/layout/logic';",
+    "diagnostic": "layer-import"
+  },
+  {
+    "file": "src/ui/firmware/probe.ts",
+    "code": "import { analyzeProject } from '@domain/analysis';",
+    "diagnostic": "layer-import"
+  },
+  {
+    "file": "src/ui/firmware/probe.ts",
+    "code": "import { getWiringCells } from '@domain/wiring/matrix';",
+    "diagnostic": "layer-import"
   }
 ]

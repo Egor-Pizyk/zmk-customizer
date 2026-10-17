@@ -132,7 +132,7 @@ Every layer, its name, its order and all its actions, including layer behaviors,
 
 ### Functional Requirements
 
-- **FR-001**: The Bindings workspace MUST show a tab list above the canvas with one tab per layer in keymap order (position number and name) and an "Add layer" button after it. The open layer is the selected tab; the first layer is marked as always on.
+- **FR-001**: The Bindings workspace MUST show a tab list above the canvas with one tab per layer in keymap order (position number and name) and an "Add layer" button after it. The open layer is the selected tab; the first layer is marked as always on. The tab strip MUST occupy its own single row with horizontal overflow and a reserved scrollbar gutter; Add layer MUST stay visible outside the scrolling strip. Name and order controls MUST occupy a separate row independent of layer count. Adding layers from 1 through 32 MUST NOT move these controls or the canvas at a fixed viewport. The selected tab MUST be revealed after adding, switching, reordering or undo/redo; long tab labels are visually truncated while retaining their full accessible name and tooltip.
 - **FR-002**: The user MUST be able to add a layer (appended after the last layer, opened, with a unique default name and pass-through on every existing key), rename a layer, move a layer one position left or right, and delete a layer. Each is one project change and one undo step.
 - **FR-003**: Delete MUST be unavailable while the project has one layer; "Add layer" MUST be unavailable while it has 32 layers (ZMK v0.3 layer limit, `docs/zmk/keymap.md` §2). Unavailable actions state why.
 - **FR-004**: Deleting a layer MUST run at once (no confirmation) and show "Deleted layer <name>. Undo" in the status message.

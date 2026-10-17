@@ -10,6 +10,7 @@ import { buildProject } from '../../../../helpers/build-project';
 
 const target = {
   boardId: 'nice_nano_v2',
+  ble: true,
   gpioPins: [2, 6, 8, 9, 10, 11, 17, 20, 22, 24, 29, 31],
 } as const;
 
@@ -167,3 +168,15 @@ function removeBoardPins(project: ReturnType<typeof buildProject>) {
     }),
   };
 }
+
+it('retains the real split capability through the matrix facade', async () => {
+  const { buildWiringProject, wiringBoard } = await import('../../../../helpers/wiring-project');
+  const project = buildWiringProject('matrix', 'split');
+  const board = wiringBoard();
+  const result = deriveShieldMatrix(project, {
+    boardId: board.id,
+    gpioPins: board.gpioPins,
+    ble: false,
+  });
+  expect(getResultError(result).map((issue) => issue.code)).toContain('wiring-split-unsupported');
+});

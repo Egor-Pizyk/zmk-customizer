@@ -1,3 +1,4 @@
+import type { Net } from '@domain/wires/nets';
 import { hasWiring } from '@domain/wiring';
 import { findKeyCurrentFlow } from '@domain/wires';
 import { getNets } from '@domain/wires/nets';
@@ -8,28 +9,24 @@ import type { ControllerBoard, Half, Project, Result, ValidationIssue, Wiring } 
 export function deriveWiring(
   project: Project,
   board: Pick<ControllerBoard, 'id' | 'gpioPins' | 'ble'>,
+  input: { readonly nets?: readonly Net[] | undefined } = {},
 ): Result<ShieldMatrix, readonly ValidationIssue[]> {
   if (!hasWiring(project)) {
     return { ok: false, error: [] };
   }
   const wiring = project.wiring;
   const issues: ValidationIssue[] = [];
-  const cells = getWiringCells(project);
+  const nets = input.nets ?? getNets(project);
+  const cells = getWiringCells(project, nets);
   const halves = ['left', ...(wiring.topology === 'split' ? (['right'] as const) : [])] as const;
   const scans: Record<Half, { rowPins: number[]; colPins: number[] }> = {
     left: { rowPins: [], colPins: [] },
     right: { rowPins: [], colPins: [] },
   };
-  if (wiring.topology === 'split' && !board.ble) {
-    issues.push({
-      code: 'wiring-split-unsupported',
-      message: 'Split requires a Bluetooth controller. Select a BLE board or use unibody.',
-      path: ['controllerId'],
-    });
-  }
+  collectCapabilityIssues(wiring, board, issues);
   collectTerminalShapeIssues(wiring, issues);
   collectHalfIssues(project, board, { halves, cells, scans, issues });
-  collectCellIssues(project, { cells, nets: getNets(project), issues });
+  collectCellIssues(project, { cells, nets, issues });
   const width = scans.left.colPins.length + scans.right.colPins.length;
   if (width > 255) {
     issues.push({
@@ -281,5 +278,19 @@ function collectTerminalShapeIssues(wiring: Wiring, issues: ValidationIssue[]) {
         path: ['wiring', 'terminals', index, 'boardPin'],
       });
     }
+  }
+}
+
+function collectCapabilityIssues(
+  wiring: Wiring,
+  board: Pick<ControllerBoard, 'ble'>,
+  issues: ValidationIssue[],
+) {
+  if (wiring.topology === 'split' && !board.ble) {
+    issues.push({
+      code: 'wiring-split-unsupported',
+      message: 'Split requires a Bluetooth controller. Select a BLE board or use unibody.',
+      path: ['controllerId'],
+    });
   }
 }

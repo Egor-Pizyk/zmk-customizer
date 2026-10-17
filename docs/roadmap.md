@@ -56,6 +56,11 @@ Each `/speckit-specify` prompt below describes what and why only. Technology cho
 | 021 | lighting-displays | 013, 015 |
 | 022 | zmk-version-selection | all catalog features |
 | 023 | build-verification | 010 |
+| 031 | keyboard-presets | 011, 012, 013, 014 |
+| 033 | wiring-and-settings-usability | 001, 003, 012, 013 |
+| 032 | interactive-onboarding | all preceding product features, including 031 and 033; implement last |
+
+Numbers 024–030 are already reserved by existing feature directories listed in [`specs/README.md`](../specs/README.md). The new features use 031–033 without renumbering existing specs. Feature 033 is ordered before onboarding 032; assigned numbers are preserved. Interactive onboarding must remain the last planned product feature; future product features go before it in implementation order without changing assigned numbers.
 
 Workspaces (from 001): **Schematic** holds the schematic of keys and wires (003), switch diodes (008), the layout editor (012) and matrix/wiring editor (013) and owns the project JSON config (002); **Bindings** holds bindings keycaps (004), key behaviors (005), the Action panel (006), layers (007), the keymap editor (014), custom behaviors (016) and combos/macros/conditional layers (017); **Firmware** holds kconfig-settings (015); **Export** holds the file preview (009) and download (010). Every feature reports its validation issues in the 001 problems panel, counted in the tab badge of the workspace that fixes them.
 
@@ -458,7 +463,7 @@ After 014 a user can design a non-standard keyboard from nothing, wire it, map i
 
 ## Later / optional
 
-Order among these is flexible; pick by user demand.
+Order among these is flexible; pick by user demand. Interactive onboarding (032) is the exception: implement it last, after the other planned product features.
 
 ### 018 — kle-import
 Import a Keyboard Layout Editor JSON into the Schematic physical layout (positions, sizes, rotations). Out: KLE colors/legends beyond a label. Acceptance: fixture KLE files for the presets import to layouts equal to the preset layouts. Open: whether KLE parsing needs a dependency (ADR required). Docs: `docs/zmk/physical-layout.md`.
@@ -500,6 +505,71 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 ```
 /speckit-specify A developer check that proves the generated files really build: for every preset keyboard, generate the configuration and compile the firmware with the official ZMK build environment, failing when any build fails. It runs locally and in continuous integration, never inside the app.
+```
+
+### 031 — keyboard-presets
+
+**Goal.** Start a custom keyboard from a familiar physical layout instead of drawing every key, with a choice of standard QWERTY bindings or an empty keymap.
+
+**In scope**
+- A browsable preset library covering common 100%, TKL/80%, 75%, 65%, 60%, 50% and 40% keyboards, simple macropads (including 3×3), and popular split layouts such as Corne, Lily58 and Sofle. Specify exact variants and key counts during clarification; percentage alone does not identify a layout.
+- Preview each preset's name, physical layout, key count and unibody/split structure before creating the project.
+- Choose standard QWERTY bindings adapted to the selected layout, or the same physical layout with no assigned actions. For compact/split layouts, show which standard keys need layers or manual assignment; do not imply a full-size keymap fits every preset.
+- Presets create ordinary editable projects, preserving layout geometry and split halves. Explain whether wiring/controller choices are included or still need configuration; never imply that physical layout alone is ready to build.
+- Protect the current project before replacing it; preserve existing project file compatibility and Undo/Redo behavior.
+
+**Acceptance criteria.** Each listed family has a selectable, previewable preset; both QWERTY and empty-keymap modes retain the same geometry and half assignments. New projects can be edited, saved, reloaded and exported through existing flows. Invalid or incomplete wiring is reported through existing validation. Preset selection works by keyboard and has an accessible layout description.
+
+**Out of scope.** Custom PCB definitions, cloning commercial firmware, runtime downloads of presets and automatic firmware flashing. Existing starter presets remain available; this feature expands them into a user-facing library.
+
+```
+/speckit-specify A keyboard preset library for ZMK Customizer. Let users preview and start from common full-size 100%, TKL, 75%, 65%, 60%, 50% and 40% layouts, simple macropads including 3×3, and popular split keyboards such as Corne, Lily58 and Sofle. For every preset offer standard QWERTY bindings adapted to its keys or an empty keymap, keeping the same physical layout. Explain missing standard keys on compact layouts and any controller or wiring setup still required. Created projects remain fully editable and use the existing save, validation and export flows. Protect existing work when applying a preset and make the library keyboard accessible. Out of scope: custom PCB definitions, downloading presets at runtime, flashing firmware.
+```
+
+### 033 — wiring-and-settings-usability
+
+**Status.** Planned follow-up requested by the user; not implemented. Extends the schematic/wiring flows from 003/013 and settings panels from 001. Amend the affected contracts before implementation.
+
+**Goal.** Make automatic wiring predictable, preserve intentional electrical connections while moving keys, support direct wire deletion, and keep the keyboard canvas usable while editing settings.
+
+**In scope**
+1. Rework automatic connection and routing logic. Review how automatic wiring chooses connections, reuses existing wiring and routes buses; define the intended rules during clarification, with a visible preview before applying changes. Do not treat the current algorithm as the desired behavior.
+2. When a wire passes through a key pin and connects to it, persist a full electrical connection rather than relying only on geometric coincidence. Moving the key from which the wire originally started must preserve the connection to the encountered pin; moving either connected key must keep the intended connectivity. Distinguish intentional connections from insulated crossings.
+3. Let users select wires directly on the canvas, clearly see the selection and delete selected wires without deleting keys. Provide keyboard selection/deletion as well as pointer interaction, with Undo/Redo and consistent cleanup of affected connections.
+4. Make settings windows and editing panels compact and responsive so they do not occupy most of the screen or obscure the main canvas. Keep the keyboard and current edit visible, allow panels to be collapsed or dismissed, and retain keyboard access, visible focus and usable scrolling on smaller screens. Choose exact dimensions and layout during specification.
+
+**Acceptance criteria.** Automatic wiring has explicit, testable rules and a reviewable preview. A wire connected through an intermediate pin remains electrically connected after the original source key moves, and after save/reload and Undo/Redo. Users can select and delete wires with mouse and keyboard while preserving keys. Settings panels leave a usable canvas at agreed desktop and smaller viewport sizes. Existing project files, manual wiring, insulated crossings and deterministic ZMK export remain supported; any schema change includes migrations and old-file tests.
+
+**Open.** Exact automatic connection/routing rules, behavior when moving an intermediate connected key, selection of one wire versus multiple wires, and panel sizing/breakpoints are resolved during clarification. These are backlog requirements, not an approved implementation design.
+
+**Ordering.** Implement before interactive onboarding (032), so the tour teaches the updated wiring and panel behavior. Other assigned roadmap numbers stay unchanged.
+
+```
+/speckit-specify Improve wiring and settings usability in ZMK Customizer. Rework automatic connection and routing rules with a preview before applying changes. When a wire passes through and connects to a key pin, save a durable electrical connection that survives moving the key the wire originally started from, rather than deriving connectivity only from overlapping coordinates. Let users select and delete wires directly, including keyboard access and Undo/Redo, without deleting keys. Make settings windows and editing panels compact and responsive so the canvas stays visible and usable. Preserve existing project imports, manual wiring, insulated crossings and deterministic export. Clarify exact routing rules, movement behavior, selection scope and panel dimensions before planning. Implement before interactive onboarding.
+```
+
+### 032 — interactive-onboarding (implement last)
+
+**Goal.** Guide a first-time user through the product with short explanations and real actions, ending with their first simple custom keyboard built from scratch: a 3×3 macropad and its downloadable ZMK configuration.
+
+**Ordering.** Added on user request after keyboard-presets. Implement after every other planned product feature so the tour describes the complete product. Keep it last when adding future roadmap items.
+
+**In scope**
+- Start the guide automatically once on the first visit in a browser profile. Persist that it has been offered separately from project data, so reloading, completing or dismissing it does not trigger another automatic start. No account or telemetry is needed.
+- A persistent “Take the tour again” button in the lower part of the app lets users restart it after completion or dismissal.
+- Dim the surrounding screen while leaving the current target clearly visible and interactive. Place a short explanation beside the highlighted control: what it does, why it matters, and exactly what to do next. Follow targets across workspaces and layout changes.
+- Lead the user through actual editing from an empty project: place nine keys in a 3×3 layout, choose a controller, configure diodes/wiring and pins, assign actions, inspect validation, review firmware options, preview generated files and download the configuration. The result must use the same validation and export rules as any other project.
+- Briefly introduce the rest of the available functionality, including presets, layers, behaviors, combos/macros, import and supported hardware/settings, without requiring advanced features in the simple macropad. Distinguish configuration export from building and flashing firmware outside the app.
+- Show progress; allow Back, Next where appropriate, Skip/Exit and replay. Advance action-dependent steps after the requested action succeeds, with clear help when validation blocks progress. Protect existing work before starting or replaying a tutorial project.
+- Support keyboard navigation, screen-reader explanations, visible focus and reduced motion. The dimming overlay must not hide the active target or trap users without an accessible exit.
+- As part of this feature, add a maintenance rule to [`docs/agent-rules.md`](agent-rules.md), the agent-rule owner loaded by `AGENTS.md`: whenever features or their user flows are added, changed or removed, agents must update affected tutorial steps, targets, explanations and verification in the same change. If no tutorial update is needed, record why in the feature's verification evidence.
+
+**Acceptance criteria.** A fresh browser profile starts the guide once; reload and later visits do not restart it after completion or dismissal. The lower replay button starts it again. A beginner can follow the highlighted controls from an empty project to a validated 3×3 macropad and download its configuration. Every workspace and available feature area receives a concise introduction. Steps remain aligned with visible controls, support keyboard use and an accessible exit, and do not overwrite existing work silently. Tutorial verification covers first visit, dismissal, completion, replay and the full guided export. The agent maintenance rule is delivered with this feature.
+
+**Out of scope.** Accounts, cross-device completion tracking, telemetry, firmware compilation or flashing in the browser, and requiring advanced features to finish the first keyboard.
+
+```
+/speckit-specify Implement interactive onboarding as the last planned product feature of ZMK Customizer. On the first browser visit, automatically offer the tour once, remembering the offer separately from the project. Dim the screen around the current control while keeping it visible and usable, and briefly explain what it does, why it is needed and what action to take. Guide real actions from an empty project to a simple 3×3 macropad: layout, controller, wiring, bindings, validation, firmware settings, generated-file preview and configuration download. Introduce all other available feature areas briefly without requiring them for the macropad. Provide progress, back/next navigation, skip/exit and a persistent replay button in the lower part of the app. Protect existing projects, support keyboard and screen-reader use and reduced motion, and never restart automatically after completion or dismissal. Add an agent maintenance rule requiring tutorial steps, targets, text and verification to stay current whenever features are added, changed or removed. Out of scope: accounts, telemetry, in-browser firmware building and flashing.
 ```
 
 ### Not planned

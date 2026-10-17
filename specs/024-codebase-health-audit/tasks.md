@@ -91,3 +91,12 @@ Setup → Foundation → US1 MVP → US2 → US3 → US4 → US5 → US6 (featur
 ## Implementation strategy
 
 Сначала US1 как MVP сохранности данных; затем каждый story имеет собственный checkpoint и проверки. Не объявлять A09 закрытым по golden tests. Не включать диагностические probes, утверждающие дефекты, в постоянный suite. Полный closure требует всех 32 tasks, unchanged historical fixtures/JSON/golden либо объяснённой migration и build evidence.
+
+## Follow-up corrections — 2026-10-15
+
+- [x] T033 Add failing maximum-length allocator, wire/bend budget and BLE facade regressions; retain baseline failures as local evidence.
+- [x] T034 Centralize resource policy; guard wire edits/routing and history commits with readable refusal and unchanged history/storage; cover count/segment/text/UTF-8 byte limits and repaired edits.
+- [x] T035 Preserve bounded allocation and reserved references through import → edits → serialize → import.
+- [x] T036 Propagate actual capabilities and shared nets through explicit wiring; consume analysis in UI wiring grids/tables and extend modern-wiring benchmark.
+- [x] T037 Close engine/shared-UI import bypasses with negative fixtures; document effect inventory limits and test the actual guarantee.
+- [x] T038 Verify final make check/build/full browser suite, three sequential new-journey passes and isolated regression sensitivity/restoration; append results and limitations to research.md.

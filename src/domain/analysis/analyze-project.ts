@@ -1,4 +1,4 @@
-import { deriveShieldMatrix } from '@domain/wiring/matrix';
+import { deriveShieldMatrix, getWiringCells } from '@domain/wiring/matrix';
 import type { ShieldTarget } from '@domain/wiring/matrix';
 import { findCrossings } from '@domain/crossings';
 import { findWireContacts } from '@domain/wires';
@@ -21,5 +21,13 @@ export function analyzeProject(
   const schematicIssues = validateSchematic(project, nets);
   const matrix = deriveShieldMatrix(project, input.target, { nets, schematicIssues });
   const issues = validateShieldProject(project, { ...input, nets, matrix, schematicIssues });
-  return { project, contacts, crossings: findCrossings(project, contacts), nets, matrix, issues };
+  return {
+    project,
+    wiringCells: getWiringCells(project, nets),
+    contacts,
+    crossings: findCrossings(project, contacts),
+    nets,
+    matrix,
+    issues,
+  };
 }

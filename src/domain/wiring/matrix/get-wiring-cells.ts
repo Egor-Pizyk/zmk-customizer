@@ -1,4 +1,5 @@
 import { getNets } from '@domain/wires/nets';
+import type { Net } from '@domain/wires/nets';
 import type { Half, KeyPin, Project } from '@domain';
 
 export type WiringCell = {
@@ -9,8 +10,10 @@ export type WiringCell = {
   readonly rowPin?: KeyPin;
 };
 
-export function getWiringCells(project: Project): readonly WiringCell[] {
-  const nets = getNets(project);
+export function getWiringCells(
+  project: Project,
+  nets: readonly Net[] = getNets(project),
+): readonly WiringCell[] {
   return project.keys.map((key) => {
     const half = key.half ?? 'left';
     const terminals = project.wiring?.terminals.filter((terminal) => terminal.half === half) ?? [];

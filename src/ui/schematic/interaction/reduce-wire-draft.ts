@@ -86,7 +86,7 @@ function finish(
 ): WireDraftResult {
   const { start } = input.draft;
   const { end, bends } = input;
-  const check = canAddWire(project, { start, end });
+  const check = canAddWire(project, { start, end, bends });
   return check === 'ok'
     ? { draft: undefined, finished: { start, end, bends } }
     : { draft: undefined, hint: formatWireCheck(check) };

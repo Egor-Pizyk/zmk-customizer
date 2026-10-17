@@ -39,7 +39,7 @@ Several keymap layers in the Bindings workspace: a layer bar above the canvas (t
 | III. Static only | ✅ | No network, no dependency |
 | IV. User data is untrusted | ✅ | New shapes strict in zod; malformed → rejected at their path; dangling `layerId`, bad names, >32 layers → issues, never load failures (contracts/project-json.md) |
 | V. Every ZMK option explains itself | ✅ | Five `BEHAVIORS` entries with description + v0.3 `docsUrl` (anchors checked in v0.3.0 docs source); catalog test enforces it |
-| VI. Minimal code | ✅ | One new binding shape pair; `setKeyBehavior` extended instead of a new op; limit lives in `BINDINGS_CATALOG`, layer picks in `pick-value.ts`; no drag reorder, no rename mode, no new effect or context; `Tabs` is the primitive admin-ui.md names for layer tabs |
+| VI. Minimal code | ✅ | One new binding shape pair; `setKeyBehavior` extended instead of a new op; limit lives in `BINDINGS_CATALOG`, layer picks in `pick-value.ts`; no drag reorder, no rename mode or context; the stability extension adds only selected-tab DOM scrolling; `Tabs` is the primitive admin-ui.md names for layer tabs |
 | VII. Deterministic | ✅ | Ids via `createEntityId`; `addLayer` fills bindings in key order |
 | VIII. Accessible | ✅ | Tablist with roving tabindex and automatic activation, labeled field and buttons with reasons when unavailable, issue activation opens the layer; Keys table follows the open layer |
 
@@ -102,3 +102,13 @@ src/
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
 | AGENTS.md §3.2 / ADR 0003 say "schema changes bump `schemaVersion` and add a migration"; this feature keeps v3 (research R2) | Clarified by the owner (Q5), same as spec 005 R6: the binding union only gains variants, every older file parses identically | A no-op `migrate-v3-to-v4.ts` adds a file and fixture for no data change. Amending the AGENTS.md / ADR wording ("additive variants keep the version") is a governance change left to the owner |
+
+## Layer bar stability extension (2026-10-15)
+
+Scope: FR-001/FR-016; preserve layer data, undo/redo, automatic keyboard activation and current actions. Use a separate full-width tab row, pinned Add layer and a second control row that may wrap only with viewport width. Tabs retain native horizontal scrolling with a reserved scrollbar gutter, bounded labels and selected-tab DOM synchronization. No new dependency, domain or storage change.
+
+Relevant context: docs/architecture.md, docs/folder-structure.md, docs/tooling.md, docs/guidelines/frontend/{react,accessibility,admin-ui,tailwind}.md, docs/testing.md and docs/commands.md. Owners: src/ui/bindings/rendering/components/layer-bar.tsx and src/ui/components/components/tabs.tsx; contract: contracts/ui.md.
+
+Research: [NN/g tabs](https://www.nngroup.com/articles/tabs-used-right/) discourages stacked tab rows; [web.dev](https://web.dev/articles/optimize-cls/) recommends reserving space for dynamic content; [WAI-ARIA](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/) defines roving focus and arrow/Home/End activation. Apply a single scrolling strip because up to 32 user-created layers cannot all fit.
+
+Verification: dedicated Playwright scenario at 1024/1280/1440 px in light/dark; compare canvas, name field and Add layer geometry while adding to 32, inspect long labels, End/Home visibility, rename/reorder/delete and undo/redo. Run changed scenarios three times, full checks, build and browser suite. Screen reader and true browser 200% zoom remain manual owner checks (T051).

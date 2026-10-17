@@ -27,7 +27,7 @@
 
 - `use-key-picker.ts` — open slot (clamped in render to the line's slots), search, pending modifiers, draft state; `syncSelection` resets search, modifiers and slot. Hover/details, tabs, tap/side arming go. Copy/paste move to the panel header (`action-panel-body.tsx`).
 - `create-pick-handlers.ts` — `handlePick` runs `toPickResult`, commits or drafts, opens the next slot or auto-advances. `create-option-handlers.ts` — modifier chips per open slot, tap-dance add/remove/pause, mod-morph triggers.
-- Components: `action-panel-body.tsx` (header with selection name and copy/paste, then line, picker, extras), `binding-line.tsx`, `slot-picker.tsx` (prompt, search, chips, list), `choice-list.tsx` + `choice-option.tsx` (grouped list, roving tab stop, docs link via ArrowRight; rows without a legend box, canonical code and first alias shown), `slot-extras.tsx` (chips, tap-dance remove/pause, mod-morph triggers, auto-advance).
+- Components: `action-panel-body.tsx` (header with selection name and copy/paste, then line, picker, extras), `binding-line.tsx`, `slot-picker.tsx` (prompt, search, list), `choice-list.tsx` + `choice-option.tsx` (grouped list, roving tab stop, docs link via ArrowRight; rows without a legend box, canonical code and first alias shown), `slot-extras.tsx` (chips, tap-dance remove/pause, mod-morph triggers, auto-advance).
 - Canvas: `keycap-shape.tsx` draws the tag top-right (`data-keycap-tag`) and the Shift symbol beside the tap symbol (`BindingLegend.shifted` from `format-binding-legend.ts`); `use-bindings-pointer.ts` opens the behavior slot when the press starts on it.
 - `DocsLink` renders an external-link arrow icon (`components/icons/external-link-icon.tsx`) with the docs name as screen-reader text and tooltip.
 - Removed: `behavior-section.tsx`, `behavior-action.ts`, `key-picker.tsx`, `picker-list.tsx`, `picker-tab-bar.tsx`, `picker-tabs.ts`, `visible-picker-tabs.ts`, `action-panel-sections.ts`, `picker-preview.tsx`, `key-options.tsx`, `hold-select.tsx`, `behavior-options.tsx`, `tap-dance-options.tsx`, `mod-morph-options.tsx`, `basic-pick-handlers.ts`, `tap-dance-handlers.ts`, `mod-morph-handlers.ts`, `toggle-key-modifier.ts` (folded into the new handlers) and their tests.
@@ -35,10 +35,18 @@
 ## Accessibility
 
 - Binding line: `role="group"` "Binding"; each part a `<button aria-pressed>` named "Tap: A" etc.
-- List: one tab stop (roving) of `<button>` rows (`aria-label` name + ", current", `aria-describedby` description and codes); docs links `tabIndex=-1`, reached with ArrowRight; group headers are visible text, chips are buttons with `aria-current` for the group in view.
+- List: one tab stop (roving) of `<button>` rows (`aria-label` name + ", current", `aria-describedby` description and codes); docs links `tabIndex=-1`, reached with ArrowRight; group headers are visible text; category jump buttons are absent.
 - Escape to canvas stays in `action-panel.tsx` (react.md effects table).
 
 ## Risks
 
 - A draft made over a stored binding also applies to another selection with an identical binding (harmless: the last chosen behavior shows).
 - Keycap tag adds text at small zoom; it follows the same zoom rule as the legend (hidden when too small to read).
+
+## Remove category navigation (2026-10-15)
+
+User scope: remove the tab-like category buttons above behavior/key choices (FR-006, US2 AS1–2). Keep grouped sticky headings, all choices, search, current-value scroll, roving keyboard navigation, modifier toggles, binding slots, undo/redo and persisted data. No domain, storage, catalog or generator change.
+
+Relevant context: docs/architecture.md, docs/folder-structure.md, docs/tooling.md, docs/guidelines/code-quality/{typescript,control-flow,naming/functions,naming/variables}.md, docs/guidelines/frontend/{react,accessibility,admin-ui,tailwind}.md, docs/testing.md, docs/commands.md. Owner: src/ui/bindings/picker/components/choice-list.tsx. Delete GroupChips, group-in-view state and scroll/jump handlers; retain ChoiceGroups and ChoiceGroupSection. No new dependency or effect.
+
+Verify FR-006/FR-007/FR-012/FR-014 with a focused Playwright scenario: neither behavior nor key picker exposes category navigation, group headings and search remain, keyboard picks Backspace via BSPC, saved binding is correct and Undo restores A. Run the changed scenario three times per browser without retries, full checks/build/browser suite.
