@@ -1,5 +1,6 @@
 services:
   app:
+    user: ${APP_USER:-node}
     build:
       context: ..
       dockerfile: infra/Dockerfile
