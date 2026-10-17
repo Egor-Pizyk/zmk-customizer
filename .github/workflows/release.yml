@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  pull_request:
+    branches: [main]
+    types: [closed, labeled]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: releases
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: >-
+      github.event.pull_request.merged == true &&
+      (contains(github.event.pull_request.labels.*.name, 'release:patch') ||
+       contains(github.event.pull_request.labels.*.name, 'release:minor') ||
+       contains(github.event.pull_request.labels.*.name, 'release:major'))
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - name: Publish version and generated changelog
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/create-release.mjs
