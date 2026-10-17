@@ -44,6 +44,8 @@ jobs:
       - run: docker build -f infra/Dockerfile --target prod -t zmk-customizer .
 
   mutations:
+    env:
+      APP_USER: root
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -54,6 +56,8 @@ jobs:
       - run: make test-mutations
 
   zmk-build:
+    env:
+      APP_USER: root
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
