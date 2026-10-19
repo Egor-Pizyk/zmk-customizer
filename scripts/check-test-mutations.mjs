@@ -43,8 +43,8 @@ export const MUTATIONS = [
   [
     'keymap shifts layer target',
     'src/generators/keymap/render-binding.ts',
-    'layer.id === binding.layerId)}',
-    'layer.id === binding.layerId) + 1}',
+    'project.layers.findIndex((layer) => layer.id === binding.layerId)',
+    'project.layers.findIndex((layer) => layer.id === binding.layerId) + 1',
     ['tests/unit/generators/shield/generate-shield-files.test.ts'],
   ],
   [

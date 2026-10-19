@@ -27,3 +27,11 @@ Six Node tooling tests cover byte-first replacement (including invalid UTF-8 and
 - Final formatting check and git diff --check: passed. No Python files remain under scripts/ or active references to the deleted runners in Makefile, package.json, CI or docs.
 
  No new E2E journey or three-run validation of changed E2E tests is required; existing browser seeds and journeys are unchanged.
+
+## Release maintenance — 2026-10-19
+
+Previous main CI run 39221880634 failed before mutation execution because the layer-reference renderer was refactored and its seed anchor was stale. Updated only the seed anchor/replacement to shift the current `project.layers.findIndex(...)` expression by one; product code and generated output remain unchanged. Added a current-source anchor preflight regression for all registered unit seeds.
+
+- Regression first failed for the stale layer-target anchor: `/tmp/031-release-anchor-red.log`. After repair, all seven runner tooling contracts pass: `/tmp/031-release-anchor-green.log`.
+- `make test-mutations` ran alone: **29/29 seeded regressions detected**, including three failing golden assertions for the shifted-layer seed; exact original files restored. Exit 0, `/tmp/031-release-mutations.log`.
+- Final `make check`: exit 0; **205 Vitest files / 1203 tests**, static/tooling/coverage gates passed, `/tmp/031-release-check.log`. No product/browser pipeline change; the current product already passed the full 146-test E2E and 32 ZMK target builds recorded in feature 031.

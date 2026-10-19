@@ -105,3 +105,11 @@ test('command runner preserves nonzero results and surfaces timeouts', () => {
     /ETIMEDOUT/u,
   );
 });
+
+test('registered unit mutation anchors match the current production sources', async () => {
+  const { MUTATIONS } = await import('../../scripts/check-test-mutations.mjs');
+  for (const [name, file, anchor] of MUTATIONS) {
+    const source = readFileSync(new URL(`../../${file}`, import.meta.url), 'utf8');
+    assert.ok(source.includes(anchor), `${name}: missing anchor in ${file}`);
+  }
+});
