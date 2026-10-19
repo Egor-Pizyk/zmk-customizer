@@ -14,6 +14,10 @@ export function findSlotStroke(source: LineSource, slot: SlotRef): KeyStroke | u
     return undefined;
   }
   const { binding } = source;
+  if (slot.kind === 'custom-parameter' && binding.kind === 'custom') {
+    const parameter = binding.parameters[slot.index];
+    return parameter?.kind === 'key' ? parameter.key : undefined;
+  }
   if (slot.kind === 'dance-tap' && binding.kind === 'tap_dance') {
     return binding.taps[slot.index];
   }

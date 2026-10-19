@@ -1,0 +1,36 @@
+        user_dance_b1: user_dance_b1 {
+            compatible = "zmk,behavior-tap-dance";
+            #binding-cells = <0>;
+            tapping-term-ms = <200>;
+            bindings = <&kp A>, <&kp B>;
+        };
+        user_held_b0: user_held_b0 {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            bindings = <&kp>, <&kp>;
+            flavor = "hold-preferred";
+            tapping-term-ms = <200>;
+            quick-tap-ms = <(-1)>;
+            require-prior-idle-ms = <(-1)>;
+        };
+        user_morph_b2: user_morph_b2 {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp A>, <&kp B>;
+            mods = <(MOD_LSFT)>;
+            keep-mods = <0>;
+        };
+        user_sticky_key_b3: user_sticky_key_b3 {
+            compatible = "zmk,behavior-sticky-key";
+            #binding-cells = <1>;
+            bindings = <&kp>;
+            release-after-ms = <1000>;
+            ignore-modifiers;
+        };
+        user_sticky_layer_b4: user_sticky_layer_b4 {
+            compatible = "zmk,behavior-sticky-key";
+            #binding-cells = <1>;
+            bindings = <&mo>;
+            release-after-ms = <1000>;
+            quick-release;
+        };

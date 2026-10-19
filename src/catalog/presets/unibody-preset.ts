@@ -5,7 +5,13 @@ import { UNIBODY_WIRING } from './unibody-preset-wiring';
 const DIODE = { pin: 1, cathode: 'away-switch' } as const;
 
 export const UNIBODY_PRESET = {
-  schemaVersion: 7,
+  schemaVersion: 11,
+  encoders: [],
+  combos: [],
+  macros: [],
+  conditionalLayers: [],
+  behaviors: [],
+  firmware: {},
   controllerId: 'nice_nano_v2',
   name: 'Unibody six',
   keys: [

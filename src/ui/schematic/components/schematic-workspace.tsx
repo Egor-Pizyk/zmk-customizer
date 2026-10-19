@@ -1,3 +1,4 @@
+import { EncoderPanel } from '@ui/schematic/encoders/components';
 import { WiringControls, ControllerPanel } from '@ui/schematic/wiring/components';
 import { LayoutControls } from '@ui/schematic/layout/components';
 import { getSelectedKeyIds } from '@ui/schematic/interaction';
@@ -20,6 +21,7 @@ export function SchematicWorkspace() {
       <WorkspaceCanvas workspace={workspace} marks={marks} />
       <WorkspaceLayoutControls workspace={workspace} />
       <WiringControls {...workspace.wiring} />
+      <EncoderPanel />
       <PartsList
         commit={commit}
         issues={issues}

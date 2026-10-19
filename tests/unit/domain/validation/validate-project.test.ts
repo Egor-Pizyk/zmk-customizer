@@ -7,6 +7,8 @@ const CATALOG = {
   keycodeNames: new Set(['A']),
   bluetoothProfileCount: 5,
   maxLayerCount: 32,
+  advancedLimits: { comboKeys: 20, macroBindings: 256, macroQueue: 64 },
+  encoderLimits: { maxSteps: 360, maxTriggers: 360, rotationDegrees: 360 },
   shieldLimits: {
     keyboardNameBytes: 16,
     layerNodeNameLength: 31,
@@ -23,7 +25,13 @@ function codesAndPaths(project: Project) {
 function named(name: string, shieldName?: string): Project {
   return shieldName === undefined
     ? {
-        schemaVersion: 7,
+        schemaVersion: 11,
+        encoders: [],
+        combos: [],
+        macros: [],
+        conditionalLayers: [],
+        behaviors: [],
+        firmware: {},
         controllerId: 'nice_nano_v2',
         keys: [],
         wires: [],
@@ -32,7 +40,13 @@ function named(name: string, shieldName?: string): Project {
         name,
       }
     : {
-        schemaVersion: 7,
+        schemaVersion: 11,
+        encoders: [],
+        combos: [],
+        macros: [],
+        conditionalLayers: [],
+        behaviors: [],
+        firmware: {},
         controllerId: 'nice_nano_v2',
         keys: [],
         wires: [],

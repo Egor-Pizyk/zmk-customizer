@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import type { WorkspaceId } from '@storage/preferences';
 import { BindingsWorkspace } from '@ui/bindings/components';
 import { ExportWorkspace } from '@ui/export/components';
-import { FirmwareWorkspace } from '@ui/firmware';
+import { FirmwareWorkspace } from '@ui/firmware/components';
 import { SchematicWorkspace } from '@ui/schematic/components';
 import { getWorkspaceLabel } from '@ui/navigation';
 

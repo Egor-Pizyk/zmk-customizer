@@ -18,7 +18,13 @@ it('writes 2-space JSON in schema key order with one trailing newline', () => {
   const text = expectSerializedText({
     shieldName: 'corne',
     name: 'x',
-    schemaVersion: 7,
+    schemaVersion: 11,
+    encoders: [],
+    combos: [],
+    macros: [],
+    conditionalLayers: [],
+    behaviors: [],
+    firmware: {},
     controllerId: 'nice_nano_v2',
     keys: [],
     wires: [],
@@ -26,14 +32,20 @@ it('writes 2-space JSON in schema key order with one trailing newline', () => {
     layers: [{ id: 'l0', name: 'Base', bindings: {} }],
   });
   expect(text).toBe(
-    '{\n  "schemaVersion": 7,\n  "controllerId": "nice_nano_v2",\n  "name": "x",\n  "shieldName": "corne",\n  "keys": [],\n  "wires": [],\n  "insulatedCrossings": [],\n  "layers": [\n    {\n      "id": "l0",\n      "name": "Base",\n      "bindings": {}\n    }\n  ]\n}\n',
+    '{\n  "schemaVersion": 11,\n  "encoders": [],\n  "combos": [],\n  "macros": [],\n  "conditionalLayers": [],\n  "behaviors": [],\n  "firmware": {},\n  "controllerId": "nice_nano_v2",\n  "name": "x",\n  "shieldName": "corne",\n  "keys": [],\n  "wires": [],\n  "insulatedCrossings": [],\n  "layers": [\n    {\n      "id": "l0",\n      "name": "Base",\n      "bindings": {}\n    }\n  ]\n}\n',
   );
 });
 
 it('omits shieldName when absent', () => {
   expect(
     expectSerializedText({
-      schemaVersion: 7,
+      schemaVersion: 11,
+      encoders: [],
+      combos: [],
+      macros: [],
+      conditionalLayers: [],
+      behaviors: [],
+      firmware: {},
       controllerId: 'nice_nano_v2',
       keys: [],
       wires: [],
@@ -46,7 +58,10 @@ it('omits shieldName when absent', () => {
 
 it('writes migrated v3 bytes with explicit controller and unmappable pin metadata', () => {
   const expected = fixtureSmall
-    .replace('"schemaVersion": 3,', '"schemaVersion": 7,\n  "controllerId": "nice_nano_v2",')
+    .replace(
+      '"schemaVersion": 3,',
+      '"schemaVersion": 11,\n  "encoders": [],\n  "combos": [],\n  "macros": [],\n  "conditionalLayers": [],\n  "behaviors": [],\n  "firmware": {},\n  "controllerId": "nice_nano_v2",',
+    )
     .replace('"boardPin": 3', '"droppedBoardPin": "nice!nano v2 P3"');
   const project = projectSchema.parse(JSON.parse(expected));
   expect(expectSerializedText(project)).toBe(expected);
@@ -54,7 +69,13 @@ it('writes migrated v3 bytes with explicit controller and unmappable pin metadat
 
 it('reports a schema failure instead of throwing', () => {
   const bad: Project = {
-    schemaVersion: 7,
+    schemaVersion: 11,
+    encoders: [],
+    combos: [],
+    macros: [],
+    conditionalLayers: [],
+    behaviors: [],
+    firmware: {},
     controllerId: 'nice_nano_v2',
     name: 'x',
     keys: [{ id: 'bad', xU: 0, yU: 0 }],

@@ -1,3 +1,5 @@
+import { formatReferenceName } from './format-reference-name';
+import type { BindingDefinitions } from './format-reference-name';
 import { BEHAVIORS, BLUETOOTH_COMMANDS, OUTPUT_COMMANDS } from '@catalog/bindings';
 import { assertNever } from '@domain';
 import type { Binding, KeyStroke, Layer, LayerBinding } from '@domain';
@@ -56,6 +58,8 @@ function isCatalogBinding(binding: Binding): binding is CatalogBinding {
     case 'bootloader': {
       return true;
     }
+    case 'macro':
+    case 'custom':
     case 'kp':
     case 'mt':
     case 'sk':
@@ -92,9 +96,16 @@ function formatLayerBindingName(binding: LayerBinding, layers: readonly Layer[])
 }
 
 /** Full action name: keycap aria-label, tooltip, Bindings table, status messages (FR-007). */
-export function formatBindingName(binding: Binding | undefined, layers: readonly Layer[]): string {
+export function formatBindingName(
+  binding: Binding | undefined,
+  layers: readonly Layer[],
+  definitions: BindingDefinitions = {},
+): string {
   if (binding === undefined) {
     return 'Not assigned (does nothing)';
+  }
+  if (binding.kind === 'macro' || binding.kind === 'custom') {
+    return formatReferenceName(binding, definitions);
   }
   if (isCatalogBinding(binding)) {
     return findBehaviorLabel(binding);
@@ -102,6 +113,12 @@ export function formatBindingName(binding: Binding | undefined, layers: readonly
   if ('layerId' in binding) {
     return formatLayerBindingName(binding, layers);
   }
+  return formatParameterName(binding);
+}
+
+function formatParameterName(
+  binding: Exclude<Binding, CatalogBinding | LayerBinding | { kind: 'custom' | 'macro' }>,
+): string {
   switch (binding.kind) {
     case 'kp': {
       return formatKeyStroke(binding.key);

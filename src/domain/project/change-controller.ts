@@ -28,6 +28,7 @@ export function changeController(
   return {
     ...project,
     controllerId: next.id,
+    encoders: changeEncoderPins(project, { previous, next }),
     ...(project.wiring === undefined
       ? {}
       : {
@@ -53,4 +54,20 @@ export function changeController(
       end: changeEnd(wire.end, { previous, next }),
     })),
   };
+}
+
+function changeEncoderPins(
+  project: Project,
+  input: { readonly previous: ControllerBoard; readonly next: ControllerBoard },
+) {
+  const { previous, next } = input;
+  return project.encoders.map((encoder) => {
+    const { aPin, bPin, ...rest } = encoder;
+    const canKeep = previous.family === next.family;
+    return {
+      ...rest,
+      ...(canKeep && aPin !== undefined && next.gpioPins.includes(aPin) ? { aPin } : {}),
+      ...(canKeep && bPin !== undefined && next.gpioPins.includes(bPin) ? { bPin } : {}),
+    };
+  });
 }

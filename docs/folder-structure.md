@@ -4,6 +4,15 @@ The top-level source folders define architectural layers. Nested folders group r
 
 | Folder | Responsibility |
 |---|---|
+| `src/domain/advanced-keymap/` | Combo, macro/step and conditional-layer operations, budgets and references |
+| `src/domain/behaviors/` | Named behavior definitions, arguments and semantic validation |
+| `src/ui/bindings/advanced/{components,logic}/` | Combo, macro and conditional-layer editors |
+| `src/ui/bindings/behaviors/{components,logic}/` | Custom behavior library and typed editors |
+| `src/domain/encoders/` | EC11 hardware edits, per-layer rotation assignments and semantic validation |
+| `src/catalog/encoders/` | Pinned encoder defaults, option descriptions and documentation |
+| `src/ui/schematic/encoders/components/` | Keyboard accessible encoder hardware/position/pin editor |
+| `src/ui/bindings/encoders/components/` | Active-layer encoder rotation actions and repair focus |
+| `src/domain/firmware/` | Typed firmware defaults, immutable overrides and validation |
 | `src/domain/project/` | Project creation, naming, identifiers and controller changes |
 | `src/domain/keys/` | Adding, moving, duplicating and deleting physical keys |
 | `src/domain/geometry/` | Coordinates, shapes and overlap |
@@ -25,11 +34,12 @@ The top-level source folders define architectural layers. Nested folders group r
 | `src/catalog/controllers/` | Boards, controller lookup and wiring choices |
 | `src/catalog/bindings/` | Keycodes, behaviors, modifiers and command catalogs |
 | `src/catalog/presets/` | Preset keyboard definitions |
-| `src/catalog/firmware/` | Pinned target and ZMK limits |
+| `src/catalog/firmware/` | Pinned target, ZMK limits and typed Kconfig option facts |
 | `src/catalog/zmk/` | Vendored upstream data |
 | `src/generators/shield/` | Shield overlays and Kconfig files |
 | `src/generators/keymap/` | Keymap and behavior rendering |
 | `src/generators/repository/` | Complete repository packaging and user configuration |
+| `src/storage/kle/` | KLE JSON validation, geometry decoding and conversion warnings |
 | `src/storage/project/` | Project parsing, schema, budgets, serialization and persistence |
 | `src/storage/migrations/` | Versioned project migrations |
 | `src/storage/preferences/` | Application preferences |
@@ -41,6 +51,7 @@ The top-level source folders define architectural layers. Nested folders group r
 | `src/ui/schematic/wiring/` | Controller and electrical wiring editors |
 | `src/ui/schematic/parts/` | Parts tables and per-part editors |
 | `src/ui/schematic/tools/` | Tool choices and tool window |
+| `src/ui/firmware/{components,logic}/` | Catalog-driven Firmware controls, search, drafts and issue repair |
 | `src/ui/bindings/formatting/` | Binding names and keycap legends |
 | `src/ui/bindings/picker/` | Binding choices, slots, drafts and picker controls |
 | `src/ui/bindings/panel/` | Action panel composition, size and focus |

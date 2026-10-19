@@ -4,13 +4,13 @@ import { INPUT_CLASSES } from '@ui/components/logic';
 import {
   findLineBehavior,
   findSlotValueId,
-  filterPickerItems,
+  filterPickerGroups,
   formatSlotPrompt,
   getSlotChoices,
 } from '@ui/bindings/picker/logic';
 import { ChoiceList } from './choice-list';
 
-import type { ChoiceGroup, PickerItem, KeyPickerState } from '@ui/bindings/picker/logic';
+import type { PickerItem, KeyPickerState } from '@ui/bindings/picker/logic';
 
 type SlotPickerProps = {
   readonly picker: KeyPickerState;
@@ -18,13 +18,6 @@ type SlotPickerProps = {
   /** Escape in the search field: back to the active keycap (spec 004 FR-025). */
   readonly onEscapeToCanvas: () => void;
 };
-
-function filterGroups(groups: readonly ChoiceGroup[], search: string): readonly ChoiceGroup[] {
-  return groups.flatMap((group) => {
-    const items = filterPickerItems(group.items, search);
-    return items.length === 0 ? [] : [{ ...group, items }];
-  });
-}
 
 function SlotSearch({
   picker,
@@ -73,9 +66,14 @@ export function SlotPicker(props: SlotPickerProps) {
   const promptId = useId();
   const listId = useId();
   // Layer rows link to the open behavior's docs; a layer slot exists only on its line.
-  const docsUrl = findLineBehavior(picker.source)?.docsUrl ?? '';
-  const choices = getSlotChoices(picker.slot, { layers: picker.layers, docsUrl });
-  const groups = filterGroups(choices, picker.search);
+  const docsUrl = findLineBehavior(picker.source, picker.behaviors, picker.macros)?.docsUrl ?? '';
+  const choices = getSlotChoices(picker.slot, {
+    layers: picker.layers,
+    behaviors: picker.behaviors,
+    macros: picker.macros,
+    docsUrl,
+  });
+  const groups = filterPickerGroups(choices, picker.search);
 
   function handleExitTop() {
     document.querySelector<HTMLInputElement>(`[data-slot-search="${listId}"]`)?.focus();

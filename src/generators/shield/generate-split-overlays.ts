@@ -28,7 +28,7 @@ export function generateSplitOverlays(
         : '';
     files.push({
       path: `${base}_${half}.overlay`,
-      content: `#include "${name}.dtsi"\n\n&kscan0 {\n${lists}\n};\n${offset}`,
+      content: `#include "${name}.dtsi"\n\n&kscan0 {\n${lists}\n};\n${offset}${project.encoders.flatMap((encoder, index) => (encoder.half === half ? [`\n&encoder_${index} { status = "okay"; };\n`] : [])).join('')}`,
     });
   }
   return files;

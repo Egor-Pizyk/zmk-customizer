@@ -1,3 +1,4 @@
+import { getProjectBindingEntries } from '@domain/bindings';
 import { createEntityId } from '@domain/project';
 import { toLayerNodeName } from './to-layer-node-name';
 import type { Binding, Project } from '@domain';
@@ -19,11 +20,16 @@ export function addLayer(
   project: Project,
   input?: { readonly reservedLayerIds: readonly string[] },
 ): Project {
-  const referencedIds = project.layers.flatMap((layer) =>
-    Object.values(layer.bindings).flatMap((binding) =>
-      'layerId' in binding ? [binding.layerId] : [],
-    ),
-  );
+  const referencedIds = getProjectBindingEntries(project).flatMap(({ binding }) => {
+    if ('layerId' in binding) {
+      return [binding.layerId];
+    }
+    return binding.kind === 'custom'
+      ? binding.parameters.flatMap((parameter) =>
+          parameter.kind === 'layer' ? [parameter.layerId] : [],
+        )
+      : [];
+  });
   const id = createEntityId({
     prefix: 'l',
     existingIds: [

@@ -46,7 +46,7 @@ test('keyboard-only table selection, native stepping, properties, duplication an
   ]) {
     await page.keyboard.press('Tab');
     await expect(page.getByRole('spinbutton', { name: property.name, exact: true })).toBeFocused();
-    await page.keyboard.press('Control+a');
+    await page.keyboard.press('ControlOrMeta+a');
     await page.keyboard.type(property.value);
     await page.keyboard.press('Enter');
     const changed = (await saved(page)).keys[0];
@@ -83,13 +83,15 @@ test('keyboard-only table selection, native stepping, properties, duplication an
   await page.keyboard.press('Enter');
   expect((await saved(page)).keys).toHaveLength(4);
   await expect(key(page, 3)).toBeVisible();
-  await page.keyboard.press('Tab');
+  await page.keyboard.press(
+    browserName === 'webkit' && process.platform === 'darwin' ? 'Alt+Tab' : 'Tab',
+  );
   await expect(
     page.getByRole('button', { name: 'Delete selected keys', exact: true }),
   ).toBeFocused();
   await page.keyboard.press('Enter');
   expect((await saved(page)).keys).toHaveLength(2);
-  await page.keyboard.press('Control+z');
+  await page.keyboard.press('ControlOrMeta+z');
   expect((await saved(page)).keys).toHaveLength(4);
   await expect(key(page, 3)).toBeVisible();
 });

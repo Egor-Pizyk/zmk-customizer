@@ -115,3 +115,46 @@ it('leaves project unchanged when a search has no match and returns focus from t
     expect(document.activeElement?.getAttribute('aria-label')).toMatch(/Key 0/u);
   });
 });
+
+it('finds a key category by keyboard and commits only the selected key', async () => {
+  const { user } = renderApp(undefined, {
+    activeWorkspaceId: 'bindings',
+    isAutoAdvanceEnabled: false,
+  });
+  const before = loadProject().project;
+  await user.click(screen.getByRole('button', { name: 'Choose action for key 1' }));
+  await user.click(screen.getByRole('button', { name: /^key:/u }));
+  const search = screen.getByRole('searchbox', { name: 'Search by name, code or symbol' });
+  await user.type(search, 'letters');
+  expect(screen.queryByText(/Nothing matches/u)).toBeNull();
+  await user.keyboard('{Enter}');
+  const base = getDefinedValue(before.layers[0]);
+  expect(loadProject().project).toEqual({
+    ...before,
+    layers: [
+      {
+        ...base,
+        bindings: { ...base.bindings, k1: { kind: 'kp', key: { keycode: 'A', modifiers: [] } } },
+      },
+      ...before.layers.slice(1),
+    ],
+  });
+  expect(screen.getByRole('button', { name: 'key: A' })).toBeTruthy();
+});
+
+it('returns Escape focus to the key inspected from the table without changing project or history', async () => {
+  const { user } = renderApp(undefined, { activeWorkspaceId: 'bindings' });
+  const before = loadProject().project;
+  await user.click(screen.getByRole('button', { name: 'Choose action for key 1' }));
+  await user.type(screen.getByRole('searchbox'), 'no-match-keymap-014');
+  await user.keyboard('{Escape}');
+  await waitFor(() => {
+    expect(document.activeElement?.getAttribute('aria-label')).toMatch(/^Key 1,/u);
+  });
+  expect(loadProject().project).toEqual(before);
+  expect(
+    within(screen.getByRole('banner'))
+      .getByRole('button', { name: /^Undo/u })
+      .getAttribute('aria-disabled'),
+  ).toBe('true');
+});

@@ -7,6 +7,9 @@ type NumberInputProps = {
   readonly label: string;
   readonly id?: string;
   readonly shouldCommitUnchanged?: boolean;
+  readonly describedBy?: string | undefined;
+  readonly min?: number;
+  readonly max?: number;
   readonly value: number;
   readonly step?: number;
   /** Space-separated issue paths the problems panel may focus (`[data-issue-path~=…]`). */
@@ -59,6 +62,9 @@ export function NumberInput(props: NumberInputProps) {
   return (
     <input
       id={props.id}
+      aria-describedby={props.describedBy}
+      min={props.min}
+      max={props.max}
       aria-invalid={isInvalid || undefined}
       aria-label={label}
       className={INPUT_CLASSES}

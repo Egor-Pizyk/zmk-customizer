@@ -4,6 +4,8 @@ import { buildProject } from '../../../helpers/build-project';
 
 const CATALOG = {
   maxLayerCount: 32,
+  advancedLimits: { comboKeys: 20, macroBindings: 256, macroQueue: 64 },
+  encoderLimits: { maxSteps: 360, maxTriggers: 360, rotationDegrees: 360 },
   shieldLimits: {
     keyboardNameBytes: 16,
     layerNodeNameLength: 31,

@@ -28,3 +28,18 @@ export type {
   Result,
   ControllerBoard,
 } from './types';
+export type {
+  CustomBehavior,
+  BehaviorParameter,
+  HoldTapTarget,
+  HoldTapFlavor,
+} from './behavior-types';
+export type {
+  Combo,
+  Macro,
+  MacroStep,
+  ConditionalLayer,
+  AdvancedKeymapLimits,
+} from './advanced-keymap-types';
+
+export type { Encoder, EncoderBinding } from './encoder-types';

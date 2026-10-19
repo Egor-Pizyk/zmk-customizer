@@ -374,6 +374,8 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 
 ## 014 — keymap-editor
 
+**Specified:** [`specs/014-keymap-editor/spec.md`](../specs/014-keymap-editor/spec.md). Acceptance and discovered gaps: category search and inspected-key Escape focus recovery. Automated acceptance is implemented; the manual accessibility completion gate remains pending in [`verification.md`](../specs/014-keymap-editor/verification.md).
+
 **Reduced by 004 and 007 (2026-09-28).** The keycode picker, built-in behaviors, catalog, keymap view and list alternative are delivered by 004 bindings-keycaps; layer management and layer behaviors by 007 layers. What remains here: the keymap round-trip acceptance against the preset golden files once shield generators (009) and the layout editor (012) exist, and any gaps found then. The original scope is kept below for reference.
 
 **Goal.** In the Bindings workspace, edit layers and per-key bindings with built-in ZMK behaviors, using a searchable keycode picker instead of typed codes.
@@ -409,15 +411,17 @@ After 014 a user can design a non-standard keyboard from nothing, wire it, map i
 
 ## 015 — kconfig-settings
 
+**Status.** Implemented; verification evidence in `specs/015-kconfig-settings/verification.md`. Manual accessibility gate remains pending.
+
 **Goal.** In the Firmware workspace, set common ZMK Kconfig options through typed controls, each explained and linked.
 
 **In scope.** Catalog of options from `docs/zmk/kconfig-options.md` (BLE, sleep/idle, debounce, USB/BLE output, battery reporting, split options), typed controls (bool/int/enum/string with range), default shown and only non-default values written to `.conf`; per-option `docsUrl`; search.
 
-**Out of scope.** Options belonging to encoders/RGB/displays (their own features), arbitrary free-form Kconfig lines (open).
+**Out of scope.** Options belonging to encoders/RGB/displays (their own features), arbitrary free-form Kconfig lines.
 
 **Acceptance criteria.** Only changed options appear in `.conf`, sorted; out-of-range values are validation errors in the problems panel (Firmware badge); every option has description + `docsUrl` (test); golden test with a fixed option set.
 
-**Open.** Whether to allow a raw "extra Kconfig lines" field; which options go to `.conf` vs `Kconfig.defconfig`.
+**Resolved in `specs/015-kconfig-settings/`.** Raw lines excluded. User overrides go to `.conf`; hardware defaults remain in `Kconfig.defconfig`. Board-owned USB/BLE enables are excluded. Central-only split overrides use both per-half user `.conf` files and omit the shared file.
 
 **Relevant docs.** `docs/zmk/kconfig-options.md`.
 
@@ -428,6 +432,8 @@ After 014 a user can design a non-standard keyboard from nothing, wire it, map i
 ---
 
 ## 016 — custom-behaviors
+
+**Specified:** [`specs/016-custom-behaviors/spec.md`](../specs/016-custom-behaviors/spec.md). Implemented; automated evidence and manual limits in [`verification.md`](../specs/016-custom-behaviors/verification.md).
 
 **Goal.** In the Bindings workspace, define user behaviors (hold-tap, tap-dance, mod-morph, sticky key/layer tuning) and bind them to keys.
 
@@ -446,6 +452,8 @@ After 014 a user can design a non-standard keyboard from nothing, wire it, map i
 ---
 
 ## 017 — combos-macros-conditional-layers
+
+**Implemented (2026-10-18):** [`specs/017-combos-macros-conditional-layers/spec.md`](../specs/017-combos-macros-conditional-layers/spec.md). Completion evidence: [`verification.md`](../specs/017-combos-macros-conditional-layers/verification.md).
 
 **Goal.** Combos, macros and conditional layers, the remaining keymap sections, in the Bindings workspace.
 
@@ -466,14 +474,16 @@ After 014 a user can design a non-standard keyboard from nothing, wire it, map i
 Order among these is flexible; pick by user demand. Interactive onboarding (032) is the exception: implement it last, after the other planned product features.
 
 ### 018 — kle-import
-Import a Keyboard Layout Editor JSON into the Schematic physical layout (positions, sizes, rotations). Out: KLE colors/legends beyond a label. Acceptance: fixture KLE files for the presets import to layouts equal to the preset layouts. Open: whether KLE parsing needs a dependency (ADR required). Docs: `docs/zmk/physical-layout.md`.
+**Specified:** [`specs/018-kle-import/spec.md`](../specs/018-kle-import/spec.md); implementation delivered; broad browser/manual gates tracked in [`verification.md`](../specs/018-kle-import/verification.md). Import downloaded strict Keyboard Layout Editor JSON into Schematic physical layout (positions, sizes, rotations), with conversion warnings and an explicit undoable project replacement. No colors, legends/labels, inferred bindings or wiring. Decals are skipped and secondary shapes use the primary rectangle with warnings. Independent KLE fixtures match the existing six-key preset geometry and exact rotation-cluster cases. Dependency decision resolved: existing validation plus a small decoder, no new dependency or schema change. Existing ZMK physical-layout output remains unchanged.
 
 ```
 /speckit-specify Import a keyboard layout created in the popular Keyboard Layout Editor website into the Schematic workspace so users do not have to redraw keys they already designed. Key positions, sizes and rotations are taken over; anything the tool cannot represent is listed after import. A file that cannot be read is rejected with a clear message and the current project stays unchanged.
 ```
 
 ### 019 — encoders
-Rotary encoders: pins per half and steps (Schematic), sensor bindings per layer (Bindings). Requires a new `docs/zmk/encoders.md` page first. Acceptance: golden test against an upstream shield with encoders.
+**Specified and implemented:** [`specs/019-encoders/spec.md`](../specs/019-encoders/spec.md); current checks and remaining manual limits in [`verification.md`](../specs/019-encoders/verification.md).
+
+EC11 rotary encoders: layout markers with numeric positions, A/B pins and half, electrical steps and per-sensor triggers per rotation in Schematic; independent clockwise/counterclockwise existing actions per layer in Bindings. Missing actions do nothing; push buttons remain ordinary keys. Schema v11 migration, conflict validation and repair navigation preserve existing projects/history. Shared sensor order, half-local activation and guarded driver defaults target v0.3. [Verified encoder notes](zmk/encoders.md), verbatim upstream Sofle fixtures and independent golden contracts cover output. No new runtime dependency.
 
 ```
 /speckit-specify Support rotary encoders: in the Schematic workspace the user adds encoders to the layout, assigns their pins and sets their resolution; in the Bindings workspace they choose per layer what turning left and right does. Each option links to the ZMK documentation.
@@ -585,4 +595,4 @@ Parsing existing ZMK shield files back into a project (Devicetree parsing), cust
 - ~~Canvas arrow keys (012 layout-editor)~~ — resolved: plain arrows navigate visible centers when a key is focused, otherwise retain canvas pan; Shift+arrows nudge selected keys. Numeric inputs retain native keys.
 - Charlieplex kscan: own feature or part of 013.
 - Split halves on different boards.
-- Raw "extra Kconfig lines" escape hatch (015).
+- ~~Raw "extra Kconfig lines" escape hatch (015)~~ — resolved: excluded; typed catalog only.

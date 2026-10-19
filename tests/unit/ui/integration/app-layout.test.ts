@@ -156,6 +156,9 @@ it('applies an explicitly entered first-key value to mixed selection and keeps t
   expect(loadProject().project.keys.map((key) => getKeyGeometry(key).widthU)).toEqual([1, 1]);
   await user.click(screen.getByRole('button', { name: 'Delete key 1' }));
   expect(screen.getByRole('checkbox', { name: 'Select key 0' })).toHaveProperty('tabIndex', 0);
+  await waitFor(() => {
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Add key' }));
+  });
 });
 
 it('extends canvas selection with Mod+Space without moving or saving keys', async () => {

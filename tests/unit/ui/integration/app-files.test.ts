@@ -88,7 +88,9 @@ async function uploadProject(
 it('rejects malformed imports without overwriting the project and allows choosing the same file again', async () => {
   const { user, container } = renderApp();
   const before = loadProject().project;
-  const input = getDefinedValue(container.querySelector<HTMLInputElement>('input[type="file"]'));
+  const input = getDefinedValue(
+    container.querySelector<HTMLInputElement>('input[type="file"][aria-hidden="true"]'),
+  );
   await user.click(screen.getByRole('button', { name: 'Open' }));
   await user.click(screen.getByRole('button', { name: 'Choose file…' }));
   await uploadProject(input, '{broken', user);

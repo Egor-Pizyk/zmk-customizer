@@ -41,3 +41,5 @@ export type { PickerPick, PickerItem } from './to-picker-item';
 export { useKeyPicker } from './use-key-picker';
 export type { KeyPickerState } from './use-key-picker';
 export { usePickerState } from './use-picker-state';
+export { filterPickerGroups } from './filter-picker-groups';
+export type { LineBehavior } from './binding-slots';

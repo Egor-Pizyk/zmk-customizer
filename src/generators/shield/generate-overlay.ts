@@ -1,3 +1,4 @@
+import { renderEncoderHardware } from './render-encoder-hardware';
 import { getKeyGeometry } from '@domain/geometry';
 import { getShieldName } from '@domain/project';
 import type { ShieldMatrix } from '@domain/wiring/matrix';
@@ -96,7 +97,7 @@ ${renderKscan(matrix, target.connector)}
 ${renderMatrixTransform(matrix)}
 
 ${renderPhysicalLayout(project)}
-};
+${renderEncoderHardware(project, target)}};
 `,
   };
 }

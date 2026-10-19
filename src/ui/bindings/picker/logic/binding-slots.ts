@@ -1,5 +1,6 @@
-import { BEHAVIORS, keycodeByName } from '@catalog/bindings';
-import type { BehaviorEntry } from '@catalog/bindings';
+import { getCustomSlots } from './get-custom-slots';
+import { formatStrokeCode } from './format-stroke-code';
+import { keycodeByName } from '@catalog/bindings';
 import { assertNever } from '@domain';
 import type {
   Binding,
@@ -13,6 +14,11 @@ import type {
 import { findSlotStroke } from './find-slot-stroke';
 /** One part of a binding the picker edits (spec 006 FR-002). */
 export type SlotRef =
+  | {
+      readonly kind: 'custom-parameter';
+      readonly index: number;
+      readonly parameterKind: 'key' | 'layer';
+    }
   | { readonly kind: 'behavior' }
   | { readonly kind: 'key' }
   | { readonly kind: 'hold' }
@@ -59,11 +65,7 @@ export function isProfileCommand(
 }
 
 /** `LC(LS(A))`: modifiers as ZMK modifier functions around the keycode. */
-export function formatStrokeCode(stroke: KeyStroke): string {
-  const opening = stroke.modifiers.map((modifier) => `${modifier}(`).join('');
-  return `${opening}${stroke.keycode}${')'.repeat(stroke.modifiers.length)}`;
-}
-
+export { formatStrokeCode } from './format-stroke-code';
 function toStrokeValue(stroke: KeyStroke | undefined): string | undefined {
   return stroke === undefined ? undefined : formatStrokeCode(stroke);
 }
@@ -110,6 +112,9 @@ function getBehaviorNodeSlots(
 }
 
 function getBindingSlots(binding: Exclude<Binding, LayerBinding>): readonly LineSlot[] {
+  if (binding.kind === 'custom') {
+    return getCustomSlots(binding);
+  }
   switch (binding.kind) {
     case 'kp':
     case 'sk':
@@ -117,10 +122,7 @@ function getBindingSlots(binding: Exclude<Binding, LayerBinding>): readonly Line
       return [{ ref: { kind: 'key' }, label: 'key', value: formatStrokeCode(binding.key) }];
     }
     case 'mt': {
-      return [
-        { ref: { kind: 'hold' }, label: 'hold', value: formatStrokeCode(binding.hold) },
-        { ref: { kind: 'tap' }, label: 'tap', value: formatStrokeCode(binding.tap) },
-      ];
+      return getModTapSlots(binding);
     }
     case 'bt': {
       return toBluetoothSlots(binding.command, 'profile' in binding ? binding.profile : undefined);
@@ -132,6 +134,7 @@ function getBindingSlots(binding: Exclude<Binding, LayerBinding>): readonly Line
     case 'mod_morph': {
       return getBehaviorNodeSlots(binding);
     }
+    case 'macro':
     case 'trans':
     case 'none':
     case 'caps_word':
@@ -209,18 +212,18 @@ export function getLineSlots(source: LineSource, layers: readonly Layer[]): read
   return getSlots(source).map(({ ref, label, value }) => ({
     ref,
     label,
-    value: ref.kind === 'layer' && value !== undefined ? formatLayerValue(value, layers) : value,
+    value:
+      (ref.kind === 'layer' ||
+        (ref.kind === 'custom-parameter' && ref.parameterKind === 'layer')) &&
+      value !== undefined
+        ? formatLayerValue(value, layers)
+        : value,
   }));
 }
 
 /** The behavior the line shows, stored or drafted; none when there is nothing to share. */
-export function findLineBehavior(source: LineSource): BehaviorEntry | undefined {
-  if (source.kind === 'none') {
-    return undefined;
-  }
-  const behaviorId = source.kind === 'draft' ? source.draft.behaviorId : source.binding.kind;
-  return BEHAVIORS.find((behavior) => behavior.id === behaviorId);
-}
+export { findLineBehavior } from './find-line-behavior';
+export type { LineBehavior } from './find-line-behavior';
 
 export function isSameSlot(first: SlotRef, second: SlotRef): boolean {
   return JSON.stringify(first) === JSON.stringify(second);
@@ -243,11 +246,20 @@ export function resolveOpenSlot(source: LineSource, openSlot?: SlotRef): SlotRef
 /** The id of the open slot's current choice, to mark and scroll to (spec 006 FR-005, FR-006). */
 export function findSlotValueId(source: LineSource, slot: SlotRef): string | undefined {
   switch (slot.kind) {
+    case 'custom-parameter': {
+      return getSlots(source).find((line) => isSameSlot(line.ref, slot))?.value;
+    }
     case 'behavior': {
       if (source.kind === 'none') {
         return undefined;
       }
-      return source.kind === 'draft' ? source.draft.behaviorId : source.binding.kind;
+      if (source.kind === 'draft') {
+        return source.draft.behaviorId;
+      }
+      if (source.binding.kind === 'macro') {
+        return source.binding.macroId;
+      }
+      return source.binding.kind === 'custom' ? source.binding.behaviorId : source.binding.kind;
     }
     case 'bt-command':
     case 'profile':
@@ -274,26 +286,11 @@ export function findSlotValueId(source: LineSource, slot: SlotRef): string | und
  * drafted key, or nothing (hold, sticky and toggle keys take no modifiers here) (FR-010). The tap
  * of layer-tap takes them like the tap of mod-tap (spec 007).
  */
-export function findModifierTarget(
-  source: LineSource,
-  slot: SlotRef,
-): KeyStroke | 'pending' | undefined {
-  const canHaveModifiers =
-    slot.kind === 'tap' ||
-    slot.kind === 'dance-tap' ||
-    slot.kind === 'morph-side' ||
-    slot.kind === 'key';
-  if (!canHaveModifiers) {
-    return undefined;
-  }
-  if (source.kind === 'draft') {
-    const { behaviorId } = source.draft;
-    return behaviorId === 'kp' || behaviorId === 'mt' || behaviorId === 'lt'
-      ? 'pending'
-      : undefined;
-  }
-  if (source.kind === 'binding' && (source.binding.kind === 'sk' || source.binding.kind === 'kt')) {
-    return undefined;
-  }
-  return findSlotStroke(source, slot);
+export { findModifierTarget } from './find-modifier-target';
+
+function getModTapSlots(binding: Extract<Binding, { kind: 'mt' }>): readonly LineSlot[] {
+  return [
+    { ref: { kind: 'hold' }, label: 'hold', value: formatStrokeCode(binding.hold) },
+    { ref: { kind: 'tap' }, label: 'tap', value: formatStrokeCode(binding.tap) },
+  ];
 }

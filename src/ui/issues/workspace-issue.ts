@@ -6,6 +6,18 @@ import type { Preferences, WorkspaceId } from '@storage/preferences';
 export type WorkspaceIssue = ValidationIssue & { readonly workspaceId: WorkspaceId };
 
 const WORKSPACE_BY_ISSUE_CODE: Record<ValidationCode, WorkspaceId> = {
+  'encoder-invalid': 'schematic',
+  'encoder-pin-missing': 'schematic',
+  'encoder-pin-conflict': 'schematic',
+  'combo-invalid': 'bindings',
+  'macro-invalid': 'bindings',
+  'macro-reference-missing': 'bindings',
+  'conditional-layer-invalid': 'bindings',
+  'advanced-reference-cycle': 'bindings',
+  'behavior-invalid': 'bindings',
+  'behavior-reference-missing': 'bindings',
+  'behavior-cycle': 'bindings',
+  'firmware-option-invalid': 'firmware',
   'wiring-cell-missing': 'schematic',
   'wiring-terminal-conflict': 'schematic',
   'wiring-half-conflict': 'schematic',
@@ -77,3 +89,5 @@ export function formatIssueCount(count: number): string {
   }
   return count === 1 ? '1 problem' : `${count} problems`;
 }
+
+export const REVEAL_ISSUE_EVENT = 'zmk-customizer:reveal-issue';

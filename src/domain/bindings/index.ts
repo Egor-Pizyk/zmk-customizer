@@ -6,3 +6,6 @@ export { isEveryKeySendingKey } from './is-every-key-sending-key';
 export { isSameBinding } from './is-same-binding';
 export { isValidTappingTerm } from './is-valid-tapping-term';
 export { normalizeModifiers } from './normalize-modifiers';
+export { getBindingStrokes } from './get-binding-strokes';
+export { getProjectBindingEntries } from './get-project-binding-entries';
+export type { ProjectBindingEntry } from './get-project-binding-entries';

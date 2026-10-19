@@ -18,7 +18,17 @@ it('loads v3 without adding diodes or changing the circuit', () => {
   const old = { ...legacy, schemaVersion: 3, keys: [{ id: 'k1', xU: 0, yU: 0 }] };
   expect(parseProjectFile(JSON.stringify(old))).toEqual({
     ok: true,
-    value: { ...old, schemaVersion: 7, controllerId: 'nice_nano_v2' },
+    value: {
+      ...old,
+      schemaVersion: 11,
+      encoders: [],
+      combos: [],
+      macros: [],
+      conditionalLayers: [],
+      behaviors: [],
+      firmware: {},
+      controllerId: 'nice_nano_v2',
+    },
   });
 });
 it.each([
@@ -31,7 +41,13 @@ it.each([
   const paths = issuePaths(
     JSON.stringify({
       ...createProject({ controllerId: 'nice_nano_v2' }),
-      schemaVersion: 7,
+      schemaVersion: 11,
+      encoders: [],
+      combos: [],
+      macros: [],
+      conditionalLayers: [],
+      behaviors: [],
+      firmware: {},
       controllerId: 'nice_nano_v2',
       keys: [{ id: 'k1', xU: 0, yU: 0, diode }],
     }),

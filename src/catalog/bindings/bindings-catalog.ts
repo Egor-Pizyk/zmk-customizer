@@ -1,3 +1,4 @@
+import { ENCODER_LIMITS } from '@catalog/encoders';
 import type { BindingsCatalog } from '@domain/validation';
 import { BLUETOOTH_PROFILE_COUNT } from './bluetooth-commands';
 import { ZMK_LIMITS } from '@catalog/firmware';
@@ -8,6 +9,8 @@ export const BINDINGS_CATALOG: BindingsCatalog = {
   keycodeNames: new Set(keycodeByName.keys()),
   bluetoothProfileCount: BLUETOOTH_PROFILE_COUNT,
   // ZMK v0.3 layer state is a uint32_t bit mask: at most 32 layers (docs/zmk/keymap.md §2).
+  advancedLimits: { comboKeys: 20, macroBindings: 256, macroQueue: 64 },
   maxLayerCount: ZMK_LIMITS.layerCount,
   shieldLimits: ZMK_LIMITS,
+  encoderLimits: ENCODER_LIMITS,
 };

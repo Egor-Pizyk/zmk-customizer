@@ -1,3 +1,4 @@
+import { EncodersLayer } from './encoders-layer';
 import type { HoverPreview } from '@ui/schematic/interaction';
 import { HoverPreviewLayer } from './hover-preview-layer';
 import { KeysLayer } from './keys-layer';
@@ -16,6 +17,7 @@ export function SchematicContent({ hoverPreview, ...layerProps }: SchematicConte
   return (
     <>
       <KeysLayer {...layerProps} />
+      <EncodersLayer project={layerProps.project} />
       <WiresLayer {...layerProps} />
       <WireEndsLayer {...layerProps} />
       <PinsLayer {...layerProps} />

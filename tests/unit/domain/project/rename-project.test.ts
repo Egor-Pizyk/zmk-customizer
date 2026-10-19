@@ -3,7 +3,13 @@ import { renameProject } from '@domain/project';
 import { expect, it } from 'vitest';
 
 const PROJECT: Project = {
-  schemaVersion: 7,
+  schemaVersion: 11,
+  encoders: [],
+  combos: [],
+  macros: [],
+  conditionalLayers: [],
+  behaviors: [],
+  firmware: {},
   controllerId: 'nice_nano_v2',
   keys: [],
   wires: [],
@@ -15,7 +21,13 @@ const PROJECT: Project = {
 
 it('sets the name exactly as typed and keeps the override', () => {
   expect(renameProject(PROJECT, { name: '  New  ' })).toEqual({
-    schemaVersion: 7,
+    schemaVersion: 11,
+    encoders: [],
+    combos: [],
+    macros: [],
+    conditionalLayers: [],
+    behaviors: [],
+    firmware: {},
     controllerId: 'nice_nano_v2',
     keys: [],
     wires: [],

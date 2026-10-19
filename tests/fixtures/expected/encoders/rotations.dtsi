@@ -1,0 +1,18 @@
+    behaviors {
+        encoder_rotation_0_0: encoder_rotation_0_0 {
+            compatible = "zmk,behavior-sensor-rotate";
+            #sensor-binding-cells = <0>;
+            bindings = <&kp C_VOL_UP>, <&kp C_VOL_DN>;
+        };
+        encoder_rotation_0_1: encoder_rotation_0_1 {
+            compatible = "zmk,behavior-sensor-rotate";
+            #sensor-binding-cells = <0>;
+            bindings = <&none>, <&none>;
+        };
+        encoder_rotation_1_1: encoder_rotation_1_1 {
+            compatible = "zmk,behavior-sensor-rotate";
+            #sensor-binding-cells = <0>;
+            bindings = <&kp PG_UP>, <&kp PG_DN>;
+        };
+    };
+

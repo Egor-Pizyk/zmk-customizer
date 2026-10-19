@@ -1,10 +1,11 @@
-import type { BehaviorEntry } from '@catalog/bindings';
-import type { Layer } from '@domain';
+import type { LineBehavior, LineSource, SlotRef } from '@ui/bindings/picker/logic';
+import type { CustomBehavior, Layer, Macro } from '@domain';
 import { Button, DocsLink } from '@ui/components/components';
 import { findLineBehavior, getLineSlots, isSameSlot } from '@ui/bindings/picker/logic';
-import type { LineSource, SlotRef } from '@ui/bindings/picker/logic';
 
 type BindingLineProps = {
+  readonly behaviors?: readonly CustomBehavior[];
+  readonly macros?: readonly Macro[];
   readonly source: LineSource;
   readonly slot: SlotRef;
   /** Every layer, so a layer slot reads "1 Nav" (spec 007). */
@@ -17,7 +18,7 @@ type BindingLineProps = {
 // then each slot with its label and value; the open part is pressed.
 export function BindingLine(props: BindingLineProps) {
   const { source, slot, onSlotOpen: handleSlotOpen } = props;
-  const behavior = findLineBehavior(source);
+  const behavior = findLineBehavior(source, props.behaviors, props.macros);
   const isTapDance = source.kind === 'binding' && source.binding.kind === 'tap_dance';
   return (
     <section aria-label="Binding" className="flex flex-col gap-2">
@@ -86,7 +87,7 @@ function BindingSummary({
   behavior,
   source,
 }: {
-  readonly behavior: BehaviorEntry | undefined;
+  readonly behavior: LineBehavior | undefined;
   readonly source: LineSource;
 }) {
   if (behavior === undefined) {

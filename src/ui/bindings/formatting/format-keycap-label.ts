@@ -1,5 +1,6 @@
+import type { BindingDefinitions } from './format-reference-name';
 import { BEHAVIORS } from '@catalog/bindings';
-import type { Binding, Layer } from '@domain';
+import type { Binding, CustomBehavior, Layer, Macro } from '@domain';
 import { formatBindingName } from './format-binding-name';
 import { formatFullBindingLegend } from './format-binding-legend';
 import { formatLegendTitle } from './format-legend-title';
@@ -11,10 +12,12 @@ export function formatKeycapLabel(input: {
   readonly binding: Binding | undefined;
   /** Every layer, for the targets of layer behaviors (spec 007). */
   readonly layers: readonly Layer[];
+  readonly behaviors?: readonly CustomBehavior[];
+  readonly macros?: readonly Macro[];
   readonly isSelected: boolean;
   readonly problems: readonly string[];
 }): string {
-  const name = formatBindingName(input.binding, input.layers);
+  const name = formatBindingName(input.binding, input.layers, input);
   const parts = [`Key ${input.keyIndex}, ${input.layerName} layer: ${name}`];
   if (input.isSelected) {
     parts.push('selected');
@@ -24,10 +27,14 @@ export function formatKeycapLabel(input: {
 }
 
 // SVG <title> hover tooltip: the full legend with the full action name (FR-007).
-export function formatKeycapTitle(binding: Binding | undefined, layers: readonly Layer[]): string {
+export function formatKeycapTitle(
+  binding: Binding | undefined,
+  layers: readonly Layer[],
+  definitions: BindingDefinitions = {},
+): string {
   return formatLegendTitle(
-    formatFullBindingLegend(binding, layers)?.tap,
-    formatBindingName(binding, layers),
+    formatFullBindingLegend(binding, layers, definitions)?.tap,
+    formatBindingName(binding, layers, definitions),
   );
 }
 

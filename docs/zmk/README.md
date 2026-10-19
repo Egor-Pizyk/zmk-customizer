@@ -28,12 +28,13 @@ Marking convention in every page: v0.3.0 facts are primary and unmarked; anythin
 | [matrix-transform.md](matrix-transform.md) | `zmk,matrix-transform`, `RC()`, offsets, key index order, split |
 | [physical-layout.md](physical-layout.md) | `zmk,physical-layout`, `key_physical_attrs` units, chosen, multiple layouts, position map, Studio requirements |
 | [boards.md](boards.md) | controller boards, v0.3.0 (HWMv1) ids we generate + main (HWMv2) ids, `&pro_micro` / `&xiao_d` pin tables, board overlay names |
+| [encoders.md](encoders.md) | EC11 pins/steps, per-sensor triggers, split activation, rotation bindings and driver defaults |
 | [keymap.md](keymap.md) | keymap structure, includes, layers, bindings, keycodes source, modifiers, sensors |
 | [behaviors.md](behaviors.md) | every built-in behavior + user-instantiable behavior properties |
 | [combos-macros-layers.md](combos-macros-layers.md) | combos, macros, conditional layers |
 | [kconfig-options.md](kconfig-options.md) | user-facing Kconfig inventory with types/defaults/anchors |
 
-Golden fixtures: `tests/fixtures/upstream/{corne,reviung41}/` (byte-for-byte copies at `v0.3.0` = `edf5c08`, each with a `SOURCE.md` listing main-only differences) and `tests/fixtures/upstream/_shared-includes/` (the `app/dts` includes they use; identical on main).
+Golden fixtures: `tests/fixtures/upstream/{corne,reviung41,sofle}/` (byte-for-byte copies at `v0.3.0` = `edf5c08`, each with a `SOURCE.md` recording provenance; Corne/Reviung also list verified main-only differences) and `tests/fixtures/upstream/_shared-includes/` (the `app/dts` includes they use; identical on main).
 
 ## Glossary: ZMK term → our domain term
 

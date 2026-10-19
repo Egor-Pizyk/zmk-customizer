@@ -70,6 +70,14 @@ function toLayerTapDraftResult(
 // Tap-dance taps and mod-morph sides keep their own modifiers; the next tap or side opens.
 function toNodeKeycodeResult(input: PickInput, binding: Binding, keycode: string): PickResult {
   const { slot, target } = input;
+  if (slot.kind === 'custom-parameter' && binding.kind === 'custom') {
+    const parameters = binding.parameters.map((parameter, index) =>
+      index === slot.index && parameter.kind === 'key'
+        ? { ...parameter, key: { keycode, modifiers: parameter.key.modifiers } }
+        : parameter,
+    );
+    return toBindingResult(input, { ...binding, parameters });
+  }
   if (slot.kind === 'dance-tap' && binding.kind === 'tap_dance') {
     const taps = binding.taps.map((tap, index) =>
       index === slot.index ? { ...tap, keycode } : tap,
@@ -168,6 +176,9 @@ export function toProfileResult(input: PickInput, profile: number): PickResult {
 // layer-tap keeping each key's own key when every key sends one, then opening its tap (spec 007).
 export function toLayerResult(input: PickInput, layerId: string): PickResult {
   const { source, target } = input;
+  if (source.kind === 'binding' && source.binding.kind === 'custom') {
+    return toCustomLayerResult(input, layerId);
+  }
   if (source.kind === 'binding' && 'layerId' in source.binding) {
     return toBindingResult(input, { ...source.binding, layerId });
   }
@@ -192,4 +203,21 @@ export function toLayerResult(input: PickInput, layerId: string): PickResult {
     });
   }
   return { kind: 'draft', draft: { ...draft, layerId }, next: { kind: 'tap' } };
+}
+
+function toCustomLayerResult(input: PickInput, layerId: string): PickResult {
+  const { source, slot } = input;
+  if (
+    source.kind !== 'binding' ||
+    source.binding.kind !== 'custom' ||
+    slot.kind !== 'custom-parameter'
+  ) {
+    return throwUnfitPick(input);
+  }
+  return toBindingResult(input, {
+    ...source.binding,
+    parameters: source.binding.parameters.map((parameter, index) =>
+      parameter.kind === 'layer' && index === slot.index ? { kind: 'layer', layerId } : parameter,
+    ),
+  });
 }

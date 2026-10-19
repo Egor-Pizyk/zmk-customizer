@@ -1,3 +1,7 @@
+import { renderEncoderBehaviors } from './render-encoder-behaviors';
+import { renderEncoderBindings } from './render-encoder-bindings';
+import { renderAdvancedKeymap } from './render-advanced-keymap';
+import { getProjectBindings } from '@domain/behaviors';
 import { getShieldName } from '@domain/project';
 import { toLayerNodeName } from '@domain/layers';
 import type { Layer, Project } from '@domain';
@@ -7,14 +11,12 @@ import { renderBinding } from './render-binding';
 import { renderCustomBehaviors } from './render-custom-behaviors';
 
 function renderIncludes(project: Project): string {
-  const bindings = project.layers.flatMap((layer) =>
-    project.keys.map((key) => layer.bindings[key.id]),
-  );
+  const bindings = getProjectBindings(project);
   const headers = ['behaviors.dtsi', 'dt-bindings/zmk/keys.h'];
-  if (bindings.some((binding) => binding?.kind === 'bt')) {
+  if (bindings.some((binding) => binding.kind === 'bt')) {
     headers.push('dt-bindings/zmk/bt.h');
   }
-  if (bindings.some((binding) => binding?.kind === 'out')) {
+  if (bindings.some((binding) => binding.kind === 'out')) {
     headers.push('dt-bindings/zmk/outputs.h');
   }
   return headers.map((header) => `#include <${header}>`).join('\n');
@@ -22,7 +24,11 @@ function renderIncludes(project: Project): string {
 
 function renderLayer(
   layer: Layer,
-  input: { readonly project: Project; readonly custom: ReturnType<typeof renderCustomBehaviors> },
+  input: {
+    readonly project: Project;
+    readonly custom: ReturnType<typeof renderCustomBehaviors>;
+    readonly encoderLabels: readonly string[];
+  },
 ): string {
   const bindings = input.project.keys
     .map(
@@ -34,22 +40,25 @@ function renderLayer(
             display-name = "${escapeString(layer.name, 'devicetree')}";
             bindings = <
 ${bindings}
-            >;
+            >;${renderEncoderBindings(input.encoderLabels)}
         };`;
 }
 
 export function generateKeymap(project: Project): GeneratedFile {
   const shieldName = getShieldName(project);
   const custom = renderCustomBehaviors(project);
+  const encoders = renderEncoderBehaviors(project, custom.findLabel);
   const layers = project.layers
-    .map((layer) => renderLayer(layer, { project, custom }))
+    .map((layer, index) =>
+      renderLayer(layer, { project, custom, encoderLabels: encoders.labels[index] ?? [] }),
+    )
     .join('\n\n');
   return {
     path: `boards/shields/${shieldName}/${shieldName}.keymap`,
     content: `${renderIncludes(project)}
 
 / {
-${custom.text}    keymap {
+${custom.text}${encoders.text}${renderAdvancedKeymap(project, custom.findLabel)}    keymap {
         compatible = "zmk,keymap";
 
 ${layers}

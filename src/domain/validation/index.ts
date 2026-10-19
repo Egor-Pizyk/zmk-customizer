@@ -7,3 +7,4 @@ export { validateLayers } from './validate-layers';
 export { validateNetsWithoutBoardPin } from './validate-nets-without-board-pin';
 export { validateProject } from './validate-project';
 export { validateSchematic } from './validate-schematic';
+export { findBindingIssue } from './find-binding-issue';

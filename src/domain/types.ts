@@ -1,5 +1,15 @@
+import type { Encoder, EncoderBinding } from './encoder-types';
+import type { Combo, Macro, ConditionalLayer } from './advanced-keymap-types';
+import type { CustomBehavior, BehaviorParameter } from './behavior-types';
+
 export type Project = {
-  readonly schemaVersion: 7;
+  readonly schemaVersion: 11;
+  readonly encoders: readonly Encoder[];
+  readonly combos: readonly Combo[];
+  readonly macros: readonly Macro[];
+  readonly conditionalLayers: readonly ConditionalLayer[];
+  readonly behaviors: readonly CustomBehavior[];
+  readonly firmware: Readonly<Record<string, boolean | number | string>>;
   readonly controllerId: string;
   readonly wiring?: Wiring;
   readonly name: string;
@@ -30,6 +40,7 @@ export type Wiring = {
 };
 
 export type Layer = {
+  readonly encoderBindings?: Readonly<Record<string, EncoderBinding>>;
   readonly id: string;
   readonly name: string;
   /** Keyed by Key.id. Missing entry = unassigned = &none (spec 004 FR-021). */
@@ -53,6 +64,12 @@ export type OutputCommand = 'OUT_TOG' | 'OUT_USB' | 'OUT_BLE';
 
 /** `kind` is the ZMK behavior label without `&` (docs/zmk/behaviors.md §1). */
 export type Binding =
+  | { readonly kind: 'macro'; readonly macroId: string }
+  | {
+      readonly kind: 'custom';
+      readonly behaviorId: string;
+      readonly parameters: readonly BehaviorParameter[];
+    }
   | { readonly kind: 'kp'; readonly key: KeyStroke }
   | { readonly kind: 'mt'; readonly hold: KeyStroke; readonly tap: KeyStroke }
   | { readonly kind: 'sk'; readonly key: KeyStroke }
@@ -88,7 +105,7 @@ export type Binding =
   | { readonly kind: 'mo' | 'tog' | 'to' | 'sl'; readonly layerId: string }
   | { readonly kind: 'lt'; readonly layerId: string; readonly tap: KeyStroke };
 
-export type BehaviorId = Binding['kind'];
+export type BehaviorId = Exclude<Binding['kind'], 'custom' | 'macro'>;
 
 /** The layer behaviors; `'layerId' in binding` narrows a Binding to these. */
 export type LayerBinding = Extract<Binding, { readonly layerId: string }>;
@@ -158,6 +175,18 @@ export type CrossingRef = {
 };
 
 export type ValidationCode =
+  | 'encoder-invalid'
+  | 'encoder-pin-missing'
+  | 'encoder-pin-conflict'
+  | 'combo-invalid'
+  | 'macro-invalid'
+  | 'macro-reference-missing'
+  | 'conditional-layer-invalid'
+  | 'advanced-reference-cycle'
+  | 'behavior-invalid'
+  | 'behavior-reference-missing'
+  | 'behavior-cycle'
+  | 'firmware-option-invalid'
   | 'wiring-cell-missing'
   | 'wiring-terminal-conflict'
   | 'wiring-half-conflict'

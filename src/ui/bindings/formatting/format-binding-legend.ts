@@ -1,3 +1,5 @@
+import { formatReferenceName } from './format-reference-name';
+import type { BindingDefinitions } from './format-reference-name';
 import { KEYCODE_LEGENDS, KEYCODES, keycodeByName } from '@catalog/bindings';
 import type { Keycode } from '@catalog/bindings';
 import { assertNever, MODIFIERS } from '@domain';
@@ -149,6 +151,8 @@ function isSimpleBinding(binding: Binding): binding is SimpleBinding {
     case 'bootloader': {
       return true;
     }
+    case 'macro':
+    case 'custom':
     case 'kp':
     case 'mt':
     case 'sk':
@@ -174,19 +178,25 @@ function isSimpleBinding(binding: Binding): binding is SimpleBinding {
 export function formatBindingLegend(
   binding: Binding | undefined,
   layers: readonly Layer[],
+  definitions: BindingDefinitions = {},
 ): BindingLegend | undefined {
-  return toBindingLegend(binding, { isFull: false, layers });
+  return toBindingLegend(binding, { isFull: false, layers, definitions });
 }
 
 /** Hover tooltips: the same legend, never shortened with "…" (FR-007). */
 export function formatFullBindingLegend(
   binding: Binding | undefined,
   layers: readonly Layer[],
+  definitions: BindingDefinitions = {},
 ): BindingLegend | undefined {
-  return toBindingLegend(binding, { isFull: true, layers });
+  return toBindingLegend(binding, { isFull: true, layers, definitions });
 }
 
-type LegendOptions = { readonly isFull: boolean; readonly layers: readonly Layer[] };
+type LegendOptions = {
+  readonly isFull: boolean;
+  readonly layers: readonly Layer[];
+  readonly definitions: BindingDefinitions;
+};
 
 function toBindingLegend(
   binding: Binding | undefined,
@@ -194,6 +204,10 @@ function toBindingLegend(
 ): BindingLegend | undefined {
   if (binding === undefined) {
     return undefined;
+  }
+  if (binding.kind === 'macro' || binding.kind === 'custom') {
+    const name = formatReferenceName(binding, options.definitions);
+    return { tap: options.isFull ? name : truncate(name) };
   }
   if (isSimpleBinding(binding)) {
     return { tap: FIXED_LEGENDS[binding.kind] };
@@ -216,7 +230,7 @@ function toLayerLegend(binding: LayerBinding, options: LegendOptions): BindingLe
 }
 
 function toParameterLegend(
-  binding: Exclude<Binding, SimpleBinding | LayerBinding>,
+  binding: Exclude<Binding, SimpleBinding | LayerBinding | { kind: 'custom' | 'macro' }>,
   isFull: boolean,
 ): BindingLegend {
   switch (binding.kind) {

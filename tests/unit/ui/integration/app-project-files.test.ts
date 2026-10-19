@@ -32,7 +32,9 @@ it.each([
   'keeps the latest Open request when older completes first: %s',
   async (firstIndex, secondIndex) => {
     const { user, container } = renderApp();
-    const input = getDefinedValue(container.querySelector<HTMLInputElement>('input[type="file"]'));
+    const input = getDefinedValue(
+      container.querySelector<HTMLInputElement>('input[type="file"][aria-hidden="true"]'),
+    );
     const older = pendingFile('Older');
     const newer = pendingFile('Newer');
     await user.upload(input, older.file);
@@ -54,7 +56,9 @@ it.each([
 
 it('ignores an old failure after a successful Open and allows retry', async () => {
   const { user, container } = renderApp();
-  const input = getDefinedValue(container.querySelector<HTMLInputElement>('input[type="file"]'));
+  const input = getDefinedValue(
+    container.querySelector<HTMLInputElement>('input[type="file"][aria-hidden="true"]'),
+  );
   const older = pendingFile('Older');
   const newer = pendingFile('Newer');
   await user.upload(input, older.file);
@@ -80,7 +84,9 @@ it('ignores an old failure after a successful Open and allows retry', async () =
 
 it('does not replace New with a pending Open', async () => {
   const { user, container } = renderApp();
-  const input = getDefinedValue(container.querySelector<HTMLInputElement>('input[type="file"]'));
+  const input = getDefinedValue(
+    container.querySelector<HTMLInputElement>('input[type="file"][aria-hidden="true"]'),
+  );
   const pending = pendingFile('Older');
   await user.upload(input, pending.file);
   await user.click(screen.getByRole('button', { name: 'New' }));
@@ -94,7 +100,9 @@ it('does not replace New with a pending Open', async () => {
 
 it('keeps edits made during Open and announces the cancellation', async () => {
   const { user, container } = renderApp();
-  const input = getDefinedValue(container.querySelector<HTMLInputElement>('input[type="file"]'));
+  const input = getDefinedValue(
+    container.querySelector<HTMLInputElement>('input[type="file"][aria-hidden="true"]'),
+  );
   const pending = pendingFile('Older');
   await user.upload(input, pending.file);
   const name = screen.getByRole('textbox', { name: 'Name' });
@@ -111,7 +119,9 @@ it('keeps edits made during Open and announces the cancellation', async () => {
 it('rejects excessive import complexity while keeping the saved current project', async () => {
   const { user, container } = renderApp();
   const before = loadProject().project;
-  const input = getDefinedValue(container.querySelector<HTMLInputElement>('input[type="file"]'));
+  const input = getDefinedValue(
+    container.querySelector<HTMLInputElement>('input[type="file"][aria-hidden="true"]'),
+  );
   const pending = pendingFile('Excessive');
   await user.upload(input, pending.file);
   await act(async () => {
@@ -130,7 +140,9 @@ it('rejects excessive import complexity while keeping the saved current project'
 it('invalidates a pending Open even when edit followed by Undo returns to the same project object', async () => {
   const { user, container } = renderApp();
   const before = loadProject().project;
-  const input = getDefinedValue(container.querySelector<HTMLInputElement>('input[type="file"]'));
+  const input = getDefinedValue(
+    container.querySelector<HTMLInputElement>('input[type="file"][aria-hidden="true"]'),
+  );
   const pending = pendingFile('Older');
   await user.upload(input, pending.file);
   const name = screen.getByRole('textbox', { name: 'Name' });

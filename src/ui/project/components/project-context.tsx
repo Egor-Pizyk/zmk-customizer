@@ -36,6 +36,7 @@ export function ProjectProvider({ initialLoad, children }: ProjectProviderProps)
       ...createHistoryActions(change),
       ...createFileActions(change, importSession),
       project: present,
+      importSession,
       analysis: getProjectAnalysis(present),
       issues,
       rejectedFile: state.rejectedFile,

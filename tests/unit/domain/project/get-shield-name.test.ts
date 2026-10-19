@@ -4,7 +4,13 @@ import { expect, it } from 'vitest';
 it('returns the override as typed when present', () => {
   expect(
     getShieldName({
-      schemaVersion: 7,
+      schemaVersion: 11,
+      encoders: [],
+      combos: [],
+      macros: [],
+      conditionalLayers: [],
+      behaviors: [],
+      firmware: {},
       controllerId: 'nice_nano_v2',
       keys: [],
       wires: [],
@@ -19,7 +25,13 @@ it('returns the override as typed when present', () => {
 it('derives the technical name from the name when there is no override', () => {
   expect(
     getShieldName({
-      schemaVersion: 7,
+      schemaVersion: 11,
+      encoders: [],
+      combos: [],
+      macros: [],
+      conditionalLayers: [],
+      behaviors: [],
+      firmware: {},
       controllerId: 'nice_nano_v2',
       keys: [],
       wires: [],

@@ -25,7 +25,7 @@ function focusCheckbox(keyId: string) {
 // Selection column: one tab stop with a roving tabindex; Space toggles natively, arrows move,
 // Shift+arrows extend (admin-ui.md "Tables").
 export function BindingsTableRows(props: BindingsTableRowsProps) {
-  const { project, layerIndex, selectedKeyIds, activeKeyId, problemsByKeyId } = props;
+  const { project, selectedKeyIds, activeKeyId, problemsByKeyId } = props;
   const rovingKeyId = activeKeyId ?? project.keys[0]?.id;
   return project.keys.map((key, keyIndex) => {
     const isSelected = selectedKeyIds.includes(key.id);
@@ -47,9 +47,7 @@ export function BindingsTableRows(props: BindingsTableRowsProps) {
         </td>
         <RowHeader {...props} keyId={key.id} keyIndex={keyIndex} />
         <td>
-          <span>
-            {formatBindingName(project.layers[layerIndex]?.bindings[key.id], project.layers)}
-          </span>
+          <span>{formatRowBinding(props, key.id)}</span>
           {problems.map((problem) => (
             <span className="flex items-center gap-1 text-xs text-danger" key={problem}>
               <WarningIcon />
@@ -145,4 +143,8 @@ function ChooseButton({ keyId, keyIndex, onChooseAction }: RowProps) {
       Choose action
     </Button>
   );
+}
+
+function formatRowBinding({ project, layerIndex }: BindingsTableRowsProps, keyId: string): string {
+  return formatBindingName(project.layers[layerIndex]?.bindings[keyId], project.layers, project);
 }

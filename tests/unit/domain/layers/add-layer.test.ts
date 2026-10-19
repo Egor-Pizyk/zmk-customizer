@@ -31,6 +31,8 @@ it('keeps a copied reference deleted after its last project reference is replace
     keycodeNames: new Set<string>(),
     bluetoothProfileCount: 5,
     maxLayerCount: 32,
+    advancedLimits: { comboKeys: 20, macroBindings: 256, macroQueue: 64 },
+    encoderLimits: { maxSteps: 360, maxTriggers: 360, rotationDegrees: 360 },
     shieldLimits: {
       keyboardNameBytes: 16,
       layerNodeNameLength: 31,
@@ -93,6 +95,8 @@ it('never reuses the id of a deleted layer that a key still points at (research 
     keycodeNames: new Set<string>(),
     bluetoothProfileCount: 5,
     maxLayerCount: 32,
+    advancedLimits: { comboKeys: 20, macroBindings: 256, macroQueue: 64 },
+    encoderLimits: { maxSteps: 360, maxTriggers: 360, rotationDegrees: 360 },
     shieldLimits: {
       keyboardNameBytes: 16,
       layerNodeNameLength: 31,

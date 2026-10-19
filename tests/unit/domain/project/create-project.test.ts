@@ -4,7 +4,13 @@ import { expect, it } from 'vitest';
 it('creates an empty project named My keyboard without a technical name override', () => {
   const project = createProject({ controllerId: 'nice_nano_v2' });
   expect(project).toEqual({
-    schemaVersion: 7,
+    schemaVersion: 11,
+    encoders: [],
+    combos: [],
+    macros: [],
+    conditionalLayers: [],
+    behaviors: [],
+    firmware: {},
     controllerId: 'nice_nano_v2',
     name: 'My keyboard',
     keys: [],

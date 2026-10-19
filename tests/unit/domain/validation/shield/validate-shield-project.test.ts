@@ -16,6 +16,8 @@ const options = {
     keycodeNames: new Set(['A']),
     bluetoothProfileCount: 5,
     maxLayerCount: 32,
+    advancedLimits: { comboKeys: 20, macroBindings: 256, macroQueue: 64 },
+    encoderLimits: { maxSteps: 360, maxTriggers: 360, rotationDegrees: 360 },
     shieldLimits: {
       keyboardNameBytes: 16,
       layerNodeNameLength: 31,

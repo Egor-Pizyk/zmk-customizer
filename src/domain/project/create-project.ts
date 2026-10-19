@@ -2,7 +2,13 @@ import type { Project } from '@domain';
 
 export function createProject(input: { readonly controllerId: string }): Project {
   return {
-    schemaVersion: 7,
+    schemaVersion: 11,
+    encoders: [],
+    combos: [],
+    macros: [],
+    conditionalLayers: [],
+    behaviors: [],
+    firmware: {},
     controllerId: input.controllerId,
     name: 'My keyboard',
     keys: [],

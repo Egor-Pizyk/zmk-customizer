@@ -6,22 +6,19 @@ import { MODIFIER_SYMBOLS } from './modifier-labels';
 // Exact keycode id, modifier symbols with the id when modified, tap over hold for mixed
 // bindings; behaviors without a code stay on the face legend (spec 004 FR-007).
 function cornerForBinding(binding: Binding): string | undefined {
+  if ('key' in binding) {
+    const suffix = { kp: '', sk: '/STK', kt: '/TOG' }[binding.kind];
+    return `${cornerStrokeText(binding.key)}${suffix}`;
+  }
   switch (binding.kind) {
-    case 'kp': {
-      return cornerStrokeText(binding.key);
-    }
     case 'mt': {
       return `${cornerStrokeText(binding.tap)}/${cornerStrokeText(binding.hold)}`;
-    }
-    case 'sk': {
-      return `${cornerStrokeText(binding.key)}/STK`;
-    }
-    case 'kt': {
-      return `${cornerStrokeText(binding.key)}/TOG`;
     }
     case 'lt': {
       return cornerStrokeText(binding.tap);
     }
+    case 'macro':
+    case 'custom':
     case 'bt':
     case 'out':
     case 'trans':

@@ -17,7 +17,16 @@ it('loads a v5 project with unchanged keys, bindings, wiring and default old geo
     schemaVersion: 5,
   };
   const loaded = getResultValue(parseProjectFile(JSON.stringify(old)));
-  expect(loaded).toEqual({ ...old, schemaVersion: 7 });
+  expect(loaded).toEqual({
+    ...old,
+    schemaVersion: 11,
+    encoders: [],
+    combos: [],
+    macros: [],
+    conditionalLayers: [],
+    behaviors: [],
+    firmware: {},
+  });
   expect(getKeyGeometry(getDefinedValue(loaded.keys[0]))).toMatchObject({
     widthU: 1,
     heightU: 1,
@@ -49,7 +58,13 @@ it('round-trips all geometry while rejecting non-finite fields and allowing repa
         },
       ],
     }),
-    schemaVersion: 7,
+    schemaVersion: 11,
+    encoders: [],
+    combos: [],
+    macros: [],
+    conditionalLayers: [],
+    behaviors: [],
+    firmware: {},
   };
   expect(getResultValue(parseProjectFile(JSON.stringify(project)))).toEqual(project);
   for (const field of [

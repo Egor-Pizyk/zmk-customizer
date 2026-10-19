@@ -42,7 +42,9 @@ function Keycaps(props: BindingsCanvasProps & { readonly view: ContentView }) {
     const isSelected = selectedKeyIds.includes(key.id);
     const problems = problemsByKeyId.get(key.id) ?? [];
     const legend =
-      view.zoom < LEGEND_MIN_ZOOM ? undefined : formatBindingLegend(binding, project.layers);
+      view.zoom < LEGEND_MIN_ZOOM
+        ? undefined
+        : formatBindingLegend(binding, project.layers, project);
     return (
       <KeycapShape
         bindingKey={key}
@@ -58,6 +60,8 @@ function Keycaps(props: BindingsCanvasProps & { readonly view: ContentView }) {
           layerName: layer?.name ?? '',
           binding,
           layers: project.layers,
+          behaviors: project.behaviors,
+          macros: project.macros,
           isSelected,
           problems,
         })}
@@ -65,7 +69,7 @@ function Keycaps(props: BindingsCanvasProps & { readonly view: ContentView }) {
         tag={legend === undefined ? undefined : formatKeycapTag(binding)}
         onFocus={props.onKeyFocus}
         onKeyDown={props.onKeyKeyDown}
-        title={formatKeycapTitle(binding, project.layers)}
+        title={formatKeycapTitle(binding, project.layers, project)}
       />
     );
   });

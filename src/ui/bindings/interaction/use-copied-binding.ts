@@ -1,6 +1,6 @@
 import { findBinding, isSameBinding } from '@domain/bindings';
 import { setBindings } from '@domain/bindings/editing';
-import type { Binding } from '@domain';
+import type { Binding, Project } from '@domain';
 import { useProject } from '@ui/project/logic';
 import { formatBindingName } from '@ui/bindings/formatting';
 import { useState } from 'react';
@@ -26,7 +26,7 @@ export function useCopiedBinding(options: CopiedBindingOptions) {
     // An unassigned key does nothing, so copying it copies "Do nothing".
     const binding = findBinding(project, { layerIndex, keyId }) ?? { kind: 'none' };
     setCopiedBinding(binding);
-    announce(`Copied ${formatBindingName(binding, project.layers)}`);
+    announce(`Copied ${formatCopiedBinding(binding, project)}`);
   }
 
   function handlePaste() {
@@ -46,12 +46,36 @@ export function useCopiedBinding(options: CopiedBindingOptions) {
       return;
     }
     const change = { layerIndex, keyIds: targetKeyIds, binding: copiedBinding };
-    const name = formatBindingName(copiedBinding, project.layers);
+    const name = formatCopiedBinding(copiedBinding, project);
     const text = `Pasted ${name} to ${selectionName}`;
     commit((current) => setBindings(current, change), text);
   }
 
+  return {
+    canPaste: copiedBinding !== undefined,
+    ...getReservedCopiedIds(copiedBinding),
+    handleCopy,
+    handlePaste,
+  };
+}
+
+function getReservedCopiedIds(copiedBinding: Binding | undefined) {
   const reservedLayerIds =
+    copiedBinding?.kind === 'custom'
+      ? copiedBinding.parameters.flatMap((parameter) =>
+          parameter.kind === 'layer' ? [parameter.layerId] : [],
+        )
+      : [];
+  const directLayerIds =
     copiedBinding !== undefined && 'layerId' in copiedBinding ? [copiedBinding.layerId] : [];
-  return { canPaste: copiedBinding !== undefined, reservedLayerIds, handleCopy, handlePaste };
+  const reservedBehaviorIds = copiedBinding?.kind === 'custom' ? [copiedBinding.behaviorId] : [];
+  return {
+    reservedMacroIds: copiedBinding?.kind === 'macro' ? [copiedBinding.macroId] : [],
+    reservedLayerIds: [...reservedLayerIds, ...directLayerIds],
+    reservedBehaviorIds,
+  };
+}
+
+function formatCopiedBinding(binding: Binding, project: Project): string {
+  return formatBindingName(binding, project.layers, project);
 }

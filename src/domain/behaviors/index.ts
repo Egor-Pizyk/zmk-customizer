@@ -1,0 +1,15 @@
+export { getTargetParameterKind } from './get-target-parameter-kind';
+export { getBehaviorActions } from './get-behavior-actions';
+export { getBehaviorLabel } from './get-behavior-label';
+export { createBehavior } from './create-behavior';
+export { addBehavior } from './add-behavior';
+export { replaceBehavior } from './replace-behavior';
+export { removeBehavior } from './remove-behavior';
+export { createBehaviorBinding } from './create-behavior-binding';
+export { validateBehaviors } from './validate-behaviors';
+export { validateBehaviorBinding } from './validate-behavior-binding';
+export { getProjectBindings } from './get-project-bindings';
+export { createActionBinding } from './create-action-binding';
+export { addBehaviorTap } from './add-behavior-tap';
+export { setBehaviorTap } from './set-behavior-tap';
+export { setBehaviorParameter } from './set-behavior-parameter';

@@ -23,6 +23,8 @@ export function ActionPanelBody(props: ActionPanelBodyProps) {
     <>
       <SelectionHeader {...props} />
       <BindingLine
+        behaviors={picker.behaviors}
+        macros={picker.macros}
         layers={picker.layers}
         onAddTap={handlers.handleAddTap}
         onSlotOpen={picker.handleSlotOpen}

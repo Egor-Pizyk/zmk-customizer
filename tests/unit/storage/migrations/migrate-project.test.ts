@@ -1,13 +1,19 @@
 import { expect, it } from 'vitest';
 import { CURRENT_SCHEMA_VERSION, migrateProject } from '@storage/migrations';
 
-it('is at version 6', () => {
-  expect(CURRENT_SCHEMA_VERSION).toBe(7);
+it('is at version 11', () => {
+  expect(CURRENT_SCHEMA_VERSION).toBe(11);
 });
 
 it('returns current-version data unchanged', () => {
   const data = {
-    schemaVersion: 7,
+    schemaVersion: 11,
+    encoders: [],
+    combos: [],
+    macros: [],
+    conditionalLayers: [],
+    behaviors: [],
+    firmware: {},
     controllerId: 'nice_nano_v2',
     name: 'x',
     keys: [],
@@ -15,12 +21,18 @@ it('returns current-version data unchanged', () => {
     insulatedCrossings: [],
     layers: [{ id: 'l0', name: 'Base', bindings: {} }],
   };
-  expect(migrateProject(data, { fromVersion: 5 })).toBe(data);
+  expect(migrateProject(data, { fromVersion: 11 })).toBe(data);
 });
 
 it('migrates v1 through v2 and v3 to v4', () => {
   expect(migrateProject({ schemaVersion: 1, name: 'x' }, { fromVersion: 1 })).toEqual({
-    schemaVersion: 7,
+    schemaVersion: 11,
+    encoders: [],
+    combos: [],
+    macros: [],
+    conditionalLayers: [],
+    behaviors: [],
+    firmware: {},
     controllerId: 'nice_nano_v2',
     name: 'x',
     keys: [],

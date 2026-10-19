@@ -41,6 +41,7 @@ export function useBindingsInteraction(workspace: BindingsWorkspaceState) {
       onSelectionChange,
       onActiveKeyChange: workspace.handleActiveKeyChange,
       onChooseAction: (keyId: string) => {
+        workspace.handleActiveKeyChange(keyId);
         onSelectionChange([keyId]);
         focusActionPanel();
       },

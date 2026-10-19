@@ -25,6 +25,8 @@ export function useKeyPicker(
     target,
     /** Every layer, for layer slots and the names of layer behaviors (spec 007). */
     layers: project.layers,
+    behaviors: project.behaviors,
+    macros: project.macros,
     shared,
     source,
     slot: resolveOpenSlot(source, openSlot),

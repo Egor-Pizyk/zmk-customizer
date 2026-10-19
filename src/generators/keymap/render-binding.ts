@@ -1,3 +1,5 @@
+import { renderMacroReference } from './render-macro-reference';
+import { renderBehaviorReference } from './render-behavior-reference';
 import { assertNever } from '@domain';
 import type { Binding, Project } from '@domain';
 import { renderKeyStroke } from './render-key-stroke';
@@ -10,6 +12,18 @@ type BindingInput = {
 type CustomBinding = Extract<Binding, { readonly kind: 'tap_dance' | 'mod_morph' }>;
 
 export function renderBinding(binding: Binding, input: BindingInput): string {
+  if (binding.kind === 'macro') {
+    return renderMacroReference(input.project, binding.macroId);
+  }
+  if (binding.kind === 'custom') {
+    return renderBehaviorReference(binding, input.project);
+  }
+  if (binding.kind === 'tap_dance' || binding.kind === 'mod_morph') {
+    return `&${input.findCustomLabel(binding)}`;
+  }
+  if ('layerId' in binding) {
+    return renderLayerBinding(binding, input.project);
+  }
   switch (binding.kind) {
     case 'kp':
     case 'sk':
@@ -18,19 +32,6 @@ export function renderBinding(binding: Binding, input: BindingInput): string {
     }
     case 'mt': {
       return `&mt ${renderKeyStroke(binding.hold)} ${renderKeyStroke(binding.tap)}`;
-    }
-    case 'mo':
-    case 'tog':
-    case 'to':
-    case 'sl': {
-      return `&${binding.kind} ${input.project.layers.findIndex((layer) => layer.id === binding.layerId)}`;
-    }
-    case 'lt': {
-      return `&lt ${input.project.layers.findIndex((layer) => layer.id === binding.layerId)} ${renderKeyStroke(binding.tap)}`;
-    }
-    case 'tap_dance':
-    case 'mod_morph': {
-      return `&${input.findCustomLabel(binding)}`;
     }
     case 'bt':
     case 'out':
@@ -89,4 +90,13 @@ function renderFixedBinding(
       return assertNever(binding);
     }
   }
+}
+
+function renderLayerBinding(
+  binding: Extract<Binding, { readonly layerId: string }>,
+  project: Project,
+): string {
+  const layerIndex = project.layers.findIndex((layer) => layer.id === binding.layerId);
+  const suffix = binding.kind === 'lt' ? ` ${renderKeyStroke(binding.tap)}` : '';
+  return `&${binding.kind} ${layerIndex}${suffix}`;
 }

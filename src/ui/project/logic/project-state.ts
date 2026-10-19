@@ -1,3 +1,4 @@
+import { FIRMWARE_OPTIONS } from '@catalog/firmware';
 import { getProjectResourceError } from '@domain/project';
 import { BINDINGS_CATALOG } from '@catalog/bindings';
 import type { Project, ValidationIssue } from '@domain';
@@ -89,6 +90,7 @@ export function getProjectAnalysis(project: Project): ReturnType<typeof analyzeP
   const board = getControllerBoard(project.controllerId);
   const analysis = analyzeProject(project, {
     bindingsCatalog: BINDINGS_CATALOG,
+    firmwareOptions: FIRMWARE_OPTIONS,
     target: { ...board, boardId: board.id },
     board,
   });

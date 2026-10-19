@@ -4,7 +4,13 @@ import { projectSchema } from '@storage/project';
 const BASE_LAYER = { id: 'l0', name: 'Base', bindings: {} };
 
 const BASE = {
-  schemaVersion: 7,
+  schemaVersion: 11,
+  encoders: [],
+  combos: [],
+  macros: [],
+  conditionalLayers: [],
+  behaviors: [],
+  firmware: {},
   controllerId: 'nice_nano_v2',
   name: 'x',
   keys: [],

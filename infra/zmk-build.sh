@@ -36,6 +36,18 @@ while IFS=$'\t' read -r target board shield; do
   west build -p always -s zmk/app -d "${build_path}" -b "${board}" -- \
     "-DSHIELD=${shield}" "-DZMK_CONFIG=${export_path}/config" "-DZMK_EXTRA_MODULES=${export_path}" \
     2>&1 | tee "/logs/${target}.log"
+  python3 - "${target}" "${build_path}/zephyr/.config" <<'PYCONFIG'
+import json, sys
+from pathlib import Path
+entry = next(item for item in json.load(open('/exports/targets.json')) if item['id'] == sys.argv[1])
+values = dict(line.split('=', 1) for line in Path(sys.argv[2]).read_text().splitlines() if line.startswith('CONFIG_') and '=' in line)
+for symbol, expected in entry.get('expectedConfig', {}).items():
+    actual = values.get(symbol)
+    assert actual == expected, f"{entry['id']}: {symbol}: expected {expected!r}, actual {actual!r}"
+for symbol in entry.get('expectedAbsentConfig', []):
+    assert symbol not in values, f"{entry['id']}: {symbol} must not be enabled on this half"
+print(f"PASS: {entry['id']} resulting .config assertions ({len(entry.get('expectedConfig', {}))})")
+PYCONFIG
   mkdir -p "/artifacts/${target}"
   for file in .config zephyr.dts zmk.uf2 zmk.bin; do
     if [ -f "${build_path}/zephyr/${file}" ]; then cp "${build_path}/zephyr/${file}" "/artifacts/${target}/${file}"; fi

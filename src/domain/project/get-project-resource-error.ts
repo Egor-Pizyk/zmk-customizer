@@ -1,9 +1,16 @@
+import { findAdvancedResourceError } from './find-advanced-resource-error';
 import type { Project } from '@domain';
 import { PROJECT_BUDGET } from './project-budget';
 
 /** Resource failures are edit refusals, unlike repairable electrical conflicts. */
 export function getProjectResourceError(project: Project): string | undefined {
+  const behaviorError = findBehaviorResourceError(project) ?? findAdvancedResourceError(project);
+  if (behaviorError !== undefined) {
+    return behaviorError;
+  }
   const limits = [
+    [project.encoders.length, 16, 'encoders'],
+    [Object.keys(project.firmware).length, PROJECT_BUDGET.firmwareOptions, 'firmware overrides'],
     [project.keys.length, PROJECT_BUDGET.keys, 'keys'],
     [project.wires.length, PROJECT_BUDGET.wires, 'wires'],
     [project.layers.length, PROJECT_BUDGET.layers, 'layers'],
@@ -23,6 +30,12 @@ export function getProjectResourceError(project: Project): string | undefined {
   const segments = project.wires.reduce((count, wire) => count + 2 * (wire.bends.length + 1), 0);
   if (segments > PROJECT_BUDGET.segments) {
     return `Project exceeds ${PROJECT_BUDGET.segments} wire segments. Simplify the wiring.`;
+  }
+  const oversizedFirmware = Object.values(project.firmware).some(
+    (value) => typeof value === 'string' && value.length > PROJECT_BUDGET.firmwareStringLength,
+  );
+  if (oversizedFirmware) {
+    return `Firmware text exceeds ${PROJECT_BUDGET.firmwareStringLength} characters. Shorten it before applying.`;
   }
   return findCollectionError(project) ?? findStringError(project) ?? findByteError(project);
 }
@@ -77,6 +90,24 @@ function findStringError(value: unknown, name = ''): string | undefined {
     const error = findStringError(child, field);
     if (error !== undefined) {
       return error;
+    }
+  }
+  return undefined;
+}
+
+function findBehaviorResourceError(project: Project): string | undefined {
+  if (project.behaviors.length > 128) {
+    return 'A project can have at most 128 custom behaviors.';
+  }
+  for (const behavior of project.behaviors) {
+    if (behavior.name.length > 160) {
+      return 'Behavior names can have at most 160 characters.';
+    }
+    if (behavior.kind === 'tap-dance' && behavior.bindings.length > 32) {
+      return 'A custom tap dance can have at most 32 actions.';
+    }
+    if (behavior.kind === 'hold-tap' && behavior.triggerKeyIds.length > 256) {
+      return 'A hold-tap can have at most 256 trigger keys.';
     }
   }
   return undefined;

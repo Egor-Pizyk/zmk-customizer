@@ -1,5 +1,6 @@
 import {
   setKeyPressModifier,
+  setBindings,
   setModMorphKeys,
   setModMorphMods,
   setTapDanceTaps,
@@ -47,6 +48,16 @@ function handleModifierToggle(
   const changed = { ...stroke, modifiers: toggleModifier(stroke.modifiers, input) };
   const { binding } = source;
   const text = `${selectionName}: modifiers changed`;
+  if (slot.kind === 'custom-parameter' && binding.kind === 'custom') {
+    const parameters = binding.parameters.map((parameter, index) =>
+      parameter.kind === 'key' && index === slot.index ? { ...parameter, key: changed } : parameter,
+    );
+    commit(
+      (current) => setBindings(current, { ...target, binding: { ...binding, parameters } }),
+      text,
+    );
+    return;
+  }
   if (slot.kind === 'dance-tap' && binding.kind === 'tap_dance') {
     const taps = binding.taps.map((tap, index) => (index === slot.index ? changed : tap));
     commit((current) => setTapDanceTaps(current, { ...target, taps }), text);

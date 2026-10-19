@@ -2,7 +2,7 @@ import { PROJECT_BUDGET } from './project-budget';
 
 // Only the allocator interprets decimal suffixes; bigint never enters the serialized Project.
 export function createEntityId(input: {
-  readonly prefix: 'k' | 'w' | 'l' | 't';
+  readonly prefix: 'e' | 'k' | 'w' | 'l' | 't' | 'c' | 'm' | 'q' | 's';
   readonly existingIds: readonly string[];
 }): string {
   let highest = 0n;

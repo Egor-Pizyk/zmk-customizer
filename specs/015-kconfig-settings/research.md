@@ -1,0 +1,7 @@
+# Research decisions
+
+- Authoritative sources fetched 2026-10-17: https://github.com/zmkfirmware/zmk/blob/v0.3.0/app/Kconfig and app/src/split/bluetooth/{Kconfig,Kconfig.defaults}; pinned docs/zmk/kconfig-options.md. Source wins over docs defaults. No main-only options.
+- Exclude board-owned BLE/USB enabling; offer documented USB boot and HID report choices. Do not expose low-level queues/priority, reset-on-start or experimental bundled options with implied values until modeled.
+- Supported inventory is deliberately common, not every tuning knob: WPM; HID rollover and consumer usage choices, HID indicators and separate modifier release; USB manufacturer and boot; BLE clear bonds and passkey; idle/sleep/debounce; battery reporting/interval/BAS; split peripheral HID indicators and battery fetch/proxy. BLE only for wireless boards, sleep conservatively wireless nRF52840 boards with HAS_POWEROFF; generated kscan already wakeup-source.
+- Central-only symbols cannot be enabled in shared split .conf without peripheral warnings. Use per-half user conf when any such override exists; no shared user conf then. Alternatives cmake-args and Kconfig.defconfig rejected: user overrides belong in .conf.
+- No free-form lines; strings are one-line, control-free and ≤64 UTF-8 bytes; integer bounds are explicit product safety bounds unless upstream range is documented. Defaults remove overrides on edit; generator also removes imported explicit defaults and resolves hardware-dependent battery defaults.

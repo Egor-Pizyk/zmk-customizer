@@ -72,6 +72,7 @@ Effects sync with systems outside React. A change that adds, moves or removes an
 
 | Effect | Where |
 |---|---|
+| Generic reveal-issue document listener clears Firmware search before deferred problem focus; cleanup removes listener | `firmware/components/firmware-workspace.tsx` |
 | Reveal the selected tab inside its horizontal strip after selection, rename, reorder or project history changes; preserves focus and only scrolls the strip | `components/logic/use-tab-visibility.ts` |
 | `document.documentElement.dataset.theme` sync with the theme preference | `preferences/preferences-context.tsx` |
 | Focus the workspace `<h1>` when the workspace changes (accessibility.md "Structure") | `app/components/workspace-view.tsx` |

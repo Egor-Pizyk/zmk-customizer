@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 8,
+  "controllerId": "nice_nano_v2",
+  "name": "Legacy",
+  "keys": [
+    {
+      "id": "k0",
+      "xU": 1,
+      "yU": 2
+    }
+  ],
+  "wires": [],
+  "insulatedCrossings": [],
+  "layers": [
+    {
+      "id": "l0",
+      "name": "Base",
+      "bindings": {
+        "k0": {
+          "kind": "kp",
+          "key": {
+            "keycode": "A",
+            "modifiers": []
+          }
+        }
+      }
+    }
+  ],
+  "firmware": {
+    "CONFIG_ZMK_SLEEP": true
+  }
+}

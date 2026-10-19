@@ -1,0 +1,28 @@
+    macros {
+        user_macro_sequence_m1: user_macro_sequence_m1 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <15>;
+            tap-ms = <30>;
+            bindings = <&macro_press &kp LSHIFT>, <&macro_tap &kp A>, <&macro_wait_time 100 &macro_press &none &macro_wait_time 15>, <&macro_release &kp LSHIFT>;
+        };
+    };
+
+    combos {
+        compatible = "zmk,combos";
+        user_combo_escape_c1 {
+            timeout-ms = <50>;
+            key-positions = <0 1>;
+            bindings = <&user_macro_sequence_m1>;
+            layers = <1>;
+        };
+    };
+
+    conditional_layers {
+        compatible = "zmk,conditional-layers";
+        user_rule_q1 {
+            if-layers = <0 1>;
+            then-layer = <2>;
+        };
+    };
+

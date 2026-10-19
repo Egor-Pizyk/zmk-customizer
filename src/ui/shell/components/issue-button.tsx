@@ -1,6 +1,6 @@
 import { usePreferences } from '@ui/preferences';
 import { getWorkspaceLabel } from '@ui/navigation';
-import { toIssueTargetPreferences } from '@ui/issues';
+import { REVEAL_ISSUE_EVENT, toIssueTargetPreferences } from '@ui/issues';
 import type { WorkspaceIssue } from '@ui/issues';
 
 type IssueButtonProps = {
@@ -15,9 +15,10 @@ export function IssueButton({ issue }: IssueButtonProps) {
   // The target may not be rendered yet: switch to its workspace and open the Schematic parts
   // list or the issue's layer first, then focus on the next frame (spec 003 FR-025, spec 007).
   function handleClick() {
+    document.dispatchEvent(new Event(REVEAL_ISSUE_EVENT));
     const selector = `[data-issue-path~="${issue.path.join('.')}"]`;
     const target = document.querySelector<HTMLElement>(selector);
-    if (target !== null) {
+    if (target !== null && !target.closest('[hidden]')) {
       focusTarget(target);
       return;
     }

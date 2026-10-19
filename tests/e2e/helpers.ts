@@ -7,7 +7,13 @@ import { parseProjectFile } from '@storage/project';
 
 export type Point = { readonly x: number; readonly y: number };
 export const fixture: Project = {
-  schemaVersion: 7,
+  schemaVersion: 11,
+  encoders: [],
+  combos: [],
+  macros: [],
+  conditionalLayers: [],
+  behaviors: [],
+  firmware: {},
   controllerId: 'nice_nano_v2',
   name: 'Browser shield',
   shieldName: 'browser_shield',

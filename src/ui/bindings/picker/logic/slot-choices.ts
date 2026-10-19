@@ -1,3 +1,5 @@
+import { getMacroChoices } from './get-macro-choices';
+import { getCustomChoices } from './get-custom-choices';
 import {
   BEHAVIORS,
   BLUETOOTH_COMMANDS,
@@ -8,7 +10,7 @@ import {
 } from '@catalog/bindings';
 import type { KeycodeCategory } from '@catalog/bindings';
 import { assertNever } from '@domain';
-import type { Layer } from '@domain';
+import type { CustomBehavior, Layer, Macro } from '@domain';
 import type { SlotRef } from './binding-slots';
 import {
   toBehaviorItem,
@@ -123,16 +125,28 @@ const OUT_COMMAND_GROUPS = [
 ];
 
 /** The project's layers, and the open behavior's docs page that layer rows link to (spec 007). */
-export type LayerChoiceContext = { readonly layers: readonly Layer[]; readonly docsUrl: string };
+export type LayerChoiceContext = {
+  readonly layers: readonly Layer[];
+  readonly docsUrl: string;
+  readonly behaviors?: readonly CustomBehavior[];
+  readonly macros?: readonly Macro[];
+};
 
 /**
  * What the open slot offers, grouped (spec 006 FR-004); module constants, stable references,
  * except the layer rows, built from the project's layers (at most 32) per render.
  */
 export function getSlotChoices(slot: SlotRef, context: LayerChoiceContext): readonly ChoiceGroup[] {
+  if (slot.kind === 'custom-parameter') {
+    return getParameterChoices(slot, context);
+  }
   switch (slot.kind) {
     case 'behavior': {
-      return BEHAVIOR_GROUPS;
+      return [
+        ...BEHAVIOR_GROUPS,
+        ...getCustomChoices(context.behaviors ?? []),
+        ...getMacroChoices(context.macros ?? []),
+      ];
     }
     case 'key':
     case 'tap':
@@ -164,42 +178,22 @@ export function getSlotChoices(slot: SlotRef, context: LayerChoiceContext): read
 }
 
 /** The picker's title: what the open slot asks for (FR-003). */
-export function formatSlotPrompt(slot: SlotRef): string {
-  switch (slot.kind) {
-    case 'behavior': {
-      return 'What should the key do?';
-    }
-    case 'key': {
-      return 'Which key?';
-    }
-    case 'hold': {
-      return 'Which modifier while held?';
-    }
-    case 'tap': {
-      return 'Which key when tapped?';
-    }
-    case 'bt-command': {
-      return 'Which Bluetooth command?';
-    }
-    case 'profile': {
-      return 'Which profile?';
-    }
-    case 'out-command': {
-      return 'Where should keys go?';
-    }
-    case 'layer': {
-      return 'Which layer?';
-    }
-    case 'dance-tap': {
-      return `Which key for tap ${slot.index + 1}?`;
-    }
-    case 'morph-side': {
-      return slot.side === 'normal'
-        ? 'Which key normally?'
-        : 'Which key while the triggers are held?';
-    }
-    default: {
-      return assertNever(slot);
-    }
+export { formatSlotPrompt } from './format-slot-prompt';
+
+function getParameterChoices(
+  slot: Extract<SlotRef, { kind: 'custom-parameter' }>,
+  context: LayerChoiceContext,
+): readonly ChoiceGroup[] {
+  if (slot.parameterKind === 'key') {
+    return KEY_GROUPS;
   }
+  return [
+    toGroup(
+      'layers',
+      'Layers',
+      context.layers.map((layer, layerIndex) =>
+        toLayerItem(layer, { layerIndex, docsUrl: context.docsUrl }),
+      ),
+    ),
+  ];
 }

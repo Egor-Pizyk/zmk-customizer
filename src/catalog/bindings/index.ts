@@ -10,3 +10,10 @@ export { OUTPUT_COMMANDS } from './output-commands';
 export type { OutputCommandEntry } from './output-commands';
 export { parseKeysHeader } from './parse-keys-header';
 export type { KeycodeCategory, Keycode } from './parse-keys-header';
+export {
+  CUSTOM_BEHAVIOR_TYPES,
+  CUSTOM_BEHAVIOR_PROPERTIES,
+  HOLD_TAP_TARGETS,
+  HOLD_TAP_FLAVORS,
+} from './custom-behavior-options';
+export { MACRO_OPTIONS, ADVANCED_OPTIONS, MACRO_STEP_KINDS } from './advanced-keymap-options';

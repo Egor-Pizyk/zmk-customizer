@@ -1,3 +1,6 @@
+import { EncoderBindings } from '@ui/bindings/encoders/components';
+import { AdvancedLibrary } from '@ui/bindings/advanced/components';
+import { BehaviorLibrary } from '@ui/bindings/behaviors/components';
 import { toTabId } from '@ui/components/logic';
 import { ActionPanel } from '@ui/bindings/panel/components';
 import { BindingsCanvas, BindingsTable, LayerBar, NoKeys } from '@ui/bindings/rendering/components';
@@ -14,12 +17,18 @@ export function BindingsWorkspace() {
   const panelId = useId();
   const { project, layers } = workspace;
   if (project.keys.length === 0) {
-    return <NoKeys />;
+    return (
+      <div className="flex min-h-0 flex-1 flex-col">
+        <BindingLibraries workspace={workspace} />
+        <NoKeys />
+      </div>
+    );
   }
   const openLayerId = project.layers[layers.layerIndex]?.id ?? '';
   return (
     <div className="flex min-h-0 flex-1 overflow-hidden">
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+        <BindingLibraries workspace={workspace} />
         <LayerBar
           actions={layers}
           layers={project.layers}
@@ -38,5 +47,23 @@ export function BindingsWorkspace() {
       </div>
       <ActionPanel {...panelProps} />
     </div>
+  );
+}
+
+function BindingLibraries({
+  workspace,
+}: {
+  readonly workspace: ReturnType<typeof useBindingsWorkspace>;
+}) {
+  return (
+    <>
+      <EncoderBindings layerIndex={workspace.layers.layerIndex} />
+      <BehaviorLibrary reservedIds={workspace.copied.reservedBehaviorIds} />
+      <AdvancedLibrary
+        selectedKeyIds={workspace.selectedKeyIds}
+        onSelectKeys={workspace.handleSelectionChange}
+        reservedMacroIds={workspace.copied.reservedMacroIds}
+      />
+    </>
   );
 }

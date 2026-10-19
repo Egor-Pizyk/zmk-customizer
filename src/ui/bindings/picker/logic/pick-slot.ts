@@ -1,4 +1,10 @@
-import { setKeyBehavior, setModMorphBinding, setTapDanceBinding } from '@domain/bindings/editing';
+import { createBehaviorBinding } from '@domain/behaviors';
+import {
+  setBindings,
+  setKeyBehavior,
+  setModMorphBinding,
+  setTapDanceBinding,
+} from '@domain/bindings/editing';
 import type { KeyBehavior } from '@domain/bindings/editing';
 import type { BehaviorId, LayerBinding } from '@domain';
 import type { SlotRef } from './binding-slots';
@@ -16,6 +22,17 @@ import {
 export function toPickResult(input: PickInput): PickResult {
   const { pick } = input;
   switch (pick.kind) {
+    case 'macro': {
+      return toBindingResult(input, { kind: 'macro', macroId: pick.macroId });
+    }
+    case 'custom': {
+      return toStoreResult((project) =>
+        setBindings(project, {
+          ...input.target,
+          binding: createBehaviorBinding(project, pick.behaviorId),
+        }),
+      );
+    }
     case 'behavior': {
       return toBehaviorResult(input, pick.behaviorId);
     }

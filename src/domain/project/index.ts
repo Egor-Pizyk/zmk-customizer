@@ -8,3 +8,4 @@ export { setShieldName } from './set-shield-name';
 export { toShieldName } from './to-shield-name';
 export { PROJECT_BUDGET } from './project-budget';
 export { getProjectResourceError } from './get-project-resource-error';
+export { replaceProjectLayout } from './replace-project-layout';

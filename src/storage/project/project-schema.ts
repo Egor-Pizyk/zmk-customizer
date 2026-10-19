@@ -1,8 +1,10 @@
+import { encoderBindingsSchema } from './encoder-schema';
+import { projectContentSchema } from './project-content-schema';
+import { bindingSchema, layerIdSchema } from './binding-schema';
 import { wiringSchema, findTerminalIssues } from './wiring-schema';
 import { PROJECT_BUDGET } from './project-budget';
 import { CONTROLLER_BOARDS } from '@catalog/controllers';
 import { BOARD_PIN_COUNT } from '@domain/wires';
-import { MODIFIERS } from '@domain';
 import type { Project, Wire, WireEnd, WireEndSide } from '@domain';
 
 import * as z from 'zod';
@@ -47,84 +49,8 @@ const wireSchema = z.strictObject({
   bends: z.array(pointSchema).max(PROJECT_BUDGET.bendsPerWire),
 });
 
-const modifierSchema = z.enum(MODIFIERS);
-
-// Unique and in MODIFIERS order, so equal bindings are deep-equal (spec 004 contracts/project-schema.md).
-const keyStrokeSchema = z.strictObject({
-  keycode: z.string().min(1).max(PROJECT_BUDGET.stringLength),
-  modifiers: z
-    .array(modifierSchema)
-    .refine(
-      (modifiers) =>
-        modifiers.every(
-          (modifier, index) =>
-            index === 0 ||
-            MODIFIERS.indexOf(modifier) > MODIFIERS.indexOf(modifiers[index - 1] ?? modifier),
-        ),
-      { message: 'Expected unique modifiers in the order LC LS LA LG RC RS RA RG' },
-    ),
-});
-
-const layerIdSchema = z
-  .string()
-  .max(PROJECT_BUDGET.idLength)
-  .regex(/^l\d+$/u);
-
-// Unknown keycodes and profiles beyond the profile count are validation issues, not schema
-// errors, so such a file still opens (spec 004 research R7).
-// z.union, not discriminatedUnion: `bt` has two shapes under one kind. A failing binding is
-// reported at its own path (layers.L.bindings.keyId).
-const bindingSchema = z.union([
-  z.strictObject({ kind: z.literal(['kp', 'sk', 'kt']), key: keyStrokeSchema }),
-  z.strictObject({ kind: z.literal('mt'), hold: keyStrokeSchema, tap: keyStrokeSchema }),
-  z.strictObject({
-    kind: z.literal([
-      'trans',
-      'none',
-      'caps_word',
-      'key_repeat',
-      'gresc',
-      'sys_reset',
-      'bootloader',
-    ]),
-  }),
-  z.strictObject({
-    kind: z.literal('bt'),
-    command: z.enum(['BT_CLR', 'BT_CLR_ALL', 'BT_NXT', 'BT_PRV']),
-  }),
-  z.strictObject({
-    kind: z.literal('bt'),
-    command: z.enum(['BT_SEL', 'BT_DISC']),
-    profile: z.int().min(0),
-  }),
-  z.strictObject({ kind: z.literal('out'), command: z.enum(['OUT_TOG', 'OUT_USB', 'OUT_BLE']) }),
-  z.strictObject({
-    kind: z.literal('tap_dance'),
-    taps: z.array(keyStrokeSchema).min(1).max(PROJECT_BUDGET.taps),
-    tappingTermMs: z.int(),
-  }),
-  z.strictObject({
-    kind: z.literal('mod_morph'),
-    normal: keyStrokeSchema,
-    morphed: keyStrokeSchema,
-    mods: z
-      .array(modifierSchema)
-      .min(1)
-      .refine(
-        (mods) =>
-          mods.every(
-            (modifier, index) =>
-              index === 0 ||
-              MODIFIERS.indexOf(modifier) > MODIFIERS.indexOf(mods[index - 1] ?? modifier),
-          ),
-        { message: 'Expected unique modifiers in the order LC LS LA LG RC RS RA RG' },
-      ),
-  }),
-  z.strictObject({ kind: z.literal(['mo', 'tog', 'to', 'sl']), layerId: layerIdSchema }),
-  z.strictObject({ kind: z.literal('lt'), layerId: layerIdSchema, tap: keyStrokeSchema }),
-]);
-
 const layerSchema = z.strictObject({
+  encoderBindings: encoderBindingsSchema.exactOptional(),
   id: layerIdSchema,
   name: z.string().max(PROJECT_BUDGET.stringLength),
   bindings: z.record(z.string(), bindingSchema),
@@ -218,15 +144,14 @@ function findCrossingIssues(project: Project): Issue[] {
   });
 }
 
-// Describes only the current schemaVersion; older files are migrated before parsing (research R8).
-// References must resolve so domain operations never meet a dangling id (003 R15). Exception:
 // a layer behavior's layerId may name a deleted layer; no operation dereferences it and
 // validation reports it (spec 007 R2).
 // The top level strips unknown keys (forward compat, tested in parse-project-file.test.ts);
 // every nested node is strict so a malformed binding, wire or key is rejected at its own path.
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(7),
+    schemaVersion: z.literal(11),
+    ...projectContentSchema.shape,
     wiring: wiringSchema.exactOptional(),
     controllerId: z.enum(CONTROLLER_BOARDS.map((board) => board.id)),
     name: z.string().max(PROJECT_BUDGET.stringLength),
@@ -287,13 +212,31 @@ export const projectSchema = z
     const issues = [
       ...findTerminalIssues(project),
       ...findDuplicateIds(project.keys, 'keys'),
+      ...findDuplicateIds(project.encoders, 'encoders'),
+      ...findEncoderBindingIssues(project),
       ...findDuplicateIds(project.wires, 'wires'),
       ...findWireIssues(project),
       ...findCrossingIssues(project),
       ...findDuplicateIds(project.layers, 'layers'),
+      ...findDuplicateIds(project.behaviors, 'behaviors'),
+      ...findDuplicateIds(project.combos, 'combos'),
+      ...findDuplicateIds(project.macros, 'macros'),
+      ...findDuplicateIds(project.conditionalLayers, 'conditionalLayers'),
       ...findLayerIssues(project),
     ];
     for (const issue of issues) {
       context.addIssue({ code: 'custom', message: issue.message, path: [...issue.path] });
     }
   }) satisfies z.ZodType<Project>;
+
+function findEncoderBindingIssues(project: Project): Issue[] {
+  const ids = new Set(project.encoders.map((encoder) => encoder.id));
+  return project.layers.flatMap((layer, index) =>
+    Object.keys(layer.encoderBindings ?? {})
+      .filter((id) => !ids.has(id))
+      .map((id) => ({
+        message: `No encoder with id ${id}`,
+        path: ['layers', index, 'encoderBindings', id],
+      })),
+  );
+}

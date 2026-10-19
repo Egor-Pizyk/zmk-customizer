@@ -19,6 +19,8 @@ import {
 
 /** The value a picker row sets in the open slot (spec 006 FR-004). */
 export type PickerPick =
+  | { readonly kind: 'macro'; readonly macroId: string }
+  | { readonly kind: 'custom'; readonly behaviorId: string }
   | { readonly kind: 'behavior'; readonly behaviorId: BehaviorId }
   | { readonly kind: 'keycode'; readonly keycode: string }
   | { readonly kind: 'bt-command'; readonly command: BluetoothCommand | BluetoothProfileCommand }
