@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import type { ChangeEvent, MouseEvent, ReactNode, RefObject } from 'react';
 import { Button, Dialog } from '@ui/components/components';
+import { PresetPicker } from './preset-picker';
 import { useProject } from '@ui/project/logic';
 
 type ProjectDialogsProps = {
@@ -90,13 +91,14 @@ function NewProjectDialog({ isOpen, onClose }: ConfirmDialogProps) {
   }
 
   return (
-    <Dialog isOpen={isOpen} onClose={handleClose} title="Start a new project?">
-      <p>{REPLACE_WARNING}</p>
+    <Dialog isOpen={isOpen} onClose={handleClose} title="Start a new project?" size="wide">
+      <p>{REPLACE_WARNING} Starting a project also clears Undo/Redo history.</p>
+      <PresetPicker onCreated={handleClose} />
       <DialogButtons hasSaveButton onCancel={handleClose}>
         <Button onClick={handleStartNewClick} variant="danger">
           Start new project
         </Button>
-        <Button onClick={handlePresetClick} variant="primary">
+        <Button onClick={handlePresetClick} variant="secondary">
           Start six-key unibody preset
         </Button>
       </DialogButtons>

@@ -1,6 +1,12 @@
 import { SHIELD_TARGET } from '@catalog/firmware';
 import { UNIBODY_PRESET } from '@catalog/presets';
-import { createPresetProject, createProject, getShieldName } from '@domain/project';
+import type { PresetLayout, PresetBindingMode } from '@domain/project';
+import {
+  createLayoutPresetProject,
+  createPresetProject,
+  createProject,
+  getShieldName,
+} from '@domain/project';
 import { readImportFile, serializeProject } from '@storage/project';
 import { downloadTextFile } from '@ui/downloads';
 import { applyHistoryAction, discardKeptBackup, withAnnouncement } from './project-state';
@@ -72,15 +78,7 @@ export function createFileActions(
       change((latest) => ({ ...latest, rejectedFile: undefined }));
     },
     startNewProject: () => {
-      change((latest) =>
-        applyHistoryAction(latest, {
-          action: {
-            kind: 'replace',
-            project: createProject({ controllerId: SHIELD_TARGET.boardId }),
-          },
-          announcementText: 'Started a new project',
-        }),
-      );
+      startNewProject(change);
     },
     startPresetProject: () => {
       change((latest) =>
@@ -90,6 +88,12 @@ export function createFileActions(
         }),
       );
     },
+    startLayoutPresetProject: (input: {
+      readonly preset: PresetLayout;
+      readonly bindingMode: PresetBindingMode;
+    }) => {
+      startLayoutPresetProject(change, input);
+    },
     downloadKeptBackup: () => {
       change(downloadBackup);
     },
@@ -97,4 +101,34 @@ export function createFileActions(
       change(discardKeptBackup);
     },
   };
+}
+
+function startLayoutPresetProject(
+  change: ProjectStateChange,
+  input: { readonly preset: PresetLayout; readonly bindingMode: PresetBindingMode },
+) {
+  change((latest) =>
+    applyHistoryAction(latest, {
+      action: {
+        kind: 'replace',
+        project: createLayoutPresetProject({
+          ...input,
+          controllerId: latest.history.present.controllerId,
+        }),
+      },
+      announcementText: `Started ${input.preset.name} with ${input.bindingMode === 'empty' ? 'an empty keymap' : 'QWERTY bindings'}`,
+    }),
+  );
+}
+
+function startNewProject(change: ProjectStateChange) {
+  change((latest) =>
+    applyHistoryAction(latest, {
+      action: {
+        kind: 'replace',
+        project: createProject({ controllerId: SHIELD_TARGET.boardId }),
+      },
+      announcementText: 'Started a new project',
+    }),
+  );
 }

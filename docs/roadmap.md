@@ -529,6 +529,8 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 ### 031 — keyboard-presets
 
+**Specified:** [`specs/031-keyboard-presets/spec.md`](../specs/031-keyboard-presets/spec.md). Implemented on branch `031-keyboard-presets`; completion verification is recorded in that directory. Exact initial variants: ANSI 104/87/61, compact 84/68, ortholinear 60/48, macropad 9, Corne 42 (documented thumb/half clearance), Lily58 rev1 58 and Sofle rev1 58. These are layout-only starting projects with QWERTY or empty bindings; existing complete six-key starter is preserved.
+
 **Goal.** Start a custom keyboard from a familiar physical layout instead of drawing every key, with a choice of standard QWERTY bindings or an empty keymap.
 
 **In scope**

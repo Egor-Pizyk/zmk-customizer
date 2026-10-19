@@ -7,11 +7,12 @@ type DialogProps = {
   readonly isOpen: boolean;
   readonly onClose: () => void;
   readonly title: string;
+  readonly size?: 'default' | 'wide';
   readonly children: ReactNode;
 };
 
 // Native <dialog>: focus trap, inert page, Escape and focus return come from the browser (R8).
-export function Dialog({ isOpen, onClose, title, children }: DialogProps) {
+export function Dialog({ isOpen, onClose, title, children, size = 'default' }: DialogProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
   useModalDialog(dialogRef, isOpen, onClose);
@@ -23,7 +24,7 @@ export function Dialog({ isOpen, onClose, title, children }: DialogProps) {
   return (
     <dialog
       aria-labelledby={titleId}
-      className="m-auto w-full max-w-md rounded-lg border border-border bg-surface-raised text-text backdrop:bg-text/40"
+      className={`m-auto max-h-dvh w-full overflow-y-auto rounded-lg border border-border bg-surface-raised text-text backdrop:bg-text/40 ${size === 'wide' ? 'max-w-2xl' : 'max-w-md'}`}
       ref={dialogRef}
     >
       <div className="flex flex-col gap-4 p-4">
