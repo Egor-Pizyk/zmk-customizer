@@ -52,15 +52,16 @@ Each `/speckit-specify` prompt below describes what and why only. Technology cho
 | 017 | combos-macros-conditional-layers | 014, 016 |
 | 018 | kle-import | 012 |
 | 019 | encoders | 013, 014 |
-| 020 | zmk-studio-support | 014, 015 |
-| 021 | lighting-displays | 013, 015 |
-| 022 | zmk-version-selection | all catalog features |
+| 020 | zmk-studio-support — deferred | 014, 015 |
+| 021 | lighting-displays — deferred | 013, 015 |
+| 022 | zmk-version-selection — deferred | all catalog features |
 | 023 | build-verification | 010 |
 | 031 | keyboard-presets | 011, 012, 013, 014 |
 | 033 | wiring-and-settings-usability | 001, 003, 012, 013 |
-| 032 | interactive-onboarding | all preceding product features, including 031 and 033; implement last |
+| 034 | agent-assisted-configuration — discovery | 002, 009, 010; other dependencies TBD |
+| 032 | interactive-onboarding | all preceding scheduled product features, including 031, 033 and 034; implement last |
 
-Numbers 024–030 are already reserved by existing feature directories listed in [`specs/README.md`](../specs/README.md). The new features use 031–033 without renumbering existing specs. Feature 033 is ordered before onboarding 032; assigned numbers are preserved. Interactive onboarding must remain the last planned product feature; future product features go before it in implementation order without changing assigned numbers.
+Numbers 024–030 are already reserved by existing feature directories listed in [`specs/README.md`](../specs/README.md). The new features use 031–034 without renumbering existing specs. Features 033 and 034 are ordered before onboarding 032; assigned numbers are preserved. Interactive onboarding must remain the last planned product feature; future product features go before it in implementation order without changing assigned numbers. Deferred features 020–022 do not block the scheduled work; revisit their order when resumed.
 
 Workspaces (from 001): **Schematic** holds the schematic of keys and wires (003), switch diodes (008), the layout editor (012) and matrix/wiring editor (013) and owns the project JSON config (002); **Bindings** holds bindings keycaps (004), key behaviors (005), the Action panel (006), layers (007), the keymap editor (014), custom behaviors (016) and combos/macros/conditional layers (017); **Firmware** holds kconfig-settings (015); **Export** holds the file preview (009) and download (010). Every feature reports its validation issues in the 001 problems panel, counted in the tab badge of the workspace that fixes them.
 
@@ -490,6 +491,9 @@ EC11 rotary encoders: layout markers with numeric positions, A/B pins and half, 
 ```
 
 ### 020 — zmk-studio-support
+
+**Status (2026-10-19).** Deferred on user request; skip for now and continue with 021 — lighting-displays. Scope and number are retained. Revisit the TODO at the end of this roadmap before scheduling implementation.
+
 Enable ZMK Studio for the generated shield (Kconfig, build snippet, unlock binding). Settings in the Firmware workspace. Requires a new `docs/zmk/studio.md` page. Physical layout from 009 is already a prerequisite Studio needs.
 
 ```
@@ -497,6 +501,9 @@ Enable ZMK Studio for the generated shield (Kconfig, build snippet, unlock bindi
 ```
 
 ### 021 — lighting-displays
+
+**Status (2026-10-19).** Deferred on user request; skip for now. Scope and number are retained; see the TODO at the end of this roadmap.
+
 RGB underglow, backlight, OLED / nice!view: pins in Schematic, options in Firmware. Large surface; split into separate specs when started. Requires new `docs/zmk/` pages.
 
 ```
@@ -504,6 +511,9 @@ RGB underglow, backlight, OLED / nice!view: pins in Schematic, options in Firmwa
 ```
 
 ### 022 — zmk-version-selection
+
+**Status (2026-10-19).** Deferred on user request; skip for now. Target remains pinned to ZMK v0.3.0. Scope and number are retained; see the TODO at the end of this roadmap.
+
 Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixtures per version. Depends on catalog structure proven by 011–017. Open: how many versions to support at once.
 
 ```
@@ -558,6 +568,22 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 /speckit-specify Improve wiring and settings usability in ZMK Customizer. Rework automatic connection and routing rules with a preview before applying changes. When a wire passes through and connects to a key pin, save a durable electrical connection that survives moving the key the wire originally started from, rather than deriving connectivity only from overlapping coordinates. Let users select and delete wires directly, including keyboard access and Undo/Redo, without deleting keys. Make settings windows and editing panels compact and responsive so the canvas stays visible and usable. Preserve existing project imports, manual wiring, insulated crossings and deterministic export. Clarify exact routing rules, movement behavior, selection scope and panel dimensions before planning. Implement before interactive onboarding.
 ```
 
+### 034 — agent-assisted-configuration
+
+**Status (2026-10-19).** Open discovery requested by the user; no implementation approach approved. Schedule before interactive onboarding (032).
+
+**Goal.** Let users generate or edit a keyboard configuration with their own AI agent using a maintained prompt and the project's verified knowledge, then review and use the result in ZMK Customizer. AI execution belongs to the user's chosen environment; the app remains static without a backend or runtime network calls.
+
+**Delivery order (confirmed by the user, 2026-10-19).** First support creating a new project from scratch from the user's description. After that, extend the flow to modify an existing project supplied as context. Existing-project editing is a later stage, not required for the initial delivery; specify its change review and preservation of unrelated project data before implementing it.
+
+**Initial creation scope (confirmed by the user, 2026-10-19).** Create a complete keyboard project, not just physical geometry: key positions/sizes/rotations and split halves where applicable, controller selection, supported electrical wiring with pins and diodes where required, bindings and layers, and relevant supported firmware settings. Include supported advanced actions or hardware when requested, rather than adding them by default. The intended result can be reviewed and validated in Customizer and exported through its existing flow. The agent must ask for missing hardware facts or obtain explicit agreement on proposed choices; it must not invent the user's actual wiring. Stay within the app's supported capabilities and pinned ZMK v0.3.0. Configuration validation does not establish successful firmware compilation or hardware operation.
+
+**Candidate approaches to discuss.** A copyable/downloadable prompt and context bundle; a public agent-oriented documentation page with versioned schema, supported capabilities and examples; an optional MCP integration only if investigation establishes a useful approach compatible with the frontend-only constraints. Search indexing is a discovery aid, not a guarantee that an agent has loaded current documentation. These are alternatives for evaluation, not committed deliverables.
+
+**Open questions.** Generate an importable Project JSON or raw ZMK files; how agents obtain current schemas/catalog facts and validate output; how users review changes and repair rejected output; offline availability and documentation versioning; whether MCP adds enough value and what local or external components it would require. Resolve these during discovery and specification before planning. Creation precedes existing-project editing as confirmed above.
+
+**Proposed safety and compatibility boundaries.** Use the supported import/validation and deterministic export flows where applicable; never apply untrusted agent output silently or overwrite current work. Preserve project compatibility and Undo/Redo. Do not assume unsupported ZMK features, automatic electrical correctness or successful firmware compilation.
+
 ### 032 — interactive-onboarding (implement last)
 
 **Goal.** Guide a first-time user through the product with short explanations and real actions, ending with their first simple custom keyboard built from scratch: a 3×3 macropad and its downloadable ZMK configuration.
@@ -596,3 +622,9 @@ Parsing existing ZMK shield files back into a project (Devicetree parsing), cust
 - Charlieplex kscan: own feature or part of 013.
 - Split halves on different boards.
 - ~~Raw "extra Kconfig lines" escape hatch (015)~~ — resolved: excluded; typed catalog only.
+
+## TODO
+
+- [ ] Revisit deferred **020 — zmk-studio-support** and agree when to resume it. Skipped for now on user request (2026-10-19); keep interactive onboarding (032) last when rescheduling.
+- [ ] Revisit deferred **021 — lighting-displays** and **022 — zmk-version-selection**. Skipped for now on user request (2026-10-19); keep the ZMK v0.3.0 target until version selection is explicitly resumed.
+- [ ] Discuss and specify **034 — agent-assisted-configuration**: user-owned AI execution, maintained prompt/knowledge delivery, output contract, validation and the feasibility/value of MCP under static-app constraints.
