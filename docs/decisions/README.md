@@ -52,3 +52,5 @@ What becomes easier, what becomes harder, what we must now keep true.
 - [0018 — Task-scoped agent context and proportional SDD](0018-task-scoped-agent-context.md)
 
 - [0019 — GitHub flow with stacked PRs and per-PR releases](0019-github-flow.md)
+
+- [0020 — One feature PR and asynchronous delivery](0020-single-pr-asynchronous-delivery.md)

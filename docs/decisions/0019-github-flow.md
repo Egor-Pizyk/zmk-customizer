@@ -1,6 +1,6 @@
 # 0019. GitHub flow with stacked PRs and per-PR releases
 
-Status: Accepted
+Status: Partially superseded by 0020 (PR cardinality and synchronous CI/release waiting)
 Date: 2026-10-20
 
 ## Context
