@@ -12,4 +12,8 @@ Specification and design only; no production changes or product checks performed
 
 ## Outstanding implementation gates
 
-032 PR #13 was still open at planning inspection; integrate its final merged result and recheck its acceptance/contracts before production edits. T001–T032 remain open. No passing unit/E2E/migration/golden/firmware/manual acceptance is claimed. No feature PR/release has been submitted for these local planning artifacts; specification, implementation and verification stay in one future 033 feature PR.
+Historical planning state: 032 PR #13 was open. The dependency integration below supersedes that state. T002–T032 remain open. No passing unit/E2E/migration/golden/firmware/manual acceptance is claimed. No feature PR/release has been submitted for these local planning artifacts; specification, implementation and verification stay in one future 033 feature PR.
+
+## Dependency integration — 2026-10-20
+
+User reported manual acceptance of 032 passed. GitHub confirmed PR #13 merged, all five required jobs succeeded and v0.1.0 targets merge SHA 21c5867a4ea2c81b8bdc55a066e5b896601c4a4c. Integrated origin/main into 033; resolved the specs index conflict by retaining both 032 and 033 entries. Final 032 allocation/output contracts match the planned dependency. T001 is complete; T002–T032 remain open. No 033 production code changed or product checks run.

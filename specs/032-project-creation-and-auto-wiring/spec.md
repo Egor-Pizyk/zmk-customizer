@@ -2,7 +2,7 @@
 
 **Feature Branch**: `feature/032-project-creation-and-auto-wiring`
 **Created**: 2026-10-20
-**Status**: Implemented; automated verification recorded; manual accessibility and delivery gates pending
+**Status**: Complete; automated verification recorded, manual acceptance reported passed by user; PR #13 merged and v0.1.0 published
 **Input**: Implement the next roadmap item, 032.
 
 ## Goal and scope

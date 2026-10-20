@@ -551,7 +551,7 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 ### 032 — project-creation-and-auto-wiring
 
-**Status (2026-10-20).** Feature 032 is implemented; automated verification is recorded and the required manual accessibility/delivery gates remain pending; see [specification](../specs/032-project-creation-and-auto-wiring/spec.md). User confirmed preserving valid GPIOs, atomic refusal of invalid/conflicting pins or insufficient capacity, outward row outputs and top/bottom column clearance. Corne/Lily58 success cases use a 1u grouping grid; finer-grid capacity failures report guidance rather than silently regrouping. Extends project creation from 002/031 and automatic wiring from 013. Amend affected owning contracts during specification before code changes.
+**Status (2026-10-20).** Feature 032 is complete; automated verification is recorded, the user reported manual acceptance passed, PR #13 merged and v0.1.0 was published; see [specification](../specs/032-project-creation-and-auto-wiring/spec.md). User confirmed preserving valid GPIOs, atomic refusal of invalid/conflicting pins or insufficient capacity, outward row outputs and top/bottom column clearance. Corne/Lily58 success cases use a 1u grouping grid; finer-grid capacity failures report guidance rather than silently regrouping. Extends project creation from 002/031 and automatic wiring from 013. Amend affected owning contracts during specification before code changes.
 
 **Goal.** Simplify starting a project and make automatic wiring assign usable controller GPIOs with clearly placed outputs instead of leaving pins unassigned or placing them over keys/the other half.
 

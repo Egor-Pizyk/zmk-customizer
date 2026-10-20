@@ -2,11 +2,11 @@
 
 **Input**: spec.md, plan.md, research.md, data-model.md, contracts/wiring-interactions.md, quickstart.md.
 
-All tasks remain unperformed. Observe required failing domain/storage/regression tests before their implementation. [P] marks disjoint work only after its stated prerequisites; it does not authorize concurrent mutations/checks.
+T001 dependency integration is complete; T002–T032 remain unperformed. Observe required failing domain/storage/regression tests before their implementation. [P] marks disjoint work only after its stated prerequisites; it does not authorize concurrent mutations/checks.
 
 ## Foundation — dependency and contracts
 
-- [ ] T001 Integrate final merged 032 from origin/main into feature/033-wiring-and-settings-usability, resolve 033 with .specify/scripts/bash/check-prerequisites.sh and compare final specs/032-project-creation-and-auto-wiring/spec.md with plan.md; preserve other work and record actual dependency state in specs/033-wiring-and-settings-usability/verification.md.
+- [x] T001 Integrate final merged 032 from origin/main into feature/033-wiring-and-settings-usability, resolve 033 with .specify/scripts/bash/check-prerequisites.sh and compare final specs/032-project-creation-and-auto-wiring/spec.md with plan.md; preserve other work and record actual dependency state in specs/033-wiring-and-settings-usability/verification.md.
 - [ ] T002 Amend specs/003-schematic-switches-wires/spec.md and contracts/project-schema.md and contracts/ui.md, specs/013-matrix-wiring-editor/contracts/wiring.md, specs/032-project-creation-and-auto-wiring/spec.md and specs/001-app-shell-ui/contracts/ui-regions.md per contracts/wiring-interactions.md; scope historical formats by schema version. Reconcile docs/guidelines/frontend/tailwind.md and admin-ui.md for these narrow/docked panels before code, then reanalyze 033 artifacts.
 - [ ] T003 Add failing frozen-input contracts in tests/unit/domain/wires/get-key-pin-wires.test.ts, tests/unit/domain/keys/move-keys.test.ts and tests/unit/domain/keys/set-key-geometries.test.ts for three-key pass-through movement, fixed anchors, diode pin, split isolation and unrelated pin crossing; record observed failures in specs/033-wiring-and-settings-usability/verification.md.
 - [ ] T004 Add independent v11 fixtures under tests/fixtures/project/ and failing migration/rejection/near-budget contracts in tests/unit/storage/migrations/migrate-v11-to-v12.test.ts and tests/unit/storage/project/large-schematic.test.ts; assert exact expected pin relationships, malformed contacts, future-version refusal and unchanged current project. Record failures before T005–T007.
