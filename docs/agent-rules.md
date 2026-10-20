@@ -8,6 +8,6 @@
 - Record actual checks and their limits. Never claim a manual accessibility check, firmware build or test was run when it was not.
 - Comments explain non-obvious reasons and ZMK quirks; do not repeat code.
 - Never commit `dist/`, `coverage/`, `node_modules/` or other generated reports.
-- When commits are requested, use Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `test:`, `refactor:`), one logical change each.
+- Read [Git flow](guidelines/git-flow.md) before starting/resuming work or creating a feature/branch, and re-read it after verification before committing, pushing or opening/merging PRs. It owns branch/commit naming, stacks, release labels and autonomous delivery.
 
 Implementation conventions live in guidelines; test policy in `docs/testing.md`; SDD routes and completion gates in `docs/workflow.md`.
