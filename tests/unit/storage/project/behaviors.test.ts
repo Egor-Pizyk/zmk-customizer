@@ -11,7 +11,7 @@ describe('016 project compatibility', () => {
     expect(result.ok).toBe(true);
     expect(getResultValue(result)).toEqual({
       ...JSON.parse(fixture),
-      schemaVersion: 11,
+      schemaVersion: 12,
       encoders: [],
       combos: [],
       macros: [],

@@ -1,3 +1,4 @@
+import { legacyV11ProjectSchema } from './legacy-v11-project-schema';
 import { serializeProject } from './serialize-project';
 import * as z from 'zod';
 import { PROJECT_BUDGET } from './project-budget';
@@ -52,7 +53,18 @@ export function parseProjectFile(raw: string): Result<Project, ProjectFileError>
   if (version.data.schemaVersion > CURRENT_SCHEMA_VERSION) {
     return { ok: false, error: { kind: 'newer-version' } };
   }
-  const migrated = migrateProject(json.value, { fromVersion: version.data.schemaVersion });
+  const input = { value: json.value, version: version.data.schemaVersion };
+  if (input.version <= 11) {
+    const legacy = legacyV11ProjectSchema.safeParse(
+      migrateProject(input.value, { fromVersion: input.version, toVersion: 11 }),
+    );
+    if (!legacy.success) {
+      return { ok: false, error: toNotProject(legacy.error) };
+    }
+    input.value = legacy.data;
+    input.version = 11;
+  }
+  const migrated = migrateProject(input.value, { fromVersion: input.version });
   const project = projectSchema.safeParse(migrated);
   if (!project.success) {
     return { ok: false, error: toNotProject(project.error) };

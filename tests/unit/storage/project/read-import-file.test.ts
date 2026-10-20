@@ -6,7 +6,7 @@ it('reads a valid project file', async () => {
   await expect(readImportFile(file)).resolves.toEqual({
     ok: true,
     value: {
-      schemaVersion: 11,
+      schemaVersion: 12,
       encoders: [],
       combos: [],
       macros: [],

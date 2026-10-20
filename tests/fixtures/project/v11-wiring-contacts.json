@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 11,
+  "name": "Legacy row",
+  "controllerId": "nice_nano_v2",
+  "encoders": [], "behaviors": [], "combos": [], "macros": [], "conditionalLayers": [], "firmware": {},
+  "keys": [{"id":"k1","xU":0,"yU":0},{"id":"k2","xU":2,"yU":0},{"id":"k3","xU":4,"yU":0}],
+  "wires": [{"id":"w1","start":{"kind":"key-pin","keyId":"k1","pin":1},"end":{"kind":"key-pin","keyId":"k3","pin":1},"bends":[]}],
+  "insulatedCrossings": [],
+  "layers": [{"id":"l0","name":"Base","bindings":{"k2":{"kind":"kp","key":{"keycode":"A","modifiers":[]}}}}]
+}

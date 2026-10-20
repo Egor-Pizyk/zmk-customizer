@@ -1,3 +1,4 @@
+import { completeWiring } from './complete-wiring';
 import { createWiringTerminals, autoAssignCells, getWiringConnections } from '@domain/wiring';
 import { prepareTerminals } from './prepare-terminals';
 import { initializeWiring } from './initialize-wiring';
@@ -8,6 +9,7 @@ import type { ControllerBoard, Half, Project, Result, Wiring } from '@domain';
 
 export type WiringEdit = { readonly board: ControllerBoard } & (
   | { readonly kind: 'initialize' }
+  | { readonly kind: 'complete'; readonly gridStepU: number }
   | { readonly kind: 'auto'; readonly gridStepU: number }
   | { readonly kind: 'mode'; readonly mode: 'matrix' | 'direct' }
   | { readonly kind: 'topology'; readonly topology: 'unibody' | 'split' }
@@ -29,6 +31,9 @@ export type WiringEdit = { readonly board: ControllerBoard } & (
 );
 
 export function editWiring(original: Project, input: WiringEdit): Result<Project, string> {
+  if (input.kind === 'complete') {
+    return completeWiring(original, input);
+  }
   const project = initializeWiring(original, input.board);
   const wiring = project.wiring;
   if (input.kind === 'initialize') {

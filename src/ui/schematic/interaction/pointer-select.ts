@@ -2,8 +2,8 @@ import { getSelectedKeyIds } from './get-selected-key-ids';
 import { isKeyPositionFree } from '@domain/geometry';
 import { moveKeys } from '@domain/keys';
 import { setWireBends, getWireBendsResourceError } from '@domain/wires/editing';
-import type { Key, Wire, WireEnd, WirePoint } from '@domain';
-import { isKeyCellInMarquee, isPointInMarquee } from '@ui/canvas/logic';
+import type { Key, WirePoint } from '@domain';
+import { isKeyCellInMarquee } from '@ui/canvas/logic';
 import type { PointerState } from './pointer-types';
 import type { CanvasHit } from './read-canvas-hit';
 import { snapPoint } from './snap-point';
@@ -30,34 +30,6 @@ function focusBoardPinSelect(input: { readonly wireId: string; readonly side: st
 
 function isKeyInMarquee(key: Key, marquee: { start: WirePoint; end: WirePoint }): boolean {
   return isKeyCellInMarquee(key, marquee);
-}
-
-function isWireInMarquee(
-  wire: Wire,
-  marquee: { start: WirePoint; end: WirePoint },
-  project: { keys: readonly { id: string; xU: number; yU: number }[] },
-): boolean {
-  const points: WirePoint[] = [];
-  const start: WireEnd = wire.start;
-  const end: WireEnd = wire.end;
-  if (start.kind === 'key-pin') {
-    const key = project.keys.find((candidate) => candidate.id === start.keyId);
-    if (key) {
-      points.push({ xU: key.xU, yU: key.yU });
-    }
-  } else if (start.kind === 'free') {
-    points.push(start.at);
-  }
-  if (end.kind === 'key-pin') {
-    const key = project.keys.find((candidate) => candidate.id === end.keyId);
-    if (key) {
-      points.push({ xU: key.xU, yU: key.yU });
-    }
-  } else if (end.kind === 'free') {
-    points.push(end.at);
-  }
-  points.push(...wire.bends);
-  return points.some((point) => isPointInMarquee(point, marquee));
 }
 
 function startMultiKeyDrag(
@@ -124,13 +96,11 @@ export function pressSelectTool(state: PointerState, { hit, world, event }: Pres
     return;
   }
   if (hit.kind === 'bend') {
-    event.currentTarget.setPointerCapture(event.pointerId);
-    state.onDragChange({
-      kind: 'bend',
-      wireId: hit.wireId,
-      bendIndex: hit.bendIndex,
-      point: world,
-    });
+    startBendDrag(state, { hit, world, event });
+    return;
+  }
+  if (hit.kind === 'section') {
+    selectSection(state, { sectionId: hit.sectionId, shiftKey: event.shiftKey });
     return;
   }
   if (hit.kind === 'wire') {
@@ -187,9 +157,7 @@ function endMarqueeDrag(state: PointerState, project: PointerState['project']) {
     return;
   }
   const keyIds = project.keys.filter((key) => isKeyInMarquee(key, drag)).map((key) => key.id);
-  const wireIds = project.wires
-    .filter((wire) => isWireInMarquee(wire, drag, project))
-    .map((wire) => wire.id);
+  const wireIds: readonly string[] = [];
   if (keyIds.length === 0 && wireIds.length === 0) {
     state.onSelectionChange();
   } else {
@@ -227,11 +195,7 @@ function endMultiKeyDrag(state: PointerState, project: PointerState['project']) 
     state.onHint('There is already a key here.');
     return;
   }
-  state.commit((current) =>
-    moveKeys(current, {
-      moves: targetPositions.map((tp) => ({ keyId: tp.keyId, position: tp.position })),
-    }),
-  );
+  commitKeyMove(state, targetPositions);
 }
 
 function endSingleKeyDrag(state: PointerState, project: PointerState['project']) {
@@ -247,7 +211,7 @@ function endSingleKeyDrag(state: PointerState, project: PointerState['project'])
     state.onHint('There is already a key here.');
     return;
   }
-  state.commit((current) => moveKeys(current, { moves: [{ keyId, position }] }));
+  commitKeyMove(state, [{ keyId, position }]);
 }
 
 export function endSelectDrag(state: PointerState) {
@@ -274,4 +238,37 @@ export function endSelectDrag(state: PointerState) {
     return;
   }
   endSingleKeyDrag(state, project);
+}
+
+function selectSection(
+  state: PointerState,
+  input: { readonly sectionId: string; readonly shiftKey: boolean },
+) {
+  const previous =
+    input.shiftKey && state.selection?.kind === 'sections' && state.selection.base === state.project
+      ? state.selection.sectionIds
+      : [];
+  const sectionIds = previous.includes(input.sectionId)
+    ? previous.filter((id) => id !== input.sectionId)
+    : [...previous, input.sectionId];
+  state.onSelectionChange({ kind: 'sections', base: state.project, sectionIds });
+}
+
+function startBendDrag(state: PointerState, { hit, world, event }: Press) {
+  if (hit.kind !== 'bend') {
+    return;
+  }
+  event.currentTarget.setPointerCapture(event.pointerId);
+  state.onDragChange({ kind: 'bend', wireId: hit.wireId, bendIndex: hit.bendIndex, point: world });
+}
+
+function commitKeyMove(state: PointerState, moves: Parameters<typeof moveKeys>[1]['moves']) {
+  const next = moveKeys(state.project, { moves });
+  if (next === state.project) {
+    state.onHint(
+      'Move refused to preserve electrical connections or processing limits. Repair the affected wires, then retry.',
+    );
+    return;
+  }
+  state.commit((current) => (current === state.project ? next : current));
 }

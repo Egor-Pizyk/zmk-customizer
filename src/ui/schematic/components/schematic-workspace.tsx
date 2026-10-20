@@ -1,7 +1,7 @@
+import { SchematicEditorPanel } from './schematic-editor-panel';
 import { EncoderPanel } from '@ui/schematic/encoders/components';
 import { WiringControls, ControllerPanel } from '@ui/schematic/wiring/components';
 import { LayoutControls } from '@ui/schematic/layout/components';
-import { getSelectedKeyIds } from '@ui/schematic/interaction';
 import { PartsList } from '@ui/schematic/parts/components';
 import { SchematicCanvas } from './schematic-canvas';
 import { getSchematicMarks } from '@ui/schematic/rendering/logic';
@@ -16,20 +16,29 @@ export function SchematicWorkspace() {
   const marks = getSchematicMarks(issues.filter((issue) => issue.workspaceId === 'schematic'));
 
   return (
-    <>
-      <ControllerPanel project={project} commit={commit} />
-      <WorkspaceCanvas workspace={workspace} marks={marks} />
-      <WorkspaceLayoutControls workspace={workspace} />
-      <WiringControls {...workspace.wiring} />
-      <EncoderPanel />
-      <PartsList
-        commit={commit}
-        issues={issues}
-        onSelectionChange={workspace.handleSelectionChange}
-        project={project}
-        selection={selection}
-      />
-    </>
+    <section aria-label="Schematic editing area" className="schematic-editing-area">
+      <div className="schematic-canvas-pane">
+        <WorkspaceCanvas workspace={workspace} marks={marks} />
+      </div>
+      <SchematicEditorPanel
+        onDismissPreview={() => {
+          workspace.wiring.handleCancel();
+          workspace.layout.handleCancel();
+        }}
+      >
+        <ControllerPanel project={project} commit={commit} />
+        <WorkspaceLayoutControls workspace={workspace} />
+        <WiringControls {...workspace.wiring} />
+        <EncoderPanel />
+        <PartsList
+          commit={commit}
+          issues={issues}
+          onSelectionChange={workspace.handleSelectionChange}
+          project={project}
+          selection={selection}
+        />
+      </SchematicEditorPanel>
+    </section>
   );
 }
 
@@ -46,7 +55,7 @@ function WorkspaceCanvas({
   const [focusedKeyId, setFocusedKeyId] = useState<string | undefined>();
   function handleKeyFocus(keyId: string) {
     setFocusedKeyId(keyId);
-    if (selection?.kind !== 'multi' && !getSelectedKeyIds(selection).includes(keyId)) {
+    if (selection?.kind !== 'multi' && !(selection?.kind === 'key' && selection.keyId === keyId)) {
       workspace.handleSelectionChange({ kind: 'key', keyId });
     }
   }
@@ -82,6 +91,7 @@ function WorkspaceLayoutControls({ workspace }: { readonly workspace: Workspace 
     <LayoutControls
       commit={commit}
       hasPreview={workspace.layout.hasPreview}
+      canApply={workspace.layout.canApply}
       issues={issues}
       onApply={workspace.layout.handleApply}
       onCancel={workspace.layout.handleCancel}

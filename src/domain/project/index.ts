@@ -10,3 +10,5 @@ export { getProjectResourceError } from './get-project-resource-error';
 export { replaceProjectLayout } from './replace-project-layout';
 export { createLayoutPresetProject } from './create-layout-preset-project';
 export type { PresetLayout, PresetLayoutKey, PresetBindingMode } from './preset-layout';
+
+export { getProjectJson } from './get-project-json';

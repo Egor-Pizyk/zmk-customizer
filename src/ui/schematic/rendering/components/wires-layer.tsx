@@ -1,25 +1,33 @@
+import { getWireSections } from '@domain/wires';
+import { BendHandles } from './bend-handles';
 import { CrossingBridge } from './crossing-bridge';
-import { formatWireLabel } from '@ui/schematic/formatting';
 import type { SchematicLayerProps } from '@ui/schematic/rendering/logic';
 import { WireShape } from './wire-shape';
 
 export function WiresLayer({ project, view, paths, selection, crossings }: SchematicLayerProps) {
   return (
     <>
-      {project.wires.map((wire, wireIndex) => (
+      {getWireSections(project).map((section) => (
         <WireShape
-          bends={wire.bends}
+          bends={[]}
           isSelected={
-            (selection?.kind === 'wire' && selection.wireId === wire.id) ||
-            (selection?.kind === 'multi' && selection.wireIds.includes(wire.id))
+            selection?.kind === 'sections' &&
+            selection.base === project &&
+            selection.sectionIds.includes(section.id)
           }
-          key={wire.id}
-          label={formatWireLabel(project, { wireIndex })}
-          path={paths.get(wire.id) ?? []}
+          key={section.id}
+          label={`Wire section ${section.id}`}
+          path={section.path}
           pxPerU={view.pxPerU}
-          wireId={wire.id}
+          wireId={section.wireId}
+          sectionId={section.id}
         />
       ))}
+      {project.wires
+        .filter((wire) => selection?.kind === 'wire' && selection.wireId === wire.id)
+        .map((wire) => (
+          <BendHandles key={wire.id} wireId={wire.id} bends={wire.bends} pxPerU={view.pxPerU} />
+        ))}
       {crossings
         .filter((crossing) => crossing.isInsulated)
         .map((crossing) => (

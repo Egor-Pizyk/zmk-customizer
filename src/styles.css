@@ -65,3 +65,50 @@ body {
 [data-canvas-workspace] [role='graphics-symbol'] {
   outline: none;
 }
+
+/* Local component sizing keeps the work surface available while editors scroll independently. */
+@utility schematic-editing-area {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  @media (min-width: 80rem) {
+    flex-direction: row;
+  }
+}
+@utility schematic-canvas-pane {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 55%;
+  min-height: calc(50% + 2rem);
+  min-width: 0;
+  overflow: hidden;
+  & > div {
+    min-height: 0;
+  }
+  @media (min-width: 80rem) {
+    min-height: 0;
+    min-width: 60%;
+  }
+}
+@utility schematic-editor-pane {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 45%;
+  max-height: 45%;
+  min-height: 0;
+  min-width: 0;
+  @media (min-width: 80rem) {
+    flex: 0 1 22.5rem;
+    max-width: 35%;
+    max-height: 100%;
+  }
+}
+@utility settings-dialog-size {
+  max-width: min(30rem, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+}

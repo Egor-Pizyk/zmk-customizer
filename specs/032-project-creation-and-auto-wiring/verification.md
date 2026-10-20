@@ -1,6 +1,6 @@
 # Verification — feature 032
 
-Date: 2026-10-20. Implementation and automated acceptance verified; manual accessibility and final delivery gates remain pending.
+Date: 2026-10-20. Implementation and automated acceptance verified; user-reported manual acceptance is complete. PR #13 merged and v0.1.0 published.
 
 ## Specification and independent review
 
@@ -22,7 +22,7 @@ Applied ui-ux-pro-max before and after implementation. Queries covered keyboard 
 
 Rendered screenshots were inspected directly from isolated Playwright output. New actions have equal dimensions, a red Cancel, readable light/dark presentation and scrollable reflow at 640×500. Native keyboard Tab reaches each action and scrolls focused Cancel into view; Escape returns focus to New. The real automatic-wiring preview, inspected with existing pan/zoom, shows distinct D0–D4 labels outside the keys. Local review images are ignored artifacts in `.e2e-mutations/032-ui-review/`.
 
-Resolved findings: UI032-01 extra creation actions; UI032-02 proposed-pin explanation/recovery; UI032-03 output/label clearance; UI032-04 split-move net preservation. No unresolved automated acceptance finding. Manual screen-reader speech, OS-originated settings and physical keyboard-only review have not been performed.
+Resolved findings: UI032-01 extra creation actions; UI032-02 proposed-pin explanation/recovery; UI032-03 output/label clearance; UI032-04 split-move net preservation. No unresolved automated acceptance finding. Manual acceptance was performed by the user, who reported “проверил, все ок” on 2026-10-20 after the accessibility handoff. The agent did not independently perform or observe those checks.
 
 ## Automated evidence
 
@@ -36,9 +36,11 @@ Checks ran against an isolated worktree containing only the staged 032 scope, ex
 - Final fresh complete `make test-e2e` passed **161/161 in 5.6 minutes** across Chromium/Firefox/WebKit after that test correction. Log: `/tmp/zmk-032-clean-e2e-corrected.log`. Byte-for-byte comparison confirmed all changed implementation/test files match the committed PR tree. Required CI also verifies the final commit.
 - Controlled sensitivity ran alone: temporarily retained unassigned terminal pins after successful allocation. The browser acceptance test failed at the expected GPIO value (`0` versus empty), not a runner/build failure. Exact source bytes restored; subsequent automatic-wiring browser tests passed. Log: `/tmp/zmk-032-sensitivity.log`.
 
-## Required outstanding gates
+## Manual acceptance and delivery
 
-T015 is the manual accessibility pass required by `docs/guidelines/frontend/accessibility.md`, Testing. `docs/agent-rules.md` prohibits Computer Use/native app control without an explicit user request. No such control was used. The user elected to perform this manual pass personally on 2026-10-20; its result is pending. Before merge, complete this pass and require final-head main-based `check`, `e2e`, `image`, `mutations`, `zmk-build`; then verify the squash release at its exact merge SHA. CI/release evidence belongs to the PR and final delivery report.
+On 2026-10-20, following the T015 handoff, the user confirmed: “проверил, все ок” (“checked, everything is okay”). T015 is complete on that user report; no detailed per-device observations were supplied and no agent-performed manual checks are claimed.
+
+GitHub inspection confirmed PR #13 merged at `21c5867a4ea2c81b8bdc55a066e5b896601c4a4c`; check, e2e, image, mutations and zmk-build succeeded. Release v0.1.0 is published at that exact SHA: https://github.com/Egor-Pizyk/zmk-customizer/releases/tag/v0.1.0 . This is observed delivery state, not an assertion about the order in which the merge and manual confirmation occurred.
 
 ## Limits
 

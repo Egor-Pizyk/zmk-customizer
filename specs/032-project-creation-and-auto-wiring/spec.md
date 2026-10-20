@@ -2,7 +2,7 @@
 
 **Feature Branch**: `feature/032-project-creation-and-auto-wiring`
 **Created**: 2026-10-20
-**Status**: Implemented; automated verification recorded; manual accessibility and delivery gates pending
+**Status**: Complete; automated verification recorded, manual acceptance reported passed by user; PR #13 merged and v0.1.0 published
 **Input**: Implement the next roadmap item, 032.
 
 ## Goal and scope
@@ -62,3 +62,7 @@ Project, preset, controller GPIO, per-half terminal, proposed circuit and output
 ## Assumptions and open questions
 
 User confirmed 2026-10-20: retain correct pins, refuse conflicts/invalid pins, outward horizontal rows, top/bottom columns by space, and report capacity errors for manual regrouping. No open material questions. Equal-width actions stack vertically, retaining equal heights when labels wrap. No hardware facts are inferred.
+
+## Feature 033 interaction extension
+
+Complete wiring is additive: retain each existing known axis, half, GPIO and deliberate conductor, filling only missing compatible connections with preview. Rebuild wiring is a separate explicit action with the former Auto assign replacement behavior and 032 output/allocation rules. Refused/cancelled proposals do not write saved state. Actual schematic connectivity remains authoritative.

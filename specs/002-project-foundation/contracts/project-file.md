@@ -51,3 +51,7 @@ A value that is valid in shape but breaks a project rule (for example a 500-char
 - If the backup write throws, nothing is overwritten: autosave is off for the session.
 - If the main key is damaged and the backup key already holds a different value, neither key is written for the rest of the session (research R7).
 - Two tabs: last write wins; there is no detection and no `storage` event handling (spec clarification 1).
+
+## Current format extension (schema v12, feature 033)
+
+Schema ordering and the trailing newline stay deterministic. Save/download normally use two-space indentation. If that representation exceeds the unchanged 5 MiB byte budget, use compact JSON plus the newline instead; refuse only if the compact artifact also exceeds the budget. Domain edit guards measure the same chosen representation. This preserves legacy near-budget files when migration adds fixed wire anchors/contacts. Historical v1 golden bytes remain frozen.

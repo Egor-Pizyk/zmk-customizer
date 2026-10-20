@@ -10,6 +10,7 @@ import type { KeyboardEvent } from 'react';
 type SchematicKeyboardOptions = {
   readonly wiring?: { readonly hasPreview: boolean; readonly handleCancel: () => void };
   readonly project: Project;
+  readonly announce?: (message: string) => void;
   readonly layout: { readonly hasPreview: boolean; readonly handleCancel: () => void };
   readonly commit: Commit;
   readonly gridSizeU: number;

@@ -65,3 +65,5 @@ The dependency matrix in docs/architecture.md is checked by scripts/check-archit
 - Electrical engine modules wiring/matrix, wires/nets and validation (including shield) expose no runtime UI API. Mixed wire/crossing modules grant UI access only to explicit non-analysis query/edit contracts; newly added exports are unavailable by default. Only ui/project/logic/project-state.ts calls domain analysis. New engine exports inherit the module restriction. Shared UI modules do not import workspaces or app composition; only app composes workspaces. Use getProjectAnalysis; domain type imports remain allowed.
 
 These static checks do not establish semantic purity or complete alias/data-flow analysis; tests and review remain required.
+
+Feature 033 UI-safe wire queries: getWireConductors and getWireSections expose visible geometry/selection descriptions only. Capture, partition analysis and routing remain domain-owned and unavailable to runtime UI consumers.

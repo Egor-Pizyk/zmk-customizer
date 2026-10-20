@@ -1,5 +1,5 @@
 import { getKeyGeometry } from '@domain/geometry';
-import { pruneInsulatedCrossings } from '@domain/crossings';
+import { preserveKeyWiring } from './preserve-key-wiring';
 import type { Project, WirePoint } from '@domain';
 
 export function moveKeys(
@@ -26,5 +26,5 @@ export function moveKeys(
   });
   return keys.every((key, index) => key === project.keys[index])
     ? project
-    : pruneInsulatedCrossings({ ...project, keys });
+    : preserveKeyWiring(project, { ...project, keys });
 }

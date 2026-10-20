@@ -1,5 +1,5 @@
 import { getWireHalf } from '@domain/wiring';
-import { getWirePath } from './get-wire-path';
+import { getWireConductors } from '@domain/wires/geometry';
 import type { Project, Wire, WirePoint } from '@domain';
 
 type Segment = { readonly from: WirePoint; readonly to: WirePoint; readonly isHorizontal: boolean };
@@ -15,6 +15,7 @@ type WireShape = {
   readonly wire: Wire;
   readonly path: readonly WirePoint[];
   readonly segments: readonly Segment[];
+  readonly endpoints: readonly WirePoint[];
   readonly bounds: Bounds;
 };
 
@@ -35,11 +36,14 @@ function isBetween(value: number, first: number, second: number): boolean {
 }
 
 function toShape(project: Project, wire: Wire): WireShape {
-  const path = getWirePath(project, wire);
-  const segments = path.slice(1).map((to, index) => {
-    const from = path[index] ?? to;
-    return { from, to, isHorizontal: from.yU === to.yU };
-  });
+  const conductors = getWireConductors(project, wire);
+  const path = conductors.flat();
+  const segments = conductors.flatMap((conductor) =>
+    conductor.slice(1).map((to, index) => {
+      const from = conductor[index] ?? to;
+      return { from, to, isHorizontal: from.yU === to.yU };
+    }),
+  );
   const bounds = { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity };
   for (const point of path) {
     bounds.minX = Math.min(bounds.minX, point.xU);
@@ -47,7 +51,15 @@ function toShape(project: Project, wire: Wire): WireShape {
     bounds.minY = Math.min(bounds.minY, point.yU);
     bounds.maxY = Math.max(bounds.maxY, point.yU);
   }
-  return { wire, path, segments, bounds };
+  return {
+    wire,
+    path,
+    segments,
+    bounds,
+    endpoints: conductors.flatMap((conductor) =>
+      [conductor[0], conductor.at(-1)].filter((point) => point !== undefined),
+    ),
+  };
 }
 
 function areBoundsApart(first: Bounds, second: Bounds): boolean {
@@ -101,8 +113,8 @@ function findSharedPoint(first: Segment, second: Segment): WirePoint | undefined
 }
 
 function isEndPoint(shape: WireShape, point: WirePoint): boolean {
-  const ends = [shape.path[0], shape.path.at(-1)];
-  return ends.some((end) => end !== undefined && end.xU === point.xU && end.yU === point.yU);
+  const ends = shape.endpoints;
+  return ends.some((end) => end.xU === point.xU && end.yU === point.yU);
 }
 
 function getArcPosition(path: readonly WirePoint[], point: WirePoint): number {

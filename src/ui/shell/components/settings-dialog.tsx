@@ -35,7 +35,7 @@ export function SettingsDialog({ isOpen, onClose }: SettingsDialogProps) {
   }
 
   return (
-    <Dialog isOpen={isOpen} onClose={handleClose} title="Settings">
+    <Dialog size="settings" isOpen={isOpen} onClose={handleClose} title="Settings">
       {storageStatus === 'unavailable' ? (
         <p className="rounded-md border border-warning p-2 text-warning">
           Settings can&apos;t be saved in this browser and will reset when you close the tab.

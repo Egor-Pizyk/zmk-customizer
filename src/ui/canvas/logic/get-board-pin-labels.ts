@@ -1,4 +1,4 @@
-import { getWirePath } from '@domain/wires';
+import { getWirePath } from '@domain/wires/geometry';
 import type { Project, WirePoint } from '@domain';
 
 export type BoardPinLabel = {

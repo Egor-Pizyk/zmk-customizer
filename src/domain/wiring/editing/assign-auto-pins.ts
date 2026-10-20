@@ -7,21 +7,19 @@ export function assignAutoPins(
   project: Project,
   input: {
     readonly board: ControllerBoard;
+    readonly retainAllWires?: boolean;
     readonly terminals: readonly WiringTerminal[];
   },
 ): Result<readonly WiringTerminal[], string> {
   const terminals: WiringTerminal[] = [];
   for (const half of ['left', 'right'] as const) {
-    const occupied = getOccupiedPins(project, half);
+    const occupied = getOccupiedPins(project, half, input.retainAllWires === true);
     const halfTerminals = input.terminals.filter((terminal) => terminal.half === half);
     const error =
       findPreviousError(project, { half, occupied, board: input.board }) ??
       findAssignmentError(halfTerminals, { occupied, board: input.board });
     if (error !== undefined) {
-      return {
-        ok: false,
-        error: `${half}: ${error} Repair the pin assignments before Auto assign.`,
-      };
+      return assignmentFailure(`${half}: ${error} Repair the pin assignments before Auto assign.`);
     }
     const used = new Set([
       ...occupied,
@@ -44,13 +42,18 @@ export function assignAutoPins(
   return { ok: true, value: terminals };
 }
 
-function getOccupiedPins(project: Project, half: Half): readonly number[] {
+function getOccupiedPins(project: Project, half: Half, retainAllWires: boolean): readonly number[] {
   const encoderPins = project.encoders
     .filter((encoder) => encoder.half === half)
     .flatMap((encoder) => [encoder.aPin, encoder.bPin].filter((pin) => pin !== undefined));
-  const retained = new Set(getRetainedWires(project).map((wire) => wire.id));
+  const retained = new Set(
+    (retainAllWires ? project.wires : getRetainedWires(project)).map((wire) => wire.id),
+  );
   const manualPins: number[] = [];
   for (const net of getNets(project)) {
+    if (retainAllWires && net.terminalIds.length > 0) {
+      continue;
+    }
     const pins = new Set(
       net.boardPins
         .filter((contact) => retained.has(contact.wireId))
@@ -176,4 +179,8 @@ function getTerminalPins(project: Project, half: Half): readonly number[] {
       .filter((terminal) => terminal.half === half)
       .flatMap((terminal) => (terminal.boardPin === undefined ? [] : [terminal.boardPin])) ?? []
   );
+}
+
+function assignmentFailure(error: string): Result<readonly WiringTerminal[], string> {
+  return { ok: false, error };
 }

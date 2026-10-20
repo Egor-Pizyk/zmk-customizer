@@ -1,4 +1,5 @@
-import { formatBoardPin, getWirePath } from '@domain/wires';
+import { formatBoardPin } from '@domain/wires';
+import { getWirePath } from '@domain/wires/geometry';
 import type { Project, Wire, WirePoint } from '@domain';
 import { getBoardPinLabels, toPathData } from '@ui/canvas/logic';
 import type { ContentView } from '@ui/canvas/logic';

@@ -20,7 +20,7 @@ it('loads v3 without adding diodes or changing the circuit', () => {
     ok: true,
     value: {
       ...old,
-      schemaVersion: 11,
+      schemaVersion: 12,
       encoders: [],
       combos: [],
       macros: [],
@@ -41,7 +41,7 @@ it.each([
   const paths = issuePaths(
     JSON.stringify({
       ...createProject({ controllerId: 'nice_nano_v2' }),
-      schemaVersion: 11,
+      schemaVersion: 12,
       encoders: [],
       combos: [],
       macros: [],

@@ -1,3 +1,4 @@
+import { PartsWireSectionsTable } from './parts-wire-sections-table';
 import { getKeyPinWires } from '@domain/wires';
 import type { Project } from '@domain';
 import { usePreferences } from '@ui/preferences';
@@ -34,7 +35,7 @@ export function PartsList(props: PartsTableProps) {
       aria-labelledby={headingId}
       className="shrink-0 border-t border-border bg-surface-raised"
     >
-      <details onToggle={handleToggle} open={preferences.isPartsListOpen}>
+      <details name="schematic-editor" onToggle={handleToggle} open={preferences.isPartsListOpen}>
         <summary className="cursor-pointer px-4 py-2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus">
           <h2 className="inline text-base font-semibold" id={headingId}>
             Parts
@@ -42,6 +43,7 @@ export function PartsList(props: PartsTableProps) {
         </summary>
         <div className="flex max-h-72 flex-col gap-6 overflow-auto px-4 pb-4">
           <PartsKeysTable {...props} wiresOf={wiresOf} />
+          <PartsWireSectionsTable {...props} />
           <PartsWiresTable {...props} />
           <PartsCrossingsTable {...props} />
         </div>

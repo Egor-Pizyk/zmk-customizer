@@ -1,3 +1,4 @@
+import { addWire } from '@domain/wires/editing';
 import { getNets } from '@domain/wires/nets';
 import type { Project, Wire } from '@domain';
 import { describe, expect, it } from 'vitest';
@@ -69,7 +70,7 @@ describe('getNets', () => {
 
   it('joins a pin that a wire passes over', () => {
     const passing = { id: 'w1', start: keyPin('k2', 1), end: freeEnd(-1, 0.3667), bends: [] };
-    const project = buildProject({ keys: KEYS, wires: [passing] });
+    const project = addWire(buildProject({ keys: KEYS }), passing);
     expect(netOf(project, 'k1', 1)?.wireIds).toEqual(['w1']);
   });
 

@@ -1,3 +1,5 @@
+import { getProjectJson } from './get-project-json';
+import { getWireSegmentCount } from '@domain/wires/geometry';
 import { findAdvancedResourceError } from './find-advanced-resource-error';
 import type { Project } from '@domain';
 import { PROJECT_BUDGET } from './project-budget';
@@ -27,7 +29,7 @@ export function getProjectResourceError(project: Project): string | undefined {
       return `A wire can have at most ${PROJECT_BUDGET.bendsPerWire} bends. Remove a bend first.`;
     }
   }
-  const segments = project.wires.reduce((count, wire) => count + 2 * (wire.bends.length + 1), 0);
+  const segments = getWireSegmentCount(project);
   if (segments > PROJECT_BUDGET.segments) {
     return `Project exceeds ${PROJECT_BUDGET.segments} wire segments. Simplify the wiring.`;
   }
@@ -64,7 +66,7 @@ function findCollectionError(project: Project): string | undefined {
 }
 
 function findByteError(project: Project): string | undefined {
-  const text = `${JSON.stringify(project, undefined, 2)}\n`;
+  const text = getProjectJson(project);
   return new TextEncoder().encode(text).length > PROJECT_BUDGET.bytes
     ? 'Project exceeds the saved JSON byte budget. Remove some content before adding more.'
     : undefined;

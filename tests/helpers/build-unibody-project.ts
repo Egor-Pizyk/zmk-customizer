@@ -1,6 +1,6 @@
 import type { Project, Key, Wire } from '@domain';
 import { findCrossings } from '@domain/crossings';
-import { getKeyPinPosition } from '@domain/wires';
+import { getKeyPinPosition } from '@domain/wires/geometry';
 
 import { buildProject } from './build-project';
 

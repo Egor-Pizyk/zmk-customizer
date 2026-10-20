@@ -41,6 +41,7 @@
       "@domain/validation": ["./src/domain/validation/index.ts"],
       "@domain/validation/shield": ["./src/domain/validation/shield/index.ts"],
       "@domain/wires": ["./src/domain/wires/index.ts"],
+      "@domain/wires/geometry": ["./src/domain/wires/geometry/index.ts"],
       "@domain/wires/editing": ["./src/domain/wires/editing/index.ts"],
       "@domain/wires/nets": ["./src/domain/wires/nets/index.ts"],
       "@domain/wiring": ["./src/domain/wiring/index.ts"],

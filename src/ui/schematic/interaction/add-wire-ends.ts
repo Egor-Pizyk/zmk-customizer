@@ -1,4 +1,5 @@
-import { findFreeEndPosition, getKeyPinPosition, getWirePath } from '@domain/wires';
+import { findFreeEndPosition } from '@domain/wires';
+import { getKeyPinPosition, getWirePath } from '@domain/wires/geometry';
 import { getNearestPointOnPath } from '@domain/geometry';
 import type { KeyPin, Project, WireEnd } from '@domain';
 

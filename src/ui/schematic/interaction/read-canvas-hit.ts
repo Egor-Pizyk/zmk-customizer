@@ -1,6 +1,7 @@
 import type { KeyPin, WireEndSide } from '@domain';
 
 export type CanvasHit =
+  | { readonly kind: 'section'; readonly sectionId: string }
   | { readonly kind: 'pin'; readonly keyId: string; readonly pin: KeyPin }
   | { readonly kind: 'bend'; readonly wireId: string; readonly bendIndex: number }
   | { readonly kind: 'wire-end'; readonly wireId: string; readonly side: WireEndSide }
@@ -37,6 +38,10 @@ export function readCanvasHit(target: EventTarget | null): CanvasHit {
       wireId: end['wireId'],
       side: end['wireEnd'] === 'start' ? 'start' : 'end',
     };
+  }
+  const section = closestData(target, 'section-id');
+  if (section?.['sectionId'] !== undefined) {
+    return { kind: 'section', sectionId: section['sectionId'] };
   }
   const wire = closestData(target, 'wire-id');
   if (wire?.['wireId'] !== undefined) {

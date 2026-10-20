@@ -88,8 +88,6 @@ type WiringOptionsControlsInput = {
 
 function WiringOptionLinks({ project, onEdit: handleEdit }: WiringOptionsControlsInput) {
   const wiring = project.wiring;
-  const board = getControllerBoard(project.controllerId);
-  const { gridSizeU } = usePreferences().preferences;
   if (wiring === undefined) {
     return null;
   }
@@ -112,14 +110,7 @@ function WiringOptionLinks({ project, onEdit: handleEdit }: WiringOptionsControl
       {wiring.kind === 'matrix' ? (
         <DocsLink href={WIRING_OPTIONS.directions[0].docsUrl} topic="Diode direction" />
       ) : undefined}
-      <Button
-        variant="secondary"
-        onClick={() => {
-          handleEdit({ kind: 'auto', gridStepU: gridSizeU, board });
-        }}
-      >
-        Auto assign cells
-      </Button>
+      <WiringAutoActions project={project} onEdit={handleEdit} />
     </div>
   );
 }
@@ -129,4 +120,32 @@ function getTopologyEdit(value: string, board: WiringEdit['board']): WiringEdit 
 }
 function getDirectionEdit(value: string, board: WiringEdit['board']): WiringEdit {
   return { kind: 'direction', direction: value === 'row2col' ? 'row2col' : 'col2row', board };
+}
+
+function WiringAutoActions({ project, onEdit: handleEdit }: WiringOptionsControlsInput) {
+  const board = getControllerBoard(project.controllerId);
+  const { gridSizeU } = usePreferences().preferences;
+  return (
+    <>
+      <Button
+        variant="secondary"
+        onClick={() => {
+          handleEdit({ kind: 'complete', gridStepU: gridSizeU, board });
+        }}
+      >
+        Complete wiring
+      </Button>
+      <p className="text-text-muted">
+        Rebuild wiring replaces managed connections and cells. Review the preview before applying.
+      </p>
+      <Button
+        variant="secondary"
+        onClick={() => {
+          handleEdit({ kind: 'auto', gridStepU: gridSizeU, board });
+        }}
+      >
+        Rebuild wiring
+      </Button>
+    </>
+  );
 }

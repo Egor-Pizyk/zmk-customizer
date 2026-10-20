@@ -1,4 +1,4 @@
-import { getWirePath } from '@domain/wires';
+import { getWirePath } from '@domain/wires/geometry';
 import { isKeyPositionFree } from '@domain/geometry';
 import type { Project, WirePoint } from '@domain';
 import type { CanvasHit } from './read-canvas-hit';
