@@ -4,7 +4,8 @@ import { createPresetKeys } from './create-preset-keys';
 export const LILY58_58 = {
   id: 'lily58-58',
   name: 'Lily58 rev1',
-  description: 'Column-staggered Lily58 with number row and thumb clusters.',
+  description:
+    'Column-staggered Lily58 with mirrored 30° thumb keys and 0.125u extra inward thumb clearance.',
   limitations:
     'No function row, number pad or full navigation cluster; add layers or assign manually.',
   topology: 'split',
@@ -62,8 +63,8 @@ export const LILY58_58 = {
     ['LEFT_GUI', 2.5, 4.125, 1, 1, 0, 0, 0, 'left'],
     ['LEFT_ALT', 3.5, 4.15, 1, 1, 0, 0, 0, 'left'],
     ['SPACE', 4.5, 4.25, 1, 1, 0, 0, 0, 'left'],
-    ['SPACE', 6, 4.25, 1, 1.5, 0, 0, 0, 'left'],
-    ['ENTER', 9.5, 4.25, 1, 1.5, 0, 0, 0, 'right'],
+    ['SPACE', 5.875, 4, 1, 1.5, 30, 6.375, 4.75, 'left'],
+    ['ENTER', 9.625, 4, 1, 1.5, -30, 10.125, 4.75, 'right'],
     ['ENTER', 11, 4.25, 1, 1, 0, 0, 0, 'right'],
     ['RIGHT_ALT', 12, 4.15, 1, 1, 0, 0, 0, 'right'],
     ['RIGHT_GUI', 13, 4.15, 1, 1, 0, 0, 0, 'right'],

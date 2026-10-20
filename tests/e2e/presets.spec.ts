@@ -145,6 +145,27 @@ test('Lily58 and Sofle preserve halves in both modes; New dialog reflows at narr
       const bounds = await dialog.boundingBox();
       expect(bounds?.width).toBeLessThanOrEqual(720);
       expect(bounds?.height).toBeLessThanOrEqual(700);
+      if (presetId === 'lily58-58') {
+        const preview = page.getByLabel('Lily58 rev1 layout preview');
+        await expect(preview.locator('rect')).toHaveCount(58);
+        await expect(preview.locator('rect').nth(53)).toHaveAttribute(
+          'transform',
+          'rotate(30 6.375 4.75)',
+        );
+        await expect(preview.locator('rect').nth(54)).toHaveAttribute(
+          'transform',
+          'rotate(-30 10.125 4.75)',
+        );
+        await page.screenshot({ path: testInfo.outputPath(`lily58-${mode}-preview.png`) });
+        await page.getByText('Key geometry and QWERTY assignments', { exact: true }).click();
+        const geometry = page.getByRole('list', { name: 'Preset key geometry' });
+        await expect(geometry).toContainText(
+          'Key 53: SPACE, 1×1.5u at 5.875, 4u; rotation 30°, origin 6.375, 4.75u; left half',
+        );
+        await expect(geometry).toContainText(
+          'Key 54: ENTER, 1×1.5u at 9.625, 4u; rotation -30°, origin 10.125, 4.75u; right half',
+        );
+      }
       if (presetId === 'sofle-58' && mode === 'QWERTY') {
         await page.screenshot({ path: testInfo.outputPath('sofle-preview.png') });
       }
@@ -153,6 +174,59 @@ test('Lily58 and Sofle preserve halves in both modes; New dialog reflows at narr
       expect(project.keys).toHaveLength(58);
       expect(project.keys.filter((entry) => entry.half === 'left')).toHaveLength(29);
       expect(project.keys.filter((entry) => entry.half === 'right')).toHaveLength(29);
+      if (presetId === 'lily58-58') {
+        expect(project.keys[53]).toMatchObject({
+          xU: 5.875,
+          yU: 4,
+          widthU: 1,
+          heightU: 1.5,
+          rotationDeg: 30,
+          rotationOriginXU: 6.375,
+          rotationOriginYU: 4.75,
+          half: 'left',
+        });
+        expect(project.keys[54]).toMatchObject({
+          xU: 9.625,
+          yU: 4,
+          widthU: 1,
+          heightU: 1.5,
+          rotationDeg: -30,
+          rotationOriginXU: 10.125,
+          rotationOriginYU: 4.75,
+          half: 'right',
+        });
+        await expectGeometry(
+          page,
+          {
+            id: 'k53',
+            xU: 5.875,
+            yU: 4,
+            widthU: 1,
+            heightU: 1.5,
+            rotationDeg: 30,
+            rotationOriginXU: 6.375,
+            rotationOriginYU: 4.75,
+          },
+          53,
+        );
+        await expectGeometry(
+          page,
+          {
+            id: 'k54',
+            xU: 9.625,
+            yU: 4,
+            widthU: 1,
+            heightU: 1.5,
+            rotationDeg: -30,
+            rotationOriginXU: 10.125,
+            rotationOriginYU: 4.75,
+          },
+          54,
+        );
+        expect(JSON.parse(await downloadJson(page))).toEqual(project);
+        await page.reload();
+        await expect.poll(() => saved(page)).toEqual(project);
+      }
       if (geometries === undefined) {
         geometries = project.keys;
       } else {

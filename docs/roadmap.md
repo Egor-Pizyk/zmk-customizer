@@ -60,9 +60,11 @@ Each `/speckit-specify` prompt below describes what and why only. Technology cho
 | 032 | project-creation-and-auto-wiring | 031, 013, 011 |
 | 033 | wiring-and-settings-usability | 032, 001, 003, 012, 013 |
 | 034 | agent-assisted-configuration — discovery | 002, 009, 010; other dependencies TBD |
-| 037 | interactive-onboarding | all preceding scheduled product features, including 031, 033 and 034; implement last |
+| 035 | ui-ux-audit-specification | 031–034 |
+| 036 | ui-ux-remediation | 035 |
+| 037 | interactive-onboarding | all preceding scheduled product features, including 031–036; implement last |
 
-Numbers 024–030 are reserved by existing feature directories in [`specs/README.md`](../specs/README.md). Feature 032 is project creation and automatic wiring, selected by the user on 2026-10-20 after 031. Planned interactive onboarding moves to 037 so it remains last; existing specified feature numbers are unchanged. Scheduled work continues with 033 wiring/settings usability and 034 agent-assisted configuration. Deferred 020–022 remain postponed. Only not-yet-specified roadmap entries may be renumbered.
+Numbers 024–030 are already reserved by existing feature directories listed in [`specs/README.md`](../specs/README.md). On 2026-10-20, the user requested project-creation-and-auto-wiring as the next step after 031 and renumbering subsequent planned work. Scheduled order is now 032 project creation/auto wiring → 033 wiring/settings usability → 034 agent-assisted configuration → 035 UI/UX audit/specification → 036 UI/UX fixes → 037 onboarding. Previously out-of-order onboarding 032 moves to 037; 033–036 already match their positions and retain their numbers. Feature 032 now has a spec directory; the subsequent planned items do not; existing specified feature numbers are unchanged. Interactive onboarding must remain the last planned product feature; when adding work before it, renumber only not-yet-specified entries as needed. Deferred features 020–022 do not block the scheduled work; revisit their order when resumed.
 
 Workspaces (from 001): **Schematic** holds the schematic of keys and wires (003), switch diodes (008), the layout editor (012) and matrix/wiring editor (013) and owns the project JSON config (002); **Bindings** holds bindings keycaps (004), key behaviors (005), the Action panel (006), layers (007), the keymap editor (014), custom behaviors (016) and combos/macros/conditional layers (017); **Firmware** holds kconfig-settings (015); **Export** holds the file preview (009) and download (010). Every feature reports its validation issues in the 001 problems panel, counted in the tab badge of the workspace that fixes them.
 
@@ -530,7 +532,7 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 ### 031 — keyboard-presets
 
-**Specified:** [`specs/031-keyboard-presets/spec.md`](../specs/031-keyboard-presets/spec.md). Implemented on branch `031-keyboard-presets`; completion verification is recorded in that directory. Exact initial variants: ANSI 104/87/61, compact 84/68, ortholinear 60/48, macropad 9, Corne 42 (documented thumb/half clearance), Lily58 rev1 58 and Sofle rev1 58. These are layout-only starting projects with QWERTY or empty bindings; existing complete six-key starter is preserved.
+**Specified:** [`specs/031-keyboard-presets/spec.md`](../specs/031-keyboard-presets/spec.md). Implemented on branch `031-keyboard-presets`; completion verification is recorded in that directory. Exact initial variants: ANSI 104/87/61, compact 84/68, ortholinear 60/48, macropad 9, Corne 42 (documented thumb/half clearance), Lily58 rev1 58 (mirrored 30° inner thumbs with 0.125u extra inward clearance) and Sofle rev1 58. These are layout-only starting projects with QWERTY or empty bindings; existing complete six-key starter is preserved.
 
 **Goal.** Start a custom keyboard from a familiar physical layout instead of drawing every key, with a choice of standard QWERTY bindings or an empty keymap.
 
@@ -579,7 +581,7 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 **Goal.** Make automatic wiring predictable, preserve intentional electrical connections while moving keys, support direct wire deletion, and keep the keyboard canvas usable while editing settings.
 
 **In scope**
-1. Build on 032, which owns free-GPIO allocation and outward output placement; broader automatic connection and routing improvements remain here. Review how automatic wiring chooses connections, reuses existing wiring and routes buses; define the intended rules during clarification, with a visible preview before applying changes. Do not treat the current algorithm as the desired behavior.
+1. Build on 032, which owns automatic free-GPIO allocation and outward output placement; do not duplicate that work. Rework any remaining automatic connection and routing logic. Review how automatic wiring chooses connections, reuses existing wiring and routes buses; define the intended rules during clarification, with a visible preview before applying changes. Do not treat the current algorithm as the desired behavior.
 2. When a wire passes through a key pin and connects to it, persist a full electrical connection rather than relying only on geometric coincidence. Moving the key from which the wire originally started must preserve the connection to the encountered pin; moving either connected key must keep the intended connectivity. Distinguish intentional connections from insulated crossings.
 3. Let users select wires directly on the canvas, clearly see the selection and delete selected wires without deleting keys. Provide keyboard selection/deletion as well as pointer interaction, with Undo/Redo and consistent cleanup of affected connections.
 4. Make settings windows and editing panels compact and responsive so they do not occupy most of the screen or obscure the main canvas. Keep the keyboard and current edit visible, allow panels to be collapsed or dismissed, and retain keyboard access, visible focus and usable scrolling on smaller screens. Choose exact dimensions and layout during specification.
@@ -588,7 +590,7 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 **Open.** Exact automatic connection/routing rules, behavior when moving an intermediate connected key, selection of one wire versus multiple wires, and panel sizing/breakpoints are resolved during clarification. These are backlog requirements, not an approved implementation design.
 
-**Ordering.** Implement before interactive onboarding (037), so the tour teaches the updated wiring and panel behavior. Other assigned roadmap numbers stay unchanged.
+**Ordering.** Implement before interactive onboarding (037), so the tour teaches the updated wiring and panel behavior. Follow the scheduled order above; existing spec-directory numbers remain immutable.
 
 ```
 /speckit-specify Improve wiring and settings usability in ZMK Customizer. Rework automatic connection and routing rules with a preview before applying changes. When a wire passes through and connects to a key pin, save a durable electrical connection that survives moving the key the wire originally started from, rather than deriving connectivity only from overlapping coordinates. Let users select and delete wires directly, including keyboard access and Undo/Redo, without deleting keys. Make settings windows and editing panels compact and responsive so the canvas stays visible and usable. Preserve existing project imports, manual wiring, insulated crossings and deterministic export. Clarify exact routing rules, movement behavior, selection scope and panel dimensions before planning. Implement before interactive onboarding.
@@ -609,6 +611,32 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 **Open questions.** Generate an importable Project JSON or raw ZMK files; how agents obtain current schemas/catalog facts and validate output; how users review changes and repair rejected output; offline availability and documentation versioning; whether MCP adds enough value and what local or external components it would require. Resolve these during discovery and specification before planning. Creation precedes existing-project editing as confirmed above.
 
 **Proposed safety and compatibility boundaries.** Use the supported import/validation and deterministic export flows where applicable; never apply untrusted agent output silently or overwrite current work. Preserve project compatibility and Undo/Redo. Do not assume unsupported ZMK features, automatic electrical correctness or successful firmware compilation.
+
+### 035 — ui-ux-audit-specification
+
+**Goal.** Invoke the installed `ui-ux-pro-max` skill to find concrete UI/UX problems across the completed product and turn the findings into an actionable specification before fixes begin. Added on user request (2026-10-19); scheduled after 033/034 and before remediation 036 and onboarding 037.
+
+**Skill.** Invoke `$ui-ux-pro-max` in Codex. Read the [installed skill](../.agents/skills/ui-ux-pro-max/SKILL.md) and [project installation notes](../.agents/skills/ui-ux-pro-max/INSTALLATION.md); run its local searches for relevant UX concerns and the existing React/Tailwind stack. Repository requirements and tokens govern recommendations.
+
+**Audit scope.** Schematic, Bindings, Firmware, Export, shared navigation, panels, dialogs, settings, presets and agent-assisted configuration as delivered. Examine core creation/edit/save/import/export journeys, discoverability, labels and feedback, validation and recovery, keyboard and screen-reader access, focus, contrast in supported themes, reduced motion, responsive layouts and consistency. Use isolated Playwright under project testing rules for browser evidence; record any unverified manual checks explicitly.
+
+**Deliverables and acceptance.** Create `specs/035-ui-ux-audit-specification/` through Spec Kit. Record each confirmed problem with a stable finding ID, affected flow/component, reproduction steps, actual versus expected behavior, evidence, severity, user impact and owning feature/requirement. Separate confirmed findings from hypotheses and recommendations that do not apply. Specify the desired outcome, scope, non-goals and testable acceptance criteria for every confirmed finding, linking it to proposed remediation 036. Preserve project compatibility, Undo/Redo, deterministic exports and accessibility. This stage finishes with the audit evidence and specification; production fixes belong to the separate next step.
+
+```
+/speckit-specify Audit the completed ZMK Customizer UI/UX using the installed ui-ux-pro-max skill. Find and document concrete problems across all workspaces and shared user flows, including accessibility, keyboard use, feedback, error recovery, themes, responsive layout and consistency. Give every confirmed finding a stable ID, reproduction, evidence, severity, impact, owning requirement and testable expected outcome. Mark unverified hypotheses and manual checks explicitly. Produce a specification covering every confirmed problem for the separate ui-ux-remediation step, preserving project data, Undo/Redo and export contracts. Do not implement production fixes in this audit stage.
+```
+
+### 036 — ui-ux-remediation
+
+**Goal.** Fix every confirmed problem specified by 035 as a separate implementation step, before onboarding 037 is built.
+
+**Workflow.** Use the 035 findings and acceptance criteria as input to `/speckit-specify`, then clarify, plan, generate tasks and analyze before implementation. Invoke `ui-ux-pro-max` for relevant guidance. Amend affected owning feature artifacts where requirements change. Map each finding ID to its requirement, implementation task, regression check and verification evidence; do not silently omit lower-severity findings. Reproduce bug regressions before fixing them and follow the project checks for the changed code and journeys.
+
+**Acceptance criteria.** Every confirmed 035 finding has an implemented fix and passing acceptance evidence. Recheck affected flows, keyboard access, supported themes and layouts; verify preserved save/import/export and Undo/Redo behavior where affected. Record remaining manual verification limits honestly. Any newly discovered problem is specified before expanding implementation; unresolved findings remain open and prevent claiming that all fixes are complete.
+
+```
+/speckit-specify Fix all confirmed UI/UX problems specified by feature 035 in ZMK Customizer. Preserve a traceable mapping from each audit finding to its expected outcome, fix, regression checks and evidence. Use ui-ux-pro-max guidance within the existing project rules and design tokens, preserving user data compatibility, Undo/Redo, accessibility and deterministic ZMK v0.3.0 exports. Cover every confirmed finding and record verification limits; finish this remediation before interactive onboarding 037.
+```
 
 ### 037 — interactive-onboarding (implement last)
 
