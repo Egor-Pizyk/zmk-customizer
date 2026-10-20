@@ -28,6 +28,7 @@ Read all matching rows before working in that area. Conditional reading is manda
 
 | Task / area | Required context |
 |---|---|
+| Start/resume work, create a feature/branch; finish work, commit, push, open/merge PRs or release | `docs/guidelines/git-flow.md` (read before starting and re-read before delivery) |
 | Find files or feature ownership | `docs/repository-map.md`, `specs/README.md`; relevant roadmap entry for scope |
 | Plan or change production code | `docs/architecture.md`, `docs/folder-structure.md`, `docs/tooling.md` |
 | Implement existing feature work | Relevant `spec.md`, `plan.md`, `tasks.md` and contracts; other artifacts only when cited or needed |

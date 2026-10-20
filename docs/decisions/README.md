@@ -31,7 +31,7 @@ What becomes easier, what becomes harder, what we must now keep true.
 | [0003](0003-single-project-state.md) | Single serializable Project state, pure operations, versioned migrations | Accepted |
 | [0004](0004-oxlint-oxfmt.md) | oxlint + oxfmt instead of ESLint/Prettier | Accepted |
 | [0005](0005-docker-makefile.md) | Docker for dev and prod, Makefile for non-Node commands | Accepted |
-| [0006](0006-spec-kit.md) | Spec-Driven Development with GitHub Spec Kit | Accepted |
+| [0006](0006-spec-kit.md) | Spec-Driven Development with GitHub Spec Kit | Partially superseded by 0019 |
 | [0007](0007-golden-file-tests.md) | Golden-file tests of generators against upstream ZMK shields | Accepted |
 | [0008](0008-svg-layout-editor.md) | SVG layout editor with keyboard-accessible table | Accepted |
 | [0009](0009-runtime-dependencies.md) | Runtime dependencies limited to react, zod, fflate | Accepted |
@@ -50,3 +50,5 @@ What becomes easier, what becomes harder, what we must now keep true.
 - [0017 — Separate UI logic and React components](0017-ui-logic-and-components.md)
 
 - [0018 — Task-scoped agent context and proportional SDD](0018-task-scoped-agent-context.md)
+
+- [0019 — GitHub flow with stacked PRs and per-PR releases](0019-github-flow.md)
