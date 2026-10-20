@@ -25,11 +25,11 @@
 ## Verification and completion
 
 - [x] T011 Reinvoke ui-ux-pro-max, inspect isolated rendered UI and record findings in specs/032-project-creation-and-auto-wiring/verification.md.
-- [ ] T012 Run make check, build, full E2E, changed tests three times, controlled sensitivity and make zmk-build; record actual results/limits in specs/032-project-creation-and-auto-wiring/verification.md.
+- [x] T012 Run make check, build, full E2E, changed tests three times, controlled sensitivity and make zmk-build; record actual results/limits in specs/032-project-creation-and-auto-wiring/verification.md.
 - [x] T013 Verify final consistency of specs/013-matrix-wiring-editor/contracts/wiring.md and specs/031-keyboard-presets/spec.md with 032 and update specs/README.md/docs/roadmap.md without including pre-existing edits.
 - [x] T014 Re-read docs/guidelines/git-flow.md and prepare the scoped diff, release:minor PR description and local verification evidence; delivery gates are tracked by the PR checks and final delivery report.
 
-- [ ] T015 Complete the required manual accessibility pass (keyboard, VoiceOver/Safari, OS theme/reduced motion and zoom) before marking the feature done. Automated browser evidence does not replace it.
+- [ ] T015 Complete the required manual accessibility pass (keyboard, VoiceOver/Safari, OS theme/reduced motion and zoom) before marking the feature done. Automated browser evidence does not replace it. On 2026-10-20 the user chose to perform this pass personally; merge waits for their result.
 
 ## Dependencies
 
@@ -46,3 +46,14 @@ T001→T002 before production. T003→T004→T005 for US1. T006→T007 before au
 | FR-007,FR-008 | T006,T008,T009,T010,T012 | Proposal copy, unchanged preview storage, Apply/history/reload/JSON/ZIP | verification.md |
 
 Git delivery follows local completion: push the scoped commit, open a main-based PR, require all five final-head checks, then verify squash merge and its release. External delivery evidence belongs to the PR/final report, avoiding a self-referential verification commit. Manual screen-reader/OS checks remain explicitly unperformed in verification.md.
+
+## Manual acceptance handoff (T015)
+
+Use the production app with an existing saved project backed up. Follow the complete accessibility checklist in `docs/guidelines/frontend/accessibility.md`, scoped to the changed flows:
+
+1. Keyboard: open New; inspect preset and QWERTY/empty choices; Tab through Create/Empty/Cancel; Escape and Cancel preserve data and return focus. Create an empty and a preset project.
+2. Import the saved circuit or create a macropad. Auto assign proposes GPIOs; inspect outputs with canvas pan/zoom. Cancel preserves saved state; Apply changes it once; Undo/Redo restores it. Check a capacity/conflict error is readable and leaves the project unchanged.
+3. VoiceOver/Safari: verify workspace headings, key names, action names, focus changes and status/error announcements without duplicate speech.
+4. OS theme/reduced motion and 200% zoom: inspect both themes, visible/unobscured focus, readable actions and absence of horizontal page overflow. No new color-token pairs were introduced.
+
+Record actual pass/fail observations here or in PR #13. Do not check T015 merely because automated CI is green.

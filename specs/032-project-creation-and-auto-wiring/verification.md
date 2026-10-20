@@ -33,12 +33,12 @@ Checks ran against an isolated worktree containing only the staged 032 scope, ex
 - `make zmk-build`: passed all 32 actual-export targets and the intentional connector rejection. Pinned ZMK v0.3.0 SHA `edf5c0814fd3ea202e43aad2d68fd32e882a518c`. Log: `/tmp/zmk-032-zmk.log`. Existing fixtures cover matrix/direct/split/boards/keymaps/encoders; this does not assert firmware compilation for every newly unwired library preset.
 - Three sequential isolated affected-journey runs passed 35/35 each without retries: `/tmp/zmk-032-clean-repeat-{1,2,3}.log`. Preview/Apply/Cancel, Undo/Redo, reload, JSON/ZIP, capacity errors and project creation covered.
 - A final full browser attempt passed 158/161: three copies of one test refocused an already-focused Cancel after resizing, so native focus did not scroll again. Corrected the test to exercise actual Tab arrival through Create → Empty → Cancel, with no production change. The final native-size creation suite then passed 9/9 three consecutive times across Chromium/Firefox/WebKit: `/tmp/zmk-032-native-creation-{1,2,3}.log`.
-- A fresh complete `make test-e2e` run after that test correction is tracked below; required CI will also verify the final commit.
+- Final fresh complete `make test-e2e` passed **161/161 in 5.6 minutes** across Chromium/Firefox/WebKit after that test correction. Log: `/tmp/zmk-032-clean-e2e-corrected.log`. Byte-for-byte comparison confirmed all changed implementation/test files match the committed PR tree. Required CI also verifies the final commit.
 - Controlled sensitivity ran alone: temporarily retained unassigned terminal pins after successful allocation. The browser acceptance test failed at the expected GPIO value (`0` versus empty), not a runner/build failure. Exact source bytes restored; subsequent automatic-wiring browser tests passed. Log: `/tmp/zmk-032-sensitivity.log`.
 
 ## Required outstanding gates
 
-T015 is the manual accessibility pass required by `docs/guidelines/frontend/accessibility.md`, Testing. `docs/agent-rules.md` prohibits Computer Use/native app control without an explicit user request. No such control was used. Before merge, complete this pass and require final-head main-based `check`, `e2e`, `image`, `mutations`, `zmk-build`; then verify the squash release at its exact merge SHA. CI/release evidence belongs to the PR and final delivery report.
+T015 is the manual accessibility pass required by `docs/guidelines/frontend/accessibility.md`, Testing. `docs/agent-rules.md` prohibits Computer Use/native app control without an explicit user request. No such control was used. The user elected to perform this manual pass personally on 2026-10-20; its result is pending. Before merge, complete this pass and require final-head main-based `check`, `e2e`, `image`, `mutations`, `zmk-build`; then verify the squash release at its exact merge SHA. CI/release evidence belongs to the PR and final delivery report.
 
 ## Limits
 
