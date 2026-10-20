@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
-import { UNIBODY_PRESET } from '@catalog/presets';
+import { UNIBODY_PRESET } from '../helpers/unibody-preset';
 import {
   downloadJson,
   downloadZip,
@@ -16,18 +16,15 @@ const PRESETS = [
   {
     project: UNIBODY_PRESET,
     golden: 'tests/fixtures/generated/unibody/unibody_six.keymap',
-    startLabel: 'Start six-key unibody preset',
   },
 ];
 
-for (const { project, golden, startLabel } of PRESETS) {
+for (const { project, golden } of PRESETS) {
   test(`${project.name} survives no-edit keymap editor round trip @cross-browser`, async ({
     page,
   }) => {
     const expected = await readFile(golden, 'utf8');
-    await page.goto('/');
-    await page.getByRole('banner').getByRole('button', { name: 'New', exact: true }).click();
-    await page.getByRole('button', { name: startLabel, exact: true }).click();
+    await openProject(page, project);
     await expect.poll(() => saved(page)).toEqual(project);
     await workspace(page, 'Bindings');
     await page

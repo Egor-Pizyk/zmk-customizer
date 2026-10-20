@@ -1,9 +1,10 @@
 import { createWiringTerminals, autoAssignCells, getWiringConnections } from '@domain/wiring';
+import { prepareTerminals } from './prepare-terminals';
 import { initializeWiring } from './initialize-wiring';
 import { getWiringCells } from '@domain/wiring/matrix';
 import type { WiringCell } from '@domain/wiring/matrix';
 import { routeWiring } from './route-wiring';
-import type { ControllerBoard, Half, Project, Result, Wiring, WiringTerminal } from '@domain';
+import type { ControllerBoard, Half, Project, Result, Wiring } from '@domain';
 
 export type WiringEdit = { readonly board: ControllerBoard } & (
   | { readonly kind: 'initialize' }
@@ -60,16 +61,16 @@ function applyCells(
 ): Result<Project, string> {
   const { cells, wiring } = prepared;
   let nextWiring = wiring;
-  const terminals = createWiringTerminals(project, nextWiring, {
+  let terminals = createWiringTerminals(project, nextWiring, {
     cells,
     ...(input.kind === 'dimensions' ? { dimensions: input } : {}),
   });
-  const capacityError = getPinCapacityError(terminals, input.board);
-  if (capacityError !== undefined) {
-    return { ok: false, error: capacityError };
+  const assigned = prepareTerminals(project, input, terminals);
+  if (!assigned.ok) {
+    return assigned;
   }
-  // New buses are unassigned; preserve available existing pins, never invent a connection to hardware.
-  nextWiring = { ...nextWiring, terminals };
+  nextWiring = { ...nextWiring, terminals: assigned.value };
+  terminals = [...assigned.value];
   const keys = getWiringKeys(project, nextWiring, cells);
   const connections = getWiringConnections(nextWiring, cells);
   let terminalIds = terminals.map((terminal) => terminal.id);
@@ -88,6 +89,8 @@ function applyCells(
     {
       connections: connections.filter((connection) => terminalIds.includes(connection.terminalId)),
       terminalIds,
+      replaceKeyNets: input.kind === 'auto',
+      sourceProject: project,
     },
   );
 }
@@ -269,20 +272,4 @@ function hasSameDimensions(wiring: Wiring, input: Extract<WiringEdit, { kind: 'd
     rowCount === input.rows &&
     terminals.filter((terminal) => terminal.kind === colKind).length === input.cols
   );
-}
-
-function getPinCapacityError(
-  terminals: readonly WiringTerminal[],
-  board: ControllerBoard,
-): string | undefined {
-  for (const half of ['left', 'right']) {
-    const requiredPins = terminals.filter(
-      (terminal) => terminal.half === half && terminal.kind !== 'ground',
-    ).length;
-    if (requiredPins > board.gpioPins.length) {
-      return `${half} needs ${requiredPins} GPIOs, but ${board.name} exposes ${board.gpioPins.length}. Reduce the dimensions.`;
-    }
-  }
-
-  return undefined;
 }

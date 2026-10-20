@@ -74,34 +74,16 @@ function OpenProjectDialog({
 }
 
 function NewProjectDialog({ isOpen, onClose }: ConfirmDialogProps) {
-  const { startNewProject, startPresetProject } = useProject();
-
   function handleClose() {
     onClose();
   }
-
-  function handlePresetClick() {
-    startPresetProject();
-    onClose();
-  }
-
-  function handleStartNewClick() {
-    startNewProject();
-    onClose();
-  }
-
   return (
     <Dialog isOpen={isOpen} onClose={handleClose} title="Start a new project?" size="wide">
-      <p>{REPLACE_WARNING} Starting a project also clears Undo/Redo history.</p>
-      <PresetPicker onCreated={handleClose} />
-      <DialogButtons hasSaveButton onCancel={handleClose}>
-        <Button onClick={handleStartNewClick} variant="danger">
-          Start new project
-        </Button>
-        <Button onClick={handlePresetClick} variant="secondary">
-          Start six-key unibody preset
-        </Button>
-      </DialogButtons>
+      <p>
+        {REPLACE_WARNING} Use Save in the project bar before opening New. Starting a project also
+        clears Undo/Redo history.
+      </p>
+      <PresetPicker onCreated={handleClose} onCancel={handleClose} />
     </Dialog>
   );
 }

@@ -83,18 +83,13 @@ test('preset preview is unsaved, keyboard creates split empty layout and preserv
   await expect(page.getByRole('button', { name: 'Download .zip', exact: true })).toBeDisabled();
 });
 
-test('QWERTY macropad edits undo and redo, save current work from New and retain complete starter export', async ({
+test('QWERTY macropad edits undo and redo, save current work before New and retain legacy-file export', async ({
   page,
 }) => {
   await openProject(page);
   const before = await saved(page);
+  expect(JSON.parse(await downloadJson(page))).toEqual(before);
   await page.getByRole('banner').getByRole('button', { name: 'New', exact: true }).click();
-  const pending = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Save to file', exact: true }).click();
-  const backup = await pending;
-  const path = await backup.path();
-  const { readFile } = await import('node:fs/promises');
-  expect(JSON.parse(await readFile(path, 'utf8'))).toEqual(before);
   await page.getByRole('button', { name: 'Create project from preset' }).click();
   const created = await saved(page);
   expect(created.keys).toHaveLength(9);
@@ -125,8 +120,8 @@ test('QWERTY macropad edits undo and redo, save current work from New and retain
   expect(await saved(page)).toEqual(edited);
   await history(page, 'Undo').click();
   await expect.poll(() => saved(page)).toEqual(created);
-  await page.getByRole('banner').getByRole('button', { name: 'New', exact: true }).click();
-  await page.getByRole('button', { name: 'Start six-key unibody preset', exact: true }).click();
+  const { UNIBODY_PRESET } = await import('../helpers/unibody-preset');
+  await importText(page, JSON.stringify(UNIBODY_PRESET));
   await workspace(page, 'Export');
   const files = await downloadZip(page);
   expect(files['config/unibody_six.keymap']).toContain('&kp A');

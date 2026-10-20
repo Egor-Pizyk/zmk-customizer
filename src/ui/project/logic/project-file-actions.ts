@@ -1,12 +1,6 @@
 import { SHIELD_TARGET } from '@catalog/firmware';
-import { UNIBODY_PRESET } from '@catalog/presets';
 import type { PresetLayout, PresetBindingMode } from '@domain/project';
-import {
-  createLayoutPresetProject,
-  createPresetProject,
-  createProject,
-  getShieldName,
-} from '@domain/project';
+import { createLayoutPresetProject, createProject, getShieldName } from '@domain/project';
 import { readImportFile, serializeProject } from '@storage/project';
 import { downloadTextFile } from '@ui/downloads';
 import { applyHistoryAction, discardKeptBackup, withAnnouncement } from './project-state';
@@ -79,14 +73,6 @@ export function createFileActions(
     },
     startNewProject: () => {
       startNewProject(change);
-    },
-    startPresetProject: () => {
-      change((latest) =>
-        applyHistoryAction(latest, {
-          action: { kind: 'replace', project: createPresetProject(UNIBODY_PRESET) },
-          announcementText: 'Started the six-key unibody preset',
-        }),
-      );
     },
     startLayoutPresetProject: (input: {
       readonly preset: PresetLayout;

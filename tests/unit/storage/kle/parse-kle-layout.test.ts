@@ -2,7 +2,7 @@ import { getResultValue, getResultError } from '../../../helpers/result';
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { parseKleLayout, readKleFile } from '@storage/kle';
-import { UNIBODY_PRESET } from '@catalog/presets';
+import { UNIBODY_PRESET } from '../../../helpers/unibody-preset';
 import { getKeyGeometry } from '@domain/geometry';
 
 function fixture(name: string) {

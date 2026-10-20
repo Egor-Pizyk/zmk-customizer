@@ -1,6 +1,6 @@
 import { getDefinedValue } from '../../../helpers/defined-value';
 import { expect, it } from 'vitest';
-import { UNIBODY_PRESET } from '@catalog/presets';
+import { UNIBODY_PRESET } from '../../../helpers/unibody-preset';
 import { generateKeymap, renderAdvancedKeymap } from '@generators/keymap';
 import golden from '../../../fixtures/expected/advanced-keymap/sections.dtsi?raw';
 

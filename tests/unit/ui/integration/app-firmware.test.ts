@@ -3,7 +3,7 @@ import { screen, within, waitFor } from '@testing-library/react';
 import { expect, it } from 'vitest';
 import { renderApp } from '../../../helpers/render-app';
 import { getDefinedValue } from '../../../helpers/defined-value';
-import { UNIBODY_PRESET } from '@catalog/presets';
+import { UNIBODY_PRESET } from '../../../helpers/unibody-preset';
 import { loadProject } from '@storage/project';
 
 it('commits four typed controls, cancels drafts, searches and preserves undo/history', async () => {
