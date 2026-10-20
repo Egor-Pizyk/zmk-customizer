@@ -9,6 +9,7 @@ updates:
       prefix: chore
     labels:
       - 'release:patch'
+    # Keep coupled toolchains together; review major upgrades separately.
     groups:
       react:
         patterns: ['react', 'react-dom', '@types/react', '@types/react-dom']
