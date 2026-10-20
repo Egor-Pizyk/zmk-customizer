@@ -1,6 +1,7 @@
 import { getWireHalf } from '@domain/wiring';
 import { validateNetsWithoutBoardPin } from './validate-nets-without-board-pin';
-import { getKeyPinPosition, formatBoardPin, getKeyPinWires } from '@domain/wires';
+import { formatBoardPin, getKeyPinWires } from '@domain/wires';
+import { getKeyPinPosition } from '@domain/wires/geometry';
 import { getNets } from '@domain/wires/nets';
 import type { Net, NetBoardPin } from '@domain/wires/nets';
 import { isKeyPositionFree } from '@domain/geometry';

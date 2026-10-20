@@ -81,7 +81,7 @@ export const SHORTCUTS = [
     scope: 'canvas',
     id: 'delete-selection',
     keys: ['Delete', 'Backspace'],
-    label: 'Schematic: delete the selected key or wire',
+    label: 'Schematic: delete selected keys or wire sections',
   },
   {
     scope: 'canvas',

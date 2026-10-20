@@ -1,4 +1,4 @@
-import { getWirePath } from '@domain/wires';
+import { getWirePath } from '@domain/wires/geometry';
 import { getSchematicGeometry } from '@ui/schematic/interaction';
 import { expect, it } from 'vitest';
 import { buildProject, freeEnd, keyPin } from '../../../../helpers/build-project';

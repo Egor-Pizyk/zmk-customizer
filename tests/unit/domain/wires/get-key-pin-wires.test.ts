@@ -1,3 +1,4 @@
+import { addWire } from '@domain/wires/editing';
 import { getKeyPinWires } from '@domain/wires';
 import { expect, it } from 'vitest';
 import { buildProject, freeEnd, keyPin } from '../../../helpers/build-project';
@@ -24,8 +25,12 @@ it('lists wires that end on a key pin, in wire order', () => {
 
 // A wire running over a pin connects it, so a row wire can pass through every key of the row.
 it('connects a pin that a wire passes over', () => {
-  const row = { id: 'w1', start: keyPin('k1', 1), end: keyPin('k3', 1), bends: [] };
-  const wiresOf = getKeyPinWires(buildProject({ keys: KEYS, wires: [row] }));
+  const project = addWire(buildProject({ keys: KEYS }), {
+    start: keyPin('k1', 1),
+    end: keyPin('k3', 1),
+    bends: [],
+  });
+  const wiresOf = getKeyPinWires(project);
   expect(wiresOf({ keyId: 'k2', pin: 1 })).toEqual([0]);
   expect(wiresOf({ keyId: 'k2', pin: 2 })).toEqual([]);
 });

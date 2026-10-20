@@ -84,7 +84,7 @@ try {
   }
   assert.equal(targets.length, 8);
   const { createProject } = await server.ssrLoadModule('/src/domain/project/index.ts');
-  const { getKeyPinPosition } = await server.ssrLoadModule('/src/domain/wires/index.ts');
+  const { getKeyPinPosition } = await server.ssrLoadModule('/src/domain/wires/geometry/index.ts');
   const board = CONTROLLER_BOARDS.find((candidate) => candidate.id === 'nice_nano_v2');
   assert.ok(board);
   for (const rotationDeg of [-15, 30]) {

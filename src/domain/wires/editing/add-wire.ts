@@ -1,4 +1,4 @@
-import { canAddWire } from '@domain/wires';
+import { canAddWire, captureWireContacts } from '@domain/wires';
 import { createEntityId, getProjectResourceError } from '@domain/project';
 import type { Project, WireEnd, WirePoint } from '@domain';
 
@@ -12,6 +12,9 @@ export function addWire(
     return project;
   }
   const id = createEntityId({ prefix: 'w', existingIds: project.wires.map((wire) => wire.id) });
-  const next = { ...project, wires: [...project.wires, { id, ...input }] };
+  const next = {
+    ...project,
+    wires: [...project.wires, captureWireContacts(project, { id, ...input })],
+  };
   return getProjectResourceError(next) === undefined ? next : project;
 }

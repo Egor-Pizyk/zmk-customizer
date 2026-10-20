@@ -41,3 +41,5 @@ Later features rely on these regions being stable: they add content to slots, no
 | Placeholder workspace | `<main>` content | — | Empty state: heading plus one sentence on what will appear, for example "ZMK settings for your keyboard will appear here." |
 
 Maintenance 2026-10-12: no minimap; canvas controls include “Center keyboard” (unavailable with no keys), preserving zoom and centering the extreme key bounds.
+
+Feature 033 places Schematic editors in one collapsible non-modal panel host, with the Parts keyboard alternative inside the host. Shared landmarks/names and compact Tools remain. Base layout stacks the panel below the canvas, xl docks it; Settings retains native modality and bounded scrolling.

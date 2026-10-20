@@ -1,9 +1,14 @@
 import { getNearestPointOnPath } from '@domain/geometry';
-import { getWirePath } from './get-wire-path';
+import { getWirePath } from '@domain/wires/geometry';
 import type { Project, Wire, WireEnd } from '@domain';
 
 function hasKeyPin(wire: Wire): boolean {
-  return wire.start.kind === 'key-pin' || wire.end.kind === 'key-pin';
+  return (
+    wire.start.kind === 'key-pin' ||
+    wire.end.kind === 'key-pin' ||
+    wire.contacts !== undefined ||
+    wire.contactIds !== undefined
+  );
 }
 
 function freeJunction(project: Project, end: WireEnd, removedIds: ReadonlySet<string>): WireEnd {
@@ -21,7 +26,7 @@ function removeOnce(project: Project, removedIds: ReadonlySet<string>): Project 
     if (!removedIds.has(wire.id)) {
       const start = freeJunction(project, wire.start, removedIds);
       const end = freeJunction(project, wire.end, removedIds);
-      wires.push({ id: wire.id, start, end, bends: wire.bends });
+      wires.push({ ...wire, start, end });
     }
   }
   return { ...project, wires };

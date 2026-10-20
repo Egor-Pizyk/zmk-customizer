@@ -13,9 +13,8 @@ const UI_WIRE_FILES = new Set([
   'find-free-end-position',
   'find-key-current-flow',
   'find-nearest-key-pin',
-  'get-key-pin-position',
   'get-key-pin-wires',
-  'get-wire-path',
+  'get-wire-sections',
   'remove-orphan-wires',
 ]);
 const UI_CROSSING_FILES = new Set(['toggle-crossing-insulation']);

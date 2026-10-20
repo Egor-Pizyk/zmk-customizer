@@ -22,6 +22,7 @@ export type {
   WireEnd,
   WireEndSide,
   Wire,
+  WireContact,
   CrossingRef,
   ValidationCode,
   ValidationIssue,

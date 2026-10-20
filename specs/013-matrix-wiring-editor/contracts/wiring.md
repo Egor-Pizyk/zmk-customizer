@@ -36,3 +36,7 @@ Add controlled browser regressions for lost rewiring, preview saved before Apply
 ## Feature 032 extension
 
 [032](../../032-project-creation-and-auto-wiring/spec.md) extends explicit Auto assign with free catalog GPIO proposals, retaining valid assignments and reserving per-controller encoder/retained manual contacts. Invalid/conflicting pins or insufficient capacity refuse atomically with repair guidance. Existing center/grid grouping remains; users may change the grid or manually group rows. Outward row/input outputs use left/right per half; column/ground outputs choose top/bottom clearance with deterministic spacing/fallback outside rotated key geometry. Existing preview/Apply/Cancel, actual connectivity, storage/history and export contracts remain. Other wiring edits do not implicitly fill missing GPIOs.
+
+## Feature 033 interaction extension
+
+Complete wiring is additive: retain each existing known axis, half, GPIO and deliberate conductor, filling only missing compatible connections with preview. Rebuild wiring is a separate explicit action with the former Auto assign replacement behavior and 032 output/allocation rules. Refused/cancelled proposals do not write saved state. Actual schematic connectivity remains authoritative.

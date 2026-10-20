@@ -1,3 +1,4 @@
+import { getProjectJson } from '@domain/project';
 import type { Project, Result } from '@domain';
 import { PROJECT_BUDGET } from './project-budget';
 import { projectSchema } from './project-schema';
@@ -13,7 +14,7 @@ export function serializeProject(project: Project): Result<string, string> {
     const detail = first === undefined ? 'unknown schema error' : first.message;
     return { ok: false, error: path === '' ? detail : `${path}: ${detail}` };
   }
-  const value = `${JSON.stringify(parsed.data, null, 2)}\n`;
+  const value = getProjectJson(parsed.data);
   if (new TextEncoder().encode(value).length > PROJECT_BUDGET.bytes) {
     return { ok: false, error: 'Project exceeds the saved JSON byte budget' };
   }

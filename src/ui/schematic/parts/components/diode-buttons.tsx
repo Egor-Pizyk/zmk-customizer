@@ -1,5 +1,5 @@
 import { getKeyDiodeState, toggleKeyDiode } from '@domain/diodes';
-import { getKeyPinPosition } from '@domain/wires';
+import { getKeyPinPosition } from '@domain/wires/geometry';
 import type { Key, KeyPin, Project } from '@domain';
 import { toScreenPoint } from '@ui/canvas/logic';
 import type { ContentView } from '@ui/canvas/logic';

@@ -4,7 +4,7 @@
 
 Project remains one plain immutable JSON value. Change `schemaVersion` from 11 to 12. Existing keys/wiring/terminals/layers/encoders remain their owning features' contracts.
 
-Wire retains `id`, `start`, `end`, `bends` and gains required `contacts`: a readonly array of `{ keyId: string, pin: 1 | 2, at: WirePoint }`.
+Wire retains `id`, `start`, `end`, `bends` and gains optional `contacts`: a readonly array of `{ keyId: string, pin: 1 | 2, at: WirePoint }`.
 
 - `keyId` references an existing key; `pin` is exactly 1 or 2.
 - `at.xU` / `at.yU` are finite coordinates under existing point bounds. The anchor is a required point of the spine and stays fixed during key transforms.
@@ -40,3 +40,15 @@ Selection is a discriminated UI union: existing key/key-multi/endpoint modes plu
 - Complete/Rebuild → deterministic candidate + summary → Apply once or Cancel; external edit invalidates.
 - Select sections → delete spans/remap surviving references → validate → one commit; Undo/Redo restores whole Projects.
 - Panel switch during wiring preview → cancel uncommitted preview, retain saved data; close/collapse → restore focus, no history entry.
+
+Representation refinement before implementation: omitted contacts means no intermediate attachments, equivalent to an empty array; v12 never infers missing contacts from geometry. This avoids adding empty arrays to every wire/fixture while retaining strict contact validation and v11 migration capture.
+
+Fixed-spine representation refinement: wires with captured contacts additionally persist optional anchors `{start: WirePoint, end: WirePoint}` containing the original spine endpoints. These two points plus existing bends preserve the original conductor without duplicating all bends or expanding migrated wires. Endpoint pins can move through orthogonal leads to those fixed points. Every contact must lie on that anchored spine; contacts require anchors. Deletion fragments retain fixed anchors, even when they carry no intermediate contacts, to avoid moving a surviving junction when its key moves. Anchors are finite points, created on wiring capture/migration or section materialization, and removed with their wire.
+
+Section deletion requires an immutable base Project argument equal to the edited Project; stale bases refuse before resolving IDs. Shared coincident sections carry all contributor spans, and their selection removes those contributors together.
+
+A materialized fragment on a split project additionally carries optional `half: 'left' | 'right'` provenance, so a fragment without a pin/terminal still belongs to the original controller half. Ordinary wires continue deriving half from their existing endpoints. This metadata is created during deletion, validated on import and retained through saves/transforms; it does not assign a new half to any key.
+
+Dense legacy buses share immutable contact coordinates through optional `Project.wireContacts: readonly (WireContact | false)[]`; each wire retains its own optional `contactIds: readonly number[]` referencing that pool. Inline contacts remain supported for ordinary wiring actions. Pool references preserve every per-wire attachment, including redundant conductors, so later deletion cannot disconnect an untouched branch. Entries are keyed by complete key/pin/anchor value; key deletion tombstones its entries and removes every corresponding wire reference without shifting other indices. Pool size is at most 1024; every reference is an existing non-tombstone entry; effective contacts remain unique and distinct from endpoints. Migration interns identical captured entries but never drops a wire-to-pin relationship.
+
+Near-byte-budget migration refinement: use the existing deterministic pretty artifact normally, with a deterministic compact JSON fallback only when indentation pushes it above 5 MiB. Both storage and domain guards measure the chosen saved representation, including UTF-8 and the trailing newline. No data or limit is dropped; malformed and compact-over-budget projects still refuse. Historical small-file formatting and golden fixtures remain unchanged. The owning 002 file contract records this current-format extension.

@@ -1,5 +1,5 @@
 import { findCrossings } from '@domain/crossings';
-import { getKeyPinPosition } from '@domain/wires';
+import { getKeyPinPosition } from '@domain/wires/geometry';
 import type { Key, KeyDiode, KeyPin, Project, Wire, WireEnd } from '@domain';
 
 import { buildProject } from './build-project';

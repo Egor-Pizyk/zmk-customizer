@@ -35,3 +35,28 @@ it('snaps to the diode outer terminal rather than the nearby other pin', () => {
     }),
   ).toEqual({ kind: 'key-pin', keyId: 'k1', pin: 1, point: { xU: 0.62, yU: 0.3667 } });
 });
+
+it('connects a newly drawn wire to a selectable section', () => {
+  const project = buildProject({
+    wires: [
+      {
+        id: 'w1',
+        start: { kind: 'free', at: { xU: 0, yU: 0 } },
+        end: { kind: 'free', at: { xU: 3, yU: 0 } },
+        bends: [],
+      },
+    ],
+  });
+  expect(
+    toDraftTarget(project, {
+      hit: { kind: 'section', sectionId: 'w1:0:0' },
+      world: { xU: 1, yU: 0 },
+      snapped: { xU: 1, yU: 0 },
+    }),
+  ).toEqual({
+    kind: 'wire',
+    wireId: 'w1',
+    point: { xU: 1, yU: 0 },
+    attachmentPoint: { xU: 1, yU: 0 },
+  });
+});

@@ -1,4 +1,4 @@
-import { getKeyPinPosition, getWirePath } from '@domain/wires';
+import { getKeyPinPosition, getWirePath } from '@domain/wires/geometry';
 import { roundU } from '@domain/geometry';
 import type { Key, Project, WireEnd, WirePoint } from '@domain';
 
@@ -108,8 +108,7 @@ export function getSchematicGeometry(project: Project) {
   const displayProject = {
     ...project,
     wires: project.wires.map((wire) => ({
-      id: wire.id,
-      bends: wire.bends,
+      ...wire,
       start: displayEnd(project, wire.start, diodes),
       end: displayEnd(project, wire.end, diodes),
     })),

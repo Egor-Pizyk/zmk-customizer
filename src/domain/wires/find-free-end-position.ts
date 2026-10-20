@@ -1,4 +1,4 @@
-import { getWirePath } from './get-wire-path';
+import { getWirePath } from '@domain/wires/geometry';
 import type { Project, WirePoint } from '@domain';
 
 const STEP_U = 1;

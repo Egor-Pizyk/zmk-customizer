@@ -7,7 +7,7 @@ import { parseProjectFile } from '@storage/project';
 
 export type Point = { readonly x: number; readonly y: number };
 export const fixture: Project = {
-  schemaVersion: 11,
+  schemaVersion: 12,
   encoders: [],
   combos: [],
   macros: [],

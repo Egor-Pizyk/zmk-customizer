@@ -25,7 +25,7 @@ function codesAndPaths(project: Project) {
 function named(name: string, shieldName?: string): Project {
   return shieldName === undefined
     ? {
-        schemaVersion: 11,
+        schemaVersion: 12,
         encoders: [],
         combos: [],
         macros: [],
@@ -40,7 +40,7 @@ function named(name: string, shieldName?: string): Project {
         name,
       }
     : {
-        schemaVersion: 11,
+        schemaVersion: 12,
         encoders: [],
         combos: [],
         macros: [],
