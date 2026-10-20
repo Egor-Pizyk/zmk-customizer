@@ -10,7 +10,12 @@ const BINDING_MODES = [
   { value: 'empty', label: 'Empty keymap' },
 ] as const;
 
-export function PresetPicker({ onCreated }: { readonly onCreated: () => void }) {
+type PresetPickerProps = { readonly onCreated: () => void; readonly onCancel: () => void };
+
+export function PresetPicker({
+  onCreated: handleCreated,
+  onCancel: handleCancelClick,
+}: PresetPickerProps) {
   const { startLayoutPresetProject } = useProject();
   const [presetId, setPresetId] = useState('macropad-9');
   const [bindingMode, setBindingMode] = useState<PresetBindingMode>('qwerty');
@@ -21,17 +26,11 @@ export function PresetPicker({ onCreated }: { readonly onCreated: () => void }) 
       return;
     }
     startLayoutPresetProject({ preset, bindingMode });
-    onCreated();
+    handleCreated();
   }
 
-  function handleBindingModeChange(mode: PresetBindingMode) {
-    setBindingMode(mode);
-  }
-
-  function handlePresetSelect(id: string) {
-    setPresetId(id);
-  }
-
+  const handlePresetSelect = setPresetId;
+  const handleBindingModeChange = setBindingMode;
   return (
     <section
       aria-label="Keyboard preset library"
@@ -45,9 +44,12 @@ export function PresetPicker({ onCreated }: { readonly onCreated: () => void }) 
         value={bindingMode}
       />
       {preset === undefined ? undefined : <PresetPreview preset={preset} />}
-      <Button isDisabled={preset === undefined} onClick={handleCreateClick} variant="primary">
-        Create project from preset
-      </Button>
+      <CreationActions
+        isDisabled={preset === undefined}
+        onCreate={handleCreateClick}
+        onCreated={handleCreated}
+        onCancel={handleCancelClick}
+      />
     </section>
   );
 }
@@ -79,5 +81,44 @@ function PresetChoice({
         </select>
       )}
     />
+  );
+}
+
+type CreationActionsProps = {
+  readonly isDisabled: boolean;
+  readonly onCreate: () => void;
+  readonly onCreated: () => void;
+  readonly onCancel: () => void;
+};
+
+function CreationActions({ isDisabled, onCreate, onCreated, onCancel }: CreationActionsProps) {
+  const { startNewProject } = useProject();
+  function handleCreateClick() {
+    onCreate();
+  }
+  function handleEmptyClick() {
+    startNewProject();
+    onCreated();
+  }
+  function handleCancelClick() {
+    onCancel();
+  }
+  return (
+    <div className="grid auto-rows-fr gap-2" aria-label="New project actions">
+      <Button
+        className="w-full"
+        isDisabled={isDisabled}
+        onClick={handleCreateClick}
+        variant="primary"
+      >
+        Create project from preset
+      </Button>
+      <Button className="w-full" onClick={handleEmptyClick} variant="secondary">
+        Start empty project
+      </Button>
+      <Button className="w-full" onClick={handleCancelClick} variant="danger">
+        Cancel
+      </Button>
+    </div>
   );
 }

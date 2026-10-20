@@ -1,4 +1,4 @@
-import { UNIBODY_PRESET } from '@catalog/presets';
+import { UNIBODY_PRESET } from '../helpers/unibody-preset';
 import { getNets } from '@domain/wires/nets';
 import { getWiringCells } from '@domain/wiring/matrix';
 import { expect, test } from '@playwright/test';
@@ -222,4 +222,59 @@ test('keyboard grid assignment, auto and diode direction preserve geometry @cros
   expect(files['boards/shields/unibody_six/unibody_six.overlay']).toContain(
     'col-gpios = <&pro_micro 8 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>',
   );
+});
+
+test('Auto assign proposes free GPIOs with outward outputs and atomic history @cross-browser', async ({
+  page,
+}, testInfo) => {
+  const project = { ...UNIBODY_PRESET, wires: [], insulatedCrossings: [] };
+  await openProject(page, project);
+  await openWiring(page);
+  await page.getByRole('button', { name: 'Auto assign cells', exact: true }).click();
+  await expect(page.getByText('Wiring preview', { exact: true })).toBeVisible();
+  await expect(page.getByText(/These pins are not detected hardware wiring/u)).toBeVisible();
+  await expect(page.getByRole('combobox', { name: 'left row 0 pin', exact: true })).toHaveValue(
+    '0',
+  );
+  expect(await saved(page)).toEqual(project);
+  await page.getByRole('button', { name: 'Cancel wiring', exact: true }).click();
+  expect(await saved(page)).toEqual(project);
+  await page.getByRole('button', { name: 'Auto assign cells', exact: true }).click();
+  await page.getByRole('button', { name: 'Zoom out', exact: true }).click();
+  await page.getByRole('button', { name: 'Zoom out', exact: true }).click();
+  await page.getByRole('application').hover();
+  await page.mouse.wheel(0, -40);
+  await expect(page.locator('svg text').filter({ hasText: 'left col t3 D2' })).toBeVisible();
+  await page.screenshot({ path: testInfo.outputPath('auto-preview.png') });
+  await page.getByRole('button', { name: 'Apply wiring', exact: true }).click();
+  const applied = await saved(page);
+  expect(applied.wiring?.terminals.map((terminal) => terminal.boardPin)).toEqual([0, 1, 2, 3, 4]);
+  await history(page, 'Undo').click();
+  await expect.poll(() => saved(page)).toEqual(project);
+  await history(page, 'Redo').click();
+  await expect.poll(() => saved(page)).toEqual(applied);
+  await page.reload();
+  await expect.poll(() => saved(page)).toEqual(applied);
+  expect(JSON.parse(await downloadJson(page))).toEqual(applied);
+  const files = await downloadZip(page);
+  expect(files['boards/shields/unibody_six/unibody_six.overlay']).toContain('<&pro_micro 0');
+  expect(files['boards/shields/unibody_six/unibody_six.overlay']).toContain('<&pro_micro 4');
+});
+
+test('Auto assign capacity failure explains recovery without a saved change @cross-browser', async ({
+  page,
+}) => {
+  await openProject(page);
+  await page.getByRole('banner').getByRole('button', { name: 'New', exact: true }).click();
+  await page
+    .getByRole('combobox', { name: 'Keyboard preset', exact: true })
+    .selectOption('ansi-104');
+  await page.getByRole('button', { name: 'Create project from preset', exact: true }).click();
+  const before = await saved(page);
+  await openWiring(page);
+  await page.getByRole('button', { name: 'Auto assign cells', exact: true }).click();
+  await expect(page.getByRole('alert')).toContainText('GPIOs');
+  await expect(page.getByRole('alert')).toContainText('group rows manually');
+  await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toHaveCount(0);
+  expect(await saved(page)).toEqual(before);
 });

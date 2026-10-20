@@ -2,7 +2,7 @@ import { expect, it } from 'vitest';
 import { parseProjectFile, serializeProject } from '@storage/project';
 import { getResultValue } from '../../../helpers/result';
 import fixture from '../../../fixtures/project/v9-advanced-legacy.json?raw';
-import { UNIBODY_PRESET } from '@catalog/presets';
+import { UNIBODY_PRESET } from '../../../helpers/unibody-preset';
 
 it('migrates unchanged v9 data and retains all previous content', () => {
   const result = getResultValue(parseProjectFile(fixture));

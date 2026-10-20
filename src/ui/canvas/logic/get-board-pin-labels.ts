@@ -9,7 +9,7 @@ export type BoardPinLabel = {
 };
 
 export function getBoardPinLabels(project: Project): readonly BoardPinLabel[] {
-  return project.wires.flatMap((wire) => {
+  const labels = project.wires.flatMap((wire) => {
     const path = getWirePath(project, wire);
     return (['start', 'end'] as const).flatMap((side): BoardPinLabel[] => {
       const end = wire[side];
@@ -30,4 +30,14 @@ export function getBoardPinLabels(project: Project): readonly BoardPinLabel[] {
         : [];
     });
   });
+  return labels.filter(
+    (label, index) =>
+      labels.findIndex(
+        (other) =>
+          other.label === label.label &&
+          other.boardPin === label.boardPin &&
+          other.at.xU === label.at.xU &&
+          other.at.yU === label.at.yU,
+      ) === index,
+  );
 }

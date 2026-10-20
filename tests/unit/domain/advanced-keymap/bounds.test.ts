@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { UNIBODY_PRESET } from '@catalog/presets';
+import { UNIBODY_PRESET } from '../../../helpers/unibody-preset';
 import { BINDINGS_CATALOG } from '@catalog/bindings';
 import { addCombo, addMacro, validateAdvancedKeymap } from '@domain/advanced-keymap';
 import { getProjectResourceError } from '@domain/project';

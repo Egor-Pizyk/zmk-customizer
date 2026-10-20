@@ -1,7 +1,7 @@
 import { parseProjectFile } from '@storage/project';
 import { getResultValue } from '../helpers/result';
 import { expect, test } from '@playwright/test';
-import { UNIBODY_PRESET } from '@catalog/presets';
+import { UNIBODY_PRESET } from '../helpers/unibody-preset';
 import { downloadJson, downloadZip, history, openProject, saved, workspace } from './helpers';
 
 test('custom behaviors share definitions, persist and recover deletion @cross-browser', async ({

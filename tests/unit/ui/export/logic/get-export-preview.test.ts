@@ -1,5 +1,5 @@
 import { setKeyGeometries } from '@domain/keys';
-import { UNIBODY_PRESET } from '@catalog/presets';
+import { UNIBODY_PRESET } from '../../../../helpers/unibody-preset';
 import { getProjectAnalysis } from '@ui/project/logic';
 import { getExportPreview } from '@ui/export/logic';
 import { expect, it } from 'vitest';

@@ -90,7 +90,7 @@ it('does not replace New with a pending Open', async () => {
   const pending = pendingFile('Older');
   await user.upload(input, pending.file);
   await user.click(screen.getByRole('button', { name: 'New' }));
-  await user.click(screen.getByRole('button', { name: 'Start new project' }));
+  await user.click(screen.getByRole('button', { name: 'Start empty project' }));
   await act(async () => {
     pending.finish();
     await Promise.resolve();

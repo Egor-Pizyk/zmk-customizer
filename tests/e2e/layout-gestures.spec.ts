@@ -246,7 +246,7 @@ test('create a key using Add key, select its displayed body, move snapped/free a
 }) => {
   await page.goto('/');
   await page.getByRole('banner').getByRole('button', { name: 'New', exact: true }).click();
-  await page.getByRole('button', { name: 'Start new project', exact: true }).click();
+  await page.getByRole('button', { name: 'Start empty project', exact: true }).click();
   await page.getByRole('button', { name: 'Add key', exact: true }).click();
   await page.getByRole('button', { name: 'Center keyboard', exact: true }).click();
   await selectKey(page);

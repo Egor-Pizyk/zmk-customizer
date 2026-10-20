@@ -56,3 +56,7 @@ Preset: stable library identity, name, structure, ordered physical keys, base ke
 ## Assumptions and open questions
 
 Selected explicit variants above resolve percentage ambiguity using familiar ANSI and ortholinear examples. Split geometry comes from pinned upstream layout definitions, with explicitly described Corne thumb clearance to avoid overlapping pitch rectangles; no commercial firmware is copied. US QWERTY is the default. Existing New clears history rather than becoming undoable; its warning/save protection is retained. Current controller retention is explicit, not a hardware recommendation. No material open questions.
+
+## Superseded creation controls — feature 032
+
+Feature [032](../032-project-creation-and-auto-wiring/spec.md) supersedes US1.4, US2.1 and FR-001/FR-005 only for the separate six-key starter and dialog Save action. Remove those product actions/template; New has Create project from preset, Start empty project and red Cancel with equal dimensions. Save remains in the project bar. Existing saved six-key files remain compatible. All library geometry, bindings, preview and replacement/history contracts remain.

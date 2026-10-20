@@ -34,3 +34,7 @@ Manual T008 remains unperformed; automated results and limits are explicit in [v
 | FR-005 / SC-002 | T004,T005 | cancel preserves data/history, replace resets, starter | verification.md |
 | FR-006 / SC-002 | T001,T004–006 | JSON round trips, reload, edit history, starter ZIP | verification.md |
 | FR-007 / SC-004 | T003,T005,T008 | native keyboard/focus, geometry details, narrow dialog | verification.md |
+
+## Creation follow-up — feature 032
+
+Completed 031 tasks/evidence describe the original creation flow. Removal of the six-key product starter and dialog Save action, with preserved old-file import/export, is tracked in [032 tasks](../032-project-creation-and-auto-wiring/tasks.md). The manual accessibility task above remains unperformed.

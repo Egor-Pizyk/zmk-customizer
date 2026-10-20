@@ -48,7 +48,8 @@ function WiringContent(props: WiringControlsProps & { readonly project: Project 
       <p className="text-text-muted">
         Assignments change the actual schematic connections. Inspect rerouted wires and diode
         changes before applying. Auto assign uses visible centers and the current grid; adjust
-        irregular clusters in the table.
+        irregular clusters in the table. Auto assign proposes free GPIOs; review these against your
+        physical hardware before applying. These pins are not detected hardware wiring.
       </p>
       <WiringOptionsControls project={project} onEdit={props.handleEdit} />
       {(['left', ...(wiring.topology === 'split' ? (['right'] as const) : [])] as const).map(

@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { expect, it } from 'vitest';
 import type { Project } from '@domain';
-import { UNIBODY_PRESET } from '@catalog/presets';
+import { UNIBODY_PRESET } from '../../helpers/unibody-preset';
 import { getControllerBoard } from '@catalog/controllers';
 import { deriveShieldMatrix } from '@domain/wiring/matrix';
 import {

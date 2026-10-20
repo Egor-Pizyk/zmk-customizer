@@ -30,3 +30,4 @@ Read this index when locating feature ownership. Read only the spec, plan, tasks
 - [029-ui-logic-components](029-ui-logic-components/)
 - [030-node-mutation-runners](030-node-mutation-runners/)
 - [031-keyboard-presets](031-keyboard-presets/)
+- [032-project-creation-and-auto-wiring](032-project-creation-and-auto-wiring/)
