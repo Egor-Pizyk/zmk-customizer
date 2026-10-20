@@ -25,7 +25,7 @@
     "check:release": "node --test tests/tooling/create-release.test.mjs"
   },
   "dependencies": {
-    "fflate": "0.8.2",
+    "fflate": "0.8.3",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "zod": "^4.6.5"
