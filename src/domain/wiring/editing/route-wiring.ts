@@ -1,7 +1,9 @@
 import { createEntityId, getProjectResourceError, PROJECT_BUDGET } from '@domain/project';
-import { findWireContacts, getKeyPinPosition } from '@domain/wires';
+import { findWireContacts, getKeyPinPosition, getKeyPinWires } from '@domain/wires';
 import { getNets } from '@domain/wires/nets';
-import type { Key, KeyPin, Project, Result, Wire } from '@domain';
+import { getOutputPosition } from './get-output-position';
+import { getRetainedWires } from './get-retained-wires';
+import type { Key, KeyPin, Project, Result, Wire, WirePoint } from '@domain';
 
 export type WiringConnection = {
   readonly keyId: string;
@@ -23,21 +25,13 @@ export function routeWiring(
   input: {
     readonly connections: readonly WiringConnection[];
     readonly terminalIds: readonly string[];
+    readonly replaceKeyNets?: boolean;
+    readonly sourceProject?: Project;
   },
 ): Result<Project, string> {
-  const removedIds = new Set(
-    getNets(project)
-      .filter((net) => net.terminalIds.some((id) => input.terminalIds.includes(id)))
-      .flatMap((net) => net.wireIds),
-  );
-  // Initializing an incomplete circuit replaces its old routes explicitly in the preview.
-  const wires: Wire[] =
-    project.wiring?.terminals.length === input.terminalIds.length
-      ? []
-      : project.wires.filter((wire) => !removedIds.has(wire.id));
+  const wires = getStartingWires(project, input);
   const existingIds = project.wires.map((wire) => wire.id);
-  const { minX, minY } = getRoutingBounds(project);
-  const routeError = appendRoutes(project, input.connections, { wires, existingIds, minX, minY });
+  const routeError = appendRoutes(project, input.connections, { wires, existingIds });
   if (routeError !== undefined) {
     return { ok: false, error: routeError };
   }
@@ -72,21 +66,6 @@ function finishRoutes(
     };
   }
   return { ok: true, value: routedProject };
-}
-
-function getRoutingBounds(project: Project) {
-  const allPins = project.keys.flatMap((key) => [
-    getKeyPinPosition(key, 1),
-    getKeyPinPosition(key, 2),
-  ]);
-  let minX = 0;
-  let minY = 0;
-  for (const pin of allPins) {
-    minX = Math.min(minX, pin.xU);
-    minY = Math.min(minY, pin.yU);
-  }
-
-  return { minX, minY };
 }
 
 function getRouteInsulation(project: Project, candidate: Project) {
@@ -137,9 +116,9 @@ function connectionsMatch(routedProject: Project, connections: readonly WiringCo
 function appendRoutes(
   project: Project,
   connections: readonly WiringConnection[],
-  context: { wires: Wire[]; existingIds: string[]; minX: number; minY: number },
+  context: { wires: Wire[]; existingIds: string[] },
 ): string | undefined {
-  const { wires, existingIds, minX, minY } = context;
+  const { wires, existingIds } = context;
   for (const [index, connection] of connections.entries()) {
     const key = project.keys.find((entry) => entry.id === connection.keyId);
     const terminal = project.wiring?.terminals.find((entry) => entry.id === connection.terminalId);
@@ -154,8 +133,6 @@ function appendRoutes(
       id,
       index,
       wires,
-      minX,
-      minY,
     });
     if (routed === undefined) {
       return `Cannot route key ${project.keys.indexOf(key)} without shorting different buses. Move the key slightly or repair its wires, then retry.`;
@@ -166,13 +143,20 @@ function appendRoutes(
   return undefined;
 }
 
-function findRoute(project: Project, connection: WiringConnection, context: FindRouteInput) {
-  const { key, terminalId, id, index, wires, minX, minY } = context;
+function findRoute(
+  project: Project,
+  connection: WiringConnection,
+  context: FindRouteInput,
+): Wire | undefined {
+  const { key, terminalId, id, index, wires } = context;
+  const output = findOutput(project, { terminalId, wires });
+  if (output === undefined) {
+    return undefined;
+  }
   const start = getKeyPinPosition(key, connection.pin);
   let routed: Wire | undefined;
   for (let attempt = 0; attempt < 12; attempt += 1) {
-    const xU = minX - 1 - index * 0.07 - attempt * 0.03;
-    const yU = minY - 1 - index * 0.09 - attempt * 0.04;
+    const { xU, yU } = output;
     const escapeY =
       start.yU + (0.01 + index * 0.0001 + attempt * 0.001) * (attempt % 2 === 0 ? 1 : -1);
     const candidate: Wire = {
@@ -190,7 +174,7 @@ function findRoute(project: Project, connection: WiringConnection, context: Find
         pair.includes(id) &&
         wires.some((wire) => pair.includes(wire.id) && findTerminalId(wire) !== terminalId),
     );
-    if (!hasOverlap) {
+    if (!hasOverlap && !touchesOtherPin(project, candidate, connection)) {
       routed = candidate;
       break;
     }
@@ -205,6 +189,58 @@ type FindRouteInput = {
   id: string;
   index: number;
   wires: Wire[];
-  minX: number;
-  minY: number;
 };
+
+function touchesOtherPin(project: Project, wire: Wire, connection: WiringConnection) {
+  const findWires = getKeyPinWires({ ...project, wires: [wire] });
+  return project.keys.some((key) =>
+    ([1, 2] as const).some(
+      (pin) =>
+        (key.id !== connection.keyId || pin !== connection.pin) &&
+        findWires({ keyId: key.id, pin }).length > 0,
+    ),
+  );
+}
+
+function getStartingWires(
+  project: Project,
+  input: {
+    readonly terminalIds: readonly string[];
+    readonly replaceKeyNets?: boolean;
+    readonly sourceProject?: Project;
+  },
+): Wire[] {
+  if (input.replaceKeyNets === true) {
+    return [...getRetainedWires(input.sourceProject ?? project)];
+  }
+  if (project.wiring?.terminals.length === input.terminalIds.length) {
+    return [];
+  }
+  const removedIds = new Set(
+    getNets(input.sourceProject ?? project)
+      .filter((net) => net.terminalIds.some((id) => input.terminalIds.includes(id)))
+      .flatMap((net) => net.wireIds),
+  );
+  return project.wires.filter((wire) => !removedIds.has(wire.id));
+}
+
+function findOutput(
+  project: Project,
+  input: { readonly terminalId: string; readonly wires: readonly Wire[] },
+): WirePoint | undefined {
+  const terminal = project.wiring?.terminals.find((entry) => entry.id === input.terminalId);
+  if (terminal === undefined) {
+    return undefined;
+  }
+  const index =
+    project.wiring?.terminals
+      .filter((entry) => entry.half === terminal.half && entry.kind === terminal.kind)
+      .findIndex((entry) => entry.id === terminal.id) ?? 0;
+  const occupied = input.wires.flatMap((wire) =>
+    [wire.start, wire.end].flatMap((end) =>
+      end.kind === 'free' && end.terminalId !== terminal.id ? [end.at] : [],
+    ),
+  );
+  const output = getOutputPosition(project, { terminal, index, occupied });
+  return output.ok ? output.value : undefined;
+}

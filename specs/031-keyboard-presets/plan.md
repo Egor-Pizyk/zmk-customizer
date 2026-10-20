@@ -41,3 +41,7 @@ Tests first for domain creation: exact count/ANSI anchors and split source geome
 ## Decisions and uncertainty
 
 Percentages resolved to spec variants. Split data uses pinned sources rather than guessed geometry. QWERTY is one Base layer, omitted groups explicitly described. Existing New history reset is preserved. Corne thumb cluster uses the documented 0.25u clearance from research.md. No open blockers.
+
+## Creation follow-up — feature 032
+
+The starter-preservation and dialog Save choices above describe the original 031 delivery. [Feature 032](../032-project-creation-and-auto-wiring/plan.md) supersedes those choices: remove the shipped six-key template/creation API, retain its circuit only as a compatibility test fixture, and use three equal creation actions. Library geometry/bindings and old saved-file compatibility remain unchanged.

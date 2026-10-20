@@ -1,7 +1,7 @@
+import type { Project } from '@domain';
 import { BINDINGS_CATALOG } from '@catalog/bindings';
 import { SHIELD_TARGET } from '@catalog/firmware';
 import { serializeProject, parseProjectFile } from '@storage/project';
-import { createPresetProject } from '@domain/project';
 import { validateShieldProject } from '@domain/validation/shield';
 import { getResultValue } from '../../../helpers/result';
 import { expect, it } from 'vitest';
@@ -13,7 +13,7 @@ import { buildUnibodyProject } from '../../../helpers/build-unibody-project';
 const { project: UNIBODY_PRESET, getBoard: getControllerBoard } = getControllerFixtures();
 
 it('provides independent schemaVersion 5 projects matching the approved complete example', () => {
-  const project = createPresetProject(UNIBODY_PRESET);
+  const project: Project = structuredClone(UNIBODY_PRESET);
   expect(project).toEqual(buildUnibodyProject());
   expect(project).not.toBe(UNIBODY_PRESET);
   expect(project.keys).not.toBe(UNIBODY_PRESET.keys);

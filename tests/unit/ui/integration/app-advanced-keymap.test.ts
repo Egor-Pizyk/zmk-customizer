@@ -2,7 +2,7 @@
 import { screen, within } from '@testing-library/react';
 import { expect, it } from 'vitest';
 import { renderApp } from '../../../helpers/render-app';
-import { UNIBODY_PRESET } from '@catalog/presets';
+import { UNIBODY_PRESET } from '../../../helpers/unibody-preset';
 import { loadProject } from '@storage/project';
 
 it('edits a macro sequence, a combo and conditional layers and restores a deleted macro', async () => {

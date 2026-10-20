@@ -57,11 +57,12 @@ Each `/speckit-specify` prompt below describes what and why only. Technology cho
 | 022 | zmk-version-selection — deferred | all catalog features |
 | 023 | build-verification | 010 |
 | 031 | keyboard-presets | 011, 012, 013, 014 |
-| 033 | wiring-and-settings-usability | 001, 003, 012, 013 |
+| 032 | project-creation-and-auto-wiring | 031, 013, 011 |
+| 033 | wiring-and-settings-usability | 032, 001, 003, 012, 013 |
 | 034 | agent-assisted-configuration — discovery | 002, 009, 010; other dependencies TBD |
-| 032 | interactive-onboarding | all preceding scheduled product features, including 031, 033 and 034; implement last |
+| 037 | interactive-onboarding | all preceding scheduled product features, including 031, 033 and 034; implement last |
 
-Numbers 024–030 are already reserved by existing feature directories listed in [`specs/README.md`](../specs/README.md). The new features use 031–034 without renumbering existing specs. Features 033 and 034 are ordered before onboarding 032; assigned numbers are preserved. Interactive onboarding must remain the last planned product feature; future product features go before it in implementation order without changing assigned numbers. Deferred features 020–022 do not block the scheduled work; revisit their order when resumed.
+Numbers 024–030 are reserved by existing feature directories in [`specs/README.md`](../specs/README.md). Feature 032 is project creation and automatic wiring, selected by the user on 2026-10-20 after 031. Planned interactive onboarding moves to 037 so it remains last; existing specified feature numbers are unchanged. Scheduled work continues with 033 wiring/settings usability and 034 agent-assisted configuration. Deferred 020–022 remain postponed. Only not-yet-specified roadmap entries may be renumbered.
 
 Workspaces (from 001): **Schematic** holds the schematic of keys and wires (003), switch diodes (008), the layout editor (012) and matrix/wiring editor (013) and owns the project JSON config (002); **Bindings** holds bindings keycaps (004), key behaviors (005), the Action panel (006), layers (007), the keymap editor (014), custom behaviors (016) and combos/macros/conditional layers (017); **Firmware** holds kconfig-settings (015); **Export** holds the file preview (009) and download (010). Every feature reports its validation issues in the 001 problems panel, counted in the tab badge of the workspace that fixes them.
 
@@ -472,7 +473,7 @@ After 014 a user can design a non-standard keyboard from nothing, wire it, map i
 
 ## Later / optional
 
-Order among these is flexible; pick by user demand. Interactive onboarding (032) is the exception: implement it last, after the other planned product features.
+Order among these is flexible; pick by user demand. Interactive onboarding (037) is the exception: implement it last, after the other planned product features.
 
 ### 018 — kle-import
 **Specified:** [`specs/018-kle-import/spec.md`](../specs/018-kle-import/spec.md); implementation delivered; broad browser/manual gates tracked in [`verification.md`](../specs/018-kle-import/verification.md). Import downloaded strict Keyboard Layout Editor JSON into Schematic physical layout (positions, sizes, rotations), with conversion warnings and an explicit undoable project replacement. No colors, legends/labels, inferred bindings or wiring. Decals are skipped and secondary shapes use the primary rectangle with warnings. Independent KLE fixtures match the existing six-key preset geometry and exact rotation-cluster cases. Dependency decision resolved: existing validation plus a small decoder, no new dependency or schema change. Existing ZMK physical-layout output remains unchanged.
@@ -548,14 +549,37 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 /speckit-specify A keyboard preset library for ZMK Customizer. Let users preview and start from common full-size 100%, TKL, 75%, 65%, 60%, 50% and 40% layouts, simple macropads including 3×3, and popular split keyboards such as Corne, Lily58 and Sofle. For every preset offer standard QWERTY bindings adapted to its keys or an empty keymap, keeping the same physical layout. Explain missing standard keys on compact layouts and any controller or wiring setup still required. Created projects remain fully editable and use the existing save, validation and export flows. Protect existing work when applying a preset and make the library keyboard accessible. Out of scope: custom PCB definitions, downloading presets at runtime, flashing firmware.
 ```
 
-### 033 — wiring-and-settings-usability
+### 032 — project-creation-and-auto-wiring
+
+**Status (2026-10-20).** Feature 032 is implemented; automated verification is recorded and the required manual accessibility/delivery gates remain pending; see [specification](../specs/032-project-creation-and-auto-wiring/spec.md). User confirmed preserving valid GPIOs, atomic refusal of invalid/conflicting pins or insufficient capacity, outward row outputs and top/bottom column clearance. Corne/Lily58 success cases use a 1u grouping grid; finer-grid capacity failures report guidance rather than silently regrouping. Extends project creation from 002/031 and automatic wiring from 013. Amend affected owning contracts during specification before code changes.
+
+**Goal.** Simplify starting a project and make automatic wiring assign usable controller GPIOs with clearly placed outputs instead of leaving pins unassigned or placing them over keys/the other half.
+
+**In scope**
+1. Remove “Start six-key unibody preset” and its template from the product, including its creation action and shipped catalog data. Keep the regular preset library, including the 3×3 macropad. Previously saved six-key projects must still import and edit normally; independent regression fixtures are test data, not a selectable product template.
+2. New project creation has exactly three action buttons, in this order: **Create project from preset**, **Start empty project**, **Cancel**. Give all three equal width and height; Cancel is red as explicitly requested. Keep the selected-preset preview and QWERTY/empty-keymap choices. Remove the separate six-key action and extra Save-to-file action from this dialog. Keep a clear project-replacement/history-reset warning and cancellation that preserves current work; users can save through the existing project bar before replacing their project. Preserve keyboard access, Escape, focus return and readable controls at supported viewport sizes. Invoke the project-local `ui-ux-pro-max` skill before designing the change, incorporate accepted UI outcomes into the spec, and invoke it again for rendered-interface checks after implementation.
+3. Extend explicit Auto assign to assign unused GPIOs from the selected board to rows/columns (and direct inputs where applicable), in addition to cells and real schematic connections. Preserve valid existing assignments and avoid GPIOs already occupied on the same controller, including by encoders or retained manual connections. Treat left/right controllers as independent namespaces: reuse across halves is allowed, duplicates within a half are not. If available pins are insufficient, show an actionable error without partially applying the operation. Ground/power/reserved contacts are never GPIO candidates.
+4. Route row and column outputs outward from their keyboard half: choose left/right and top/bottom placement appropriate to that half, so output endpoints and pin labels do not overlap keys, rotated keycaps or the other half. Account for actual visible geometry, unequal halves and occupied areas, rather than a single global top-left routing origin. Define deterministic side-selection, spacing and fallback rules during specification; the user's requirement is clear outward placement, not an already approved routing algorithm.
+5. Keep assignment and rerouting reviewable in the existing preview/Apply/Cancel flow. Applying is one undoable operation; cancellation preserves saved state. Automatic results remain editable and describe the actual schematic/export, not a separate export-only mapping.
+
+**Acceptance criteria.** New offers the three named, equally sized actions with a red Cancel and no six-key starter or extra creation action. Preset creation and empty creation work by keyboard; Cancel/Escape preserve project/history. Existing six-key files still open. On representative unibody and split layouts (including Corne and Lily58), Auto assign produces available, distinct GPIO assignments per controller and outward pin outputs clear of both halves and all key geometry. Existing valid pins and occupied GPIOs are handled predictably; insufficient capacity is refused atomically. Preview, Apply, Cancel, Undo/Redo, reload, JSON and deterministic ZMK v0.3.0 export agree. Verify the affected UI with the installed skill and isolated browser tests; record remaining manual limits.
+
+**Boundaries with 033.** This feature owns the concrete GPIO allocation and outward-output placement requested here. Broader routing improvements, durable intermediate-pin connections, wire selection/deletion and compact settings panels remain in 033; do not duplicate or silently pull that whole scope into 032.
+
+**Clarify before planning.** Exact side-selection and output spacing/fallback for irregular arrangements, treatment of invalid/conflicting existing pin assignments, and automatic row grouping where the current heuristic exceeds board capacity. Do not invent the user's physical hardware wiring: explain that automatic pins are a proposed configuration for review, not detected hardware facts. Preserve old project files; any actual schema change requires migrations and old-file tests.
+
+```
+/speckit-specify Simplify New project creation and improve explicit automatic wiring in ZMK Customizer. Remove the six-key unibody starter button, template and creation action from the product, preserving the regular preset library and compatibility with existing saved projects. New must offer exactly three equally wide and tall action buttons in order: Create project from preset; Start empty project; Cancel, with Cancel red. Preserve preview, QWERTY/empty-keymap choices, replacement warning, keyboard access and safe cancellation. Auto assign must propose unused GPIOs from the selected board, preserve valid existing pins and avoid occupied pins per controller, including encoders. Route row/column outputs outward to appropriate left/right/top/bottom sides for each half with pin endpoints and labels clear of all keys and the other half. Define deterministic side/spacing/fallback and capacity-error behavior before implementation. Keep real schematic connectivity, preview/Apply/Cancel, atomic Undo/Redo, saved projects and deterministic ZMK v0.3.0 exports consistent. Invoke ui-ux-pro-max before UI design and after implementation. Broader intermediate-pin connectivity, wire deletion and panel rework remain in feature 033.
+```
+
+### 033 — wiring-and-settings-usability (next)
 
 **Status (2026-10-20).** Specified in [`specs/033-wiring-and-settings-usability/spec.md`](../specs/033-wiring-and-settings-usability/spec.md); implementation plan and 32 dependency-ordered tasks prepared, not implemented. User confirmed incremental completion with a separate rebuild action and multiple selection/deletion of conductor sections between connections. Depends on 032; amend owning 003/013 contracts before implementation.
 
 **Goal.** Make automatic wiring predictable, preserve intentional electrical connections while moving keys, support direct wire deletion, and keep the keyboard canvas usable while editing settings.
 
 **In scope**
-1. Rework automatic connection and routing logic. Review how automatic wiring chooses connections, reuses existing wiring and routes buses; define the intended rules during clarification, with a visible preview before applying changes. Do not treat the current algorithm as the desired behavior.
+1. Build on 032, which owns free-GPIO allocation and outward output placement; broader automatic connection and routing improvements remain here. Review how automatic wiring chooses connections, reuses existing wiring and routes buses; define the intended rules during clarification, with a visible preview before applying changes. Do not treat the current algorithm as the desired behavior.
 2. When a wire passes through a key pin and connects to it, persist a full electrical connection rather than relying only on geometric coincidence. Moving the key from which the wire originally started must preserve the connection to the encountered pin; moving either connected key must keep the intended connectivity. Distinguish intentional connections from insulated crossings.
 3. Let users select wires directly on the canvas, clearly see the selection and delete selected wires without deleting keys. Provide keyboard selection/deletion as well as pointer interaction, with Undo/Redo and consistent cleanup of affected connections.
 4. Make settings windows and editing panels compact and responsive so they do not occupy most of the screen or obscure the main canvas. Keep the keyboard and current edit visible, allow panels to be collapsed or dismissed, and retain keyboard access, visible focus and usable scrolling on smaller screens. Choose exact dimensions and layout during specification.
@@ -564,7 +588,7 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 **Open.** Exact automatic connection/routing rules, behavior when moving an intermediate connected key, selection of one wire versus multiple wires, and panel sizing/breakpoints are resolved during clarification. These are backlog requirements, not an approved implementation design.
 
-**Ordering.** Implement before interactive onboarding (032), so the tour teaches the updated wiring and panel behavior. Other assigned roadmap numbers stay unchanged.
+**Ordering.** Implement before interactive onboarding (037), so the tour teaches the updated wiring and panel behavior. Other assigned roadmap numbers stay unchanged.
 
 ```
 /speckit-specify Improve wiring and settings usability in ZMK Customizer. Rework automatic connection and routing rules with a preview before applying changes. When a wire passes through and connects to a key pin, save a durable electrical connection that survives moving the key the wire originally started from, rather than deriving connectivity only from overlapping coordinates. Let users select and delete wires directly, including keyboard access and Undo/Redo, without deleting keys. Make settings windows and editing panels compact and responsive so the canvas stays visible and usable. Preserve existing project imports, manual wiring, insulated crossings and deterministic export. Clarify exact routing rules, movement behavior, selection scope and panel dimensions before planning. Implement before interactive onboarding.
@@ -572,7 +596,7 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 ### 034 — agent-assisted-configuration
 
-**Status (2026-10-19).** Open discovery requested by the user; no implementation approach approved. Schedule before interactive onboarding (032).
+**Status (2026-10-19).** Open discovery requested by the user; no implementation approach approved. Schedule before interactive onboarding (037).
 
 **Goal.** Let users generate or edit a keyboard configuration with their own AI agent using a maintained prompt and the project's verified knowledge, then review and use the result in ZMK Customizer. AI execution belongs to the user's chosen environment; the app remains static without a backend or runtime network calls.
 
@@ -586,7 +610,7 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 **Proposed safety and compatibility boundaries.** Use the supported import/validation and deterministic export flows where applicable; never apply untrusted agent output silently or overwrite current work. Preserve project compatibility and Undo/Redo. Do not assume unsupported ZMK features, automatic electrical correctness or successful firmware compilation.
 
-### 032 — interactive-onboarding (implement last)
+### 037 — interactive-onboarding (implement last)
 
 **Goal.** Guide a first-time user through the product with short explanations and real actions, ending with their first simple custom keyboard built from scratch: a 3×3 macropad and its downloadable ZMK configuration.
 
@@ -627,6 +651,6 @@ Parsing existing ZMK shield files back into a project (Devicetree parsing), cust
 
 ## TODO
 
-- [ ] Revisit deferred **020 — zmk-studio-support** and agree when to resume it. Skipped for now on user request (2026-10-19); keep interactive onboarding (032) last when rescheduling.
+- [ ] Revisit deferred **020 — zmk-studio-support** and agree when to resume it. Skipped for now on user request (2026-10-19); keep interactive onboarding (037) last when rescheduling.
 - [ ] Revisit deferred **021 — lighting-displays** and **022 — zmk-version-selection**. Skipped for now on user request (2026-10-19); keep the ZMK v0.3.0 target until version selection is explicitly resumed.
 - [ ] Discuss and specify **034 — agent-assisted-configuration**: user-owned AI execution, maintained prompt/knowledge delivery, output contract, validation and the feasibility/value of MCP under static-app constraints.

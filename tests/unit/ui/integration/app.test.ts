@@ -192,7 +192,7 @@ it('confirms replacement, cancels safely and starts an empty project with cleare
   await user.click(within(dialog).getByRole('button', { name: 'Cancel' }));
   expect(loadProject().project).toEqual(before);
   await user.click(screen.getByRole('button', { name: 'New' }));
-  await user.click(screen.getByRole('button', { name: 'Start new project' }));
+  await user.click(screen.getByRole('button', { name: 'Start empty project' }));
   expect(loadProject().project.keys).toEqual([]);
   expect(screen.getByRole('button', { name: /^Undo/u }).getAttribute('aria-disabled')).toBe('true');
 });

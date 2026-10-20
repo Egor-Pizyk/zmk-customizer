@@ -1,3 +1,4 @@
+import { UNIBODY_PRESET } from '../helpers/unibody-preset';
 import { expect, test } from '@playwright/test';
 import {
   at,
@@ -210,9 +211,7 @@ test('mouse resize/rotation matches both workspaces, reload, JSON and seven expo
 test('mouse operation on a preset exports all seven cells for every key in visible key order', async ({
   page,
 }) => {
-  await page.goto('/');
-  await page.getByRole('banner').getByRole('button', { name: 'New', exact: true }).click();
-  await page.getByRole('button', { name: 'Start six-key unibody preset', exact: true }).click();
+  await openProject(page, UNIBODY_PRESET);
   await page.getByRole('button', { name: 'Center keyboard', exact: true }).click();
   await selectKey(page);
   const start = await center(page.getByRole('button', { name: 'Resize key 0 right', exact: true }));

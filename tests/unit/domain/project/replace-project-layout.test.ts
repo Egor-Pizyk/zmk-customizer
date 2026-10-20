@@ -2,7 +2,7 @@ import { getResultValue } from '../../../helpers/result';
 import { expect, it } from 'vitest';
 import { replaceProjectLayout } from '@domain/project';
 import { getKeyGeometry } from '@domain/geometry';
-import { UNIBODY_PRESET } from '@catalog/presets';
+import { UNIBODY_PRESET } from '../../../helpers/unibody-preset';
 import { parseProjectFile, serializeProject } from '@storage/project';
 
 it('replaces layout immutably with deterministic IDs and resets unrelated content', () => {
