@@ -2,7 +2,7 @@
 
 New capabilities and changes to user-visible contracts require a specification before feature code. Read only the artifacts needed for the current stage; reuse completed, current stages rather than restarting the workflow.
 
-Before creating a feature or branch, read [Git flow](guidelines/git-flow.md). Re-read it after verification and before committing or delivering work; its PR, stack, release and merge gates apply to every route below.
+Before creating a feature or branch, read [Git flow](guidelines/git-flow.md). Re-read it after verification and before committing or delivering work; its single-PR, release and merge-submission rules apply to every route below.
 
 ## Choose the change route
 
@@ -28,7 +28,7 @@ Do not use the smaller routes to hide new behavior. For mixed work, apply the st
 7. `/speckit-implement` — execute tasks and maintain their status.
 8. Verify and record evidence using `docs/testing.md` and `docs/commands.md`.
 
-Feature order and initial scope: `docs/roadmap.md`. Approved feature specs capture refinements; if roadmap and spec disagree, reconcile the affected entry instead of enforcing stale scope. One new feature = one `specs/NNN-short-name/` directory and one or more focused branches/PRs under [Git flow](guidelines/git-flow.md), such as `docs/NNN-short-name` and `feature/NNN-short-name`. Existing directory numbers are immutable and never reused.
+Feature order and initial scope: `docs/roadmap.md`. Approved feature specs capture refinements; if roadmap and spec disagree, reconcile the affected entry instead of enforcing stale scope. One new feature = one `specs/NNN-short-name/` directory and one branch and one PR under [Git flow](guidelines/git-flow.md), containing the spec, implementation, tests and verification together. Existing directory numbers are immutable and never reused.
 
 Resolve the feature using the installed Spec Kit scripts when invoking its commands. Verify the selected directory against the user's task; persisted `.specify/feature.json` is selection state, not evidence that a feature is active or complete.
 
