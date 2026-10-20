@@ -550,7 +550,7 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 ### 033 — wiring-and-settings-usability
 
-**Status.** Planned follow-up requested by the user; not implemented. Extends the schematic/wiring flows from 003/013 and settings panels from 001. Amend the affected contracts before implementation.
+**Status (2026-10-20).** Specified in [`specs/033-wiring-and-settings-usability/spec.md`](../specs/033-wiring-and-settings-usability/spec.md); implementation plan and 32 dependency-ordered tasks prepared, not implemented. User confirmed incremental completion with a separate rebuild action and multiple selection/deletion of conductor sections between connections. Depends on 032; amend owning 003/013 contracts before implementation.
 
 **Goal.** Make automatic wiring predictable, preserve intentional electrical connections while moving keys, support direct wire deletion, and keep the keyboard canvas usable while editing settings.
 
