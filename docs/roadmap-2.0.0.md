@@ -1,6 +1,6 @@
-# Roadmap — current major +1
+# Roadmap — 2.0.0
 
-Status: discovery draft, 2026-10-21. No numeric release version assigned. This is the basis for discussion, not an approved feature sequence or implementation plan. The [existing roadmap](roadmap.md) ends with the first major release. No feature numbers are reserved here.
+Status: discovery draft, 2026-10-21. Target release: **2.0.0**, explicitly selected by the user. This is the basis for discussion, not an approved feature sequence or implementation plan. The [existing roadmap](roadmap.md) ends with the first major release. No feature numbers are reserved here.
 
 ## Confirmed direction
 
@@ -25,7 +25,7 @@ These directions come from the user. The proposals below have not yet been appro
 
 Start from the desired assembly, then select compatible components and adjust the layout and enclosure. Offer an understandable complete keyboard before exposing its individual parts. A possible flow is: layout → components → enclosure and mounting → inspect → test fit → export parts and assembly guidance. This is a flow hypothesis to test with a beginner, not a fixed set of screens.
 
-Borrow Cosmos's visible component-aware design, Ergogen's layout-derived geometry, Flatboard's constrained flat-case generation and Klavgen's attention to hand assembly. The intended advantage is a coherent path from real component choices to a buildable set of parts, with clear limitations. Merely adding more geometry settings is not a sufficient advantage. See the [research and two-round critique](research/next-major-discovery.md).
+Borrow Cosmos's visible component-aware design, Ergogen's layout-derived geometry, Flatboard's constrained flat-case generation and Klavgen's attention to hand assembly. The intended advantage is a coherent path from real component choices to a buildable set of parts, with clear limitations. Merely adding more geometry settings is not a sufficient advantage. See the [research and two-round critique](research/2.0.0-discovery.md).
 
 Proposals requiring agreement:
 

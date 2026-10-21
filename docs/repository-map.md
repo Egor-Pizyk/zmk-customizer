@@ -7,7 +7,7 @@ docs/
   guidelines/          implementation rules, mandatory when their task/path scope applies
   zmk/                 verified ZMK reference notes with links
   roadmap.md           feature list in implementation order
-  roadmap-next-major.md  discovery basis for current major +1; independent mechanical module
+  roadmap-2.0.0.md  discovery basis for 2.0.0; independent mechanical module
   research/            supporting discovery evidence, not approved feature specifications
   decisions/           ADRs (index in docs/decisions/README.md)
   context-verification.md  context-routing review and validation limits

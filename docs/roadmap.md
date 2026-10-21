@@ -4,7 +4,7 @@ This roadmap ends at the **first major release** of ZMK Customizer. Its scope is
 
 The first-major milestone follows the remaining scheduled work through **037 — interactive-onboarding**, including the existing verification and acceptance gates. Deferred 020–022 remain deferred unless explicitly resumed; they are not silently added to the milestone. “Implement last” in this document means last within this first-major roadmap.
 
-The following major has a separate [discovery roadmap](roadmap-next-major.md), designated **current major +1**, without assigning a numeric release version. It explores an independent mechanical design and enclosure-generation module alongside the existing module. It does not extend this roadmap's feature numbering or authorize implementation.
+The following major has a separate [discovery roadmap](roadmap-2.0.0.md), targeting **2.0.0**, as explicitly selected by the user. It explores an independent mechanical design and enclosure-generation module alongside the existing module. It does not extend this roadmap's feature numbering or authorize implementation.
 
 Features in implementation order. One feature = one Spec Kit branch `NNN-short-name` = one `specs/NNN-short-name/` directory (AGENTS.md §6). Numbers of specified features (a `specs/NNN-*` directory exists) are immutable. A feature added out of order takes the next number and every planned, not yet specified feature after it moves up; the added feature's section records the shift, because older specs keep the old numbers. Spec Kit numbers specs by counting existing `specs/` directories, so run `/speckit-specify` in this order to keep numbers aligned with this file.
 
