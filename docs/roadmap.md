@@ -2,7 +2,7 @@
 
 This roadmap ends at the **first major release** of ZMK Customizer. Its scope is the keyboard as a control interface: layout, wiring, bindings, firmware configuration and export. This is a future release boundary, not a claim that the scheduled work or release is complete.
 
-The first-major milestone follows the remaining scheduled work through **037 — interactive-onboarding**, including the existing verification and acceptance gates. Deferred 020–022 remain deferred unless explicitly resumed; they are not silently added to the milestone. “Implement last” in this document means last within this first-major roadmap.
+The first-major milestone follows the remaining scheduled work through **037 — interactive-onboarding**, including the existing verification and acceptance gates. After that work is complete, perform the final README/repository-description closeout at the end of this roadmap. Deferred 020–022 remain deferred unless explicitly resumed; they are not silently added to the milestone. “Implement last” in this document means last within this first-major roadmap.
 
 The following major has a separate [discovery roadmap](roadmap-2.0.0.md), targeting **2.0.0**, as explicitly selected by the user. It explores an independent mechanical design and enclosure-generation module alongside the existing module. It does not extend this roadmap's feature numbering or authorize implementation.
 
@@ -70,6 +70,7 @@ Each `/speckit-specify` prompt below describes what and why only. Technology cho
 | 035 | ui-ux-audit-specification | 031–034 and the 012 standard-keycap-size follow-up |
 | 036 | ui-ux-remediation | 035 |
 | 037 | interactive-onboarding | all preceding scheduled product features, including 031–036; implement last |
+| Closeout | refresh root README and repository description | completed first-major roadmap and verification, including 037; final documentation task |
 
 Numbers 024–030 are reserved by existing feature directories in [`specs/README.md`](../specs/README.md). Feature 032 is project creation and automatic wiring, selected by the user on 2026-10-20 after 031. Planned interactive onboarding moves to 037 so it remains last; existing specified feature numbers are unchanged. Scheduled work continues with 033 wiring/settings usability, 034 agent-assisted configuration, 035 UI/UX audit/specification and 036 UI/UX remediation before 037 onboarding. The first-major follow-up to existing 012/004 adds standard keycap sizing in Bindings before 035 so the audit and final onboarding cover it; no feature numbers change. Deferred 020–022 remain postponed. Only not-yet-specified roadmap entries may be renumbered.
 
@@ -681,3 +682,14 @@ Parsing existing ZMK shield files back into a project (Devicetree parsing), cust
 - [ ] Discuss and specify **034 — agent-assisted-configuration**: user-owned AI execution, maintained prompt/knowledge delivery, output contract, validation and the feasibility/value of MCP under static-app constraints.
 
 - [ ] Specify and deliver the first-major **012/004 standard-keycap-size follow-up**: selected keycap → context menu → standard size, replacing arbitrary resizing in Bindings; preserve legacy custom geometry. Complete before 035 audit and 037 onboarding.
+
+## Final first-major closeout — README and repository description
+
+**Status.** Planned on user request, 2026-10-21. Execute after completing the scheduled first-major product work and its verification, including 037 onboarding. This is the final documentation/metadata task; onboarding remains the last product feature and existing feature numbers do not change.
+
+- Update the root `README.md` to describe the actual delivered first-major product: purpose, supported workflows, current setup/use/export instructions, limitations, and relevant documentation links. Refresh examples or screenshots where they no longer match the delivered application.
+- Update the GitHub repository's short description (About) to match the same delivered scope. This task concerns the description, not unrelated repository settings.
+- Distinguish completed capabilities from deferred work and the 2.0.0 research roadmap; do not advertise the planned mechanical module as already available.
+- Check README links, commands and examples against the completed product, review the final README/description for consistency, and record the actual verification and metadata update.
+
+**Done when.** The root README and live repository description both accurately describe the completed first-major application. Adding this roadmap entry does not perform those future updates or claim that the first-major roadmap is complete.
