@@ -1,5 +1,11 @@
 # Roadmap
 
+This roadmap ends at the **first major release** of ZMK Customizer. Its scope is the keyboard as a control interface: layout, wiring, bindings, firmware configuration and export. This is a future release boundary, not a claim that the scheduled work or release is complete.
+
+The first-major milestone follows the remaining scheduled work through **037 — interactive-onboarding**, including the existing verification and acceptance gates. After that work is complete, perform the final README/repository-description closeout at the end of this roadmap. Deferred 020–022 remain deferred unless explicitly resumed; they are not silently added to the milestone. “Implement last” in this document means last within this first-major roadmap.
+
+The following major has a separate [discovery roadmap](roadmap-2.0.0.md), targeting **2.0.0**, as explicitly selected by the user. It explores an independent mechanical design and enclosure-generation module alongside the existing module. It does not extend this roadmap's feature numbering or authorize implementation.
+
 Features in implementation order. One feature = one Spec Kit branch `NNN-short-name` = one `specs/NNN-short-name/` directory (AGENTS.md §6). Numbers of specified features (a `specs/NNN-*` directory exists) are immutable. A feature added out of order takes the next number and every planned, not yet specified feature after it moves up; the added feature's section records the shift, because older specs keep the old numbers. Spec Kit numbers specs by counting existing `specs/` directories, so run `/speckit-specify` in this order to keep numbers aligned with this file.
 
 Ordering rule: every feature ends with something a user can load, see and download. Generators come before editors: feature 009 generates real files from preset keyboards, so each later editor changes a project whose output is already visible in the export preview and covered by golden tests. Exceptions, added on user request: 003 schematic, the 004/005 bindings editors, the 006 Action panel rework, 007 layers and 008 diodes come before 009; they store project data only, and 009 generates files from it.
@@ -60,11 +66,13 @@ Each `/speckit-specify` prompt below describes what and why only. Technology cho
 | 032 | project-creation-and-auto-wiring | 031, 013, 011 |
 | 033 | wiring-and-settings-usability | 032, 001, 003, 012, 013 |
 | 034 | agent-assisted-configuration — discovery | 002, 009, 010; other dependencies TBD |
-| 035 | ui-ux-audit-specification | 031–034 |
+| 012 follow-up | standard keycap sizes in Bindings (extension with 004) | 004, 012; complete before 035 |
+| 035 | ui-ux-audit-specification | 031–034 and the 012 standard-keycap-size follow-up |
 | 036 | ui-ux-remediation | 035 |
 | 037 | interactive-onboarding | all preceding scheduled product features, including 031–036; implement last |
+| Closeout | refresh root README and repository description | completed first-major roadmap and verification, including 037; final documentation task |
 
-Numbers 024–030 are reserved by existing feature directories in [`specs/README.md`](../specs/README.md). Feature 032 is project creation and automatic wiring, selected by the user on 2026-10-20 after 031. Planned interactive onboarding moves to 037 so it remains last; existing specified feature numbers are unchanged. Scheduled work continues with 033 wiring/settings usability, 034 agent-assisted configuration, 035 UI/UX audit/specification and 036 UI/UX remediation before 037 onboarding. Deferred 020–022 remain postponed. Only not-yet-specified roadmap entries may be renumbered.
+Numbers 024–030 are reserved by existing feature directories in [`specs/README.md`](../specs/README.md). Feature 032 is project creation and automatic wiring, selected by the user on 2026-10-20 after 031. Planned interactive onboarding moves to 037 so it remains last; existing specified feature numbers are unchanged. Scheduled work continues with 033 wiring/settings usability, 034 agent-assisted configuration, 035 UI/UX audit/specification and 036 UI/UX remediation before 037 onboarding. The first-major follow-up to existing 012/004 adds standard keycap sizing in Bindings before 035 so the audit and final onboarding cover it; no feature numbers change. Deferred 020–022 remain postponed. Only not-yet-specified roadmap entries may be renumbered.
 
 Workspaces (from 001): **Schematic** holds the schematic of keys and wires (003), switch diodes (008), the layout editor (012) and matrix/wiring editor (013) and owns the project JSON config (002); **Bindings** holds bindings keycaps (004), key behaviors (005), the Action panel (006), layers (007), the keymap editor (014), custom behaviors (016) and combos/macros/conditional layers (017); **Firmware** holds kconfig-settings (015); **Export** holds the file preview (009) and download (010). Every feature reports its validation issues in the 001 problems panel, counted in the tab badge of the workspace that fixes them.
 
@@ -334,6 +342,22 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 - Renumber by position orders keys top-to-bottom then left-to-right (rule documented in the spec, tested).
 
 **Resolved (012).** Renumber uses visible rotated centers, rounded to 0.0001u, then Y/X with stable ties. Existing project budget: 512 keys.
+
+### First-major follow-up — standard keycap sizes in Bindings
+
+**Status.** Requested by the user on 2026-10-21; roadmap scope only, not implemented. Extend the existing 012 geometry and 004 Bindings contracts through the amendment workflow before implementation. The earlier arbitrary-resize behavior above describes the existing feature, not the intended Bindings interaction after this follow-up.
+
+**Goal.** Stop arbitrary stretching of keycaps while assigning bindings. Select a keycap in Bindings, open its context menu, and choose its size from a finite catalog of standard keycap sizes instead of dragging it to arbitrary width/height.
+
+**Scope and acceptance direction**
+- The selected keycap exposes a “Keycap size” context-menu action with named standard sizes, visible units and an indication of the current selection. Confirm the actual supported size/shape combinations from component references during specification; do not invent a universal list or assume every width/height combination is standard.
+- Arbitrary resize handles/gestures in Bindings no longer produce custom dimensions. Any other Bindings size-edit path must use the same permitted choices so numeric fields cannot bypass the restriction. Movement, rotation and unrelated Schematic editing are not redesigned by this request.
+- Provide keyboard access to the same menu/size action and a labeled list/table alternative; preserve selection, focus restoration and safe cancellation. Decide multi-selection and anchoring behavior in the amended spec.
+- Size is a physical key property shared across layers and workspaces, not a binding-specific or layer-specific visual scale. Preserve key identity, bindings on every layer and existing electrical connectivity; make the change undoable and persistent, and keep export consistent with the actual project geometry.
+- Existing saved and imported projects with custom sizes must remain loadable without silent rounding, coercion or loss of data. Clearly show the existing custom size; explicit selection of a standard size changes it. Define this compatibility display during specification.
+- Specify and verify overlap handling, context-menu pointer/keyboard use, cancellation, Undo/Redo, reload and existing-file compatibility. A nominal keycap size does not establish switch-hole dimensions or mechanical compatibility for 2.0.0.
+
+**Ordering.** Required before the first major release, before 035 UI/UX audit and 036 remediation, and therefore before final 037 onboarding. Track as a follow-up to existing 012/004; do not renumber features or create a feature spec in this documentation task. Amend their affected spec/plan/tasks and any superseded read-only Bindings or resize contracts when taking up implementation.
 
 **Relevant docs.** `docs/zmk/physical-layout.md`.
 
@@ -656,3 +680,16 @@ Parsing existing ZMK shield files back into a project (Devicetree parsing), cust
 - [ ] Revisit deferred **020 — zmk-studio-support** and agree when to resume it. Skipped for now on user request (2026-10-19); keep interactive onboarding (037) last when rescheduling.
 - [ ] Revisit deferred **021 — lighting-displays** and **022 — zmk-version-selection**. Skipped for now on user request (2026-10-19); keep the ZMK v0.3.0 target until version selection is explicitly resumed.
 - [ ] Discuss and specify **034 — agent-assisted-configuration**: user-owned AI execution, maintained prompt/knowledge delivery, output contract, validation and the feasibility/value of MCP under static-app constraints.
+
+- [ ] Specify and deliver the first-major **012/004 standard-keycap-size follow-up**: selected keycap → context menu → standard size, replacing arbitrary resizing in Bindings; preserve legacy custom geometry. Complete before 035 audit and 037 onboarding.
+
+## Final first-major closeout — README and repository description
+
+**Status.** Planned on user request, 2026-10-21. Execute after completing the scheduled first-major product work and its verification, including 037 onboarding. This is the final documentation/metadata task; onboarding remains the last product feature and existing feature numbers do not change.
+
+- Update the root `README.md` to describe the actual delivered first-major product: purpose, supported workflows, current setup/use/export instructions, limitations, and relevant documentation links. Refresh examples or screenshots where they no longer match the delivered application.
+- Update the GitHub repository's short description (About) to match the same delivered scope. This task concerns the description, not unrelated repository settings.
+- Distinguish completed capabilities from deferred work and the 2.0.0 research roadmap; do not advertise the planned mechanical module as already available.
+- Check README links, commands and examples against the completed product, review the final README/description for consistency, and record the actual verification and metadata update.
+
+**Done when.** The root README and live repository description both accurately describe the completed first-major application. Adding this roadmap entry does not perform those future updates or claim that the first-major roadmap is complete.

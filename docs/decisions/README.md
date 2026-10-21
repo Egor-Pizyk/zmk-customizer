@@ -56,3 +56,5 @@ What becomes easier, what becomes harder, what we must now keep true.
 - [0020 — One feature PR and asynchronous delivery](0020-single-pr-asynchronous-delivery.md)
 
 - [0021 — Selective local checks and PR delivery](0021-selective-checks-and-pr-delivery.md)
+
+- [0022 — Evidence-based mechanical technology selection](0022-mechanical-technology-evaluation.md) — Accepted evaluation process; technology choice pending research.
