@@ -14,7 +14,7 @@ The Release workflow tags the PR merge commit and publishes a GitHub Release wit
 automatically generated changelog. Package metadata and project schema versions
 are independent and are not changed by releases. No application behavior changes.
 
-Wait for CI to pass before merging. A label on an open PR does not publish.
+Create the PR and stop, following [Git flow](guidelines/git-flow.md); merge requires a separate user request. Do not wait or poll CI. GitHub enforces required checks before the actual merge. A label on an open PR does not publish.
 A label added after merge also triggers publication, useful for the initial setup
 PR. Multiple release labels fail explicitly; remove extras and rerun the failed
 workflow. Reruns detect the PR marker in existing release notes to prevent a
@@ -24,7 +24,7 @@ Publication is serialized with workflow concurrency. GitHub keeps one running an
 one pending run per group; during a burst of merges it can replace pending runs.
 Rerun any cancelled release run after the queue clears. Releases use the merge
 commit even if `main` has advanced. They do not wait for post-merge CI; maintainers
-must merge only after reviewing PR checks. No release binaries are attached;
+rely on protected-branch checks for actual merge eligibility. Agents do not wait for publication and must distinguish an open PR, a merge and a published release. No release binaries are attached;
 GitHub supplies source archives.
 
 The workflow requires only the built-in `GITHUB_TOKEN` (`contents: write`), Node

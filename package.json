@@ -22,7 +22,10 @@
     "check:mutation-runners": "node --test tests/tooling/mutation-runners.test.mjs",
     "test:mutations": "node scripts/check-test-mutations.mjs",
     "test:e2e:mutations": "node scripts/check-e2e-mutations.mjs",
-    "check:release": "node --test tests/tooling/create-release.test.mjs"
+    "check:release": "node --test tests/tooling/create-release.test.mjs",
+    "check:changed": "node scripts/check-changes.mjs",
+    "hooks:install": "node scripts/install-hooks.mjs",
+    "check:static": "npm run check:architecture && npm run check:guidelines && npm run check:mutation-runners && npm run check:release && npm run typecheck && npm run test:e2e:types && npm run lint && npm run format:check"
   },
   "dependencies": {
     "fflate": "0.8.3",
@@ -49,7 +52,7 @@
     "oxlint-tsgolint": "^7.0.2003",
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2",
-    "vite": "^8.3.1",
+    "vite": "^8.3.5",
     "vitest": "^5.0.2"
   },
   "engines": {

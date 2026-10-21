@@ -1,6 +1,6 @@
 # 0006. Spec-Driven Development with GitHub Spec Kit
 
-Status: Accepted
+Status: Partially superseded by 0019 (one-branch-per-feature naming only)
 Date: 2026-09-27
 
 ## Context

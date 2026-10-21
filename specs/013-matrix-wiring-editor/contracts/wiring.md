@@ -32,3 +32,7 @@ Source contracts: docs/zmk/{kscan,matrix-transform,shield-files,physical-layout,
 | Native keyboard/focus and SVG preview | browser differences | existing focused cross-browser tests | wiring-cross-browser.spec.ts | keyboard selection, preview, focus and key corners | accepted project |
 
 Add controlled browser regressions for lost rewiring, preview saved before Apply and missing split offset; require visible/saved/downloaded assertion failures. Run separately with exact file restoration. Browser paint snapshots only where they independently detect wiring paint mistakes; inspect references before accepting them.
+
+## Feature 032 extension
+
+[032](../../032-project-creation-and-auto-wiring/spec.md) extends explicit Auto assign with free catalog GPIO proposals, retaining valid assignments and reserving per-controller encoder/retained manual contacts. Invalid/conflicting pins or insufficient capacity refuse atomically with repair guidance. Existing center/grid grouping remains; users may change the grid or manually group rows. Outward row/input outputs use left/right per half; column/ground outputs choose top/bottom clearance with deterministic spacing/fallback outside rotated key geometry. Existing preview/Apply/Cancel, actual connectivity, storage/history and export contracts remain. Other wiring edits do not implicitly fill missing GPIOs.

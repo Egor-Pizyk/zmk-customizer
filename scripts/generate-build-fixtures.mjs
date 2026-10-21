@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 const directory = '.zmk-build/exports';
 const server = await createServer({ server: { middlewareMode: true } });
 try {
-  const { UNIBODY_PRESET } = await server.ssrLoadModule('/src/catalog/presets/index.ts');
+  const { UNIBODY_PRESET } = await server.ssrLoadModule('/tests/helpers/unibody-preset.ts');
   const { CONTROLLER_BOARDS } = await server.ssrLoadModule('/src/catalog/controllers/index.ts');
   const { BINDINGS_CATALOG } = await server.ssrLoadModule('/src/catalog/bindings/index.ts');
   const { SHIELD_TARGET } = await server.ssrLoadModule('/src/catalog/firmware/index.ts');

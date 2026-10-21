@@ -1,4 +1,4 @@
-import { UNIBODY_PRESET } from '@catalog/presets';
+import { UNIBODY_PRESET } from '../../../../helpers/unibody-preset';
 import { CONTROLLER_BOARDS } from '@catalog/controllers';
 import { changeController, createProject, renameProject } from '@domain/project';
 import { parseProjectFile } from '@storage/project';

@@ -2,10 +2,18 @@ name: CI
 
 on:
   push:
+    branches: [main]
   pull_request:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  check:
+  static:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -14,10 +22,10 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - run: npm run check
+      - run: npm run check:static
       - run: npm run build
 
-  e2e:
+  unit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -26,16 +34,55 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - run: npx playwright install --with-deps chromium firefox webkit
-      - run: npm run test:e2e
+      - name: Unit tests and coverage thresholds
+        id: coverage
+        run: npm run test:coverage
+      - name: Coverage result
+        if: always()
+        env:
+          RESULT: ${{ steps.coverage.outcome }}
+        run: |
+          node -e 'const fs=require("node:fs"); const p="coverage/coverage-summary.json"; const total=fs.existsSync(p)?JSON.parse(fs.readFileSync(p)).total:null; fs.mkdirSync("coverage",{recursive:true}); fs.writeFileSync("coverage/result.json", JSON.stringify({result:process.env.RESULT,total})); fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, "Unit/coverage: "+process.env.RESULT+"\n"+(total?JSON.stringify(total):"Coverage unavailable")+"\n");'
       - uses: actions/upload-artifact@v6
         if: always()
         with:
-          name: browser-evidence
+          name: coverage
+          path: coverage/
+          retention-days: 14
+
+  browser:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - run: npm run test:e2e -- --project=${{ matrix.browser }}
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: browser-evidence-${{ matrix.browser }}
           path: |
             playwright-report/
             test-results/
           retention-days: 14
+
+  # Keep the existing protected status name while matrix jobs run independently.
+  e2e:
+    if: always()
+    needs: [browser]
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          RESULT: ${{ needs.browser.result }}
+        run: test "$RESULT" = success
 
   image:
     runs-on: ubuntu-latest
@@ -55,47 +102,63 @@ jobs:
       - run: make install
       - run: make test-mutations
 
+  browser-mutations:
+    env:
+      APP_USER: root
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - run: docker compose -p zmk-customizer -f infra/compose.e2e.yaml run --build --rm e2e npm ci
+      - run: make test-e2e-mutations
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: browser-mutation-evidence
+          path: .e2e-mutations/
+          include-hidden-files: true
+
   zmk-build:
     env:
       APP_USER: root
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-      - name: Determine relevant inputs
-        id: changes
-        env:
-          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
-        run: |
-          python3 - <<'PY'
-          import os, subprocess
-          base = os.environ.get('BASE', '')
-          relevant = True
-          if base and set(base) != {'0'}:
-              result = subprocess.run(['git', 'diff', '--name-only', base, 'HEAD'], capture_output=True, text=True)
-              if result.returncode == 0:
-                  roots = ('src/', 'tests/', 'scripts/', 'infra/', 'specs/023-', 'docs/zmk/', '.github/workflows/')
-                  files = {'Makefile', 'package.json', 'package-lock.json', 'vite.config.ts', 'tsconfig.json'}
-                  relevant = any(p.startswith(roots) or p in files for p in result.stdout.splitlines())
-          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
-              output.write(f'relevant={str(relevant).lower()}\n')
-          PY
       - uses: actions/cache@v5
-        if: steps.changes.outputs.relevant == 'true'
         with:
           path: .zmk-build/workspace
           key: zmk-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('infra/zmk-build.env', 'infra/zmk-build.sh', 'infra/zmk-west.yml', 'infra/compose.zmk.yaml') }}
       - run: make install && make zmk-build
-        if: steps.changes.outputs.relevant == 'true'
       - uses: actions/upload-artifact@v6
-        if: always() && steps.changes.outputs.relevant == 'true'
+        if: always()
         with:
           name: zmk-build-evidence
           path: |
             .zmk-build/logs
             .zmk-build/artifacts
             .zmk-build/exports
-      - name: Complete build status for irrelevant changes
-        if: steps.changes.outputs.relevant != 'true'
-        run: echo 'No firmware inputs changed; zmk-build status completed.'
+
+  check:
+    if: always()
+    needs: [static, unit, e2e, image, mutations, browser-mutations, zmk-build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require all checks
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          node - <<'JS'
+          const fs = require('node:fs');
+          const results = JSON.parse(process.env.RESULTS);
+          const rows = Object.entries(results).map(([job, value]) => `${job}: ${value.result}`);
+          console.log(rows.join('\n'));
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, rows.join('\n') + '\n');
+          for (const [job, value] of Object.entries(results)) {
+            if (value.result !== 'success') {
+              console.error(`::error::Required job ${job}: ${value.result}`);
+              process.exitCode = 1;
+            }
+          }
+          JS

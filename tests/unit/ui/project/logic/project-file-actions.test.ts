@@ -1,3 +1,5 @@
+import { KEYBOARD_PRESETS } from '@catalog/presets';
+import { getDefinedValue } from '../../../../helpers/defined-value';
 import { createProject } from '@domain/project';
 import { createFileActions, applyHistoryAction, createInitialState } from '@ui/project/logic';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -13,8 +15,11 @@ it('New preset autosaves through replacement, resets history, and later edits un
   const actions = createFileActions((change) => {
     state = change(state);
   });
-  actions.startPresetProject();
-  expect(state.history.present.keys).toHaveLength(6);
+  actions.startLayoutPresetProject({
+    preset: getDefinedValue(KEYBOARD_PRESETS[0]),
+    bindingMode: 'qwerty',
+  });
+  expect(state.history.present.keys).toHaveLength(getDefinedValue(KEYBOARD_PRESETS[0]).keys.length);
   expect(setItem).toHaveBeenCalledOnce();
   const preset = state.history.present;
   expect(state.history.past).toEqual([]);

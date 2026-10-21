@@ -11,7 +11,7 @@ import {
 import { changeController, createProject, getProjectResourceError } from '@domain/project';
 import { getControllerBoard, CONTROLLER_BOARDS } from '@catalog/controllers';
 import { BINDINGS_CATALOG } from '@catalog/bindings';
-import { UNIBODY_PRESET } from '@catalog/presets';
+import { UNIBODY_PRESET } from '../../../helpers/unibody-preset';
 import type { Project, Encoder, Binding } from '@domain';
 
 const board = getControllerBoard('nice_nano_v2');

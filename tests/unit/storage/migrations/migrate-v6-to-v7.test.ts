@@ -1,6 +1,6 @@
 import { editWiring } from '@domain/wiring/editing';
 import { getControllerBoard } from '@catalog/controllers';
-import { UNIBODY_PRESET } from '@catalog/presets';
+import { UNIBODY_PRESET } from '../../../helpers/unibody-preset';
 import { parseProjectFile } from '@storage/project';
 
 import { getDefinedValue } from '../../../helpers/defined-value';

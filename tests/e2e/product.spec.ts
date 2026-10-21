@@ -40,7 +40,7 @@ test('new project → layout → wiring → bindings → validated ZIP with matc
 }) => {
   await page.goto('/');
   await page.getByRole('banner').getByRole('button', { name: 'New', exact: true }).click();
-  await page.getByRole('button', { name: 'Start new project', exact: true }).click();
+  await page.getByRole('button', { name: 'Start empty project', exact: true }).click();
   await page.getByRole('button', { name: 'Add key', exact: true }).click();
   await editNumber(page, 'Key 0 X (u)', '5');
   await editNumber(page, 'Key 0 Y (u)', '5');
@@ -160,7 +160,7 @@ test('bindings/layers survive switches and reload; downloaded JSON imports and i
   await expect(page.getByRole('alert')).toContainText(/newer version/iu);
   expect(await saved(page)).toEqual(result);
   await page.getByRole('banner').getByRole('button', { name: 'New', exact: true }).click();
-  await page.getByRole('button', { name: 'Start new project', exact: true }).click();
+  await page.getByRole('button', { name: 'Start empty project', exact: true }).click();
   expect((await saved(page)).keys).toHaveLength(0);
   await importText(page, json);
   await expect.poll(() => saved(page)).toEqual(result);

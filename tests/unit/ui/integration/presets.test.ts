@@ -2,10 +2,10 @@
 import { screen, within } from '@testing-library/react';
 import { expect, it } from 'vitest';
 import { loadProject } from '@storage/project';
-import { UNIBODY_PRESET } from '@catalog/presets';
+import { UNIBODY_PRESET } from '../../../helpers/unibody-preset';
 import { renderApp } from '../../../helpers/render-app';
 
-it('browses without writes, cancels without losing history, creates a split empty layout and preserves the starter', async () => {
+it('browses without writes, cancels without losing history, creates a split empty layout and offers empty creation', async () => {
   const { user } = renderApp();
   const name = screen.getByRole('textbox', { name: 'Name' });
   await user.clear(name);
@@ -34,8 +34,14 @@ it('browses without writes, cancels without losing history, creates a split empt
   expect(created.layers[0]?.bindings).toEqual({});
   expect(screen.getByRole('button', { name: /^Undo/u }).getAttribute('aria-disabled')).toBe('true');
   await user.click(screen.getByRole('button', { name: 'New' }));
-  await user.click(screen.getByRole('button', { name: 'Start six-key unibody preset' }));
-  expect(loadProject().project).toEqual(UNIBODY_PRESET);
+  expect(
+    within(screen.getByRole('dialog'))
+      .getAllByRole('button')
+      .map((button) => button.textContent)
+      .filter(Boolean),
+  ).toEqual(['Create project from preset', 'Start empty project', 'Cancel']);
+  await user.click(screen.getByRole('button', { name: 'Start empty project' }));
+  expect(loadProject().project.keys).toEqual([]);
 });
 
 it('creates default nine-key QWERTY, edits with exact history, and blocks incomplete export', async () => {

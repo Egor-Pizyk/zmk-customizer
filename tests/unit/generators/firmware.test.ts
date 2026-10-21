@@ -6,7 +6,7 @@ import { createProject } from '@domain/project';
 import { deriveShieldMatrix } from '@domain/wiring/matrix';
 import { getControllerBoard } from '@catalog/controllers';
 import { SHIELD_TARGET } from '@catalog/firmware';
-import { UNIBODY_PRESET } from '@catalog/presets';
+import { UNIBODY_PRESET } from '../../helpers/unibody-preset';
 import expected from '../../fixtures/expected/firmware/options.conf?raw';
 
 it('renders independent sorted bool/int/enum/escaped-string golden, omits explicit defaults', () => {

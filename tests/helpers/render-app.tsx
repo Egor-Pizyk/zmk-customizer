@@ -6,7 +6,7 @@ import { App } from '@ui/app/components';
 import { PreferencesProvider } from '@ui/preferences';
 import { ProjectProvider } from '@ui/project/components';
 import { loadProject, saveProject } from '@storage/project';
-import { UNIBODY_PRESET } from '@catalog/presets';
+import { UNIBODY_PRESET } from './unibody-preset';
 import { DEFAULT_PREFERENCES, savePreferences } from '@storage/preferences';
 import type { Preferences } from '@storage/preferences';
 
