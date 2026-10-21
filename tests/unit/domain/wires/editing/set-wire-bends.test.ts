@@ -31,3 +31,32 @@ it('refuses an oversized bend edit and permits repairing an oversized wire', () 
   );
   expect(repaired.wires[0]?.bends).toEqual([]);
 });
+
+it('refuses bends that would leave a retained intermediate contact off its fixed spine', () => {
+  const project = buildProject({
+    keys: [
+      { id: 'k1', xU: 0, yU: 0 },
+      { id: 'k2', xU: 2, yU: 0 },
+      { id: 'k3', xU: 4, yU: 0 },
+    ],
+    wires: [
+      {
+        id: 'w1',
+        start: keyPin('k1', 1),
+        end: keyPin('k3', 1),
+        bends: [],
+        anchors: { start: { xU: 0.3, yU: 0.3667 }, end: { xU: 4.3, yU: 0.3667 } },
+        contacts: [{ keyId: 'k2', pin: 1, at: { xU: 2.3, yU: 0.3667 } }],
+      },
+    ],
+  });
+  expect(
+    setWireBends(project, {
+      wireId: 'w1',
+      bends: [
+        { xU: 0.3, yU: 2 },
+        { xU: 4.3, yU: 2 },
+      ],
+    }),
+  ).toBe(project);
+});

@@ -1,5 +1,5 @@
 import { useProject } from '@ui/project/logic';
-import { getWirePath } from '@domain/wires';
+import { getWirePath } from '@domain/wires/geometry';
 import { setWireBends, getWireBendsResourceError } from '@domain/wires/editing';
 import { roundU } from '@domain/geometry';
 import type { Wire, WirePoint } from '@domain';

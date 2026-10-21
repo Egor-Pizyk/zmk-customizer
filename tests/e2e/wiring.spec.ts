@@ -187,7 +187,7 @@ test('keyboard grid assignment, auto and diode direction preserve geometry @cros
     page.getByRole('button', { name: 'left row 1 col 0: Key 0, Key 3', exact: true }),
   ).toBeVisible();
   await page.getByRole('button', { name: 'Cancel wiring', exact: true }).click();
-  await page.getByRole('button', { name: 'Auto assign cells', exact: true }).click();
+  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
   await expect(page.getByText('Wiring preview', { exact: true })).toBeVisible();
   expect(await saved(page)).toEqual(UNIBODY_PRESET);
   await page.getByRole('button', { name: 'Apply wiring', exact: true }).click();
@@ -230,7 +230,7 @@ test('Auto assign proposes free GPIOs with outward outputs and atomic history @c
   const project = { ...UNIBODY_PRESET, wires: [], insulatedCrossings: [] };
   await openProject(page, project);
   await openWiring(page);
-  await page.getByRole('button', { name: 'Auto assign cells', exact: true }).click();
+  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
   await expect(page.getByText('Wiring preview', { exact: true })).toBeVisible();
   await expect(page.getByText(/These pins are not detected hardware wiring/u)).toBeVisible();
   await expect(page.getByRole('combobox', { name: 'left row 0 pin', exact: true })).toHaveValue(
@@ -239,7 +239,7 @@ test('Auto assign proposes free GPIOs with outward outputs and atomic history @c
   expect(await saved(page)).toEqual(project);
   await page.getByRole('button', { name: 'Cancel wiring', exact: true }).click();
   expect(await saved(page)).toEqual(project);
-  await page.getByRole('button', { name: 'Auto assign cells', exact: true }).click();
+  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
   await page.getByRole('button', { name: 'Zoom out', exact: true }).click();
   await page.getByRole('button', { name: 'Zoom out', exact: true }).click();
   await page.getByRole('application').hover();
@@ -272,7 +272,7 @@ test('Auto assign capacity failure explains recovery without a saved change @cro
   await page.getByRole('button', { name: 'Create project from preset', exact: true }).click();
   const before = await saved(page);
   await openWiring(page);
-  await page.getByRole('button', { name: 'Auto assign cells', exact: true }).click();
+  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('GPIOs');
   await expect(page.getByRole('alert')).toContainText('group rows manually');
   await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toHaveCount(0);

@@ -3,11 +3,17 @@ import { IconButton } from './icon-button';
 import { useEffect, useEffectEvent, useId, useRef } from 'react';
 import type { ReactNode, RefObject } from 'react';
 
+const DIALOG_SIZES = {
+  default: 'max-w-md',
+  wide: 'max-w-2xl',
+  settings: 'settings-dialog-size',
+} as const;
+
 type DialogProps = {
   readonly isOpen: boolean;
   readonly onClose: () => void;
   readonly title: string;
-  readonly size?: 'default' | 'wide';
+  readonly size?: 'default' | 'wide' | 'settings';
   readonly children: ReactNode;
 };
 
@@ -24,7 +30,7 @@ export function Dialog({ isOpen, onClose, title, children, size = 'default' }: D
   return (
     <dialog
       aria-labelledby={titleId}
-      className={`m-auto max-h-dvh w-full overflow-y-auto rounded-lg border border-border bg-surface-raised text-text backdrop:bg-text/40 ${size === 'wide' ? 'max-w-2xl' : 'max-w-md'}`}
+      className={`m-auto max-h-dvh w-full overflow-y-auto rounded-lg border border-border bg-surface-raised text-text backdrop:bg-text/40 ${DIALOG_SIZES[size]}`}
       ref={dialogRef}
     >
       <div className="flex flex-col gap-4 p-4">

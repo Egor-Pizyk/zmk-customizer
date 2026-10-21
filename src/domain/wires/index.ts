@@ -7,7 +7,12 @@ export { findKeyCurrentFlow } from './find-key-current-flow';
 export { findNearestKeyPin } from './find-nearest-key-pin';
 export { findWireContacts } from './find-wire-contacts';
 export type { WireCrossing, WireContacts } from './find-wire-contacts';
-export { getKeyPinPosition } from './get-key-pin-position';
 export { getKeyPinWires } from './get-key-pin-wires';
-export { getWirePath } from './get-wire-path';
 export { removeOrphanWires } from './remove-orphan-wires';
+
+export { captureWireContacts } from './capture-wire-contacts';
+export { getWireSections } from './get-wire-sections';
+export type { WireSection } from './get-wire-sections';
+export { findWireContactError } from './find-wire-contact-error';
+
+export { shareWireContacts } from './share-wire-contacts';

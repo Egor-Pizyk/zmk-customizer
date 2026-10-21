@@ -108,3 +108,7 @@ Every catalog-backed control (behavior, keycode, Kconfig option) shows label, on
 - Keys are named by key index as ZMK counts them, 0-based: "Key 12". Units are always shown: `1.25u`, `15°`, `30 ms`.
 - UI copy may say "keyboard" and "controller"; other terms follow the glossary (`code-quality/naming/variables.md`).
 - Errors say what is wrong and how to fix it, naming the entity (`observability.md` → "Validation issues").
+
+### Feature 033 panel exception
+
+Schematic editing panels and app Settings additionally support the narrow viewports specified by 033, including 390px. Retain base/lg/xl conventions and existing tokens/control density. Use one expanded non-modal Schematic editor, base lower area and xl docking, with canvas/panel budgets in 033. This does not redesign other workspaces or change their desktop target.

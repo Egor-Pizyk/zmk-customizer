@@ -16,9 +16,11 @@ export function useLayoutPreview(project: Project, selection: SchematicSelection
   if (preview !== undefined && current === undefined) {
     setPreview(undefined);
   }
+  const previewProject = current === undefined ? project : editLayout(project, current.edit);
   return {
+    canApply: previewProject !== project,
     hasPreview: current !== undefined,
-    previewProject: current === undefined ? project : editLayout(project, current.edit),
+    previewProject,
     handlePreview: (edit: LayoutEdit) => {
       setPreview({ base: project, selectionKey, edit });
     },

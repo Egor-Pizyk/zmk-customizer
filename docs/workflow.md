@@ -32,11 +32,21 @@ Feature order and initial scope: `docs/roadmap.md`. Approved feature specs captu
 
 Resolve the feature using the installed Spec Kit scripts when invoking its commands. Verify the selected directory against the user's task; persisted `.specify/feature.json` is selection state, not evidence that a feature is active or complete.
 
+## Frontend UI/UX workflow (Codex)
+
+For every task that creates or changes an interface, interaction or visual styling, Codex must load and invoke the project-local [$ui-ux-pro-max](../.agents/skills/ui-ux-pro-max/SKILL.md) before implementation and again after implementation for review. This applies to new screens, existing components, UI bugs and visual refactors; it is not limited to roadmap audit 035/remediation 036. The skill remains local to this project's Codex context.
+
+1. **Before creating or changing UI:** invoke the skill to describe how the interface should work and look. Run its relevant local UX searches and React/Tailwind guidance; use design-system generation when required by the skill for a new page. Check recommendations against existing components, semantic tokens, accessibility rules and the user's scope. Describe the flow, information hierarchy, controls, layout, relevant empty/error/disabled states, feedback, keyboard/focus behavior, supported themes, responsive behavior and reduced motion where applicable.
+2. **Write the result before code:** add the accepted user-facing UI/UX requirements and testable acceptance scenarios to the owning `spec.md` before planning or amending the implementation plan. Put implementation choices (component reuse, token mapping and technical layout approach) in `plan.md`, and link implementation/review tasks in `tasks.md`. For existing work, amend affected artifacts rather than restarting completed stages. For a bug or behavior-preserving refactor, record the expected UI outcome against the existing requirement and amend the spec only where it is missing or changes. Record rejected or inapplicable recommendations briefly in the plan; generated suggestions do not become requirements automatically.
+3. **After creating or changing UI:** invoke the skill again against the implemented result, compare it with the specification and run the applicable UI/UX review in [testing.md](testing.md). Fix findings within scope, repeat the affected checks after fixes, and record findings and actual evidence in the feature's verification artifacts. Specify a changed contract before expanding implementation. Unresolved acceptance failures block completion; record unperformed manual checks and remaining limits explicitly.
+
+Use the existing feature artifacts for these results; do not create a competing design-system source of truth or blindly persist generated recommendations. Preserve project compatibility, Undo/Redo, deterministic exports and repository dependency/offline rules. A skill search supplies guidance, not proof that the rendered interface passes review.
+
 ## Stage gates
 
 - Before planning: scope, non-goals and acceptance scenarios are clear; material open questions are resolved.
-- Before implementation: requirements are testable, plan respects architecture, tasks cover requirements and appropriate tests, and blocking analysis findings are resolved.
-- Before completion: affected requirements have evidence, required checks passed, task status is accurate, and unverified/manual checks and remaining limits are explicit.
+- Before implementation: frontend work has completed the UI/UX skill guidance and specification step above; requirements are testable, plan respects architecture, tasks cover requirements and appropriate tests, and blocking analysis findings are resolved.
+- Before completion: frontend work has completed the post-implementation UI/UX skill review with recorded findings and evidence; affected requirements have evidence, required checks passed, task status is accurate, and unverified/manual checks and remaining limits are explicit.
 - If implementation reveals a missing requirement or changes a contract, amend the relevant artifacts before expanding implementation. Do not check off work based only on code existing.
 
 ## Task brief and continuity

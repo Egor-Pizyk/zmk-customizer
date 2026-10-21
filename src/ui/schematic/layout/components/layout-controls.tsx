@@ -9,6 +9,7 @@ import { useState } from 'react';
 
 type LayoutControlsProps = PartsTableProps & {
   readonly hasPreview: boolean;
+  readonly canApply: boolean;
   readonly onPreview: (edit: LayoutEdit) => void;
   readonly onApply: () => void;
   readonly onCancel: () => void;
@@ -43,6 +44,12 @@ export function LayoutControls(props: LayoutControlsProps) {
     >
       <LayoutActions {...props} />
       {props.hasPreview ? <LayoutPreviewButtons {...props} /> : null}
+      {props.hasPreview && !props.canApply ? (
+        <output>
+          No layout changes: existing electrical connections and processing limits are preserved.
+          Adjust the geometry or repair the affected wires.
+        </output>
+      ) : null}
       <PreciseProperties {...props} first={first} edit={edit} onEditChange={handleEditChange} />
     </section>
   );
@@ -52,10 +59,14 @@ function PreciseProperties(props: Parameters<typeof LayoutEditorBody>[0]) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <details
+      name="schematic-editor"
       data-precise-properties
       open={isOpen}
       onToggle={(event) => {
         setIsOpen(event.currentTarget.open);
+        if (!event.currentTarget.open && props.hasPreview) {
+          props.onCancel();
+        }
       }}
     >
       <summary className="cursor-pointer text-xs focus-visible:outline-2 focus-visible:outline-focus">

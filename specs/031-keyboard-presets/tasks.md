@@ -27,13 +27,18 @@ Manual T008 remains unperformed; automated results and limits are explicit in [v
 
 | Requirement / scenario | Tasks | Test/check | Evidence |
 |---|---|---|---|
-| FR-001 / SC-001 | T001,T002 | exact preset names/counts, source anchors | verification.md |
-| FR-002 / SC-001 | T001–003,T005 | preview and saved geometry/half agreement | verification.md |
+| FR-001 / SC-001 | T001,T002,T009 | exact preset names/counts, source anchors | verification.md |
+| FR-002 / SC-001 | T001–003,T005,T009,T010 | preview and saved geometry/half agreement | verification.md |
 | FR-003 / SC-003 | T001–003,T005 | QWERTY keycodes, empty mode, limitations | verification.md |
 | FR-004 / SC-003 | T001,T002,T005 | retained controller, reset fields, wiring ZIP guard | verification.md |
 | FR-005 / SC-002 | T004,T005 | cancel preserves data/history, replace resets, starter | verification.md |
-| FR-006 / SC-002 | T001,T004–006 | JSON round trips, reload, edit history, starter ZIP | verification.md |
-| FR-007 / SC-004 | T003,T005,T008 | native keyboard/focus, geometry details, narrow dialog | verification.md |
+| FR-006 / SC-002 | T001,T004–006,T010 | JSON round trips, reload, edit history, starter ZIP | verification.md |
+| FR-007 / SC-004 | T003,T005,T008,T010 | native keyboard/focus, geometry details, narrow dialog | verification.md |
+
+## Lily58 correction — 2026-10-20
+
+- [x] T009 [FR-001,002 / SC-001] Reproduce missing thumb angles with independent pinned-source geometry anchors; verify red, correct Lily58 tuples and record source/PCB comparison in research.md.
+- [x] T010 [FR-002,006,007 / SC-001,002,004] Add browser regression for Lily58 preview/text geometry, both creation modes, rendered rotation and JSON/reload; run required checks and UI/UX post-review, record evidence in verification.md.
 
 ## Creation follow-up — feature 032
 

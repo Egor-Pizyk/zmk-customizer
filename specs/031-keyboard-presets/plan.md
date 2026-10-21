@@ -40,7 +40,13 @@ Tests first for domain creation: exact count/ANSI anchors and split source geome
 
 ## Decisions and uncertainty
 
-Percentages resolved to spec variants. Split data uses pinned sources rather than guessed geometry. QWERTY is one Base layer, omitted groups explicitly described. Existing New history reset is preserved. Corne thumb cluster uses the documented 0.25u clearance from research.md. No open blockers.
+Percentages resolved to spec variants. Split data uses pinned sources rather than guessed geometry. QWERTY is one Base layer, omitted groups explicitly described. Existing New history reset is preserved. Corne thumb cluster uses the documented 0.25u clearance from research.md; the Lily58 follow-up uses the documented 0.125u inward thumb clearance. No open blockers.
+
+## Lily58 correction — 2026-10-20
+
+Fix catalog facts under existing FR-001/002, not a new feature. Compare the pinned ZMK physical-layout definition with the original Lily58 PCB, retain the existing QMK sub-centi-u column stagger, and correct only the two thumb tuples. Add independent source anchors before implementation; existing all-preset geometry validation must remain green. Add a browser regression for preview, accessible geometry, creation modes, JSON/reload and rotated-corner rendering. Keep generator code, schema, IDs/order, bindings and old projects unchanged. Run make check, production build/full browser suite, three sequential changed-browser runs, and make zmk-build per exported-geometry policy.
+
+UI/UX skill pre-check: queried `visual consistency preview --domain ux`; results were unrelated, so narrowed once to `alt text --domain ux`. Relevant guidance is a readable text alternative to meaningful geometry. Preserve the existing SVG preview plus per-key geometry list; no new design system, layout or controls are needed. Post-change review must confirm both thumb rotations are visible and described, without clipping in the preset dialog.
 
 ## Creation follow-up — feature 032
 

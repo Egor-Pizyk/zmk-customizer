@@ -2,11 +2,17 @@ import { Button } from '@ui/components/components';
 
 type LayoutPreviewButtonsProps = {
   readonly hasPreview: boolean;
+  readonly canApply: boolean;
   readonly onApply: () => void;
   readonly onCancel: () => void;
 };
 
-export function LayoutPreviewButtons({ hasPreview, onApply, onCancel }: LayoutPreviewButtonsProps) {
+export function LayoutPreviewButtons({
+  hasPreview,
+  canApply,
+  onApply,
+  onCancel,
+}: LayoutPreviewButtonsProps) {
   function handleApplyClick() {
     onApply();
   }
@@ -15,7 +21,7 @@ export function LayoutPreviewButtons({ hasPreview, onApply, onCancel }: LayoutPr
   }
   return (
     <div className="flex gap-2">
-      <Button isDisabled={!hasPreview} onClick={handleApplyClick} size="sm">
+      <Button isDisabled={!hasPreview || !canApply} onClick={handleApplyClick} size="sm">
         Apply layout
       </Button>
       <Button isDisabled={!hasPreview} onClick={handleCancelClick} size="sm">

@@ -60,9 +60,11 @@ Each `/speckit-specify` prompt below describes what and why only. Technology cho
 | 032 | project-creation-and-auto-wiring | 031, 013, 011 |
 | 033 | wiring-and-settings-usability | 032, 001, 003, 012, 013 |
 | 034 | agent-assisted-configuration — discovery | 002, 009, 010; other dependencies TBD |
-| 037 | interactive-onboarding | all preceding scheduled product features, including 031, 033 and 034; implement last |
+| 035 | ui-ux-audit-specification | 031–034 |
+| 036 | ui-ux-remediation | 035 |
+| 037 | interactive-onboarding | all preceding scheduled product features, including 031–036; implement last |
 
-Numbers 024–030 are reserved by existing feature directories in [`specs/README.md`](../specs/README.md). Feature 032 is project creation and automatic wiring, selected by the user on 2026-10-20 after 031. Planned interactive onboarding moves to 037 so it remains last; existing specified feature numbers are unchanged. Scheduled work continues with 033 wiring/settings usability and 034 agent-assisted configuration. Deferred 020–022 remain postponed. Only not-yet-specified roadmap entries may be renumbered.
+Numbers 024–030 are reserved by existing feature directories in [`specs/README.md`](../specs/README.md). Feature 032 is project creation and automatic wiring, selected by the user on 2026-10-20 after 031. Planned interactive onboarding moves to 037 so it remains last; existing specified feature numbers are unchanged. Scheduled work continues with 033 wiring/settings usability, 034 agent-assisted configuration, 035 UI/UX audit/specification and 036 UI/UX remediation before 037 onboarding. Deferred 020–022 remain postponed. Only not-yet-specified roadmap entries may be renumbered.
 
 Workspaces (from 001): **Schematic** holds the schematic of keys and wires (003), switch diodes (008), the layout editor (012) and matrix/wiring editor (013) and owns the project JSON config (002); **Bindings** holds bindings keycaps (004), key behaviors (005), the Action panel (006), layers (007), the keymap editor (014), custom behaviors (016) and combos/macros/conditional layers (017); **Firmware** holds kconfig-settings (015); **Export** holds the file preview (009) and download (010). Every feature reports its validation issues in the 001 problems panel, counted in the tab badge of the workspace that fixes them.
 
@@ -522,7 +524,7 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 ```
 
 ### 023 — build-verification
-`make zmk-build` target: compile the generated shield for each preset inside the `zmkfirmware/zmk-build-arm` Docker image, as a developer/CI check (not a product feature, the app stays static). Could be pulled forward to right after 010 if golden tests prove insufficient. Owned by Makefile/CI, not `src/`.
+`make zmk-build` target: compile the generated shield for each preset inside the `zmkfirmware/zmk-build-arm` Docker image, as a local developer check (not run in CI; not a product feature, the app stays static). Could be pulled forward to right after 010 if golden tests prove insufficient. Owned by Makefile and local build infrastructure, not `src/`.
 
 ```
 /speckit-specify A developer check that proves the generated files really build: for every preset keyboard, generate the configuration and compile the firmware with the official ZMK build environment, failing when any build fails. It runs locally and in continuous integration, never inside the app.
@@ -551,7 +553,7 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 ### 032 — project-creation-and-auto-wiring
 
-**Status (2026-10-20).** Feature 032 is implemented; automated verification is recorded and the required manual accessibility/delivery gates remain pending; see [specification](../specs/032-project-creation-and-auto-wiring/spec.md). User confirmed preserving valid GPIOs, atomic refusal of invalid/conflicting pins or insufficient capacity, outward row outputs and top/bottom column clearance. Corne/Lily58 success cases use a 1u grouping grid; finer-grid capacity failures report guidance rather than silently regrouping. Extends project creation from 002/031 and automatic wiring from 013. Amend affected owning contracts during specification before code changes.
+**Status (2026-10-20).** Feature 032 is complete; automated verification is recorded, the user reported manual acceptance passed, PR #13 merged and v0.1.0 was published; see [specification](../specs/032-project-creation-and-auto-wiring/spec.md). User confirmed preserving valid GPIOs, atomic refusal of invalid/conflicting pins or insufficient capacity, outward row outputs and top/bottom column clearance. Corne/Lily58 success cases use a 1u grouping grid; finer-grid capacity failures report guidance rather than silently regrouping. Extends project creation from 002/031 and automatic wiring from 013. Amend affected owning contracts during specification before code changes.
 
 **Goal.** Simplify starting a project and make automatic wiring assign usable controller GPIOs with clearly placed outputs instead of leaving pins unassigned or placing them over keys/the other half.
 
@@ -572,9 +574,9 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 /speckit-specify Simplify New project creation and improve explicit automatic wiring in ZMK Customizer. Remove the six-key unibody starter button, template and creation action from the product, preserving the regular preset library and compatibility with existing saved projects. New must offer exactly three equally wide and tall action buttons in order: Create project from preset; Start empty project; Cancel, with Cancel red. Preserve preview, QWERTY/empty-keymap choices, replacement warning, keyboard access and safe cancellation. Auto assign must propose unused GPIOs from the selected board, preserve valid existing pins and avoid occupied pins per controller, including encoders. Route row/column outputs outward to appropriate left/right/top/bottom sides for each half with pin endpoints and labels clear of all keys and the other half. Define deterministic side/spacing/fallback and capacity-error behavior before implementation. Keep real schematic connectivity, preview/Apply/Cancel, atomic Undo/Redo, saved projects and deterministic ZMK v0.3.0 exports consistent. Invoke ui-ux-pro-max before UI design and after implementation. Broader intermediate-pin connectivity, wire deletion and panel rework remain in feature 033.
 ```
 
-### 033 — wiring-and-settings-usability (next)
+### 033 — wiring-and-settings-usability (implementation verification)
 
-**Status.** Planned follow-up requested by the user; not implemented. Extends the schematic/wiring flows from 003/013 and settings panels from 001. Amend the affected contracts before implementation.
+**Status (2026-10-20).** Specified in [`specs/033-wiring-and-settings-usability/spec.md`](../specs/033-wiring-and-settings-usability/spec.md); implementation and regression coverage are in final verification. Required manual acceptance is tracked separately in its verification record. User confirmed incremental completion with a separate rebuild action and multiple selection/deletion of conductor sections between connections. 032 is integrated; owning 002/003/013 contracts include the current behavior and v12 compatibility rules.
 
 **Goal.** Make automatic wiring predictable, preserve intentional electrical connections while moving keys, support direct wire deletion, and keep the keyboard canvas usable while editing settings.
 

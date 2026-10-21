@@ -13,3 +13,4 @@ export type { PartsTableProps } from './parts-list';
 export { PartsTableHead } from './parts-table-head';
 export { PartsWiresTable } from './parts-wires-table';
 export { WireBendsEditor } from './wire-bends-editor';
+export { PartsWireSectionsTable } from './parts-wire-sections-table';

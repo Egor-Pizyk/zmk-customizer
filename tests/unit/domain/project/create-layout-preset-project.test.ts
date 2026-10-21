@@ -94,6 +94,34 @@ describe('layout preset creation (031)', () => {
     }
   });
 
+  it('preserves Lily58 rev1 stagger, inner gaps and mirrored angled thumb geometry', () => {
+    const lily = KEYBOARD_PRESETS.find((preset) => preset.id === 'lily58-58');
+    expect(lily?.keys[1]).toMatchObject({ xU: 1, yU: 0.375 });
+    expect(lily?.keys[42]).toMatchObject({ xU: 6, yU: 2.75, half: 'left' });
+    expect(lily?.keys[43]).toMatchObject({ xU: 9.5, yU: 2.75, half: 'right' });
+    // ZMK v0.3.0 anchors plus documented 0.125u inward pitch-rectangle clearance.
+    expect(lily?.keys[53]).toMatchObject({
+      xU: 5.875,
+      yU: 4,
+      widthU: 1,
+      heightU: 1.5,
+      rotationDeg: 30,
+      rotationOriginXU: 6.375,
+      rotationOriginYU: 4.75,
+      half: 'left',
+    });
+    expect(lily?.keys[54]).toMatchObject({
+      xU: 9.625,
+      yU: 4,
+      widthU: 1,
+      heightU: 1.5,
+      rotationDeg: -30,
+      rotationOriginXU: 10.125,
+      rotationOriginYU: 4.75,
+      half: 'right',
+    });
+  });
+
   it('uses independent ANSI and upstream Corne anchors including rotated thumbs', () => {
     const ansi = KEYBOARD_PRESETS.find((preset) => preset.id === 'ansi-60');
     expect(ansi?.keys[0]).toMatchObject({ xU: 0, yU: 0, keycode: 'GRAVE' });

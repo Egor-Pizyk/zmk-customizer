@@ -55,7 +55,15 @@ Preset: stable library identity, name, structure, ordered physical keys, base ke
 
 ## Assumptions and open questions
 
-Selected explicit variants above resolve percentage ambiguity using familiar ANSI and ortholinear examples. Split geometry comes from pinned upstream layout definitions, with explicitly described Corne thumb clearance to avoid overlapping pitch rectangles; no commercial firmware is copied. US QWERTY is the default. Existing New clears history rather than becoming undoable; its warning/save protection is retained. Current controller retention is explicit, not a hardware recommendation. No material open questions.
+Selected explicit variants above resolve percentage ambiguity using familiar ANSI and ortholinear examples. Split geometry comes from pinned upstream layout definitions, with explicitly described Corne and Lily58 thumb clearance to avoid overlapping pitch rectangles; no commercial firmware is copied. US QWERTY is the default. Existing New clears history rather than becoming undoable; its warning/save protection is retained. Current controller retention is explicit, not a hardware recommendation. No material open questions.
+
+## Lily58 geometry correction — 2026-10-20
+
+FR-001/FR-002 clarification: Lily58 rev1 must retain column stagger and separated inner keys, with the two 1u × 1.5u inner thumb keys at +30°/−30° and their corrected positions/origins from the pinned ZMK v0.3.0 physical layout. Preview, readable geometry details and newly created projects in both binding modes must agree. Existing saved projects are not rewritten. All pitch rectangles must remain non-overlapping; any necessary clearance adaptation must be explicit rather than silently claiming exact PCB geometry.
+
+Acceptance: preview shows both angled thumbs, the per-key description includes the angle and origin, both creation modes preserve the same 58 ordered keys/halves, and save/reload preserves corrected geometry. The existing UI components and interaction contracts remain unchanged.
+
+The Lily58 correction uses 0.125u extra inward clearance for each angled thumb; the preview description discloses it.
 
 ## Superseded creation controls — feature 032
 

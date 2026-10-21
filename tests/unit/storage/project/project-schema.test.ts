@@ -4,7 +4,7 @@ import { projectSchema } from '@storage/project';
 const BASE_LAYER = { id: 'l0', name: 'Base', bindings: {} };
 
 const BASE = {
-  schemaVersion: 11,
+  schemaVersion: 12,
   encoders: [],
   combos: [],
   macros: [],
@@ -110,20 +110,6 @@ describe('projectSchema v2 schematic', () => {
         wires: [{ ...PIN_WIRE, end: { kind: 'free', at: { xU: 0, yU: 0 }, boardPin: 32 } }],
       },
       'wires.0.end.boardPin',
-    ],
-    [
-      'a wire with no key pin end',
-      {
-        keys: TWO_KEYS,
-        wires: [
-          {
-            ...PIN_WIRE,
-            start: { kind: 'free', at: { xU: 0, yU: 0 } },
-            end: { kind: 'free', at: { xU: 1, yU: 0 } },
-          },
-        ],
-      },
-      'wires.0',
     ],
     [
       'a wire whose ends are the same pin',
@@ -272,4 +258,20 @@ describe('projectSchema v3 bindings', () => {
       'layers.0.id',
     );
   });
+});
+
+it('accepts repairable conductor fragments without a key-pin endpoint', () => {
+  expect(
+    projectSchema.safeParse({
+      ...BASE,
+      wires: [
+        {
+          id: 'w1',
+          start: { kind: 'free', at: { xU: 0, yU: 0 } },
+          end: { kind: 'free', at: { xU: 1, yU: 0 } },
+          bends: [],
+        },
+      ],
+    }).success,
+  ).toBe(true);
 });

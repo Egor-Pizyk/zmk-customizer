@@ -22,3 +22,14 @@ Approved runtime dependencies (add only when the first feature needs them):
 - `fflate` — building the download `.zip`
 
 Anything else needs a line in `docs/decisions/` explaining why a few lines of our own code are not enough. Prefer browser APIs: SVG for the canvas, `<dialog>`, `<details>`, `URL.createObjectURL` for downloads, CSS for layout.
+
+## Local UI/UX skill
+
+[UI/UX Pro Max](../.agents/skills/ui-ux-pro-max/SKILL.md) is vendored in
+`.agents/skills/ui-ux-pro-max/` for this project only.
+Invoke `$ui-ux-pro-max` in Codex.
+Its local search needs Python 3 (standard library only); it adds no application dependency.
+[Installation provenance and update notes](../.agents/skills/ui-ux-pro-max/INSTALLATION.md)
+record the pinned upstream revision, license and local adaptation.
+Search recommendations remain subject to repository rules and existing design tokens.
+The planned audit/specification and separate fixes are roadmap steps 035 and 036.

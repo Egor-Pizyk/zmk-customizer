@@ -38,3 +38,7 @@ Import rules (zod, `src/storage/`), each failure reported with its path, current
 - Each wire has ≥ 1 `key-pin` end; ends are not the same pin.
 - `insulatedCrossings[].wireIds` exist and are sorted; `ordinal` integer ≥ 0. (Stale refs are harmless and dropped by the next geometry operation.)
 - v1 files migrate with empty arrays.
+
+## Feature 033 extension (schema v12)
+
+033 captures pass-through key-pin connections when wiring is created and persists fixed-anchor contacts; moving a key preserves these relationships and does not connect an unrelated pin merely by overlap. Stored conductor fragments need not have a direct key-pin endpoint; disconnected fragments remain repairable and visible. Section selection/deletion removes only the chosen conductor between adjacent electrical connection points, preserving other branches and all keys. Earlier schema formats remain historical migration contracts. See specs/033-wiring-and-settings-usability/spec.md and data-model.md for the current extension.

@@ -12,6 +12,7 @@
     "package-lock.json",
     "**/*.md",
     ".claude/**",
+    ".agents/**",
     ".specify/**",
     "tests/fixtures/**"
   ]

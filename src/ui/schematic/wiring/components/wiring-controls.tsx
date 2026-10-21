@@ -17,10 +17,14 @@ export function WiringControls(props: WiringControlsProps) {
   return (
     <section className="shrink-0 border-t border-border bg-surface-raised">
       <details
+        name="schematic-editor"
         data-wiring-controls
         open={isOpen || props.hasPreview}
         onToggle={(event) => {
           setIsOpen(event.currentTarget.open);
+          if (!event.currentTarget.open && props.hasPreview) {
+            props.handleCancel();
+          }
         }}
       >
         <summary className="cursor-pointer px-4 py-2 focus-visible:outline-2 focus-visible:outline-focus">
@@ -47,10 +51,11 @@ function WiringContent(props: WiringControlsProps & { readonly project: Project 
       {props.hasPreview ? <p className="font-semibold">Wiring preview</p> : undefined}
       <p className="text-text-muted">
         Assignments change the actual schematic connections. Inspect rerouted wires and diode
-        changes before applying. Auto assign uses visible centers and the current grid; adjust
-        irregular clusters in the table. Auto assign proposes free GPIOs; review these against your
-        physical hardware before applying. These pins are not detected hardware wiring.
+        changes before applying. Rebuild wiring uses visible centers and the current grid; adjust
+        irregular clusters in the table. Completion and rebuilding propose free GPIOs; review these
+        against your physical hardware before applying. These pins are not detected hardware wiring.
       </p>
+      <WiringProposalSummary {...props} />
       <WiringOptionsControls project={project} onEdit={props.handleEdit} />
       {(['left', ...(wiring.topology === 'split' ? (['right'] as const) : [])] as const).map(
         (half) => (
@@ -113,6 +118,17 @@ function WiringActions(props: WiringControlsProps) {
           </Button>
         </div>
       ) : undefined}
+    </>
+  );
+}
+
+function WiringProposalSummary(props: WiringControlsProps) {
+  return (
+    <>
+      {props.summary === undefined ? undefined : (
+        <output>{`Retained ${props.summary.retained}; added ${props.summary.added}; rerouted ${props.summary.rerouted}; removed ${props.summary.removed}. Keys: ${props.summary.keyIds.join(', ') || 'none'}; terminals: ${props.summary.terminalIds.join(', ') || 'none'}.`}</output>
+      )}
+      {props.message === undefined ? undefined : <output>{props.message}</output>}
     </>
   );
 }

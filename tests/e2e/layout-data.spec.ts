@@ -87,11 +87,12 @@ test('changing selection or project invalidates numeric preview and pointer prev
   await page.getByText('Precise properties', { exact: true }).click();
   const before = await saved(page);
   await editNumber(page, 'Selected width (u)', '2');
-  await page.getByRole('checkbox', { name: 'Select key 1', exact: true }).check();
+  await key(page, 1).focus();
   await expect(page.getByRole('button', { name: 'Apply layout', exact: true })).toHaveCount(0);
   await expectGeometry(page, before.keys[0] ?? { id: 'k0', xU: 5, yU: 5 });
   expect(await saved(page)).toEqual(before);
   await editNumber(page, 'Selected height (u)', '2');
+  await page.getByText('Parts', { exact: true }).click();
   await editNumber(page, 'Key 1 Y (u)', '6');
   await expect(page.getByRole('button', { name: 'Apply layout', exact: true })).toHaveCount(0);
   await expectGeometry(page, before.keys[0] ?? { id: 'k0', xU: 5, yU: 5 });
@@ -101,7 +102,6 @@ test('changing selection or project invalidates numeric preview and pointer prev
   await expectGeometry(page, { id: 'k0', xU: 5, yU: 5, widthU: 2 });
   // A real keyboard selection change during capture, then release, must not commit stale data.
   await key(page, 1).focus();
-  await page.keyboard.press('Control+Space');
   await page.mouse.up();
   expect((await saved(page)).keys[0]?.widthU ?? 1).toBe(1);
   await expectGeometry(page, before.keys[0] ?? { id: 'k0', xU: 5, yU: 5 });

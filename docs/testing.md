@@ -104,6 +104,16 @@ for 14 days even on failure. Traces and screenshots are retained for failed test
 `npx playwright show-trace <trace.zip>` opens a captured trace. Reports and build output
 are ignored in git and excluded from Docker build context.
 
+CI runs once per pull request targeting main, with four required statuses: `check`,
+`e2e`, `image` and `mutations`. Firmware compilation runs locally through
+`make zmk-build`, outside CI. Record its evidence for generator/export changes
+as required by [commands.md](commands.md). CI does not run on push
+or after merge; the separate release workflow still publishes merged PRs. New commits
+cancel obsolete runs for the same PR. Main protection requires up-to-date `check`,
+`e2e`, `image` and `mutations` results and includes administrators.
+Keep complete viewport/theme matrices in Chromium; Firefox/WebKit need representative
+engine-sensitive cases rather than repeating every presentation combination.
+
 Tests use real mouse moves/down/intermediate moves/up, native keyboard input, accessible
 roles/names, displayed SVG coordinates, actual downloads and read-only storage observations.
 No force clicks, arbitrary sleeps, injected pointer events, mocked React/domain/storage/
@@ -156,6 +166,15 @@ For new or changed user journeys, add or update Playwright E2E tests and include
 - Apply the change-specific completion checks in [commands.md](commands.md). Local selection runs through the changed-check script; full cross-browser execution belongs to CI.
 - Retain useful failure traces/screenshots. Record scenario → risk → existing coverage → new E2E → visible assertion → saved/exported assertion, verification results and remaining limits in feature artifacts. Commands and artifact handling are documented in `docs/testing.md`.
 - Never weaken assertions to make CI green or claim absence of user problems solely from passing tests.
+
+## Post-implementation UI/UX skill review (Codex)
+
+After creating or changing an interface, invoke the project-local [$ui-ux-pro-max](../.agents/skills/ui-ux-pro-max/SKILL.md) again as required by [workflow.md](workflow.md#frontend-uiux-workflow-codex). Review the implemented interface against its specification and the skill's applicable guidance, including `references/quick-reference.md` and `references/pro-rules.md`. Apply web-relevant checks within the supported product scope; record native-only or unrelated items as inapplicable with a reason.
+
+- Check affected flows and relevant empty, error, disabled and success states; labels, hierarchy, consistency and feedback; keyboard navigation, focus visibility/order/restoration, accessible names and non-pointer alternatives; contrast in supported themes, overflow/responsive layout, text zoom and reduced motion where applicable.
+- Inspect the actual rendered result in isolated Playwright under the browser rules above. Local search output or source inspection alone is not rendered-interface verification. Use the required automated checks from [commands.md](commands.md); skill review supplements those checks.
+- Record the reviewed scope, skill queries/guidance used, acceptance criteria, findings, fixes, check commands/results and remaining manual limits in the owning feature's verification artifacts. Give each finding a stable ID and status and link its requirement/task/check without duplicating an existing traceability mapping.
+- Reproduce regressions before fixes and rerun affected checks after fixes. An unresolved acceptance failure keeps its task open and blocks completion. Never label unperformed keyboard, screen-reader, visual or other manual checks as passed.
 
 ## Mutation runner implementation
 

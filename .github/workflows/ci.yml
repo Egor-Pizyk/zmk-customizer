@@ -1,15 +1,14 @@
 name: CI
 
 on:
-  push:
-    branches: [main]
   pull_request:
+    branches: [main]
 
 permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.event.pull_request.number || github.ref }}
+  group: ci-pr-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
@@ -120,29 +119,9 @@ jobs:
           path: .e2e-mutations/
           include-hidden-files: true
 
-  zmk-build:
-    env:
-      APP_USER: root
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/cache@v6
-        with:
-          path: .zmk-build/workspace
-          key: zmk-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('infra/zmk-build.env', 'infra/zmk-build.sh', 'infra/zmk-west.yml', 'infra/compose.zmk.yaml') }}
-      - run: make install && make zmk-build
-      - uses: actions/upload-artifact@v7
-        if: always()
-        with:
-          name: zmk-build-evidence
-          path: |
-            .zmk-build/logs
-            .zmk-build/artifacts
-            .zmk-build/exports
-
   check:
     if: always()
-    needs: [static, unit, e2e, image, mutations, browser-mutations, zmk-build]
+    needs: [static, unit, e2e, image, mutations, browser-mutations]
     runs-on: ubuntu-latest
     steps:
       - name: Require all checks

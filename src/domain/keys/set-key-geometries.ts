@@ -1,5 +1,5 @@
 import { getKeyGeometry } from '@domain/geometry';
-import { pruneInsulatedCrossings } from '@domain/crossings';
+import { preserveKeyWiring } from './preserve-key-wiring';
 import type { KeyGeometry, Project } from '@domain';
 
 export type KeyGeometryChange = { readonly keyId: string; readonly geometry: Partial<KeyGeometry> };
@@ -28,5 +28,5 @@ export function setKeyGeometries(
   });
   return keys.every((key, index) => key === project.keys[index])
     ? project
-    : pruneInsulatedCrossings({ ...project, keys });
+    : preserveKeyWiring(project, { ...project, keys });
 }

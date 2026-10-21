@@ -5,7 +5,7 @@ import { UNIBODY_WIRING } from './unibody-preset-wiring';
 const DIODE = { pin: 1, cathode: 'away-switch' } as const;
 
 export const UNIBODY_PRESET = {
-  schemaVersion: 11,
+  schemaVersion: 12,
   encoders: [],
   combos: [],
   macros: [],

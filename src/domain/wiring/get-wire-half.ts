@@ -1,6 +1,10 @@
+import { getWirePinContacts } from '@domain/wires/geometry';
 import type { Half, Project, Wire } from '@domain';
 
 export function getWireHalf(project: Project, wire: Wire): Half {
+  if (wire.half !== undefined) {
+    return wire.half;
+  }
   if (project.wiring?.topology !== 'split') {
     return 'left';
   }
@@ -31,7 +35,10 @@ function getDirectHalf(project: Project, wire: Wire): Half | undefined {
       );
     }
   }
-  return undefined;
+  const contact = getWirePinContacts(project, wire)[0];
+  return contact === undefined
+    ? undefined
+    : (project.keys.find((key) => key.id === contact.keyId)?.half ?? 'left');
 }
 
 function getJunctionTargets(project: Project, wire: Wire) {

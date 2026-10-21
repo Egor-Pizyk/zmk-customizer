@@ -10,8 +10,9 @@ import { buildProject } from '../../../helpers/build-project';
 
 it.each(CONTROLLER_BOARDS)(
   'explains $name and offers its exposed pins without reserved contacts',
-  (board) => {
-    renderApp({ ...loadPreset(), controllerId: board.id });
+  async (board) => {
+    const { user } = renderApp({ ...loadPreset(), controllerId: board.id });
+    await user.click(screen.getByText('Controller', { exact: true }));
     const panel = screen.getByRole('region', { name: 'Controller' });
     expect(within(panel).getByText(board.description)).toBeTruthy();
     expect(

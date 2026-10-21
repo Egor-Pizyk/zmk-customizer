@@ -3,9 +3,9 @@ import { fixture, history, openProject, saved, workspace } from './helpers';
 
 for (const width of [1024, 1280, 1440]) {
   for (const colorScheme of ['light', 'dark'] as const) {
-    test(`layer bar stays stable at ${width}px in ${colorScheme} @cross-browser`, async ({
-      page,
-    }) => {
+    // Chromium covers the presentation matrix; each other engine covers native overflow/focus once.
+    const engines = width === 1280 && colorScheme === 'light' ? ' @cross-browser' : '';
+    test(`layer bar stays stable at ${width}px in ${colorScheme}${engines}`, async ({ page }) => {
       await page.setViewportSize({ width, height: 1000 });
       await page.emulateMedia({ colorScheme });
       await openProject(page, { ...fixture, layers: fixture.layers.slice(0, 1) });

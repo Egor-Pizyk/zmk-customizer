@@ -1,5 +1,6 @@
 import { createEntityId, getProjectResourceError, PROJECT_BUDGET } from '@domain/project';
-import { findWireContacts, getKeyPinPosition, getKeyPinWires } from '@domain/wires';
+import { findWireContacts, getKeyPinWires, captureWireContacts } from '@domain/wires';
+import { getKeyPinPosition } from '@domain/wires/geometry';
 import { getNets } from '@domain/wires/nets';
 import { getOutputPosition } from './get-output-position';
 import { getRetainedWires } from './get-retained-wires';
@@ -27,6 +28,7 @@ export function routeWiring(
     readonly terminalIds: readonly string[];
     readonly replaceKeyNets?: boolean;
     readonly sourceProject?: Project;
+    readonly retainAllWires?: boolean;
   },
 ): Result<Project, string> {
   const wires = getStartingWires(project, input);
@@ -120,6 +122,12 @@ function appendRoutes(
 ): string | undefined {
   const { wires, existingIds } = context;
   for (const [index, connection] of connections.entries()) {
+    const currentNet = getNets({ ...project, wires }).find((net) =>
+      net.pins.some((pin) => pin.keyId === connection.keyId && pin.pin === connection.pin),
+    );
+    if (currentNet?.terminalIds.includes(connection.terminalId) === true) {
+      continue;
+    }
     const key = project.keys.find((entry) => entry.id === connection.keyId);
     const terminal = project.wiring?.terminals.find((entry) => entry.id === connection.terminalId);
     if (key === undefined || terminal === undefined) {
@@ -192,7 +200,7 @@ type FindRouteInput = {
 };
 
 function touchesOtherPin(project: Project, wire: Wire, connection: WiringConnection) {
-  const findWires = getKeyPinWires({ ...project, wires: [wire] });
+  const findWires = getKeyPinWires({ ...project, wires: [captureWireContacts(project, wire)] });
   return project.keys.some((key) =>
     ([1, 2] as const).some(
       (pin) =>
@@ -208,8 +216,12 @@ function getStartingWires(
     readonly terminalIds: readonly string[];
     readonly replaceKeyNets?: boolean;
     readonly sourceProject?: Project;
+    readonly retainAllWires?: boolean;
   },
 ): Wire[] {
+  if (input.retainAllWires === true) {
+    return [...project.wires];
+  }
   if (input.replaceKeyNets === true) {
     return [...getRetainedWires(input.sourceProject ?? project)];
   }
@@ -228,6 +240,13 @@ function findOutput(
   project: Project,
   input: { readonly terminalId: string; readonly wires: readonly Wire[] },
 ): WirePoint | undefined {
+  for (const wire of input.wires) {
+    for (const end of [wire.start, wire.end]) {
+      if (end.kind === 'free' && end.terminalId === input.terminalId) {
+        return end.at;
+      }
+    }
+  }
   const terminal = project.wiring?.terminals.find((entry) => entry.id === input.terminalId);
   if (terminal === undefined) {
     return undefined;

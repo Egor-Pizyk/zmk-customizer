@@ -29,7 +29,7 @@
 - [x] T013 Verify final consistency of specs/013-matrix-wiring-editor/contracts/wiring.md and specs/031-keyboard-presets/spec.md with 032 and update specs/README.md/docs/roadmap.md without including pre-existing edits.
 - [x] T014 Re-read docs/guidelines/git-flow.md and prepare the scoped diff, release:minor PR description and local verification evidence; delivery gates are tracked by the PR checks and final delivery report.
 
-- [ ] T015 Complete the required manual accessibility pass (keyboard, VoiceOver/Safari, OS theme/reduced motion and zoom) before marking the feature done. Automated browser evidence does not replace it. On 2026-10-20 the user chose to perform this pass personally; merge waits for their result.
+- [x] T015 Complete the required manual accessibility pass (keyboard, VoiceOver/Safari, OS theme/reduced motion and zoom) before marking the feature done. Automated browser evidence does not replace it. On 2026-10-20 the user chose to perform this pass personally; User confirmed on 2026-10-20: “проверил, все ок”; manual acceptance is complete.
 
 ## Dependencies
 
@@ -45,7 +45,7 @@ T001→T002 before production. T003→T004→T005 for US1. T006→T007 before au
 | FR-006 | T009,T010,T011,T012 | Rotated corner/output label clearance, real rendered preview | verification.md |
 | FR-007,FR-008 | T006,T008,T009,T010,T012 | Proposal copy, unchanged preview storage, Apply/history/reload/JSON/ZIP | verification.md |
 
-Git delivery follows local completion: push the scoped commit, open a main-based PR, require all five final-head checks, then verify squash merge and its release. External delivery evidence belongs to the PR/final report, avoiding a self-referential verification commit. Manual screen-reader/OS checks remain explicitly unperformed in verification.md.
+Git delivery follows local completion: push the scoped commit, open a main-based PR, require all five final-head checks, then verify squash merge and its release. External delivery evidence belongs to the PR/final report, avoiding a self-referential verification commit. Manual acceptance was reported passed by the user on 2026-10-20; see verification.md.
 
 ## Manual acceptance handoff (T015)
 

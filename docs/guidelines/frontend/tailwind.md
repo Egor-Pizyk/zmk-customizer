@@ -101,3 +101,7 @@ const VARIANT_CLASSES = {
 - Lint (`eslint-plugin-better-tailwindcss` via oxlint `jsPlugins`, `src/**/*.tsx`): unknown classes (raw palette colors are unknown because the default palette is cleared), conflicting, duplicate, deprecated, non-canonical and non-shorthand classes, concatenated class names (`` `p-${n}` ``), and restricted classes: `dark:`, `sm:`, `md:`, `outline-none`/`outline-hidden`, arbitrary values and properties, `(--var)` classes.
 - Lint (oxlint react): `style` prop banned (`react/forbid-dom-props`); `forwardRef`, `FC`, `ProjectContext.Provider` banned.
 - Review: placement-only `className`, variants as typed maps, tokens added before use, `border-border-strong` on input edges.
+
+### Feature 033 panel exception
+
+Schematic editing panels and app Settings additionally support the narrow viewports specified by 033, including 390px. Retain base/lg/xl conventions and existing tokens/control density. Use one expanded non-modal Schematic editor, base lower area and xl docking, with canvas/panel budgets in 033. This does not redesign other workspaces or change their desktop target.

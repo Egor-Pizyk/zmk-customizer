@@ -1,4 +1,4 @@
-import { getKeyPinPosition } from '@domain/wires';
+import { getKeyPinPosition } from '@domain/wires/geometry';
 import type { DiodePlacement } from '@ui/schematic/interaction';
 import type { Key } from '@domain';
 

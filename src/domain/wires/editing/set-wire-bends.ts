@@ -1,3 +1,4 @@
+import { captureWireContacts, findWireContactError } from '@domain/wires';
 import { getProjectResourceError } from '@domain/project';
 import { pruneInsulatedCrossings } from '@domain/crossings';
 import type { Project, WirePoint } from '@domain';
@@ -14,11 +15,12 @@ export function setWireBends(
         (point, index) => point.xU === input.bends[index]?.xU && point.yU === input.bends[index].yU,
       )
     )
-      ? { ...wire, bends: input.bends }
+      ? captureWireContacts(project, { ...wire, bends: input.bends })
       : wire,
   );
   const candidate = { ...project, wires };
-  return getProjectResourceError(candidate) !== undefined ||
+  return wires.some((wire) => findWireContactError(candidate, wire) !== undefined) ||
+    getProjectResourceError(candidate) !== undefined ||
     wires.every((wire, index) => wire === project.wires[index])
     ? project
     : pruneInsulatedCrossings({ ...project, wires });

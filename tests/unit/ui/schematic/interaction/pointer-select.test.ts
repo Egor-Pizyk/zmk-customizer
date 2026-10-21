@@ -28,8 +28,7 @@ function projectAtByteLimit(): Project {
       ),
     })),
   };
-  let remaining =
-    5 * 1024 * 1024 - new TextEncoder().encode(`${JSON.stringify(project, undefined, 2)}\n`).length;
+  let remaining = 5 * 1024 * 1024 - new TextEncoder().encode(`${JSON.stringify(project)}\n`).length;
   return {
     ...project,
     layers: project.layers.map((layer) => ({

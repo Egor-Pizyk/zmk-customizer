@@ -10,7 +10,7 @@ export const MUTATIONS = [
     'src/domain/project/change-controller.ts',
     'previous.family === next.family && next.gpioPins.includes(end.boardPin)',
     'next.gpioPins.includes(end.boardPin)',
-    ['tests/unit/ui/integration/app.test.ts'],
+    ['tests/unit/domain/project/change-controller.test.ts'],
   ],
   [
     'lost same-family pin retention',
@@ -24,7 +24,7 @@ export const MUTATIONS = [
     'src/domain/keys/remove-key.ts',
     'keyId !== input.keyId',
     'true',
-    ['tests/unit/ui/integration/app.test.ts'],
+    ['tests/unit/domain/keys/remove-key.test.ts'],
   ],
   [
     'undo restores current state',
@@ -153,7 +153,7 @@ export const MUTATIONS = [
     'src/domain/geometry/rotate-point.ts',
     '(input.rotationDeg * Math.PI)',
     '(-input.rotationDeg * Math.PI)',
-    ['tests/unit/domain/wires/get-key-pin-position.test.ts'],
+    ['tests/unit/domain/wires/geometry/get-key-pin-position.test.ts'],
   ],
   [
     'layout export loses width',

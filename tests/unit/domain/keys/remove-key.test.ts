@@ -1,4 +1,4 @@
-import { getKeyPinPosition } from '@domain/wires';
+import { getKeyPinPosition } from '@domain/wires/geometry';
 import { removeKey } from '@domain/keys';
 import { expect, it } from 'vitest';
 

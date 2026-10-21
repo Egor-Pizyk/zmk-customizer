@@ -1,6 +1,7 @@
+import { getWireSections } from '@domain/wires';
 import { getSchematicGeometry } from './get-schematic-geometry';
 import type { DiodePlacement } from './get-schematic-geometry';
-import { getKeyPinPosition, getWirePath } from '@domain/wires';
+import { getKeyPinPosition, getWirePath } from '@domain/wires/geometry';
 import { getNearestPointOnPath } from '@domain/geometry';
 import type { Key, Project, WirePoint } from '@domain';
 import type { CanvasHit } from './read-canvas-hit';
@@ -30,7 +31,10 @@ export function toDraftTarget(
   project: Project,
   input: { readonly hit: CanvasHit; readonly world: WirePoint; readonly snapped: WirePoint },
 ): DraftTarget {
-  const { hit, world, snapped } = input;
+  const { world, snapped } = input;
+  const sectionId = input.hit.kind === 'section' ? input.hit.sectionId : undefined;
+  const section = getWireSections(project).find((entry) => entry.id === sectionId);
+  const hit = section === undefined ? input.hit : { kind: 'wire' as const, wireId: section.wireId };
   const geometry = getSchematicGeometry(project);
   if (hit.kind === 'pin') {
     const key = project.keys.find((candidate) => candidate.id === hit.keyId);
@@ -43,9 +47,12 @@ export function toDraftTarget(
     const point =
       wire === undefined
         ? undefined
-        : getNearestPointOnPath(geometry.paths.get(wire.id) ?? [], world);
+        : getNearestPointOnPath(section?.path ?? geometry.paths.get(wire.id) ?? [], world);
     if (wire !== undefined && point !== undefined) {
-      const attachmentPoint = getNearestPointOnPath(getWirePath(project, wire), point) ?? point;
+      const attachmentPoint =
+        section === undefined
+          ? (getNearestPointOnPath(getWirePath(project, wire), point) ?? point)
+          : point;
       return { kind: 'wire', wireId: wire.id, point, attachmentPoint };
     }
   }

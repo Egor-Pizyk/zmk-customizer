@@ -1,10 +1,15 @@
-import { encoderBindingsSchema } from './encoder-schema';
+import {
+  contactSchema,
+  findContactPoolIssues,
+  findWireContactReferenceIssues,
+} from './wire-contact-schema';
+import { getWireSegmentCount } from '@domain/wires/geometry';
+import { layerSchema } from './project-layer-schema';
 import { projectContentSchema } from './project-content-schema';
-import { bindingSchema, layerIdSchema } from './binding-schema';
 import { wiringSchema, findTerminalIssues } from './wiring-schema';
 import { PROJECT_BUDGET } from './project-budget';
 import { CONTROLLER_BOARDS } from '@catalog/controllers';
-import { BOARD_PIN_COUNT } from '@domain/wires';
+import { BOARD_PIN_COUNT, findWireContactError } from '@domain/wires';
 import type { Project, Wire, WireEnd, WireEndSide } from '@domain';
 
 import * as z from 'zod';
@@ -40,6 +45,8 @@ const checkedWireEndSchema = wireEndSchema.refine(
 );
 
 const wireSchema = z.strictObject({
+  contactIds: z.array(z.int().min(0).max(1023)).max(1024).exactOptional(),
+  half: z.enum(['left', 'right']).exactOptional(),
   id: z
     .string()
     .max(PROJECT_BUDGET.idLength)
@@ -47,13 +54,11 @@ const wireSchema = z.strictObject({
   start: checkedWireEndSchema,
   end: checkedWireEndSchema,
   bends: z.array(pointSchema).max(PROJECT_BUDGET.bendsPerWire),
-});
-
-const layerSchema = z.strictObject({
-  encoderBindings: encoderBindingsSchema.exactOptional(),
-  id: layerIdSchema,
-  name: z.string().max(PROJECT_BUDGET.stringLength),
-  bindings: z.record(z.string(), bindingSchema),
+  anchors: z.strictObject({ start: pointSchema, end: pointSchema }).exactOptional(),
+  contacts: z
+    .array(contactSchema)
+    .max(2 * PROJECT_BUDGET.keys)
+    .exactOptional(),
 });
 
 type Issue = { readonly message: string; readonly path: readonly (string | number)[] };
@@ -107,9 +112,7 @@ function findWireIssues(project: Project): Issue[] {
       const path = ['wires', index, side];
       issues.push(...findEndIssues({ end: wire[side], path, wire, keyIds, wireIds }));
     }
-    if (wire.start.kind !== 'key-pin' && wire.end.kind !== 'key-pin') {
-      issues.push({ message: 'A wire needs a key pin at one end', path: ['wires', index] });
-    }
+    issues.push(...findWireContactReferenceIssues(project, wire, index));
     if (isSamePin(wire)) {
       issues.push({ message: 'Both ends are the same pin', path: ['wires', index, 'end'] });
     }
@@ -150,7 +153,11 @@ function findCrossingIssues(project: Project): Issue[] {
 // every nested node is strict so a malformed binding, wire or key is rejected at its own path.
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(11),
+    schemaVersion: z.literal(12),
+    wireContacts: z
+      .array(z.union([contactSchema, z.literal(false)]))
+      .max(1024)
+      .exactOptional(),
     ...projectContentSchema.shape,
     wiring: wiringSchema.exactOptional(),
     controllerId: z.enum(CONTROLLER_BOARDS.map((board) => board.id)),
@@ -189,17 +196,6 @@ export const projectSchema = z
     layers: z.array(layerSchema).min(1).max(PROJECT_BUDGET.layers),
   })
   .superRefine((project, context) => {
-    const segmentCount = project.wires.reduce(
-      (count, wire) => count + 2 * (wire.bends.length + 1),
-      0,
-    );
-    if (segmentCount > PROJECT_BUDGET.segments) {
-      context.addIssue({
-        code: 'custom',
-        message: `The wiring exceeds the ${PROJECT_BUDGET.segments}-segment processing budget. Simplify the wire bends.`,
-        path: ['wires'],
-      });
-    }
     for (const [index, layer] of project.layers.entries()) {
       if (Object.keys(layer.bindings).length > PROJECT_BUDGET.keys) {
         context.addIssue({
@@ -216,6 +212,7 @@ export const projectSchema = z
       ...findEncoderBindingIssues(project),
       ...findDuplicateIds(project.wires, 'wires'),
       ...findWireIssues(project),
+      ...findContactPoolIssues(project),
       ...findCrossingIssues(project),
       ...findDuplicateIds(project.layers, 'layers'),
       ...findDuplicateIds(project.behaviors, 'behaviors'),
@@ -224,6 +221,9 @@ export const projectSchema = z
       ...findDuplicateIds(project.conditionalLayers, 'conditionalLayers'),
       ...findLayerIssues(project),
     ];
+    if (issues.length === 0) {
+      issues.push(...findContactIssues(project));
+    }
     for (const issue of issues) {
       context.addIssue({ code: 'custom', message: issue.message, path: [...issue.path] });
     }
@@ -239,4 +239,23 @@ function findEncoderBindingIssues(project: Project): Issue[] {
         path: ['layers', index, 'encoderBindings', id],
       })),
   );
+}
+
+function findContactIssues(project: Project): Issue[] {
+  const issues: Issue[] = [];
+
+  for (const [index, wire] of project.wires.entries()) {
+    const message = findWireContactError(project, wire);
+    if (message !== undefined) {
+      issues.push({ message, path: ['wires', index, 'contacts'] });
+    }
+  }
+  if (getWireSegmentCount(project) > PROJECT_BUDGET.segments) {
+    issues.push({
+      message: 'The wiring exceeds the segment processing budget. Simplify bends or pin leads.',
+      path: ['wires'],
+    });
+  }
+
+  return issues;
 }

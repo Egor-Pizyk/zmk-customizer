@@ -1,9 +1,9 @@
-import { getWirePath } from '@domain/wires';
+import { getWirePath } from '@domain/wires/geometry';
 import { moveKey } from '@domain/keys';
 import type { WirePoint } from '@domain';
 import { expect, it } from 'vitest';
 
-import { buildProject, freeEnd, keyPin } from '../../../helpers/build-project';
+import { buildProject, freeEnd, keyPin } from '../../../../helpers/build-project';
 
 function isOrthogonal(path: readonly WirePoint[]): boolean {
   return path.every((point, index) => {

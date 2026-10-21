@@ -3,7 +3,8 @@ import type { Combo, Macro, ConditionalLayer } from './advanced-keymap-types';
 import type { CustomBehavior, BehaviorParameter } from './behavior-types';
 
 export type Project = {
-  readonly schemaVersion: 11;
+  readonly schemaVersion: 12;
+  readonly wireContacts?: readonly (WireContact | false)[];
   readonly encoders: readonly Encoder[];
   readonly combos: readonly Combo[];
   readonly macros: readonly Macro[];
@@ -159,7 +160,13 @@ export type WireEnd =
 
 export type WireEndSide = 'start' | 'end';
 
+export type WireContact = { readonly keyId: string; readonly pin: KeyPin; readonly at: WirePoint };
+
 export type Wire = {
+  readonly half?: Half;
+  readonly anchors?: { readonly start: WirePoint; readonly end: WirePoint };
+  readonly contacts?: readonly WireContact[];
+  readonly contactIds?: readonly number[];
   readonly id: string;
   readonly start: WireEnd;
   readonly end: WireEnd;

@@ -130,7 +130,7 @@ it('enforces byte limits for direct parsing, including multibyte input', () => {
   });
 });
 
-it('rejects compact input whose normalized saved form exceeds the byte budget', () => {
+it('keeps compact input when indentation alone exceeds the byte budget', () => {
   const projectKeys = keys(512);
   const bindings = Object.fromEntries(
     projectKeys.map((key) => [
@@ -149,6 +149,6 @@ it('rejects compact input whose normalized saved form exceeds the byte budget', 
   };
   const raw = JSON.stringify(project);
   expect(new TextEncoder().encode(raw).length).toBeLessThan(5 * 1024 * 1024);
-  expect(parseProjectFile(raw)).toEqual({ ok: false, error: { kind: 'too-large' } });
-  expect(serializeProject(project).ok).toBe(false);
+  expect(parseProjectFile(raw)).toEqual({ ok: true, value: project });
+  expect(serializeProject(project).ok).toBe(true);
 });

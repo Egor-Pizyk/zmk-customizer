@@ -19,7 +19,7 @@ it('loads a v5 project with unchanged keys, bindings, wiring and default old geo
   const loaded = getResultValue(parseProjectFile(JSON.stringify(old)));
   expect(loaded).toEqual({
     ...old,
-    schemaVersion: 11,
+    schemaVersion: 12,
     encoders: [],
     combos: [],
     macros: [],
@@ -58,7 +58,7 @@ it('round-trips all geometry while rejecting non-finite fields and allowing repa
         },
       ],
     }),
-    schemaVersion: 11,
+    schemaVersion: 12,
     encoders: [],
     combos: [],
     macros: [],

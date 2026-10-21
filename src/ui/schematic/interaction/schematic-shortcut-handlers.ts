@@ -2,7 +2,7 @@ import { PROJECT_BUDGET } from '@storage/project';
 import { addKey, removeKey } from '@domain/keys';
 import { createEntityId } from '@domain/project';
 import { findFreeKeyPosition } from '@domain/geometry';
-import { removeWire } from '@domain/wires/editing';
+import { removeWire, removeWireSections } from '@domain/wires/editing';
 import type { Project } from '@domain';
 import type { Commit } from './pointer-types';
 import type { SchematicSelection, SelectionChange } from './schematic-selection';
@@ -29,11 +29,16 @@ type ShortcutHandlerInput = {
   readonly activeToolId: ToolId;
   readonly onToolChange: (toolId: ToolId) => void;
   readonly hasDraft: boolean;
+  readonly announce?: (message: string) => void;
   readonly onDraftCancel: () => void;
 };
 
 function deleteSelection(input: ShortcutHandlerInput) {
   const { project, commit, selection, onSelectionChange } = input;
+  if (selection?.kind === 'sections') {
+    deleteSectionSelection(input);
+    return;
+  }
   if (selection?.kind === 'key') {
     const keyIndex = project.keys.findIndex((key) => key.id === selection.keyId);
     commit((current) => removeKey(current, { keyId: selection.keyId }), `Deleted key ${keyIndex}`);
@@ -48,19 +53,7 @@ function deleteSelection(input: ShortcutHandlerInput) {
     return;
   }
   if (selection?.kind === 'multi') {
-    const { keyIds, wireIds } = selection;
-    commit((current) => {
-      let next = current;
-      for (const wireId of wireIds) {
-        next = removeWire(next, { wireId });
-      }
-      for (const keyId of keyIds) {
-        next = removeKey(next, { keyId });
-      }
-      return next;
-    });
-    onSelectionChange();
-    focusCanvasLater();
+    deleteMultiSelection(input);
     return;
   }
   if (selection === undefined) {
@@ -114,4 +107,45 @@ export function createShortcutHandlers(input: ShortcutHandlerInput) {
       }
     },
   };
+}
+
+function deleteSectionSelection(input: ShortcutHandlerInput) {
+  const { project, commit, selection, onSelectionChange } = input;
+  if (selection?.kind === 'sections') {
+    if (selection.base !== project) {
+      onSelectionChange();
+      return;
+    }
+    const result = removeWireSections(project, { base: project, sectionIds: selection.sectionIds });
+    if (result.ok) {
+      commit(
+        (current) => (current === project ? result.value : current),
+        `Deleted ${selection.sectionIds.length} wire sections. Undo`,
+      );
+    }
+    if (!result.ok) {
+      input.announce?.(result.error);
+    }
+    onSelectionChange();
+    focusCanvasLater();
+  }
+}
+
+function deleteMultiSelection(input: ShortcutHandlerInput) {
+  const { commit, selection, onSelectionChange } = input;
+  if (selection?.kind === 'multi') {
+    const { keyIds, wireIds } = selection;
+    commit((current) => {
+      let next = current;
+      for (const wireId of wireIds) {
+        next = removeWire(next, { wireId });
+      }
+      for (const keyId of keyIds) {
+        next = removeKey(next, { keyId });
+      }
+      return next;
+    });
+    onSelectionChange();
+    focusCanvasLater();
+  }
 }

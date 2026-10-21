@@ -38,14 +38,14 @@ it.each([
     expect(getProjectResourceError({ ...base, ...rejected })).toBeTypeOf('string');
   },
 );
-it('counts pretty JSON, newline and UTF-8 bytes just like the saved artifact', () => {
+it('counts the saved JSON representation, newline and UTF-8 bytes', () => {
   const layers = Array.from({ length: 64 }, (_, index) => ({
     id: `l${index}`,
     name: 'Layer',
     bindings: Object.fromEntries(
       Array.from({ length: 512 }, (_entry, keyIndex) => [
         `k${keyIndex}`,
-        { kind: 'kp' as const, key: { keycode: 'é'.repeat(50), modifiers: [] } },
+        { kind: 'kp' as const, key: { keycode: 'é'.repeat(60), modifiers: [] } },
       ]),
     ),
   }));
