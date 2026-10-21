@@ -9,3 +9,4 @@ export { useCopiedBinding } from './use-copied-binding';
 export { useKeySelection } from './use-key-selection';
 export { useLayerActions } from './use-layer-actions';
 export type { LayerActions } from './use-layer-actions';
+export { useKeycapSize } from './use-keycap-size';

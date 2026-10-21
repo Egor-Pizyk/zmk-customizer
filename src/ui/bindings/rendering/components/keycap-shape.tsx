@@ -4,7 +4,7 @@ import type { Key } from '@domain';
 import { cornerLegendFontSize, tapLegendFontSize } from '@ui/bindings/formatting';
 import type { BindingLegend } from '@ui/bindings/formatting';
 
-import type { KeyboardEvent } from 'react';
+import type { KeyboardEvent, MouseEvent } from 'react';
 
 type KeycapShapeProps = {
   readonly keyIndex: number;
@@ -24,6 +24,7 @@ type KeycapShapeProps = {
   readonly isSelected: boolean;
   readonly hasConflict: boolean;
   readonly onKeyDown: (keyId: string, event: KeyboardEvent<SVGGElement>) => void;
+  readonly onKeycapSize: (keyId: string) => void;
   readonly onFocus: (keyId: string) => void;
 };
 
@@ -32,7 +33,19 @@ export function KeycapShape(props: KeycapShapeProps) {
   const { bindingKey, label, issuePath, title, isActive, isSelected, hasConflict } = props;
 
   function handleKeyDown(event: KeyboardEvent<SVGGElement>) {
+    if (event.key === 'ContextMenu' || (event.shiftKey && event.key === 'F10')) {
+      event.preventDefault();
+      event.stopPropagation();
+      props.onKeycapSize(bindingKey.id);
+      return;
+    }
     props.onKeyDown(bindingKey.id, event);
+  }
+
+  function handleContextMenu(event: MouseEvent<SVGGElement>) {
+    event.preventDefault();
+    event.currentTarget.focus();
+    props.onKeycapSize(bindingKey.id);
   }
 
   function handleFocus() {
@@ -47,6 +60,7 @@ export function KeycapShape(props: KeycapShapeProps) {
       data-issue-path={issuePath}
       data-keycap-id={bindingKey.id}
       data-selected={isSelected || undefined}
+      onContextMenu={handleContextMenu}
       onFocus={handleFocus}
       onKeyDown={handleKeyDown}
       role="graphics-symbol"

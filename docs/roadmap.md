@@ -345,7 +345,7 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 
 ### First-major follow-up — standard keycap sizes in Bindings
 
-**Status.** Requested by the user on 2026-10-21; roadmap scope only, not implemented. Extend the existing 012 geometry and 004 Bindings contracts through the amendment workflow before implementation. The earlier arbitrary-resize behavior above describes the existing feature, not the intended Bindings interaction after this follow-up.
+**Status (2026-10-21).** Implemented on `feature/012-standard-keycap-sizes` through amendments to 012/004; automated verification and required manual acceptance are tracked in [the follow-up journal](../specs/012-layout-editor/standard-keycap-verification.md). Delivery remains in progress until its checks and PR are recorded. The earlier arbitrary-resize behavior above describes the existing feature, not the intended Bindings interaction after this follow-up.
 
 **Goal.** Stop arbitrary stretching of keycaps while assigning bindings. Select a keycap in Bindings, open its context menu, and choose its size from a finite catalog of standard keycap sizes instead of dragging it to arbitrary width/height.
 

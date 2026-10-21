@@ -6,3 +6,4 @@ export { KeycapShape } from './keycap-shape';
 export { LayerBar } from './layer-bar';
 export { NoKeys } from './no-keys';
 export { WiresBackdrop } from './wires-backdrop';
+export { KeycapSizeDialog } from './keycap-size-dialog';

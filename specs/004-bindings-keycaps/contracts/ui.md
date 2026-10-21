@@ -49,3 +49,7 @@ Selection is shared with the canvas (the same state in `BindingsWorkspace`).
 | `paste-binding` | Mod+V (`code` `KeyV`) | same | Paste onto all selected keys (one undo step) |
 
 The key shortcuts (arrows, Home/End, Ctrl/Cmd+Space, Escape) reuse the existing `scope: 'key'` entries. The Schematic-only nudge and delete entries do nothing in Bindings; their help labels say "Schematic: …".
+
+## Standard-size amendment (2026-10-21)
+
+Bindings gains only explicit standard-size editing through the contextual Keycap size chooser and labeled Keys-table action, superseding read-only geometry wording for this operation. No arbitrary resizing/numeric sizing, movement or nudge is added to Bindings. See [012 specification](../../012-layout-editor/spec.md) FR-017–020 and its plan/tasks; single evidence journal: standard-keycap-verification.md in 012. Center/contact positions, project compatibility and one-step Undo/Redo are preserved; overlaps use existing validation.

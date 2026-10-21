@@ -31,6 +31,7 @@ The top-level source folders define architectural layers. Nested folders group r
 | `src/domain/analysis/` | Combined project analysis |
 | `src/domain/validation/` | Project and feature invariant checks |
 | `src/domain/validation/shield/` | Complete shield export validation |
+| `src/catalog/keycaps/` | Source-verified nominal rectangular keycap size choices; compatibility is not inferred |
 | `src/catalog/controllers/` | Boards, controller lookup and wiring choices |
 | `src/catalog/bindings/` | Keycodes, behaviors, modifiers and command catalogs |
 | `src/catalog/presets/` | Preset keyboard definitions |

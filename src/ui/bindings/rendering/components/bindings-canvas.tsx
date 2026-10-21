@@ -25,6 +25,7 @@ type BindingsCanvasProps = {
     SurfaceContent,
     'onPointerDown' | 'onPointerMove' | 'onPointerUp' | 'onPointerCancel'
   >;
+  readonly onKeycapSize: (keyId: string) => void;
   readonly onKeyFocus: (keyId: string) => void;
   readonly onKeyKeyDown: (keyId: string, event: KeyboardEvent<SVGGElement>) => void;
   /** The Action panel overlay. */
@@ -36,9 +37,8 @@ const LEGEND_MIN_ZOOM = 0.4;
 
 function Keycaps(props: BindingsCanvasProps & { readonly view: ContentView }) {
   const { project, layerIndex, selectedKeyIds, activeKeyId, problemsByKeyId, view } = props;
-  const layer = project.layers[layerIndex];
   return project.keys.map((key, keyIndex) => {
-    const binding = layer?.bindings[key.id];
+    const binding = project.layers[layerIndex]?.bindings[key.id];
     const isSelected = selectedKeyIds.includes(key.id);
     const problems = problemsByKeyId.get(key.id) ?? [];
     const legend =
@@ -57,7 +57,7 @@ function Keycaps(props: BindingsCanvasProps & { readonly view: ContentView }) {
         issuePath={`layers.${layerIndex}.bindings.${key.id}`}
         label={formatKeycapLabel({
           keyIndex,
-          layerName: layer?.name ?? '',
+          layerName: project.layers[layerIndex]?.name ?? '',
           binding,
           layers: project.layers,
           behaviors: project.behaviors,
@@ -67,6 +67,7 @@ function Keycaps(props: BindingsCanvasProps & { readonly view: ContentView }) {
         })}
         legend={legend}
         tag={legend === undefined ? undefined : formatKeycapTag(binding)}
+        onKeycapSize={props.onKeycapSize}
         onFocus={props.onKeyFocus}
         onKeyDown={props.onKeyKeyDown}
         title={formatKeycapTitle(binding, project.layers, project)}
@@ -79,7 +80,7 @@ export function BindingsCanvas(props: BindingsCanvasProps) {
   const { project, marquee, pointerHandlers, children } = props;
   const content: SurfaceContent = {
     ...pointerHandlers,
-    label: `Bindings canvas, ${project.keys.length} keys. The Keys table below lists every key with its action.`,
+    label: `Bindings canvas, ${project.keys.length} keys. Right-click a keycap or press Shift+F10 for Keycap size. The Keys table below lists every key with its action.`,
     render: (view) => (
       <>
         <WiresBackdrop project={project} view={view} />

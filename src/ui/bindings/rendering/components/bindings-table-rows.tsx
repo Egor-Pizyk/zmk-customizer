@@ -13,6 +13,7 @@ export type BindingsTableRowsProps = {
   readonly problemsByKeyId: ReadonlyMap<string, readonly string[]>;
   readonly onSelectionChange: (keyIds: readonly string[]) => void;
   readonly onActiveKeyChange: (keyId: string) => void;
+  readonly onKeycapSize: (keyId: string) => void;
   readonly onChooseAction: (keyId: string) => void;
 };
 
@@ -57,6 +58,7 @@ export function BindingsTableRows(props: BindingsTableRowsProps) {
         </td>
         <td>
           <ChooseButton {...props} keyId={key.id} keyIndex={keyIndex} />
+          <SizeButton {...props} keyId={key.id} keyIndex={keyIndex} />
         </td>
       </tr>
     );
@@ -147,4 +149,20 @@ function ChooseButton({ keyId, keyIndex, onChooseAction }: RowProps) {
 
 function formatRowBinding({ project, layerIndex }: BindingsTableRowsProps, keyId: string): string {
   return formatBindingName(project.layers[layerIndex]?.bindings[keyId], project.layers, project);
+}
+
+function SizeButton({ keyId, keyIndex, onKeycapSize }: RowProps) {
+  function handleClick() {
+    onKeycapSize(keyId);
+  }
+  return (
+    <Button
+      aria-label={`Keycap size for key ${keyIndex}`}
+      onClick={handleClick}
+      size="sm"
+      variant="secondary"
+    >
+      Keycap size
+    </Button>
+  );
 }

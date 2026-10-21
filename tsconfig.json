@@ -22,6 +22,7 @@
     "erasableSyntaxOnly": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
+      "@catalog/keycaps": ["./src/catalog/keycaps/index.ts"],
       "@catalog/bindings": ["./src/catalog/bindings/index.ts"],
       "@catalog/controllers": ["./src/catalog/controllers/index.ts"],
       "@catalog/firmware": ["./src/catalog/firmware/index.ts"],

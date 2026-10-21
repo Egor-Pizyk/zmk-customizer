@@ -3,8 +3,14 @@ import { AdvancedLibrary } from '@ui/bindings/advanced/components';
 import { BehaviorLibrary } from '@ui/bindings/behaviors/components';
 import { toTabId } from '@ui/components/logic';
 import { ActionPanel } from '@ui/bindings/panel/components';
-import { BindingsCanvas, BindingsTable, LayerBar, NoKeys } from '@ui/bindings/rendering/components';
-import { useBindingsInteraction } from '@ui/bindings/interaction';
+import {
+  BindingsCanvas,
+  BindingsTable,
+  LayerBar,
+  NoKeys,
+  KeycapSizeDialog,
+} from '@ui/bindings/rendering/components';
+import { useBindingsInteraction, useKeycapSize } from '@ui/bindings/interaction';
 import { useBindingsWorkspace } from '@ui/bindings/logic';
 import { useId } from 'react';
 
@@ -13,16 +19,15 @@ import { useId } from 'react';
 export function BindingsWorkspace() {
   const workspace = useBindingsWorkspace();
   const { canvasProps, panelProps, tableProps } = useBindingsInteraction(workspace);
+  const size = useKeycapSize({
+    selectedKeyIds: workspace.selectedKeyIds,
+    onSelectionChange: workspace.handleSelectionChange,
+  });
   const tabIdPrefix = useId();
   const panelId = useId();
   const { project, layers } = workspace;
   if (project.keys.length === 0) {
-    return (
-      <div className="flex min-h-0 flex-1 flex-col">
-        <BindingLibraries workspace={workspace} />
-        <NoKeys />
-      </div>
-    );
+    return <EmptyBindingsWorkspace workspace={workspace} />;
   }
   const openLayerId = project.layers[layers.layerIndex]?.id ?? '';
   return (
@@ -41,8 +46,9 @@ export function BindingsWorkspace() {
           id={panelId}
           role="tabpanel"
         >
-          <BindingsCanvas {...canvasProps} />
-          <BindingsTable {...tableProps} />
+          <BindingsCanvas {...canvasProps} onKeycapSize={size.handleOpen} />
+          <BindingsTable {...tableProps} onKeycapSize={size.handleOpen} />
+          <KeycapSizeDialog {...size.dialogProps} />
         </div>
       </div>
       <ActionPanel {...panelProps} />
@@ -65,5 +71,18 @@ function BindingLibraries({
         reservedMacroIds={workspace.copied.reservedMacroIds}
       />
     </>
+  );
+}
+
+function EmptyBindingsWorkspace({
+  workspace,
+}: {
+  readonly workspace: ReturnType<typeof useBindingsWorkspace>;
+}) {
+  return (
+    <div className="flex min-h-0 flex-1 flex-col">
+      <BindingLibraries workspace={workspace} />
+      <NoKeys />
+    </div>
   );
 }
