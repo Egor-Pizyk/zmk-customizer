@@ -129,3 +129,7 @@ firmware infrastructure are unchanged. The previous PR revision's firmware check
 passed; all five checks, including unconditional ZMK builds, must run on the new
 PR revision. Historical CI success is not claimed for that new revision. T031 stays
 open and the PR stays draft; no merge, manual acceptance or release is claimed.
+
+## Follow-up: local-only firmware compilation — 2026-10-21
+
+The owner requested removing firmware compilation from CI to shorten PR runs. This supersedes the earlier five-job policy above: CI and main protection now require only check/e2e/image/mutations; make zmk-build remains local and required for generator/export changes. No product or firmware tooling changed. Full check passed; workflow/protection verification and T007 evidence are recorded in [023 quickstart](../023-build-verification/quickstart.md#current-execution-policy--2026-10-21). T031 and the draft boundary remain unchanged.

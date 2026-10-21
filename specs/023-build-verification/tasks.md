@@ -18,3 +18,9 @@ Independent test: actual export builds eight targets, malformed connector fails 
 - [x] T006 Verify make check, build tooling tests and generated artifacts ignore rules in .gitignore/.dockerignore; commit feature independently.
 
 Dependencies: T001 → T002 → T003 → T004 → T005 → T006. MVP: US1. Generation and CI relevance tests can be developed independently after environment pins; actual builds are sequential to constrain memory.
+
+## Local-only firmware verification — 2026-10-21
+
+- [x] T007 Supersede T005: remove the CI firmware job and its required GitHub status; retain make zmk-build and pinned local tooling, align commands/testing/git-flow and roadmap, validate the workflow and record evidence. No generator/output or toolchain changes.
+
+T007 evidence: [quickstart.md](quickstart.md#current-execution-policy--2026-10-21).

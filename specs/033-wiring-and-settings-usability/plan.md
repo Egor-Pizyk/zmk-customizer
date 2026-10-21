@@ -34,8 +34,9 @@ Fix the moved rotation mutation test path and validate registered test files as 
 as production anchors. Retain the complete Chromium layer-bar viewport/theme matrix;
 use one representative Firefox/WebKit case for native overflow/focus/history rather
 than repeating that full presentation matrix in each engine. Keep retries disabled.
-Run all five CI jobs once per PR to main, cancel obsolete revisions, remove push
-triggers and firmware path skipping. Existing required checks stay protected.
+Run CI once per PR to main and cancel obsolete revisions. Follow-up owner decision
+on 2026-10-21 moves firmware compilation to local make zmk-build; CI and protected
+required checks retain check/e2e/image/mutations. Push triggers remain disabled.
 No product code or UI changes; UI design/review and firmware syntax changes are outside
 this maintenance scope. T031 manual acceptance remains open and prevents merging 033.
 

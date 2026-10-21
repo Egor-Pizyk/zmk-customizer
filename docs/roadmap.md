@@ -524,7 +524,7 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 ```
 
 ### 023 — build-verification
-`make zmk-build` target: compile the generated shield for each preset inside the `zmkfirmware/zmk-build-arm` Docker image, as a developer/CI check (not a product feature, the app stays static). Could be pulled forward to right after 010 if golden tests prove insufficient. Owned by Makefile/CI, not `src/`.
+`make zmk-build` target: compile the generated shield for each preset inside the `zmkfirmware/zmk-build-arm` Docker image, as a local developer check (not run in CI; not a product feature, the app stays static). Could be pulled forward to right after 010 if golden tests prove insufficient. Owned by Makefile and local build infrastructure, not `src/`.
 
 ```
 /speckit-specify A developer check that proves the generated files really build: for every preset keyboard, generate the configuration and compile the firmware with the official ZMK build environment, failing when any build fails. It runs locally and in continuous integration, never inside the app.

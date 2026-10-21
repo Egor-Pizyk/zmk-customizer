@@ -87,11 +87,13 @@ for 14 days even on failure. Traces and screenshots are retained for failed test
 `npx playwright show-trace <trace.zip>` opens a captured trace. Reports and build output
 are ignored in git and excluded from Docker build context.
 
-CI runs once per pull request targeting main, with all five required jobs, including
-the pinned firmware builds even for documentation changes. It does not run on push
+CI runs once per pull request targeting main, with four required jobs: `check`,
+`e2e`, `image` and `mutations`. Firmware compilation runs locally through
+`make zmk-build`, outside CI. Record its evidence for generator/export changes
+as required by [commands.md](commands.md). CI does not run on push
 or after merge; the separate release workflow still publishes merged PRs. New commits
 cancel obsolete runs for the same PR. Main protection requires up-to-date `check`,
-`e2e`, `image`, `mutations` and `zmk-build` results and includes administrators.
+`e2e`, `image` and `mutations` results and includes administrators.
 Keep complete viewport/theme matrices in Chromium; Firefox/WebKit need representative
 engine-sensitive cases rather than repeating every presentation combination.
 

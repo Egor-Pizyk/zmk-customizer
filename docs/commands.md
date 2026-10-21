@@ -11,6 +11,7 @@ make install     # npm ci inside the container (run after dependency changes: no
 make check       # typecheck + lint + format check + Vitest coverage inside the container
 make test-e2e    # production build + Chromium suite + focused Firefox/WebKit checks
 make test-e2e-mutations # controlled browser regressions; run alone after make test-e2e
+make zmk-build   # local-only pinned firmware verification; not run in CI
 make image       # build production image (nginx serving dist/)
 make prod        # run production image locally (http://localhost:8080)
 make clean       # remove dist/, coverage, containers, volumes
