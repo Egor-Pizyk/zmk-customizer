@@ -59,3 +59,14 @@ Read-only review/research can run independently. Within US1 UI tests and domain 
 - [x] T027 Run full make check/coverage, production build and actual ZMK builds; run mutations separately after production edits; record results and commit without push/PR.
 
 Dependencies: T022 → T023 → T024 → T025 → T026 → T027. No schema/output change; prior migrations/goldens remain regression gates.
+
+## Standard keycap sizes follow-up (2026-10-21)
+
+- [x] K001 Resolve 012/004 ownership, dedicated branch, source references and pre-implementation UI/UX/specification; amend affected contracts and analyze consistency.
+- [x] K002 FR-018/019: failing domain tests, then finite catalog and pure center-preserving batch size operation.
+- [x] K003 FR-017/020: contextual canvas/keyboard chooser and labeled table alternative; shared captured targets/base, current/custom/mixed feedback and focus return.
+- [x] K004 FR-017–020: real browser coverage for pointer/keyboard/table, history, persistence/JSON/export, rotated geometry, overlaps/custom sizes, themes/reflow; prove behavioral regression sensitivity.
+- [x] K005 Post-implementation ui-ux-pro-max rendered review, changed checks and single [verification journal](standard-keycap-verification.md); update roadmap and deliver one PR.
+- [ ] K006 Actual manual OS keyboard/screen-reader/200% zoom acceptance; leave open and deliver draft when unavailable.
+
+Dependencies: K001 → K002 tests → K002 implementation → K003 → K004 → K005; K006 requires actual manual evidence. No historical feature checks are reclassified as current evidence.

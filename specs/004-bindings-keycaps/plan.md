@@ -139,3 +139,7 @@ tests/fixtures/project/v2.json           v2 sample for the migration test
 | Deviation | Why needed | Simpler alternative rejected because |
 |---|---|---|
 | The keycode table is derived at load (`parseKeysHeader(raw)`) instead of an `as const` literal (`typescript.md` → Catalog data) | AGENTS §3.4 requires generating keycodes from `keys.h`; about 370 entries with aliases | A hand-written literal is error-prone and drifts from upstream. A committed generated file needs a separate generator script and a drift check, which is two artifacts instead of one. |
+
+## Standard-size amendment (2026-10-21)
+
+Bindings gains only explicit standard-size editing through the contextual Keycap size chooser and labeled Keys-table action, superseding read-only geometry wording for this operation. No arbitrary resizing/numeric sizing, movement or nudge is added to Bindings. See [012 specification](../012-layout-editor/spec.md) FR-017–020 and its plan/tasks; single evidence journal: standard-keycap-verification.md in 012. Center/contact positions, project compatibility and one-step Undo/Redo are preserved; overlaps use existing validation.

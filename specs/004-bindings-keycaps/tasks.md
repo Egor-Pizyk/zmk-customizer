@@ -427,3 +427,7 @@ Commit after each task or logical group (Conventional Commits, e.g. `feat(catalo
 - [X] T053 Test first, then implement `src/ui/bindings/picker-tabs.ts`: the tab data (Basic ANSI rows with widths, Nav, F keys, Media, Mods, System bindings, More = the rest by category), every catalog keycode reachable exactly once, a legend + name + description + docsUrl per item. Also `move-in-grid.ts` (+ test) for mini-keyboard arrows.
 - [X] T054 [US2] Implement the UI: `mini-keyboard.tsx`, `key-picker.tsx` (preview, search results, tabs, chips, When held, press mode, auto-advance switch), and the docked `action-panel.tsx`; wire them in `use-bindings-workspace.ts` / `use-bindings-interaction.ts`. Delete the step files named in plan.md.
 - [X] T055 [US2] Check it headless with a CDP screenshot (Basic tab, a search, the System tab), fix the layout, and run `npm run check`.
+
+## Standard-size amendment (2026-10-21)
+
+Bindings gains only explicit standard-size editing through the contextual Keycap size chooser and labeled Keys-table action, superseding read-only geometry wording for this operation. No arbitrary resizing/numeric sizing, movement or nudge is added to Bindings. See [012 specification](../012-layout-editor/spec.md) FR-017–020 and its plan/tasks; single evidence journal: standard-keycap-verification.md in 012. Center/contact positions, project compatibility and one-step Undo/Redo are preserved; overlaps use existing validation.

@@ -7,3 +7,7 @@ Selected-layout Tools controls: batch dimensions/angle/origin and translation; c
 Canvas key arrows navigate visual centers; Shift+arrows nudge selected keys by shared grid size, Mod+Space toggles focused key without clearing other selection. Escape cancels draft first. Pointer drag translates entire rotated cluster including origin, snap follows first key position; collision refusal considers actual polygons. Table numeric edits may overlap and surface key issues.
 
 Physical layout output: <&key_physical_attrs w h x y r rx ry>, each cell independently Math.round(value*100), negatives parenthesized, defaults retain old bytes. Order equals transform cells and keymap bindings. No r=0 origin elision when explicitly supplied. Deterministic, LF and trailing newline.
+
+## Standard-size amendment (2026-10-21)
+
+Bindings gains only explicit standard-size editing through the contextual Keycap size chooser and labeled Keys-table action, superseding read-only geometry wording for this operation. No arbitrary resizing/numeric sizing, movement or nudge is added to Bindings. See [012 specification](../spec.md) FR-017–020 and its plan/tasks; single evidence journal: standard-keycap-verification.md in 012. Center/contact positions, project compatibility and one-step Undo/Redo are preserved; overlaps use existing validation.

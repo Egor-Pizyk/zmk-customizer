@@ -9,3 +9,5 @@ export { removeKeys } from './remove-keys';
 export { renumberKeys } from './renumber-keys';
 export { setKeyGeometries } from './set-key-geometries';
 export type { KeyGeometryChange } from './set-key-geometries';
+export { setKeycapSize } from './set-keycap-size';
+export type { KeycapSizeInput } from './set-keycap-size';
