@@ -39,6 +39,7 @@ The top-level source folders define architectural layers. Nested folders group r
 | `src/generators/shield/` | Shield overlays and Kconfig files |
 | `src/generators/keymap/` | Keymap and behavior rendering |
 | `src/generators/repository/` | Complete repository packaging and user configuration |
+| `src/storage/agent/` | Self-contained agent prompt, source-derived knowledge package and complete creation examples |
 | `src/storage/kle/` | KLE JSON validation, geometry decoding and conversion warnings |
 | `src/storage/project/` | Project parsing, schema, budgets, serialization and persistence |
 | `src/storage/migrations/` | Versioned project migrations |

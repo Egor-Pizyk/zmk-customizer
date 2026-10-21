@@ -22,6 +22,7 @@ export function App() {
       <TabBar onHelpClick={dialogs.handleHelpOpen} onSettingsClick={dialogs.handleSettingsOpen} />
       <div className="flex min-w-0 flex-1 flex-col">
         <ProjectBar
+          onAgentClick={dialogs.handleAgentDialogOpen}
           onNewClick={dialogs.handleNewDialogOpen}
           onOpenClick={dialogs.handleOpenDialogOpen}
         />

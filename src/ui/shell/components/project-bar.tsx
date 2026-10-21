@@ -15,10 +15,11 @@ const SAVE_STATUS_TEXT: Record<SaveStatus, string> = {
 type ProjectBarProps = {
   readonly onNewClick: () => void;
   readonly onOpenClick: () => void;
+  readonly onAgentClick: () => void;
 };
 
 // Wraps instead of a fixed height, so issue text and 200% zoom never clip (accessibility.md).
-export function ProjectBar({ onNewClick, onOpenClick }: ProjectBarProps) {
+export function ProjectBar({ onNewClick, onOpenClick, onAgentClick }: ProjectBarProps) {
   const { saveStatus } = useProject();
 
   function handleNewClick() {
@@ -29,11 +30,19 @@ export function ProjectBar({ onNewClick, onOpenClick }: ProjectBarProps) {
     onOpenClick();
   }
 
+  function handleAgentClick() {
+    onAgentClick();
+  }
+
   return (
     <header className="flex min-h-12 shrink-0 flex-wrap items-end gap-3 border-b border-border bg-surface-raised px-4 py-2">
       <ProjectNameFields />
       <span className="self-center text-text-muted">{SAVE_STATUS_TEXT[saveStatus]}</span>
-      <ProjectActions onNewClick={handleNewClick} onOpenClick={handleOpenClick} />
+      <ProjectActions
+        onNewClick={handleNewClick}
+        onOpenClick={handleOpenClick}
+        onAgentClick={handleAgentClick}
+      />
     </header>
   );
 }
@@ -78,8 +87,12 @@ function ProjectNameFields() {
   );
 }
 
-function ProjectActions({ onNewClick, onOpenClick }: ProjectBarProps) {
+function ProjectActions({ onNewClick, onOpenClick, onAgentClick }: ProjectBarProps) {
   const { saveProjectFile } = useProject();
+
+  function handleAgentClick() {
+    onAgentClick();
+  }
 
   function handleNewClick() {
     onNewClick();
@@ -94,7 +107,7 @@ function ProjectActions({ onNewClick, onOpenClick }: ProjectBarProps) {
   }
 
   return (
-    <div className="ml-auto flex gap-1 self-center">
+    <div className="ml-auto flex flex-wrap gap-1 self-center">
       <Button onClick={handleNewClick} size="sm">
         New
       </Button>
@@ -103,6 +116,9 @@ function ProjectActions({ onNewClick, onOpenClick }: ProjectBarProps) {
       </Button>
       <Button onClick={handleSaveClick} size="sm">
         Save
+      </Button>
+      <Button onClick={handleAgentClick} size="sm">
+        Create with agent
       </Button>
       <HistoryButtons />
     </div>

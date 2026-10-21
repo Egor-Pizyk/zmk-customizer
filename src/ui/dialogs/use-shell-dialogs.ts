@@ -2,7 +2,13 @@ import { useState } from 'react';
 
 export type ShellDialogs = ReturnType<typeof useShellDialogs>;
 
-type ShellDialogId = 'settings' | 'help' | 'new-project' | 'open-project' | 'discard-backup';
+type ShellDialogId =
+  | 'settings'
+  | 'help'
+  | 'new-project'
+  | 'open-project'
+  | 'discard-backup'
+  | 'create-with-agent';
 
 // Open flags of the shell's modal dialogs: UI state, never project state (002 research R16).
 export function useShellDialogs() {
@@ -19,6 +25,8 @@ export function useShellDialogs() {
   }
 
   return {
+    isAgentDialogOpen: openDialogId === 'create-with-agent',
+    handleAgentDialogOpen: opener('create-with-agent'),
     isSettingsOpen: openDialogId === 'settings',
     isHelpOpen: openDialogId === 'help',
     isNewDialogOpen: openDialogId === 'new-project',

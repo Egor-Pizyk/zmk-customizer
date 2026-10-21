@@ -51,6 +51,7 @@
       "@generators/keymap": ["./src/generators/keymap/index.ts"],
       "@generators/repository": ["./src/generators/repository/index.ts"],
       "@generators/shield": ["./src/generators/shield/index.ts"],
+      "@storage/agent": ["./src/storage/agent/index.ts"],
       "@storage/kle": ["./src/storage/kle/index.ts"],
       "@storage/export": ["./src/storage/export/index.ts"],
       "@storage/migrations": ["./src/storage/migrations/index.ts"],
