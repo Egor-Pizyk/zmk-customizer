@@ -23,15 +23,29 @@ npm run test:e2e | test:e2e:types
 npm run check    # static checks + Vitest coverage; browser execution is a separate CI job
 ```
 
-`make help` lists targets. Choose checks by change type:
+`make help` lists targets. Normal local verification:
 
-| Change | Completion checks |
-|---|---|
-| Prose-only docs / analysis | Content, local links and instruction consistency; no product suite required |
-| Production code / refactor | `make check`, production build and `make test-e2e` |
-| Changed user journeys | Above plus changed E2E scenarios in three sequential runs without retries; see `docs/testing.md` |
-| Generators / exported geometry | Above plus `make zmk-build` |
-| Tooling / configuration | `make check` and focused affected tool checks; build/browser checks when their pipeline or product output is affected |
+```sh
+npm run hooks:install                 # once per clone; also installed by make install
+git add -- path/to/changed-file       # stage explicit paths
+npm run check:changed                 # exact staged snapshot, also pre-commit
+npm run check:changed -- --base origin/main # committed branch vs base
+```
+
+The host needs Node 24, Git, tar and Docker Compose. The runner exports the Git tree
+into an ignored temporary directory, mounts it into the browser-capable test container
+and removes it after checks. Full logs and successful tree/base receipts remain in
+`.check-logs/`; identical checks are reused by pre-commit. Add `-- --force` to rerun. Run `make install` and build `infra/compose.e2e.yaml` once
+when needed; Docker must be available. No automatic stash or index rewrite occurs.
+Changed dependency manifests require `npm ci` in the snapshot before checks. Failures
+block commits. Existing custom hooks must be reviewed before installing this hook.
+
+Selection: changed files for lint/format, related Vitest tests, whole-project typecheck
+and architectural invariants, all tooling tests for tooling changes. Deletions and
+global inputs expand unit selection; production changes expand browser selection to
+all Chromium journeys. Full CI runs every suite, with browsers in a parallel matrix.
+Use direct/full commands only for diagnosis or justified necessity, recording why.
+Manual acceptance is separate; scripts do not establish screen-reader/OS acceptance.
 
 Build command inside Docker: `docker compose -p zmk-customizer -f infra/compose.yaml run --rm app npm run build`. Do not run destructive cleanup to prepare checks. Record failures and unavailable checks accurately.
 

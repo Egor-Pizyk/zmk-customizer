@@ -18,8 +18,9 @@ logs: ## Follow dev server logs
 sh: ## Shell inside the app container
 	$(RUN) sh
 
-install: ## npm ci inside the container
+install: ## npm ci and install the staged-check Git hook
 	$(RUN) npm ci
+	npm run hooks:install
 
 check: ## typecheck + lint + format check + tests (same as CI)
 	$(RUN) npm run check
@@ -46,3 +47,6 @@ test-e2e: ## Run production browser journeys in isolated Chromium/Firefox/WebKit
 
 test-e2e-mutations: ## Verify nine browser regressions (run alone)
 	npm run test:e2e:mutations
+
+check-changed: ## Check staged files (exact index snapshot)
+	npm run check:changed

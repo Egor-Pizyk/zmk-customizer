@@ -54,3 +54,5 @@ What becomes easier, what becomes harder, what we must now keep true.
 - [0019 — GitHub flow with stacked PRs and per-PR releases](0019-github-flow.md)
 
 - [0020 — One feature PR and asynchronous delivery](0020-single-pr-asynchronous-delivery.md)
+
+- [0021 — Selective local checks and PR delivery](0021-selective-checks-and-pr-delivery.md)

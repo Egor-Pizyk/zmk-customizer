@@ -261,7 +261,8 @@ export function checkSource(file, source, { loadSource } = {}) {
       checkImport(node, node.source?.value, false);
     }
     if (node.type === 'TSImportType') {
-      checkImport(node, node.argument?.value, true);
+      // Babel 8 renamed argument to source; accept both AST versions.
+      checkImport(node, (node.source ?? node.argument)?.value, true);
     }
     const name = origin(node).replace(/^globalThis\./u, '');
     const isReference =
