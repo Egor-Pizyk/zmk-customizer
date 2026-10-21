@@ -1,5 +1,11 @@
 # Roadmap
 
+This roadmap ends at the **first major release** of ZMK Customizer. Its scope is the keyboard as a control interface: layout, wiring, bindings, firmware configuration and export. This is a future release boundary, not a claim that the scheduled work or release is complete.
+
+The first-major milestone follows the remaining scheduled work through **037 — interactive-onboarding**, including the existing verification and acceptance gates. Deferred 020–022 remain deferred unless explicitly resumed; they are not silently added to the milestone. “Implement last” in this document means last within this first-major roadmap.
+
+The following major has a separate [discovery roadmap](roadmap-next-major.md), designated **current major +1**, without assigning a numeric release version. It explores an independent mechanical design and enclosure-generation module alongside the existing module. It does not extend this roadmap's feature numbering or authorize implementation.
+
 Features in implementation order. One feature = one Spec Kit branch `NNN-short-name` = one `specs/NNN-short-name/` directory (AGENTS.md §6). Numbers of specified features (a `specs/NNN-*` directory exists) are immutable. A feature added out of order takes the next number and every planned, not yet specified feature after it moves up; the added feature's section records the shift, because older specs keep the old numbers. Spec Kit numbers specs by counting existing `specs/` directories, so run `/speckit-specify` in this order to keep numbers aligned with this file.
 
 Ordering rule: every feature ends with something a user can load, see and download. Generators come before editors: feature 009 generates real files from preset keyboards, so each later editor changes a project whose output is already visible in the export preview and covered by golden tests. Exceptions, added on user request: 003 schematic, the 004/005 bindings editors, the 006 Action panel rework, 007 layers and 008 diodes come before 009; they store project data only, and 009 generates files from it.
