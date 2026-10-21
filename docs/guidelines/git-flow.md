@@ -63,8 +63,8 @@ including for administrators. All CI suites must pass for the final revision:
 `check` aggregates static checks, unit/coverage, `e2e`, `image`, `mutations` and
 browser mutations. Protected statuses remain `check`, `e2e`, `image` and `mutations`.
 Firmware compilation is local-only via `make zmk-build`; record local evidence for
-generator/export changes under [commands](../commands.md). Failure, cancellation or unexpected skip blocks the gate. Preserve the
-existing protected status names; never use `--admin` or weaken protection.
+generator/export changes under [commands](../commands.md). Failure, cancellation or
+unexpected skip blocks the gate. Preserve the existing protected status names; never use `--admin` or weaken protection.
 
 When separately authorized and acceptance is complete, squash merge through GitHub.
 The existing release workflow publishes one release per merged PR at its merge SHA.

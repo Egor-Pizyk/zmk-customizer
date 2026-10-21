@@ -116,3 +116,11 @@ test('registered unit mutations have production anchors and existing test files'
     }
   }
 });
+
+test('registered browser mutations have unique anchors in current production sources', async () => {
+  const { SEEDS } = await import('../../scripts/check-e2e-mutations.mjs');
+  for (const [name, file, anchor] of SEEDS) {
+    const source = readFileSync(new URL(`../../${file}`, import.meta.url), 'utf8');
+    assert.equal(source.split(anchor).length, 2, `${name}: expected one anchor in ${file}`);
+  }
+});

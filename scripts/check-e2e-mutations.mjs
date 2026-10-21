@@ -49,8 +49,8 @@ export const SEEDS = [
   [
     'cancelled-value',
     'src/ui/schematic/layout/components/layout-controls.tsx',
-    'props.hasPreview &&',
-    '',
+    'props.hasPreview && draft?.base === project',
+    'draft?.base === project',
     'precise numeric Enter shows',
     'toHaveValue',
   ],
@@ -65,8 +65,8 @@ export const SEEDS = [
   [
     'saved-wiring-preview',
     'src/ui/schematic/wiring/logic/use-wiring-preview.ts',
-    'setDraft(result.value === project ? undefined : { base: project, preview: result.value });',
-    'commit(() => result.value); setDraft(result.value === project ? undefined : { base: project, preview: result.value });',
+    'setDraft(getDraftResult(project, result));',
+    'const nextDraft = getDraftResult(project, result); if (nextDraft) { commit(() => nextDraft.preview); } setDraft(nextDraft && { ...nextDraft, base: nextDraft.preview });',
     'matrix preview, conflict repair',
     'toEqual',
   ],

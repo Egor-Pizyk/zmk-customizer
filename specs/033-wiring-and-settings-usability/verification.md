@@ -133,3 +133,51 @@ open and the PR stays draft; no merge, manual acceptance or release is claimed.
 ## Follow-up: local-only firmware compilation — 2026-10-21
 
 The owner requested removing firmware compilation from CI to shorten PR runs. This supersedes the earlier five-job policy above: CI and main protection now require only check/e2e/image/mutations; make zmk-build remains local and required for generator/export changes. No product or firmware tooling changed. Full check passed; workflow/protection verification and T007 evidence are recorded in [023 quickstart](../023-build-verification/quickstart.md#current-execution-policy--2026-10-21). T031 and the draft boundary remain unchanged.
+
+## Current-main conflict resolution and requested auto-merge — 2026-10-21
+
+Scope: T034 and the owner's explicit request to resolve PR #15 and enable automatic
+merge after checks. Main base: `17f898767ee864cf1d423cfcf42c9b3f39fb3587` (all dependency
+updates merged). Spec Kit's persisted 032 selection remains unrelated; actual PR/branch
+and owning artifacts are 033. The working tree was clean before starting.
+
+Resolved the only two conflicted files, CI workflow and git-flow, preserving main's
+parallel browser matrix, coverage artifact/comment workflow, selective-check hook and
+all dependency upgrades. Retained PR-only CI with obsolete-run cancellation, local-only
+firmware builds and all four protected statuses. The aggregate check depends on every
+remaining suite including browser mutations, with no firmware job or dependency left.
+No product/UI/generator code was edited to resolve the merge. Merge commit: `bdf6045`.
+
+Normal staged-snapshot pre-commit passed at tree
+`56db7d8263b766a02f841b4288e8d115cec82004`: fresh npm ci, typechecks, architecture,
+guidelines, changed-file lint/format, all tooling tests, complete unit suite and
+**79/79 Chromium journeys in 1.8m**. Logs/receipt:
+`.check-logs/56db7d8263b7-8add5ec02d31/`. Ruby YAML parsing also checked unique keys,
+PR-only main trigger, all three matrix engines, coverage artifact, and the aggregate
+job's exact remaining dependencies. Full coverage and other browser engines are CI
+checks; these local results do not claim their final-revision CI success.
+
+Integration inspection found two obsolete browser-seed registrations now required by
+main's retained browser-mutations job: cancelled-value had two matches, and saved-wiring-preview
+had none. Added a unique-anchor tooling regression; observed it fail before repair
+(`/tmp/zmk-pr15-browser-anchor-before.log`) and pass after (`pr15-browser-anchor-after.log`,
+8 tooling contracts). Retargeted the two probes without changing existing browser
+assertions or product code. Two real-browser baselines passed in 11.8s
+(`/tmp/zmk-pr15-seed-baseline.log`). Each repaired probe then detected its intended
+regression: cancelled-value through `toHaveValue`, premature preview persistence
+through `toEqual` (`/tmp/zmk-pr15-browser-seeds.log`, `/tmp/zmk-pr15-preview-seed.log`).
+An initial preview-seed draft produced a runner/build failure and was rejected rather
+than counted; only the final behavioral assertion failure is passing evidence.
+Exact production bytes were restored after each probe; final `git diff -- src` is empty.
+These focused direct probes were necessary to diagnose the newly required CI job;
+ordinary verification uses the staged-check hook. The final tooling/evidence follow-up
+also goes through that normal hook before delivery.
+
+No new firmware compilation was performed for this conflict/tooling-only follow-up;
+prior feature firmware evidence remains historical, with generator syntax unchanged.
+T031 actual keyboard/VoiceOver/OS/physical-zoom checks remain unperformed and unchecked.
+The owner's current explicit ready/auto-merge instruction supersedes the earlier draft
+stop for PR #15, as recorded in spec.md; this does not claim manual acceptance or full
+SC-005 completion. T032/T034 completion records delivery submission, not a merged PR
+or published release. The merge request remains conditional on all required CI checks,
+with strict/up-to-date and administrator protection retained.
