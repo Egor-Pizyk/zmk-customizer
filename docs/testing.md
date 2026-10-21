@@ -35,9 +35,26 @@ normally. jsdom shims model missing native APIs, not business behavior.
 
 ## Commands and regression floors
 
-`make check` runs typecheck, lint, formatting and the full suite **with V8 coverage**,
-just like CI. `docker compose -p zmk-customizer -f infra/compose.yaml run --rm app npm run test -- <file>` runs focused tests.
-`coverage/index.html` is the generated local report; it is not committed.
+Local checks run through `npm run check:changed`: an exact staged snapshot is checked
+without changing the working tree or index. `-- --base origin/main` checks the committed
+HEAD against that base. Deleted/renamed files, global config, fixtures and helpers
+expand selection conservatively. Vitest follows import dependencies; zero related
+tests falls back to the full unit suite. Production changes run all Chromium journeys
+because runtime UI dependencies cannot be inferred safely from static imports.
+Typecheck and architecture invariants remain project-wide. Tooling changes run all
+Node tooling tests. Documentation still receives guideline/link checks.
+
+`make check` remains an explicit full diagnostic command. CI always runs all unit
+coverage, static/tooling, browser matrix, image, mutation and ZMK suites. Direct local
+test commands require a diagnostic or acute-need reason in the task journal. No
+mandatory repeated full local or three-run browser gate remains. Preserve tests-first,
+manual UI acceptance and meaningful behavioral assertions.
+
+CI publishes one bot coverage comment per PR with the checked SHA, metrics, threshold
+outcome and run link. New runs replace it; stale heads/attempts cannot overwrite current
+results. Missing/failed coverage is explicit. The publisher runs trusted main code with
+minimal write permissions; PR code only runs with read permissions. The workflow is
+available after its first merge to main. Full reports are CI artifacts.
 
 Coverage includes executable domain, generators, storage, UI and catalog lookup/
 key-header parsing. Static catalog tables, the composition root and type declarations
@@ -135,8 +152,8 @@ For new or changed user journeys, add or update Playwright E2E tests and include
 - Check screen geometry, including corners of rotated elements rather than only bounding boxes. Add independent visual snapshots where they detect paint errors; justify tolerances and inspect the cause of differences before updating references.
 - For a discovered bug, first reproduce a failing test, then fix its cause in the owning architectural layer. Domain/generator repairs also require their own tests-first contracts.
 - For a substantial new interaction contract, prove test sensitivity with a controlled behavioral regression. Run it separately from checks and production edits, require a user-facing or saved-data assertion failure, and restore exact original files. Do not require every domain permutation or all six existing browser seeds for every feature.
-- The complete Chromium suite is mandatory. Add targeted Firefox/WebKit cases for SVG, foreignObject, pointer capture, native inputs and focus where the feature touches them.
-- Apply the change-specific completion checks in [commands.md](commands.md). New or changed E2E tests require three sequential runs without retries.
+- The complete Chromium suite is mandatory in CI. Add targeted Firefox/WebKit cases for SVG, foreignObject, pointer capture, native inputs and focus where the feature touches them.
+- Apply the change-specific completion checks in [commands.md](commands.md). Local selection runs through the changed-check script; full cross-browser execution belongs to CI.
 - Retain useful failure traces/screenshots. Record scenario → risk → existing coverage → new E2E → visible assertion → saved/exported assertion, verification results and remaining limits in feature artifacts. Commands and artifact handling are documented in `docs/testing.md`.
 - Never weaken assertions to make CI green or claim absence of user problems solely from passing tests.
 

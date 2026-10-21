@@ -2,7 +2,7 @@
 
 New capabilities and changes to user-visible contracts require a specification before feature code. Read only the artifacts needed for the current stage; reuse completed, current stages rather than restarting the workflow.
 
-Before creating a feature or branch, read [Git flow](guidelines/git-flow.md). Re-read it after verification and before committing or delivering work; its single-PR, release and merge-submission rules apply to every route below.
+Before creating a feature or branch, read [Git flow](guidelines/git-flow.md). Re-read it after verification and before committing or delivering work; its single-PR, release and PR-delivery rules apply to every route below.
 
 ## Choose the change route
 
@@ -53,3 +53,11 @@ Capture these in the user request or existing feature artifacts; do not create a
 In `plan.md`, keep a short Relevant context section with exact docs, contracts and owning modules. Link requirement → task → test/check → evidence in tasks or verification; maintain one mapping, not duplicate tables across artifacts. Research, data-model, contracts and quickstart files are needed only when they carry distinct useful content.
 
 For a resumed session, read the relevant spec, plan and pending tasks, inspect the actual diff, and use recorded evidence with its date/scope. Historical success is not a check of the current tree.
+
+## Local checks and delivery
+
+Use the changed-check script for local verification; full suites and coverage gates
+run in CI. Direct test commands are reserved for diagnosis or justified necessity.
+Record one task journal with the checked SHA/tree digest and actual outcomes, linking
+from other artifacts. Open one PR and stop; do not auto-merge or wait for CI. See
+[Git flow](guidelines/git-flow.md) and [commands](commands.md).

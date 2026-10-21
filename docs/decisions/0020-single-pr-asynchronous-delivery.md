@@ -1,6 +1,6 @@
 # 0020. One feature PR and asynchronous delivery
 
-Status: Accepted
+Status: Partially superseded by [0021](0021-selective-checks-and-pr-delivery.md) (delivery boundary and verification)
 Date: 2026-10-20
 
 ## Context

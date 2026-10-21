@@ -1,0 +1,32 @@
+name: Coverage PR comment
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [requested, completed]
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: write
+
+concurrency:
+  group: coverage-${{ github.event.workflow_run.head_repository.id }}-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: false
+
+jobs:
+  comment:
+    if: github.event.workflow_run.event == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      # Trusted default-branch code only: never execute PR code with write permission.
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - run: node scripts/coverage-comment.mjs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
