@@ -8,7 +8,7 @@ Tests-first diagnostic: new app-switch-size test failed on eight unexpected Resi
 
 UI/UX skill pre-review: ux `conditional form controls`, React `conditional rendering controls`; applied labeled remaining controls and stable keys. Post-review searches: ux `visible labels keyboard focus`, React `controlled inputs labels`; existing labels, focus rings, wrapping and theme tokens retained. No new tokens/animation/page/dependency; native-mobile safe-area/haptics guidance is inapplicable. Actual OS keyboard/screen-reader/native 200% zoom acceptance remains unperformed; deliver draft. Browser automation is not manual acceptance. No firmware build required: no generator, catalog or ZMK syntax changes.
 
-Pending final changed-check receipt and rendered screenshot review.
+Final evidence follows below.
 
 Focused browser diagnosis: retained layout/data/paint/accessibility/product journeys passed 20/20. Initial new tests incorrectly queried the collapsed Parts table after workspace return; fixed test to open Parts. Native Firefox/WebKit pointer coordinates round differently with the 2.25u center; use the documented Shift snap to assert exactly 90°, retaining independent fixed-center/corner assertions. Final new journeys passed 6/6 (Chromium/Firefox/WebKit × light/dark), `/tmp/switch-focused-final.log`.
 
@@ -17,3 +17,6 @@ UX-SS-01 closed: inspected actual 1024×800 Chromium light/dark screenshots in t
 The initial changed-check snapshot was interrupted during units once the new-test correction was ready; static/type/architecture/guideline/tooling/format stages had passed. It is not final verification evidence.
 
 Updated five browser mutation probes passed separately: disabled rotation (visible corner error), invisible key (CSS opacity), shifted rotation hit area (screen coordinate), lost save (saved angle), extra Undo (exact project). `/tmp/switch-seeds-final.log`, details `.e2e-mutations/{disabled-rotation,invisible-preview,shifted-hit-area,lost-save,extra-undo}/`. Each exact source restored; no production differences remain from probes. Initial disabled-rotation probe correctly failed geometry but runner expected a different assertion name; updated expected assertion and repeated successfully. Other existing seeds remain CI-owned. Retired obsolete resize PNG references; retained geometry/paint assertions and new actual light/dark review captures.
+
+
+Final implementation `cf02825`, checked tree `fa42b2f1f29e8e5159767e0b16c371de1779cc6c`: `npm run check:changed` PASS. Whole-project type/browser types, architecture/guidelines, changed lint/format, tooling, **223 unit files / 1288 tests**, **73 Chromium journeys** passed. Exact receipt/logs: `.check-logs/fa42b2f1f29e-f01a8ca1d2ab/` (`passed.json`, `9-npm.log`, `10-npx.log`). Focused cross-browser evidence above applies to the same implementation. No coverage or unobserved CI result claimed. Final diff and staged paths reviewed, no reports or build output committed. S001–003 complete; S004/UX-SS-03 manual gate stays open, hence one draft PR with release:patch. Evidence-only closeout changes no production/test behavior.

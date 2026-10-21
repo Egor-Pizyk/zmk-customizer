@@ -75,4 +75,6 @@ Dependencies: K001 → K002 tests → K002 implementation → K003 → K004 → 
 
 - [x] S001 FR-021: failing UI regression for absent resize controls, retained rotation and keycap sizing.
 - [x] S002 FR-021: remove Schematic size controls only; preserve data/domain/output.
-- [ ] S003 FR-021: update superseded UI journeys, post-skill rendered review and changed checks; record [evidence](switch-sizing-verification.md).
+- [x] S003 FR-021: update superseded UI journeys, post-skill rendered review and changed checks; record [evidence](switch-sizing-verification.md).
+
+- [ ] S004 FR-021: actual OS keyboard/screen-reader/native 200% zoom acceptance (draft delivery; UX-SS-03).
