@@ -638,7 +638,7 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 ### 035 — ui-ux-audit-specification
 
-**Status (2026-10-21).** [Specification](../specs/035-ui-ux-audit-specification/spec.md) drafted after the prerequisite work merged. Audit execution and remediation remain pending; [journal](../specs/035-ui-ux-audit-specification/verification.md).
+**Status (2026-10-21).** [Specification](../specs/035-ui-ux-audit-specification/spec.md) drafted after the prerequisite work merged. A research pass and [036 handoff](../specs/035-ui-ux-audit-specification/findings.md) are recorded; manual audit acceptance, exact reported bug reproductions and remediation remain pending; [journal](../specs/035-ui-ux-audit-specification/verification.md).
 
 **Goal and scope.** Review the delivered four-workspace product, shared controls and end-to-end creation/editing/export flows. Produce evidence-backed findings, coverage and verification gaps, and testable remediation requirements for 036. Preserve all 21 explicit 036 reports and their identities. Apply local UI/UX guidance, accessibility, themes, responsive and keyboard review; distinguish observed results from user reports and historical checks. No application fixes or new design system are included in this stage. Complete before 036 and final onboarding 037.
 

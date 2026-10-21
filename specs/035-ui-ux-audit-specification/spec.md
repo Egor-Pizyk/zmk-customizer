@@ -2,7 +2,7 @@
 
 **Feature Branch**: `feature/035-ui-ux-audit-specification`
 **Created**: 2026-10-21
-**Status**: Draft — specification ready for planning; audit not yet executed
+**Status**: Draft — research pass and 036 handoff recorded; manual acceptance and exact reported reproductions remain open
 **Input**: Start documentation for roadmap 035 after 031–034 and the 012/004 standard-keycap-size follow-up. Audit the delivered application and specify actionable work for 036 before final onboarding 037.
 
 ## Goal and scope
@@ -11,7 +11,7 @@ Give maintainers an evidence-based account of where users cannot reliably discov
 
 **In scope**: All four workspaces, shared shell/settings/help/Problems, project lifecycle and cross-workspace flows delivered by 001–019 and 031–034, including standard keycap sizes and fixed-size Schematic switches. Inspect information hierarchy, labels, control consistency, feedback, accessibility, responsive layout and actual editing behavior. Reconcile the 21 explicit reports in roadmap 036 with audit evidence without dropping any report.
 
-**Non-goals**: Fixing application code; introducing a new visual identity or design system; implementing 036 or onboarding 037; root README/repository-description closeout; deferred 020–022 or 2.0.0 mechanical features; firmware compilation or hardware certification. This specification defines the audit deliverables; writing it does not complete the audit.
+**Non-goals**: Fixing application code; introducing a new visual identity or design system; implementing 036 or onboarding 037; root README/repository-description closeout; deferred 020–022 or 2.0.0 mechanical features; firmware compilation or hardware certification. This specification defines the audit deliverables. The current research pass is recorded in coverage/findings; complete manual audit acceptance is still pending.
 
 **Existing contracts to preserve**: Existing project imports and legacy custom geometry, immutable project edits, Undo/Redo, manual wiring and insulated crossings, deterministic export, offline/static operation, pinned ZMK v0.3.0, keyboard access and table/field alternatives. Any proposed change to an existing contract must be explicit and reconciled with its owning feature before implementation.
 
