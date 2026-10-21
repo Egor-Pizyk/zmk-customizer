@@ -61,7 +61,8 @@ if (process.argv[1]?.endsWith('/coverage-comment.mjs')) {
   const run = event.workflow_run;
   const prefix = `https://api.github.com/repos/${process.env.GITHUB_REPOSITORY}`;
   const api = async (route, options, pages = false) => {
-    const response = await fetch(prefix + route, {
+    const url = route.startsWith('https://api.github.com/') ? route : prefix + route;
+    const response = await fetch(url, {
       ...options,
       headers: {
         Authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
@@ -73,8 +74,7 @@ if (process.argv[1]?.endsWith('/coverage-comment.mjs')) {
     if (!response.ok) throw new Error(`GitHub API ${response.status}: ${route}`);
     const result = await response.json();
     const next = response.headers.get('link')?.match(/<([^>]+)>; rel="next"/u)?.[1];
-    if (pages && next)
-      return [...result, ...(await api(next.slice(prefix.length), undefined, true))];
+    if (pages && next) return [...result, ...(await api(next, undefined, true))];
     return result;
   };
   await publishCoverage({

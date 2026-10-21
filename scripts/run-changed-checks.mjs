@@ -73,8 +73,10 @@ else if (plan.related.length) {
     '--reporter=json',
     '--outputFile=.check-logs/related.json',
   ]);
-  const report = JSON.parse(readFileSync('.check-logs/related.json', 'utf8'));
-  if (!report.numTotalTests) {
+  const report = existsSync('.check-logs/related.json')
+    ? JSON.parse(readFileSync('.check-logs/related.json', 'utf8'))
+    : null;
+  if (!report?.numTotalTests) {
     console.log('No dependency-linked tests found: falling back to the full unit suite.');
     npm('test');
   }
