@@ -1,0 +1,7 @@
+# Discovery decisions — 2026-10-21
+
+- Decision: self-contained downloadable package and importable Project JSON, confirmed by user. Rationale: compatible with arbitrary agent environments and offline static application. Alternatives: documentation-only delivery and MCP evaluation; user selected package. No provider execution/credentials in app.
+- Decision: source-derived JSON Schema/catalogs with explicit semantic guide. Rationale: avoid a second handwritten schema and drifting identifiers. JSON Schema does not encode all custom refinements, graph connectivity, budgets and domain validation; existing importer and export gate remain authoritative.
+- Decision: complete unibody and split examples generated through existing preset/wiring operations and independently checked through parsing/analysis/export tests. Rationale: explain real wires/terminals and half-local GPIOs without introducing a parallel electrical generator.
+- Decision: package format version + Project schema version + pinned ZMK target identify compatibility. Agent should request a fresh package after app upgrades instead of guessing unsupported fields. No network fetch or current user project is required.
+- Local evidence: schema v12 in storage/project; catalog public indexes expose boards/pins, keycodes/actions, custom/advanced options, firmware and encoders; deterministic ZIP adapter already exists. No new dependency or ADR needed.

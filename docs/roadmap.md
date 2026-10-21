@@ -65,7 +65,7 @@ Each `/speckit-specify` prompt below describes what and why only. Technology cho
 | 031 | keyboard-presets | 011, 012, 013, 014 |
 | 032 | project-creation-and-auto-wiring | 031, 013, 011 |
 | 033 | wiring-and-settings-usability | 032, 001, 003, 012, 013 |
-| 034 | agent-assisted-configuration — discovery | 002, 009, 010; other dependencies TBD |
+| 034 | agent-assisted-configuration — initial creation package | 002, 009, 010, 031, 033 |
 | 012 follow-up | standard keycap sizes in Bindings (extension with 004) | 004, 012; complete before 035 |
 | 035 | ui-ux-audit-specification | 031–034 and the 012 standard-keycap-size follow-up |
 | 036 | ui-ux-remediation | 035 |
@@ -622,7 +622,7 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 ### 034 — agent-assisted-configuration
 
-**Status (2026-10-19).** Open discovery requested by the user; no implementation approach approved. Schedule before interactive onboarding (037).
+**Status (2026-10-21).** User approved initial delivery as a downloadable agent package with current schema, catalogs, prompt and examples; output is an importable Project JSON. Specified in [`specs/034-agent-assisted-configuration/spec.md`](../specs/034-agent-assisted-configuration/spec.md). Initial creation implementation is available on its feature branch; checks and required manual acceptance are tracked in its verification record. Schedule before interactive onboarding (037).
 
 **Goal.** Let users generate or edit a keyboard configuration with their own AI agent using a maintained prompt and the project's verified knowledge, then review and use the result in ZMK Customizer. AI execution belongs to the user's chosen environment; the app remains static without a backend or runtime network calls.
 
@@ -630,9 +630,9 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 **Initial creation scope (confirmed by the user, 2026-10-19).** Create a complete keyboard project, not just physical geometry: key positions/sizes/rotations and split halves where applicable, controller selection, supported electrical wiring with pins and diodes where required, bindings and layers, and relevant supported firmware settings. Include supported advanced actions or hardware when requested, rather than adding them by default. The intended result can be reviewed and validated in Customizer and exported through its existing flow. The agent must ask for missing hardware facts or obtain explicit agreement on proposed choices; it must not invent the user's actual wiring. Stay within the app's supported capabilities and pinned ZMK v0.3.0. Configuration validation does not establish successful firmware compilation or hardware operation.
 
-**Candidate approaches to discuss.** A copyable/downloadable prompt and context bundle; a public agent-oriented documentation page with versioned schema, supported capabilities and examples; an optional MCP integration only if investigation establishes a useful approach compatible with the frontend-only constraints. Search indexing is a discovery aid, not a guarantee that an agent has loaded current documentation. These are alternatives for evaluation, not committed deliverables.
+**Selected approach (2026-10-21).** A self-contained downloadable package with a ready prompt, current structural Project schema, supported catalogs, semantic validation guidance and complete unibody/split examples. The user gives it to their own agent, then reviews returned Project JSON using existing Open, Problems and Export. No current project is attached. Public documentation-only delivery was considered; MCP is outside the initial delivery.
 
-**Open questions.** Generate an importable Project JSON or raw ZMK files; how agents obtain current schemas/catalog facts and validate output; how users review changes and repair rejected output; offline availability and documentation versioning; whether MCP adds enough value and what local or external components it would require. Resolve these during discovery and specification before planning. Creation precedes existing-project editing as confirmed above.
+**Resolved initial contracts.** Project JSON uses the existing importer; source-derived schema/catalogs identify package, project schema and pinned ZMK versions. The package works offline after load; structural schema cannot replace importer refinements and electrical/domain validation. Save current work before confirmed replacement; field errors and Problems guide repair, and invalid projects cannot export. Future existing-project editing and any MCP evaluation require separate specification.
 
 **Proposed safety and compatibility boundaries.** Use the supported import/validation and deterministic export flows where applicable; never apply untrusted agent output silently or overwrite current work. Preserve project compatibility and Undo/Redo. Do not assume unsupported ZMK features, automatic electrical correctness or successful firmware compilation.
 
@@ -679,7 +679,7 @@ Parsing existing ZMK shield files back into a project (Devicetree parsing), cust
 
 - [ ] Revisit deferred **020 — zmk-studio-support** and agree when to resume it. Skipped for now on user request (2026-10-19); keep interactive onboarding (037) last when rescheduling.
 - [ ] Revisit deferred **021 — lighting-displays** and **022 — zmk-version-selection**. Skipped for now on user request (2026-10-19); keep the ZMK v0.3.0 target until version selection is explicitly resumed.
-- [ ] Discuss and specify **034 — agent-assisted-configuration**: user-owned AI execution, maintained prompt/knowledge delivery, output contract, validation and the feasibility/value of MCP under static-app constraints.
+- [x] Discuss and specify initial **034 — agent-assisted-configuration**: user approved downloadable knowledge package + Project JSON; see its specification. Existing-project editing and any MCP evaluation remain future work.
 
 - [ ] Specify and deliver the first-major **012/004 standard-keycap-size follow-up**: selected keycap → context menu → standard size, replacing arbitrary resizing in Bindings; preserve legacy custom geometry. Complete before 035 audit and 037 onboarding.
 

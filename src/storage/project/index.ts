@@ -21,3 +21,4 @@ export type {
 export { MAX_PROJECT_FILE_BYTES, readImportFile } from './read-import-file';
 export { serializeProject } from './serialize-project';
 export { wiringSchema, findTerminalIssues } from './wiring-schema';
+export { getProjectJsonSchema } from './get-project-json-schema';

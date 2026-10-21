@@ -26,7 +26,11 @@ function SaveHarness() {
   }
   return (
     <>
-      <ProjectBar onNewClick={handleUnusedClick} onOpenClick={handleUnusedClick} />
+      <ProjectBar
+        onAgentClick={handleUnusedClick}
+        onNewClick={handleUnusedClick}
+        onOpenClick={handleUnusedClick}
+      />
       <ProjectMessages onDiscardClick={handleUnusedClick} />
       <button onClick={handleInvalidClick} type="button">
         Trigger invalid edit
