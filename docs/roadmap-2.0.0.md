@@ -7,7 +7,7 @@ Status: discovery draft, 2026-10-21. Target release: **2.0.0**, explicitly selec
 Build a new module for keyboard mechanical design and generation of the parts needed for assembly: enclosure, switch mounting, plates, bottom and accommodation of the controller and related components. The existing module addresses the keyboard as a control interface, including wiring, bindings and firmware configuration.
 
 - Two independent business modules in a monorepository. A person must be able to use either without configuring or using the other. Share business concepts, functions and infrastructure only where their meaning genuinely matches. Shared logging is an example of possible infrastructure, not a request to add logging now.
-- The modules can work together to generate a case for a keyboard designed in the existing module. Exact exchange and update behavior remains to be agreed.
+- The modules exchange physical layouts in both directions. Users can create a case from the existing module, freely edit the layout in the case constructor, and explicitly return those changes to the existing module. Reviewable updates and independent use are part of the 2.0.0 direction; automatic live synchronization is not selected.
 - Start with flat unibody and split keyboards. Curved keywells and individually tilted keys belong to a later stage; that stage's release allocation is undecided.
 - Primary manufacturing target: home FDM 3D printing.
 - Primary assembly flow: design → print → install components → solder. Fitting a new case around an already soldered matrix is not the initial scenario.
@@ -36,6 +36,22 @@ Proposals requiring agreement:
 - Supply instructions for supported construction recipes. Automatically planning assembly for arbitrary models is not proposed for the first scope.
 - Keep custom dimensions visibly distinct from verified component profiles. Reserve space for unknown hardware without claiming that its mounting and service access are verified.
 
+## Bidirectional layout exchange — accepted direction
+
+The user selected editing the layout in the case constructor and returning changes to the existing module. A one-time import alone does not meet this direction. Both modules must remain independently usable, including creation without a source project from the other module.
+
+Specification must define the following preservation and review behavior before implementation:
+
+- Explicit transfer/update in either direction, with a preview of added, removed, moved, resized and reassigned-half keys, then Apply/Cancel. No silent cross-module writes.
+- Preserve stable key identities and existing per-layer bindings for retained keys. Surface added/deleted keys and affected wiring or references; do not invent physical electrical connections or silently reassign GPIOs. Define new-key defaults and deletion consequences during specification.
+- Preserve enclosure-only settings when updating its layout. Recheck affected mounting, contours and component clearances rather than assuming the old geometry is still valid.
+- Detect when both documents have changed since exchange; show conflicts instead of silently overwriting local work. Choose the matching/baseline mechanism during planning; no particular merge algorithm is approved.
+- Apply changes as an undoable operation in the receiving module. Define independent history, save/reload and provenance behavior; do not promise an implicit Undo across two documents.
+- Keep validation/export readiness scoped to the receiving product. A stale or failed case calculation must not block firmware work; case export must describe the current successfully calculated design.
+- Specify the shared layout contract's units, rotation origins, half identity and size meaning. A keycap's nominal size is not a switch mounting aperture. The first-major standard-keycap-size follow-up in [012](roadmap.md#012--layout-editor) is relevant input, not proof of component compatibility.
+
+These are requirements to clarify and specify, not an implementation plan. Transport, project linking, copy/fork matching, conflict UI and future 3D-to-2D exchange remain open.
+
 ## Candidate discovery gates
 
 These are investigation outcomes, not implementation tasks. Their order and eventual release scope require user agreement.
@@ -47,7 +63,7 @@ These are investigation outcomes, not implementation tasks. Their order and even
 | Browser geometry | Demonstrate the selected construction and required exports offline; measure latency, memory, failure recovery, cancellation, Undo during calculation and prevention of stale exports on agreed devices |
 | Beginner workflow | Test component selection, enclosure changes, conflict correction and export with a person without CAD experience; review the proposed screen layout in both themes |
 | Independent modules | Compare document ownership, persistence, migrations, validation and history options; demonstrate that each module works with no data from the other |
-| Interoperability | Agree layout ownership, key identity, units, coordinate systems, half identity and supported changes; test explicit transfer without losing existing user data |
+| Interoperability | Specify the accepted two-way workflow: ownership, key identity, units, halves, change/conflict review and preservation of bindings/wiring/mechanical settings; test both directions without losing existing user data |
 | Monorepository | Decide package/application boundaries from the above contracts, record required architecture/dependency decisions, then specify migration without changing existing behavior |
 | Expanded scope | Add component combinations and split assembly evidence; reassess 3D poses and curved geometry separately rather than treating curvature as a small flat-case option |
 
@@ -59,7 +75,7 @@ No experiments or prototypes listed above have been performed in this documentat
 2. Which fastening and custom dimensions are necessary within the accepted upper-part/removable-bottom construction? Additional recipes and free part composition remain later proposals.
 3. Handwired only initially, or compatibility with existing PCBs? Battery support is confirmed for a later stage; its battery/switch specification and scheduling remain open. Are stabilizers, non-1u keys, tenting and wrist rests required initially or later?
 4. Can printing output plus genuine STEP solids be delivered without disproportionate complexity? Evaluate before selecting a geometry engine. STEP geometry supports downstream CAD modification but does not promise the original parametric feature history; retain the app project as the editable design source.
-5. Is the initial layout transfer a snapshot creating an independent enclosure project, or must later changes be reviewable and applied too? Automatic live synchronization and two-way editing are not agreed.
+5. For the accepted bidirectional layout exchange, how are project pairs and copied/forked documents matched, conflicting edits resolved and incompatible future 3D geometry represented? Transport and conflict-resolution details remain open; one-time-only transfer is insufficient.
 6. Do the modules share one shell, have independent entry points, or ship as separate applications? Business independence is confirmed; deployment topology is not.
 7. How will component dimensions, source revisions and physical verification be maintained, and who can print/test the reference assemblies?
 
