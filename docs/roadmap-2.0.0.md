@@ -55,6 +55,10 @@ Specification must define the following preservation and review behavior before 
 
 These are requirements to clarify and specify, not an implementation plan. Transport, project linking, copy/fork matching, conflict UI and future 3D-to-2D exchange remain open.
 
+## Component source inventory
+
+The initial [component-source research](research/2.0.0-component-sources.md) records actual libraries, manufacturer archives, formats, reuse conditions and gaps. Official Gateron KS-33 2.0 and full-height STEP files were verified as downloads; partial collections cover MX/keycaps/Pro Micro. No complete, verified, redistribution-cleared library was established, and exact nice!nano v2 mechanics remain open. This inventory does not approve assets or add hardware to the initial catalog.
+
 ## Dedicated feature — mechanical technology research
 
 **Working name:** `mechanical-technology-research`; a separate research feature before production CAD integration and monorepo restructuring. Assign its immutable Spec Kit number only when formally specifying it; this documentation task does not create a feature directory. The user requires a full comparative study and an evidence-backed ADR choosing language, framework and geometry kernel. [ADR 0022](decisions/0022-mechanical-technology-evaluation.md) records this evaluation gate, not a technology selection.
