@@ -10,11 +10,14 @@ Build a new module for keyboard mechanical design and generation of the parts ne
 - The modules exchange physical layouts in both directions. Users can create a case from the existing module, freely edit the layout in the case constructor, and explicitly return those changes to the existing module. Reviewable updates and independent use are part of the 2.0.0 direction; automatic live synchronization is not selected.
 - Start with flat unibody and split keyboards. Curved keywells and individually tilted keys belong to a later stage; that stage's release allocation is undecided.
 - Primary manufacturing target: home FDM 3D printing.
+- Initial build is PCB-free and hot-swap-free: solder wires directly to switch contacts. Existing-PCB mounting and hot-swap socket/holder systems are excluded from the initial scope.
+- Stabilizers are excluded initially; adding them later is a confirmed extension direction. Do not present unsupported stabilized keycap combinations as verified builds; research future mounting/clearance needs without implementing stabilizers now.
 - Primary assembly flow: design → print → install components → solder. Fitting a new case around an already soldered matrix is not the initial scenario.
 - Start with a small verified component catalog and expand it. Advanced user dimensions are acceptable in principle; their scope and verification status remain open.
-- First construction: an upper part with switch mounting and a removable bottom, with individual-part settings revealed progressively. The precise fastening remains to be validated.
+- First construction: an upper part with switch mounting and a removable bottom, with individual-part settings revealed progressively. Generate the contour around the layout with adjustable margins, height and rounding. Free-drawn outlines are a later extension. Select one physically verified bottom fastening; keep reset access optional rather than requiring a reset opening in every case.
 - Initial controller scope: Arduino Pro Micro, nice!nano v2 and selected nRF52840 alternatives. Exact board revisions, connectors and mounting envelopes require individual profiles; a common MCU or electrical pinout does not establish identical mechanics. Mechanical support does not imply firmware support by the existing ZMK module.
 - Initial switch scope: conventional full-height MX-compatible Gateron and Gateron KS-33 Low Profile 2.0 as separate mechanical profiles, with compatible keycaps, including MX-style compatibility where applicable. Exact mechanical families and keycap combinations remain to be selected; do not treat all low-profile Gateron or all cross-stem keycaps as interchangeable.
+- Obtain component dimensions and switch/keycap 3D models from suitable publicly available Internet sources, prioritizing manufacturer drawings and traceable open assets. Record exact part/revision, URL, license, units, orientation, modifications and verification status; public availability alone does not grant redistribution rights or prove dimensional accuracy. Bundle approved/pinned assets for offline use. Separate visual models from authoritative fit dimensions and simplified clearance geometry.
 - Initial controller accommodation covers the board and USB access. Battery support is a confirmed future requirement, not part of the initial assembly. Revisit battery, switch, wiring clearance and service access before fixing a construction that could prevent this extension; no battery dimensions or mounting system are selected now.
 - Desired exports: printing files and editable CAD such as STEP, conditional on avoiding disproportionate complexity. Evaluate native CAD export in engine discovery; retain the condition until feasibility is demonstrated.
 - The experience must be usable without CAD knowledge and retain the product's overall visual style. Component choices should determine appropriate mounting geometry rather than asking beginners to draw it.
@@ -52,15 +55,38 @@ Specification must define the following preservation and review behavior before 
 
 These are requirements to clarify and specify, not an implementation plan. Transport, project linking, copy/fork matching, conflict UI and future 3D-to-2D exchange remain open.
 
-## Candidate discovery gates
+## Dedicated feature — mechanical technology research
 
-These are investigation outcomes, not implementation tasks. Their order and eventual release scope require user agreement.
+**Working name:** `mechanical-technology-research`; a separate research feature before production CAD integration and monorepo restructuring. Assign its immutable Spec Kit number only when formally specifying it; this documentation task does not create a feature directory. The user requires a full comparative study and an evidence-backed ADR choosing language, framework and geometry kernel. [ADR 0022](decisions/0022-mechanical-technology-evaluation.md) records this evaluation gate, not a technology selection.
+
+**Questions to answer independently**
+
+- UI framework and renderer, application/domain orchestration language, geometry kernel, execution boundary and build tooling are separate decisions. Evaluate retaining the existing TS/React UI with a different compute layer as well as justified alternatives; do not equate a language rewrite with a better CAD kernel.
+- Compare a TS-oriented baseline (including existing compiled/WASM kernels where relevant), Rust compiled to WASM, and credible lower-level alternatives such as C/C++ compiled to WASM. Screen other candidates if they satisfy the product constraints; document why a candidate is rejected instead of producing a token comparison. Screen capabilities, licenses and browser/offline suitability first, then benchmark a small justified shortlist rather than every language/kernel/framework combination.
+- Compare solid/B-rep and mesh approaches against printing output and genuine STEP CAD export. Evaluate editable downstream geometry separately from recovering original feature history. Measure the complexity cost of STEP and return any scope tradeoff to the user.
+- Evaluate pure and hybrid implementations. Account for marshaling/copying, worker scheduling, ownership/lifetimes and browser/WASM boundary costs; do not assume Rust or another lower-level language automatically improves end-to-end performance.
+- Preserve static hosting, offline execution after load, independent business modules, versioned portable data, accessible UI and existing user files. Study future curved layouts, battery accommodation and stabilizer extensions through bounded feasibility cases, not full implementation.
+
+**Required evidence and outputs**
+
+1. Survey current primary documentation, licenses, maintenance/activity, browser targets and tooling for plausible languages/frameworks/kernels; identify unavailable capabilities and operational limits.
+2. Define the same representative input fixtures and equivalent output quality/tolerances before benchmarking. Include a small handwired layout, a rotated/irregular layout, a split layout and an agreed stress case. Test plate/shell/bottom generation, cutouts, rounding, clearance checks and STL/STEP export; include invalid and near-degenerate geometry. Establish target devices, browsers, memory budgets and acceptable latency before selecting a winner. Correctness is an eligibility check before speed comparisons; hold tessellation quality and geometric tolerance constant. Record repeatability and export metadata behavior, test reopening parameter projects across candidate version updates, and explicitly resolve any byte-determinism conflict with the owning principles before adoption.
+3. Build isolated, reproducible comparison prototypes only as part of that research feature. Record candidate versions, source revisions, build options, fixture hashes, hardware/browser details and repeatable measurements. Compare cold startup/download/WASM initialization, warm full and incremental calculations, UI responsiveness, peak memory and growth across repeated edits, transfer overhead, export time/size and geometric correctness. Publish failures and unsupported measurements alongside successes.
+4. Exercise cancellation, rapid edits, Undo during work, stale-result rejection, crash/failure recovery and offline packaging. Evaluate threading requirements and hosting compatibility where relevant. Judge determinism, testing/debugging, build/CI complexity, dependency/asset licensing and long-term maintenance as well as speed.
+5. Independently review the results for technical, UX and scope weaknesses, revise the recommendation, and discuss material tradeoffs with the user. Produce a comparison matrix, reproducible evidence, known limits and migration/module-boundary proposal.
+6. Write a separate final selection ADR stating the chosen language(s), UI framework, renderer, kernel, execution model, dependencies, rejected alternatives and rationale. Link measured evidence; explicitly supersede any affected earlier decisions and update their owning rules when the decision is accepted. No production technology migration starts before this gate.
+
+**Completion.** The research produces a defensible choice and documented tradeoffs, not a preselected Rust implementation or a marketing benchmark. If no candidate satisfies the requirements, report the failed constraints and agree scope changes rather than silently dropping STEP, offline use or independence.
+
+## Future validation — required work, not yet performed
+
+The user requested recording the following technical, physical and beginner checks for future execution. The technology-research feature owns the comparative technical evidence; full physical and beginner validation remain distinct gates before claiming supported product outcomes. Other rows specify investigations needed before committing their corresponding scope.
 
 | Gate | Evidence needed before committing the corresponding product scope |
 |---|---|
-| Reference assembly | Agree exact switches, keycaps, controller, wiring approach and fastening; identify stabilizers, battery and connectors if included |
+| Reference assembly and assets | Select exact switches/keycaps/controller and bottom fastening for direct soldering; verify source drawings/models and redistribution provenance; reset access is optional, no PCB/hot swap/stabilizers initially |
 | Mechanical feasibility | Print and assemble a complete supported flat reference design; record fit, cable/solder access, disassembly and limits, alongside a local fit sample |
-| Browser geometry | Demonstrate the selected construction and required exports offline; measure latency, memory, failure recovery, cancellation, Undo during calculation and prevention of stale exports on agreed devices |
+| Technical / technology research | Complete the dedicated comparative feature above, including offline STL/STEP, latency/memory/correctness, recovery/cancellation and current-revision export; publish evidence and a final selection ADR |
 | Beginner workflow | Test component selection, enclosure changes, conflict correction and export with a person without CAD experience; review the proposed screen layout in both themes |
 | Independent modules | Compare document ownership, persistence, migrations, validation and history options; demonstrate that each module works with no data from the other |
 | Interoperability | Specify the accepted two-way workflow: ownership, key identity, units, halves, change/conflict review and preservation of bindings/wiring/mechanical settings; test both directions without losing existing user data |
@@ -73,11 +99,12 @@ No experiments or prototypes listed above have been performed in this documentat
 
 1. Select exact full-height Gateron, low-profile Gateron and keycap combinations, plus Pro Micro/nice!nano v2/alternative board revisions. KS-33 Low Profile 2.0 and conventional MX-compatible Gateron are accepted families; exact SKUs and keycaps remain open. Which combination should be physically tested first?
 2. Which fastening and custom dimensions are necessary within the accepted upper-part/removable-bottom construction? Additional recipes and free part composition remain later proposals.
-3. Handwired only initially, or compatibility with existing PCBs? Battery support is confirmed for a later stage; its battery/switch specification and scheduling remain open. Are stabilizers, non-1u keys, tenting and wrist rests required initially or later?
+3. Initial assembly is confirmed direct-solder handwired without PCB, hot swap or stabilizers. Battery and stabilizer support are future extensions; agree their later release allocation, along with curved layouts, tenting and wrist rests. Define initially supported non-1u combinations without implying verified unstabilized wide-key behavior.
 4. Can printing output plus genuine STEP solids be delivered without disproportionate complexity? Evaluate before selecting a geometry engine. STEP geometry supports downstream CAD modification but does not promise the original parametric feature history; retain the app project as the editable design source.
 5. For the accepted bidirectional layout exchange, how are project pairs and copied/forked documents matched, conflicting edits resolved and incompatible future 3D geometry represented? Transport and conflict-resolution details remain open; one-time-only transfer is insufficient.
 6. Do the modules share one shell, have independent entry points, or ship as separate applications? Business independence is confirmed; deployment topology is not.
-7. How will component dimensions, source revisions and physical verification be maintained, and who can print/test the reference assemblies?
+7. Which traceable online dimension/model sources and exact asset licenses will be used, how will their revisions and physical verification be maintained, and who can print/test the reference assemblies?
+8. Agree target hardware/browser performance budgets and the bounded future-complexity cases for the dedicated technology-research feature; actual language/framework/kernel selection follows its evidence and final ADR.
 
 ## Constraints to resolve before specification
 
