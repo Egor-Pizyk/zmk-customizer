@@ -29,10 +29,23 @@ function historyButton(name: string) {
   });
 }
 it('edits all geometry via labeled fields, persists and renders equal sized/rotated caps in both workspaces', async () => {
-  const { user, unmount, mount } = renderApp(project());
+  const { user, unmount, mount } = renderApp(
+    buildProject({
+      keys: [
+        {
+          id: 'k0',
+          xU: 0,
+          yU: 0,
+          widthU: 2.25,
+          heightU: 1.5,
+          diode: { pin: 1, cathode: 'away-switch' },
+        },
+        { id: 'k1', xU: 4, yU: 2 },
+      ],
+      bindings: { k0: { kind: 'trans' }, k1: { kind: 'none' } },
+    }),
+  );
   const before = loadProject().project;
-  await edit(user, 'Key 0 Width (u)', '2.25');
-  await edit(user, 'Key 0 Height (u)', '1.5');
   await edit(user, 'Key 0 Rotation (°)', '30');
   await edit(user, 'Key 0 Origin X (u)', '1');
   await edit(user, 'Key 0 Origin Y (u)', '2');
@@ -64,7 +77,6 @@ it('previews a multi-key geometry edit without saving, cancels and applies with 
   const before = loadProject().project;
   await user.click(screen.getByRole('checkbox', { name: 'Select key 0' }));
   await user.click(screen.getByRole('checkbox', { name: 'Select key 1' }));
-  await edit(user, 'Selected width (u)', '1.5');
   await edit(user, 'Selected rotation (°)', '-15');
   expect(loadProject().project).toEqual(before);
   expect(screen.getByRole('graphics-symbol', { name: /^Key 0\b/u }).getAttribute('transform')).toBe(
@@ -72,10 +84,9 @@ it('previews a multi-key geometry edit without saving, cancels and applies with 
   );
   await user.click(screen.getByRole('button', { name: 'Cancel preview' }));
   expect(loadProject().project).toEqual(before);
-  await edit(user, 'Selected width (u)', '1.5');
   await edit(user, 'Selected rotation (°)', '-15');
   await user.click(screen.getByRole('button', { name: 'Apply layout' }));
-  expect(loadProject().project.keys.map((key) => key.widthU)).toEqual([1.5, 1.5]);
+  expect(loadProject().project.keys.map((key) => getKeyGeometry(key).widthU)).toEqual([1, 1]);
   await user.click(historyButton('Undo'));
   expect(loadProject().project).toEqual(before);
   await user.click(historyButton('Redo'));
@@ -131,7 +142,7 @@ it('nudges the complete selected rotated cluster and preserves origin, native fi
   expect(loadProject().project.keys.map((key) => key.rotationOriginXU)).toEqual([0.25, 4.25]);
   await user.click(historyButton('Undo'));
   expect(loadProject().project).toEqual(before);
-  const width = screen.getByRole('spinbutton', { name: 'Key 0 Width (u)' });
+  const width = screen.getByRole('spinbutton', { name: 'Key 0 Rotation (°)' });
   await user.clear(width);
   await user.type(width, '7{Escape}');
   await user.tab();
@@ -143,7 +154,7 @@ it('applies an explicitly entered first-key value to mixed selection and keeps t
   const initial = project();
   const { user } = renderApp({
     ...initial,
-    keys: [initial.keys[0], { id: 'k1', xU: 4, yU: 2, widthU: 2 }].filter(
+    keys: [initial.keys[0], { id: 'k1', xU: 4, yU: 2, rotationDeg: 2 }].filter(
       (key) => key !== undefined,
     ),
   });
@@ -151,9 +162,9 @@ it('applies an explicitly entered first-key value to mixed selection and keeps t
   await user.click(first);
   await user.keyboard('{Shift>}{ArrowDown}{/Shift}');
   expect(screen.getByRole('checkbox', { name: 'Select key 1' })).toHaveProperty('checked', true);
-  await edit(user, 'Selected width (u)', '1');
+  await edit(user, 'Selected rotation (°)', '0');
   await user.click(screen.getByRole('button', { name: 'Apply layout' }));
-  expect(loadProject().project.keys.map((key) => getKeyGeometry(key).widthU)).toEqual([1, 1]);
+  expect(loadProject().project.keys.map((key) => getKeyGeometry(key).rotationDeg)).toEqual([0, 0]);
   await user.click(screen.getByRole('button', { name: 'Delete key 1' }));
   expect(screen.getByRole('checkbox', { name: 'Select key 0' })).toHaveProperty('tabIndex', 0);
   await waitFor(() => {

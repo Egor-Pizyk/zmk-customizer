@@ -90,7 +90,7 @@ function LayoutEditorBody(
   }
   return first === undefined ? (
     <p className="text-xs text-text-muted">
-      Select a key, drag its frame to resize, or drag outside a corner to rotate.
+      Select a switch and drag outside a corner to rotate. Change keycap size in Bindings.
     </p>
   ) : (
     <>

@@ -117,3 +117,9 @@ Owning branch: `feature/012-standard-keycap-sizes`; extends 004 without a new fe
 Acceptance: right-click and keyboard context invocation select a standard size; table alternative changes the same physical geometry; rotated center/contact coordinates remain fixed; multi-selection is one history step; repeated current selection and cancellation preserve Redo; custom JSON loads unmodified; Undo/Redo, reload, downloaded JSON and ZMK physical-layout cells agree. Exercise light/dark, narrow/reflow, focus restoration and reduced motion with isolated Playwright. OS/screen-reader manual checks remain separately recorded.
 
 Sources checked 2026-10-21: https://spkeyboards.com/collections/sa-individual-keycaps (1–3u named sizes above); https://spkeyboards.com/collections/sa-individual-keycaps/products/sp-sa-spacebars (6.25u and 7u). Nominal footprint does not establish stabilizer, switch-hole or enclosure compatibility.
+
+## Switch sizing correction (2026-10-21)
+
+FR-021 supersedes earlier Schematic sizing requirements (FR-003/004/013/014/016/017): Schematic offers no switch resize handles or editable width/height, either in the Keys table or Precise properties. Retain selection frame, four exterior rotation targets, numeric rotation/origin, movement and history. Existing/custom project dimensions remain unchanged and loadable. Bindings keycap size chooser remains the only size-editing UI.
+
+Acceptance: select a switch; no Resize controls or width/height inputs appear, including after opening Precise properties. Rotate from an exterior corner: visible center and dimensions stay fixed, preview remains unsaved, release commits once, Undo/Redo restore exact projects. Rotation remains keyboard-editable. Change keycap size in Bindings and return: dimensions persist with no Schematic size editor.

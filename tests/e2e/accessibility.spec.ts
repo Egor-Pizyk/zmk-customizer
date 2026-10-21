@@ -38,8 +38,6 @@ test('keyboard-only table selection, native stepping, properties, duplication an
   expect((await saved(page)).keys[0]?.xU).toBe(5.25);
   for (const property of [
     { name: 'Key 0 Y (u)', value: '5' },
-    { name: 'Key 0 Width (u)', value: '1.5' },
-    { name: 'Key 0 Height (u)', value: '1.25' },
     { name: 'Key 0 Rotation (°)', value: '30' },
     { name: 'Key 0 Origin X (u)', value: '5.5' },
     { name: 'Key 0 Origin Y (u)', value: '5.5' },
@@ -58,8 +56,6 @@ test('keyboard-only table selection, native stepping, properties, duplication an
   expect((await saved(page)).keys[0]).toMatchObject({
     xU: 5.25,
     yU: 5,
-    widthU: 1.5,
-    heightU: 1.25,
     rotationDeg: 30,
     rotationOriginXU: 5.5,
     rotationOriginYU: 5.5,

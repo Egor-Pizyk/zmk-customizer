@@ -29,33 +29,7 @@ function history(name: string) {
     name: new RegExp(`^${name}`, 'u'),
   });
 }
-it('shows selected handles, previews a side resize and persists only on release with one-step undo/redo', async () => {
-  const { user } = renderApp(project());
-  capture();
-  expect(screen.queryByRole('button', { name: 'Resize key 0 right' })).toBeNull();
-  await user.click(screen.getByRole('checkbox', { name: 'Select key 0' }));
-  const before = loadProject().project;
-  const canvas = screen.getByRole('application');
-  const handle = screen.getByRole('button', { name: 'Resize key 0 right' });
-  fireEvent.pointerDown(handle, { button: 0, pointerId: 1, clientX: 48, clientY: 24 });
-  fireEvent.pointerMove(canvas, { pointerId: 1, clientX: 96, clientY: 24 });
-  expect(
-    screen
-      .getByRole('graphics-symbol', { name: /^Key 0\b/u })
-      .querySelector('rect')
-      ?.getAttribute('width'),
-  ).toBe('1.92');
-  expect(loadProject().project).toEqual(before);
-  fireEvent.pointerUp(canvas, { button: 0, pointerId: 1, clientX: 96, clientY: 24 });
-  const resized = loadProject().project;
-  expect(resized.keys[0]?.widthU).toBe(2);
-  expect(resized.layers).toEqual(before.layers);
-  await user.click(history('Undo'));
-  expect(loadProject().project).toEqual(before);
-  await user.click(history('Redo'));
-  expect(loadProject().project).toEqual(resized);
-});
-it('rotates from an exterior corner about the center and cancels subsequent resize without saving', async () => {
+it('rotates from an exterior corner about the center and cancels subsequent rotation without saving', async () => {
   const { user } = renderApp(project());
   capture();
   await user.click(screen.getByRole('checkbox', { name: 'Select key 0' }));
@@ -79,7 +53,7 @@ it('rotates from an exterior corner about the center and cancels subsequent resi
     rotationOriginXU: 0.5,
     rotationOriginYU: 0.5,
   });
-  fireEvent.pointerDown(screen.getByRole('button', { name: 'Resize key 0 bottom right' }), {
+  fireEvent.pointerDown(screen.getByRole('button', { name: 'Rotate key 0 bottom right' }), {
     button: 0,
     pointerId: 3,
     clientX: 0,
@@ -92,59 +66,27 @@ it('rotates from an exterior corner about the center and cancels subsequent resi
   await user.click(history('Undo'));
   expect(loadProject().project).toEqual(before);
 });
-it('refuses an overlapping release, cancels capture loss, and hides handles in wiring mode', async () => {
-  const { user } = renderApp(project());
-  capture();
-  await user.click(screen.getByRole('checkbox', { name: 'Select key 0' }));
-  const before = loadProject().project;
-  const canvas = screen.getByRole('application');
-  fireEvent.pointerDown(screen.getByRole('button', { name: 'Resize key 0 right' }), {
-    button: 0,
-    pointerId: 4,
-    clientX: 48,
-    clientY: 24,
-  });
-  fireEvent.pointerMove(canvas, { pointerId: 4, clientX: 288, clientY: 24 });
-  fireEvent.pointerUp(canvas, { button: 0, pointerId: 4, clientX: 288, clientY: 24 });
-  expect(loadProject().project).toEqual(before);
-  expect(screen.getByRole('status').textContent).toContain('overlap');
-  fireEvent.pointerDown(screen.getByRole('button', { name: 'Resize key 0 right' }), {
-    button: 0,
-    pointerId: 5,
-    clientX: 48,
-    clientY: 24,
-  });
-  fireEvent.pointerMove(canvas, { pointerId: 5, clientX: 96, clientY: 24 });
-  fireEvent.lostPointerCapture(canvas, { pointerId: 5 });
-  fireEvent.pointerUp(canvas, { button: 0, pointerId: 5 });
-  expect(loadProject().project).toEqual(before);
-  await user.click(screen.getByRole('radio', { name: /^Wire/u }));
-  expect(screen.queryByRole('button', { name: 'Resize key 0 right' })).toBeNull();
-});
 it('shows numeric changes immediately in the collapsed precise editor without a Preview button', async () => {
   const { user } = renderApp(project());
   await user.click(screen.getByRole('checkbox', { name: 'Select key 0' }));
-  expect(screen.queryByRole('spinbutton', { name: 'Selected width (u)' })).toBeNull();
+  expect(screen.queryByRole('spinbutton', { name: 'Selected rotation (°)' })).toBeNull();
   await user.click(screen.getByText('Precise properties'));
   const before = loadProject().project;
-  const width = screen.getByRole('spinbutton', { name: 'Selected width (u)' });
-  await user.clear(width);
-  await user.type(width, '2{Enter}');
-  expect(
-    screen
-      .getByRole('graphics-symbol', { name: /^Key 0\b/u })
-      .querySelector('rect')
-      ?.getAttribute('width'),
-  ).toBe('1.92');
+  const rotation = screen.getByRole('spinbutton', { name: 'Selected rotation (°)' });
+  await user.clear(rotation);
+  await user.type(rotation, '2{Enter}');
+  expect(screen.getByRole('graphics-symbol', { name: /^Key 0\b/u }).getAttribute('transform')).toBe(
+    'rotate(2 0 0)',
+  );
   expect(loadProject().project).toEqual(before);
   expect(screen.queryByRole('button', { name: 'Preview layout' })).toBeNull();
   await user.click(screen.getByRole('button', { name: 'Apply layout' }));
-  expect(loadProject().project.keys[0]?.widthU).toBe(2);
+  expect(loadProject().project.keys[0]?.rotationDeg).toBe(2);
 });
 
 it('exports the geometry produced by pointer gestures and preserves wiring, diode and bindings', async () => {
   const initial = buildProject({
-    keys: [{ id: 'k0', xU: 0, yU: 0, diode: { pin: 1, cathode: 'away-switch' } }],
+    keys: [{ id: 'k0', xU: 0, yU: 0, widthU: 2, diode: { pin: 1, cathode: 'away-switch' } }],
     wires: [
       { id: 'w0', start: keyPin('k0', 1), end: freeEnd(-2, 0.3667, 2), bends: [] },
       { id: 'w1', start: keyPin('k0', 2), end: freeEnd(3, 0.2333, 8), bends: [] },
@@ -155,14 +97,6 @@ it('exports the geometry produced by pointer gestures and preserves wiring, diod
   capture();
   await user.click(screen.getByRole('checkbox', { name: 'Select key 0' }));
   const canvas = screen.getByRole('application');
-  fireEvent.pointerDown(screen.getByRole('button', { name: 'Resize key 0 right' }), {
-    button: 0,
-    pointerId: 7,
-    clientX: 48,
-    clientY: 24,
-  });
-  fireEvent.pointerMove(canvas, { pointerId: 7, clientX: 96, clientY: 24 });
-  fireEvent.pointerUp(canvas, { button: 0, pointerId: 7, clientX: 96, clientY: 24 });
   fireEvent.pointerDown(screen.getByRole('button', { name: 'Rotate key 0 bottom right' }), {
     button: 0,
     pointerId: 8,
@@ -182,56 +116,23 @@ it('exports the geometry produced by pointer gestures and preserves wiring, diod
   );
 });
 
-it('preserves Redo for a no-motion gesture and discards a preview when selection changes', async () => {
-  const { user } = renderApp(project());
-  capture();
-  await user.click(screen.getByRole('checkbox', { name: 'Select key 0' }));
-  const canvas = screen.getByRole('application');
-  const handle = screen.getByRole('button', { name: 'Resize key 0 right' });
-  fireEvent.pointerDown(handle, { button: 0, pointerId: 9, clientX: 48, clientY: 24 });
-  fireEvent.pointerMove(canvas, { pointerId: 9, clientX: 96, clientY: 24 });
-  fireEvent.pointerUp(canvas, { button: 0, pointerId: 9 });
-  const resized = loadProject().project;
-  await user.click(history('Undo'));
-  fireEvent.pointerDown(screen.getByRole('button', { name: 'Resize key 0 right' }), {
-    button: 0,
-    pointerId: 10,
-    clientX: 48,
-    clientY: 24,
-  });
-  fireEvent.pointerUp(canvas, { button: 0, pointerId: 10 });
-  expect(history('Redo').hasAttribute('disabled')).toBe(false);
-  await user.click(history('Redo'));
-  expect(loadProject().project).toEqual(resized);
-  fireEvent.pointerDown(screen.getByRole('button', { name: 'Resize key 0 right' }), {
-    button: 0,
-    pointerId: 11,
-    clientX: 96,
-    clientY: 24,
-  });
-  fireEvent.pointerMove(canvas, { pointerId: 11, clientX: 144, clientY: 24 });
-  await user.click(screen.getByRole('checkbox', { name: 'Select key 1' }));
-  fireEvent.pointerUp(canvas, { button: 0, pointerId: 11 });
-  expect(loadProject().project).toEqual(resized);
-});
-
 it.each(['Cancel preview', 'Escape'])(
   'discards cancelled numeric values after %s before editing another property',
   async (cancel) => {
     const { user } = renderApp(project());
     await user.click(screen.getByRole('checkbox', { name: 'Select key 0' }));
     await user.click(screen.getByText('Precise properties'));
-    const width = screen.getByRole('spinbutton', { name: 'Selected width (u)' });
-    await user.clear(width);
-    await user.type(width, '2{Enter}');
+    const rotation = screen.getByRole('spinbutton', { name: 'Selected rotation (°)' });
+    await user.clear(rotation);
+    await user.type(rotation, '2{Enter}');
     await cancelNumericPreview(cancel, user);
-    expect(width.getAttribute('value')).toBe('1');
-    const height = screen.getByRole('spinbutton', { name: 'Selected height (u)' });
-    await user.clear(height);
-    await user.type(height, '3{Enter}');
+    expect(rotation.getAttribute('value')).toBe('0');
+    const origin = screen.getByRole('spinbutton', { name: 'Selected origin X (u)' });
+    await user.clear(origin);
+    await user.type(origin, '3{Enter}');
     await user.click(screen.getByRole('button', { name: 'Apply layout' }));
-    expect(loadProject().project.keys[0]?.widthU).toBeUndefined();
-    expect(loadProject().project.keys[0]?.heightU).toBe(3);
+    expect(loadProject().project.keys[0]?.rotationDeg).toBeUndefined();
+    expect(loadProject().project.keys[0]?.rotationOriginXU).toBe(3);
   },
 );
 

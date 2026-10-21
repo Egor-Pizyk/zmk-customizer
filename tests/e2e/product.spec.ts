@@ -44,8 +44,7 @@ test('new project → layout → wiring → bindings → validated ZIP with matc
   await page.getByRole('button', { name: 'Add key', exact: true }).click();
   await editNumber(page, 'Key 0 X (u)', '5');
   await editNumber(page, 'Key 0 Y (u)', '5');
-  await editNumber(page, 'Key 0 Width (u)', '1.5');
-  await expectGeometry(page, { id: 'k0', xU: 5, yU: 5, widthU: 1.5 });
+  await expectGeometry(page, { id: 'k0', xU: 5, yU: 5, widthU: 1 });
   await workspace(page, 'Export');
   await expect(page.getByRole('button', { name: 'Download .zip', exact: true })).toBeDisabled();
   await expect(
@@ -78,7 +77,7 @@ test('new project → layout → wiring → bindings → validated ZIP with matc
   const zip = await downloadZip(page);
   expect(Object.keys(zip)).toContain('zephyr/module.yml');
   const overlay = Object.entries(zip).find(([name]) => name.endsWith('.overlay'))?.[1];
-  expect(overlay).toContain('<&key_physical_attrs 150 100 500 500 0 0 0>');
+  expect(overlay).toContain('<&key_physical_attrs 100 100 500 500 0 0 0>');
   expect(overlay).toContain('diode-direction = "col2row"');
   expect(overlay).toContain('row-gpios = <&pro_micro 2 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>');
   expect(overlay).toContain('col-gpios = <&pro_micro 8 GPIO_ACTIVE_HIGH>');

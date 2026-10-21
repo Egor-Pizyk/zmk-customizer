@@ -42,16 +42,6 @@ function KeyTransformFrame({ schematicKey, keyIndex, view }: KeyTransformFramePr
         height={height}
         strokeWidth={1}
       />
-      {TRANSFORM_HANDLES.map((handle) => (
-        <TransformHandle
-          key={handle.name}
-          keyId={schematicKey.id}
-          keyIndex={keyIndex}
-          handle={handle}
-          width={width}
-          height={height}
-        />
-      ))}
       {TRANSFORM_HANDLES.filter((handle) => handle.x !== 0 && handle.y !== 0).map((handle) => (
         <TransformHandle
           key={`rotate-${handle.name}`}
@@ -60,7 +50,6 @@ function KeyTransformFrame({ schematicKey, keyIndex, view }: KeyTransformFramePr
           handle={handle}
           width={width}
           height={height}
-          isRotation
         />
       ))}
     </g>
@@ -73,18 +62,10 @@ type TransformHandleProps = {
   readonly handle: (typeof TRANSFORM_HANDLES)[number];
   readonly width: number;
   readonly height: number;
-  readonly isRotation?: boolean;
 };
-function TransformHandle({
-  keyId,
-  keyIndex,
-  handle,
-  width,
-  height,
-  isRotation = false,
-}: TransformHandleProps) {
-  const offset = isRotation ? 20 : 0;
-  const label = `${isRotation ? 'Rotate' : 'Resize'} key ${keyIndex} ${handle.name}`;
+function TransformHandle({ keyId, keyIndex, handle, width, height }: TransformHandleProps) {
+  const offset = 20;
+  const label = `Rotate key ${keyIndex} ${handle.name}`;
   return (
     <foreignObject
       height={24}
@@ -97,26 +78,24 @@ function TransformHandle({
         title={label}
         tabIndex={-1}
         type="button"
-        data-key-transform={isRotation ? 'rotate' : 'resize'}
+        data-key-transform="rotate"
         data-transform-key-id={keyId}
         data-transform-handle={handle.name}
-        className={`group flex size-full items-center justify-center focus-visible:outline-2 focus-visible:outline-focus ${isRotation ? 'cursor-grab' : handle.cursor}`}
+        className="group flex size-full cursor-grab items-center justify-center focus-visible:outline-2 focus-visible:outline-focus"
       >
-        <HandleMark isRotation={isRotation} />
+        <HandleMark />
       </button>
     </foreignObject>
   );
 }
 
-function HandleMark({ isRotation }: { readonly isRotation: boolean }) {
-  return isRotation ? (
+function HandleMark() {
+  return (
     <span
       aria-hidden="true"
       className="text-accent opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"
     >
       ↻
     </span>
-  ) : (
-    <span aria-hidden="true" className="size-2 border border-accent bg-surface-raised" />
   );
 }
