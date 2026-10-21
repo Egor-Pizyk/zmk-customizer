@@ -122,6 +122,7 @@ test('rotation preview cancels on Escape and stale selection; no-motion preserve
     page.getByRole('button', { name: 'Rotate key 0 bottom right', exact: true }),
   );
   const end = { x: pivot.x - (start.y - pivot.y), y: pivot.y + (start.x - pivot.x) };
+  await page.keyboard.down('Shift');
   await beginDrag(page, start, end);
   expect(await saved(page)).toEqual(before);
   await page.keyboard.press('Escape');
@@ -138,6 +139,7 @@ test('rotation preview cancels on Escape and stale selection; no-motion preserve
   await key(page, 1).focus();
   await page.mouse.up();
   expect(await saved(page)).toEqual(before);
+  await page.keyboard.up('Shift');
   await history(page, 'Redo').click();
   expect(await saved(page)).toEqual(changed);
 });

@@ -78,3 +78,5 @@ Dependencies: K001 → K002 tests → K002 implementation → K003 → K004 → 
 - [x] S003 FR-021: update superseded UI journeys, post-skill rendered review and changed checks; record [evidence](switch-sizing-verification.md).
 
 - [ ] S004 FR-021: actual OS keyboard/screen-reader/native 200% zoom acceptance (draft delivery; UX-SS-03).
+
+- [x] S005 FR-015: reproduce PR #21 Firefox/WebKit exact-angle failure; use native Shift snapping in the cancellation/history journey, verify all rotation journeys across engines and changed checks; update the existing PR. Evidence: [switch sizing journal](switch-sizing-verification.md).
