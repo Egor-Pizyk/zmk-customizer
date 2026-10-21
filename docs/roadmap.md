@@ -636,6 +636,12 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 **Proposed safety and compatibility boundaries.** Use the supported import/validation and deterministic export flows where applicable; never apply untrusted agent output silently or overwrite current work. Preserve project compatibility and Undo/Redo. Do not assume unsupported ZMK features, automatic electrical correctness or successful firmware compilation.
 
+### 035 — ui-ux-audit-specification
+
+**Status (2026-10-21).** [Specification](../specs/035-ui-ux-audit-specification/spec.md) drafted after the prerequisite work merged. A research pass and [036 handoff](../specs/035-ui-ux-audit-specification/findings.md) are recorded; manual audit acceptance, exact reported bug reproductions and remediation remain pending; [journal](../specs/035-ui-ux-audit-specification/verification.md).
+
+**Goal and scope.** Review the delivered four-workspace product, shared controls and end-to-end creation/editing/export flows. Produce evidence-backed findings, coverage and verification gaps, and testable remediation requirements for 036. Preserve all 21 explicit 036 reports and their identities. Apply local UI/UX guidance, accessibility, themes, responsive and keyboard review; distinguish observed results from user reports and historical checks. No application fixes or new design system are included in this stage. Complete before 036 and final onboarding 037.
+
 ### 036 — ui-ux-remediation — large first-major bugfix sweep
 
 **Status (2026-10-21).** Planned on explicit user request for the first major release. Expand the already scheduled 036 remediation stage with the concrete reports below; retain its number and existing feature ownership. These are reported symptoms and requested outcomes, not verified causes or completed fixes. This roadmap update does not authorize implementing the sweep yet.
@@ -717,7 +723,7 @@ Parsing existing ZMK shield files back into a project (Devicetree parsing), cust
 - [ ] Revisit deferred **021 — lighting-displays** and **022 — zmk-version-selection**. Skipped for now on user request (2026-10-19); keep the ZMK v0.3.0 target until version selection is explicitly resumed.
 - [x] Discuss and specify initial **034 — agent-assisted-configuration**: user approved downloadable knowledge package + Project JSON; see its specification. Existing-project editing and any MCP evaluation remain future work.
 
-- [ ] Specify and deliver the first-major **012/004 standard-keycap-size follow-up**: selected keycap → context menu → standard size, replacing arbitrary resizing in Bindings; preserve legacy custom geometry. Complete before 035 audit and 037 onboarding.
+- [x] Specify and deliver the first-major **012/004 standard-keycap-size follow-up**: selected keycap → context menu → standard size, replacing arbitrary resizing in Bindings; preserve legacy custom geometry. Completed before 035; manual acceptance confirmed by the user on 2026-10-21 (see 012 verification journals).
 
 ## Final first-major closeout — README and repository description
 
