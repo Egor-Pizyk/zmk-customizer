@@ -43,7 +43,7 @@ jobs:
           RESULT: ${{ steps.coverage.outcome }}
         run: |
           node -e 'const fs=require("node:fs"); const p="coverage/coverage-summary.json"; const total=fs.existsSync(p)?JSON.parse(fs.readFileSync(p)).total:null; fs.mkdirSync("coverage",{recursive:true}); fs.writeFileSync("coverage/result.json", JSON.stringify({result:process.env.RESULT,total})); fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, "Unit/coverage: "+process.env.RESULT+"\n"+(total?JSON.stringify(total):"Coverage unavailable")+"\n");'
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: coverage
@@ -65,7 +65,7 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps ${{ matrix.browser }}
       - run: npm run test:e2e -- --project=${{ matrix.browser }}
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: browser-evidence-${{ matrix.browser }}
@@ -113,7 +113,7 @@ jobs:
           node-version-file: .nvmrc
       - run: docker compose -p zmk-customizer -f infra/compose.e2e.yaml run --build --rm e2e npm ci
       - run: make test-e2e-mutations
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: browser-mutation-evidence
@@ -131,7 +131,7 @@ jobs:
           path: .zmk-build/workspace
           key: zmk-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('infra/zmk-build.env', 'infra/zmk-build.sh', 'infra/zmk-west.yml', 'infra/compose.zmk.yaml') }}
       - run: make install && make zmk-build
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: zmk-build-evidence
