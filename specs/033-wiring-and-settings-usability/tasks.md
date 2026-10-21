@@ -56,6 +56,8 @@ Independent acceptance: specified canvas/panel budgets, reachable actions and fo
 
 ## Verification and completion
 
+- [X] T033 [PR #15 maintenance] Consolidate duplicate maximal migration coverage without dropping assertions; repair and validate mutation test paths; retain Chromium viewport/theme coverage and representative other-engine layer-bar checks; measure before/after, run full checks, mutation probes and browser verification. Record evidence in verification.md. Configure all five required jobs on PR only with obsolete-run cancellation; preserve main protection and T031 merge boundary.
+
 - [X] T028 Reinvoke ui-ux-pro-max after implementation; review rendered sections/leads/panels against spec.md, fix in-scope findings and record actual screenshots/checks/limits in specs/033-wiring-and-settings-usability/verification.md.
 - [X] T029 Run make check, Docker npm run build, make test-e2e and make zmk-build; run changed tests/e2e/wiring-usability.spec.ts and schematic-panels.spec.ts cases three sequential times without retries, recording actual commands/results in specs/033-wiring-and-settings-usability/verification.md. Preserve independent golden expectations and update any 032 label assertions without weakening them.
 - [X] T030 Prove controlled sensitivity separately/alone: temporarily remove contact persistence, broaden section deletion and violate panel height in their owning production files; require saved-net, surviving-branch and canvas-budget assertions to fail, restore exact bytes and record failures/restoration in specs/033-wiring-and-settings-usability/verification.md.

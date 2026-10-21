@@ -65,22 +65,6 @@ it('migrates a legacy project at the wire limit without splitting its wires', ()
   expect(project.schemaVersion).toBe(12);
 });
 
-it('migrates a dense legacy bus without multiplying equivalent pin attachments beyond the file budget', () => {
-  const keys = Array.from({ length: 512 }, (_, index) => ({ id: `k${index}`, xU: index, yU: 0 }));
-  const wires = Array.from({ length: 600 }, (_, index) => ({
-    id: `w${index}`,
-    start: keyPin('k0', 1),
-    end: keyPin('k511', 1),
-    bends: [],
-  }));
-  const project = getResultValue(
-    parseProjectFile(JSON.stringify({ ...base, schemaVersion: 11, keys, wires })),
-  );
-  expect(project.wires).toHaveLength(600);
-  expect(project.wireContacts).toHaveLength(510);
-  expect(project.wires[599]?.contactIds).toHaveLength(510);
-});
-
 it('keeps a formerly valid near-byte-budget legacy circuit importable after adding anchors', () => {
   const keys = Array.from({ length: 512 }, (_, index) => ({ id: `k${index}`, xU: index, yU: 0 }));
   const wires = Array.from({ length: 600 }, (_, index) => ({
@@ -101,6 +85,8 @@ it('keeps a formerly valid near-byte-budget legacy circuit importable after addi
   const project = getResultValue(parseProjectFile(legacy));
   expect(project.layers).toEqual(layers);
   expect(project.wires).toHaveLength(600);
+  expect(project.wireContacts).toHaveLength(510);
+  expect(project.wires[599]?.contactIds).toHaveLength(510);
   const saved = getResultValue(serializeProject(project));
   expect(saved.split('\n')).toHaveLength(2);
   expect(new TextEncoder().encode(saved).length).toBeLessThanOrEqual(5 * 1024 * 1024);

@@ -25,6 +25,20 @@ Existing TypeScript 7, React 19, Tailwind 4, Zod trust boundary, SVG canvas, Vit
 
 Implement FR-001–FR-013 and US1–US4 only. Retain user-confirmed incremental completion and section multi-selection. Existing operation kind `auto` remains the full-rebuild implementation route; UI labels become Complete wiring/Rebuild wiring. Other wiring edits do not implicitly allocate GPIOs. Export remains based on domain-derived actual connectivity; generators do not learn a parallel mapping. Selection/panel state remains transient, outside history/project schema. App Settings remains modal. Tools remain a compact canvas control, not a second expanded editing panel.
 
+### PR #15 test/CI maintenance (2026-10-21)
+
+Preserve all product, schema, export, keyboard and history contracts. Consolidate the
+duplicate maximal legacy-bus migration into the existing near-byte-budget round-trip
+test, retaining its contact-pool assertions and existing 60-second stress-test limit.
+Fix the moved rotation mutation test path and validate registered test files as well
+as production anchors. Retain the complete Chromium layer-bar viewport/theme matrix;
+use one representative Firefox/WebKit case for native overflow/focus/history rather
+than repeating that full presentation matrix in each engine. Keep retries disabled.
+Run all five CI jobs once per PR to main, cancel obsolete revisions, remove push
+triggers and firmware path skipping. Existing required checks stay protected.
+No product code or UI changes; UI design/review and firmware syntax changes are outside
+this maintenance scope. T031 manual acceptance remains open and prevents merging 033.
+
 ## Constitution check
 
 Before design: compatible with pure domain, static/offline, no new dependency, deterministic output, explicit errors, keyboard alternatives. Compatibility requires a v11→v12 migration and historical-file tests, not a current-schema reinterpretation. Tests precede domain/storage implementation.

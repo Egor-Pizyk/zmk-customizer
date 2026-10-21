@@ -53,3 +53,79 @@ At the user’s explicit request to merge all work into the current version and 
 The integrated tree passed `npm run check` in Docker (217 files, 1279 tests, coverage and static gates), `npm run build`, and all 7 Chromium integration scenarios in presets, schematic-panels and wiring-usability. Logs: `/tmp/zmk-merged-check.log`, `/tmp/zmk-merged-build.log`, `/tmp/zmk-merged-e2e.log`. Existing full feature browser/firmware results above were not rerun in full for this integration. No new manual accessibility or firmware result is claimed.
 
 The original workspace development server now serves the integrated source at http://localhost:5173 (HTTP 200 verified). This supersedes the separate 5180 review-build instructions above. Existing origin-local project data has not been copied or cleared.
+
+## PR #15 test/CI maintenance — 2026-10-21
+
+Scope: T033; unchanged product behavior and all original migration assertions retained.
+Spec Kit's persisted resolver selected 032; the actual checked-out branch and PR #15
+are 033, which owns this follow-up. No additional feature or PR is created.
+
+Inspected Actions run 39558568394 (PR) and duplicate push run 39558563953. Both
+failed `check` on the duplicate dense legacy migration's 15-second timeout; both
+failed `mutations` because the rotation seed referenced a test moved under geometry/.
+This is a confirmed timeout sensitivity and stale test registration, not evidence
+that random failures should be hidden through retries. E2E, image and firmware passed.
+Observed PR job times: check 2m43s (unit phase 128.50s), E2E 9m17s (browser phase
+8m09s, install 57s), image 20s, mutations 2m16s before failure, ZMK 14m30s.
+The failed mutation duration is not a complete 29-seed baseline.
+
+Local baseline, runs isolated from other checks: 217 files / 1279 tests passed with
+coverage. JSON report `coverage/before-tests.json` measured 59.89s from suite start
+through final test completion. Duplicate migration alone cost 6.51s; near-byte-budget
+migration/round-trip cost 11.13s. Baseline layer-bar journey: 18/18 passed in 1.6m
+(`/tmp/zmk-pr15-layers-before.log`). These host measurements are not directly comparable
+to GitHub runner wall times.
+
+Changes: merge the dense-bus assertions into the existing maximum-budget round-trip
+test with its existing stress-test timeout; use domain tests for controller/deletion
+business mutation seeds while retaining real-App UI-handler probes; repair the rotation
+test path and verify every registered test file exists. Keep all six Chromium
+viewport/theme layer-bar cases and their full add-through-32/focus/history assertions;
+retain one representative case per Firefox/WebKit, removing ten repeated presentation
+combinations. Zero retries, coverage thresholds and golden files are unchanged.
+
+CI now runs all five jobs on every PR to main without firmware path skipping; no push
+trigger, and obsolete revisions of a PR are cancelled. The release workflow remains
+independent. Verified main protection through GitHub API: check/e2e/image/mutations/
+zmk-build required, strict/up-to-date enabled, administrators included, conversations
+resolved. No protection relaxation is needed or made. PR #15 remains draft because
+T031 manual acceptance is still outstanding; this maintenance does not satisfy it.
+
+Verification so far:
+
+- Full Docker `npm run check` passed after formatting the changed files; type/lint,
+  architecture/guidelines/tooling and all coverage floors passed. Its first attempt
+  stopped on formatting, which was corrected. The temporary check log was mistakenly
+  placed under coverage/, which Vitest cleans; the process exit was successful but
+  that log was not retained. A separate isolated measured coverage run below retains
+  the complete output outside coverage/.
+- Isolated full coverage rerun: **1278/1278 passed**, 217 files; **59.23s** from suite
+  start to final test (baseline 59.89s). The wire-contact file dropped **17.73s → 11.86s**;
+  the remaining maximum-budget test took 11.79s. Removing 6.5s of duplicated work
+  does not translate into the same parallel-suite wall-time saving. Coverage floors
+  remain unchanged. Reports: ignored `.zmk-build/pr15-after-tests.json` and
+  `.zmk-build/pr15-after-coverage.log`. The baseline report under coverage/ was cleaned
+  by the subsequent coverage run; its measured values are recorded above.
+- All seven mutation-runner tooling contracts passed. Ruby's standard YAML parser
+  verified PR-only main triggers, all five jobs, unconditional firmware command and
+  cancellation; `git diff --check` passed. Python YAML parsing was unavailable locally
+  (no PyYAML), so no dependency was installed.
+
+- Full isolated production-browser suite: **163/163 passed in 5.6m**, Chromium plus
+  targeted Firefox/WebKit, zero retries (`.zmk-build/pr15-e2e.log`). Production build
+  passed through Playwright's webServer command. No screenshots/goldens were changed.
+- The changed eight-case layer-bar set passed three sequential executions without
+  retries: the full suite above, then **8/8 in 40.5s** and **8/8 in 39.7s**
+  (`.zmk-build/pr15-layers-2.log`, `pr15-layers-3.log`). Baseline was 18/18 in 1.6m;
+  the focused runs save roughly 58% including their production-build startup. The
+  full Chromium matrix and native overflow/focus/history checks remain covered.
+- Full isolated `npm run test:mutations`: **29/29 detected by failing behavioral
+  assertions**, including the repaired rotation seed and the two faster domain-test
+  selections. Runner confirmed exact original-byte restoration
+  (`.zmk-build/pr15-mutations.log`). No checks ran concurrently with the mutations.
+
+No local firmware rebuild was repeated: emitted syntax, generators, catalog and
+firmware infrastructure are unchanged. The previous PR revision's firmware check
+passed; all five checks, including unconditional ZMK builds, must run on the new
+PR revision. Historical CI success is not claimed for that new revision. T031 stays
+open and the PR stays draft; no merge, manual acceptance or release is claimed.
