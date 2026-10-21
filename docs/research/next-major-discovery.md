@@ -56,6 +56,14 @@ Meaningful disagreements still requiring discussion:
 
 The user's confirmed decisions live in the roadmap. These reviews are analysis and proposals, not authority to accept features on the user's behalf.
 
+## Follow-up: construction, component families and export
+
+The user accepted an upper part with switch mounting and a removable bottom, with gradually exposed settings. Requested hardware families are Arduino Pro Micro, nice!nano v2 and selected nRF52840 alternatives; conventional and low-profile Gateron with appropriate keycaps, including MX compatibility. The user subsequently selected KS-33 Low Profile 2.0 and conventional MX-compatible Gateron as separate profiles. Exact hardware revisions, SKUs and keycap combinations are still open. Printing files plus editable CAD such as STEP are desired if this does not disproportionately increase complexity.
+
+[Gateron's comparison](https://www.gateron.com/blog/detail/gateron-low-profile-switches-20-vs-30) explicitly requires exact-SKU compatibility checks across low-profile variants, including mounting, height and keycap clearance. This supports separate mechanical profiles rather than one generic low-profile hole. [nice!nano documentation](https://nicekeyboards.com/docs/nice-nano/faq/) describes battery-powered operation and charging; whether the first supported construction includes a battery and switch is pending user agreement. Do not infer the mechanics of unspecified nRF52840 alternatives from their MCU name.
+
+The official [Replicad library guide](https://replicad.pages.dev/docs/use-as-a-library/) documents browser integration with STL and STEP export. This establishes a plausible investigation path, not a selected dependency or demonstrated performance. Reviewer inference: choose a representation capable of CAD solids early if STEP matters; a mesh-only implementation can make later CAD export substantially harder. STEP exchange is not the original application's parameter history. No geometry experiment was performed.
+
 ## Task journal and verification
 
 - Documentation-only discovery requested by the user; no production, schema, dependency or UI changes.
@@ -63,4 +71,4 @@ The user's confirmed decisions live in the roadmap. These reviews are analysis a
 - Spec Kit resolver returned `specs/032-project-creation-and-auto-wiring` from persisted selection, which does not match this request. No feature selection was changed and no new feature spec was invented; this task follows the documentation/analysis route.
 - UI/UX skill read and queried. Error-recovery/validation results were relevant; progressive-disclosure queries returned off-topic matches. Proposed progressive disclosure is reviewer reasoning, not a verified skill search recommendation. No interface was implemented or visually verified.
 - Source review and agent findings recorded above. No product executions, physical prints, firmware builds or manual accessibility tests were performed.
-- Final documentation checks and the exact checked tree are to be recorded in the documentation PR description, linking this journal, when the discussion draft is delivered.
+- Documentation checks and the exact checked tree are recorded in draft PR #18, linking this journal. The isolated worktree has no persisted Spec Kit selection; its resolver reports no feature directory. The task remains roadmap documentation and does not create or change feature selection.

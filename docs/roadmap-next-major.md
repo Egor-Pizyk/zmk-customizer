@@ -12,6 +12,10 @@ Build a new module for keyboard mechanical design and generation of the parts ne
 - Primary manufacturing target: home FDM 3D printing.
 - Primary assembly flow: design → print → install components → solder. Fitting a new case around an already soldered matrix is not the initial scenario.
 - Start with a small verified component catalog and expand it. Advanced user dimensions are acceptable in principle; their scope and verification status remain open.
+- First construction: an upper part with switch mounting and a removable bottom, with individual-part settings revealed progressively. The precise fastening remains to be validated.
+- Initial controller scope: Arduino Pro Micro, nice!nano v2 and selected nRF52840 alternatives. Exact board revisions, connectors and mounting envelopes require individual profiles; a common MCU or electrical pinout does not establish identical mechanics. Mechanical support does not imply firmware support by the existing ZMK module.
+- Initial switch scope: conventional full-height MX-compatible Gateron and Gateron KS-33 Low Profile 2.0 as separate mechanical profiles, with compatible keycaps, including MX-style compatibility where applicable. Exact mechanical families and keycap combinations remain to be selected; do not treat all low-profile Gateron or all cross-stem keycaps as interchangeable.
+- Desired exports: printing files and editable CAD such as STEP, conditional on avoiding disproportionate complexity. Evaluate native CAD export in engine discovery; retain the condition until feasibility is demonstrated.
 - The experience must be usable without CAD knowledge and retain the product's overall visual style. Component choices should determine appropriate mounting geometry rather than asking beginners to draw it.
 
 These directions come from the user. The proposals below have not yet been approved.
@@ -24,8 +28,8 @@ Borrow Cosmos's visible component-aware design, Ergogen's layout-derived geometr
 
 Proposals requiring agreement:
 
-- Begin with a small number of construction recipes rather than unrestricted CAD. Investigate one removable-bottom design first; choose its actual fastening only after testing it. Do not assume that every design requires three separate plate/shell/bottom pieces.
-- Let beginners choose a whole assembly and reveal part controls progressively. Keep the current tokens, typography, accessible controls and Undo/Redo conventions; investigate navigation appropriate for a 3D workspace.
+- Build on the accepted upper-part/removable-bottom construction; choose its actual fastening only after testing it. Additional construction recipes remain proposals. Do not assume that every design requires three separate plate/shell/bottom pieces.
+- Keep the current tokens, typography, accessible controls and Undo/Redo conventions within the accepted progressive-disclosure approach; investigate navigation appropriate for a 3D workspace.
 - Provide a small fit-test print before committing to a full case. It checks selected local fits on the user's printer, not overall strength, warping or complete assembly.
 - Distinguish measured geometric conflicts, approximate clearance checks and physically tested combinations. A clear scene or watertight mesh is not proof of printability or assembly success.
 - Supply instructions for supported construction recipes. Automatically planning assembly for arbitrary models is not proposed for the first scope.
@@ -50,10 +54,10 @@ No experiments or prototypes listed above have been performed in this documentat
 
 ## Open decisions to discuss
 
-1. Which exact hardware combination should become the first reference assembly? Which switch families and controller variants must be available in the first major +1 scope?
-2. How much construction freedom should beginners get initially: one tested enclosure recipe or several? Which custom dimensions are necessary?
+1. Select exact full-height Gateron, low-profile Gateron and keycap combinations, plus Pro Micro/nice!nano v2/alternative board revisions. KS-33 Low Profile 2.0 and conventional MX-compatible Gateron are accepted families; exact SKUs and keycaps remain open. Which combination should be physically tested first?
+2. Which fastening and custom dimensions are necessary within the accepted upper-part/removable-bottom construction? Additional recipes and free part composition remain later proposals.
 3. Handwired only initially, or compatibility with existing PCBs? Are wireless builds, batteries, stabilizers, non-1u keys, tenting and wrist rests required initially or later?
-4. Which exports are necessary: printing meshes only, or editable CAD as well? Decide this before choosing a geometry engine.
+4. Can printing output plus genuine STEP solids be delivered without disproportionate complexity? Evaluate before selecting a geometry engine. STEP geometry supports downstream CAD modification but does not promise the original parametric feature history; retain the app project as the editable design source.
 5. Is the initial layout transfer a snapshot creating an independent enclosure project, or must later changes be reviewable and applied too? Automatic live synchronization and two-way editing are not agreed.
 6. Do the modules share one shell, have independent entry points, or ship as separate applications? Business independence is confirmed; deployment topology is not.
 7. How will component dimensions, source revisions and physical verification be maintained, and who can print/test the reference assemblies?
