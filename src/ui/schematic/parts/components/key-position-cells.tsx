@@ -8,8 +8,6 @@ import type { Commit } from '@ui/schematic/interaction';
 const FIELDS = [
   { field: 'xU', label: 'X (u)' },
   { field: 'yU', label: 'Y (u)' },
-  { field: 'widthU', label: 'Width (u)' },
-  { field: 'heightU', label: 'Height (u)' },
   { field: 'rotationDeg', label: 'Rotation (°)' },
   { field: 'rotationOriginXU', label: 'Origin X (u)' },
   { field: 'rotationOriginYU', label: 'Origin Y (u)' },

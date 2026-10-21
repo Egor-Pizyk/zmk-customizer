@@ -126,14 +126,13 @@ rotated bounding boxes. Screen tolerance is 0.75 CSS px for subpixel layout/seri
 anchor and edge errors of a meaningful grid step are tens of pixels. Native mouse coordinates
 may round to whole pixels, so snap tests choose 0.31u and 43° safely away from 0.375u/37.5°
 boundaries; expected snaps remain exactly 0.25u and 45°. Project values use 0.0001u precision.
-Focused 200×200 PNG references verify the rotated thin selection frame, key art and preview
-paint independently. Pixel comparison allows 20 pixels at threshold 0.15 for antialiasing,
-not geometry movement. Linux and macOS references were reviewed separately; normal runs
-never update them. Inspect actual/diff images and explain any change before an intentional
-snapshot refresh. Firefox/WebKit geometry checks remain independent of Chromium snapshots.
+Switch rotation journeys verify center/corners and painted key visibility, and capture
+light/dark screenshots for rendered review. The former resize-preview PNG baselines were
+retired when Schematic resize controls were removed (012 FR-021). Browser geometry
+assertions remain independent of captured screenshots.
 
 `make test-e2e-mutations` runs alone after `make test-e2e` has prepared the browser image.
-It first checks the relevant Chromium baseline, then temporarily seeds disabled resize,
+It first checks the relevant Chromium baseline, then temporarily seeds disabled rotation,
 invisible preview, shifted hit area, lost save, extra Undo, cancelled-value resurrection,
 lost actual wiring routes, prematurely saved wiring previews and wrong split column offset.
 Each seed must fail its expected behavioral assertion; compiler/runner exceptions do not

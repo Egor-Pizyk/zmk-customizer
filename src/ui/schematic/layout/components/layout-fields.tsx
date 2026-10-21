@@ -6,8 +6,6 @@ import { usePreferences } from '@ui/preferences';
 import { useId } from 'react';
 
 const FIELDS = [
-  { field: 'widthU', label: 'Selected width (u)' },
-  { field: 'heightU', label: 'Selected height (u)' },
   { field: 'rotationDeg', label: 'Selected rotation (°)' },
   { field: 'rotationOriginXU', label: 'Selected origin X (u)' },
   { field: 'rotationOriginYU', label: 'Selected origin Y (u)' },

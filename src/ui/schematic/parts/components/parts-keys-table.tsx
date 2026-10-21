@@ -10,8 +10,6 @@ const COLUMNS = [
   'Key',
   'X (u)',
   'Y (u)',
-  'Width (u)',
-  'Height (u)',
   'Rotation (°)',
   'Origin X (u)',
   'Origin Y (u)',

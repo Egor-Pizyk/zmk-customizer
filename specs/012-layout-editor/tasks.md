@@ -70,3 +70,9 @@ Dependencies: T022 → T023 → T024 → T025 → T026 → T027. No schema/outpu
 - [ ] K006 Actual manual OS keyboard/screen-reader/200% zoom acceptance; leave open and deliver draft when unavailable.
 
 Dependencies: K001 → K002 tests → K002 implementation → K003 → K004 → K005; K006 requires actual manual evidence. No historical feature checks are reclassified as current evidence.
+
+## Switch sizing correction
+
+- [x] S001 FR-021: failing UI regression for absent resize controls, retained rotation and keycap sizing.
+- [x] S002 FR-021: remove Schematic size controls only; preserve data/domain/output.
+- [ ] S003 FR-021: update superseded UI journeys, post-skill rendered review and changed checks; record [evidence](switch-sizing-verification.md).
