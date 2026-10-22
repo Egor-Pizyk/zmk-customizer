@@ -638,13 +638,14 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 ### 036 — ui-ux-remediation — large first-major bugfix sweep
 
-**Status (2026-10-21).** Planned on explicit user request for the first major release. Expand the already scheduled 036 remediation stage with the concrete reports below; retain its number and existing feature ownership. These are reported symptoms and requested outcomes, not verified causes or completed fixes. This roadmap update does not authorize implementing the sweep yet.
+**Status (2026-10-22).** Item 1 is implemented in the 036 branch and awaits the user's manual acceptance. Items 2–21 and the two audit follow-ups remain unstarted and require separate approval under the one-item/one-commit delivery contract.
 
 **Goal.** Resolve the reported editing, wiring, selection, rotation and interface problems before the first major release. Complete after 035 audit/specification and before 037 onboarding, so the tour and final README describe the corrected product. Include the applicable audit findings without losing or replacing this explicit user backlog.
 
 **Required scope — preserve each report during specification**
 
 1. **Encoders as placeable parts.** Add a separate Encoder entry/tool alongside key placement. Place encoders on the canvas, expose visible electrical pins with real wire connections, and rotate each encoder about its own axis. Preserve encoder actions and distinguish the encoder's rotary contacts from its optional push switch; define their relationship during specification rather than assuming a hardware pinout. Owners: 019, 003, 012/013.
+   **Implemented, manual acceptance pending:** new encoders use symbolic A/COM/B contacts plus an optional linked ordinary-key push switch; legacy direct-pin encoders remain compatible. See [036 specification and evidence](../specs/036-ui-ux-remediation/verification.md).
 2. **Slow-rotation magnetic snap.** For both keys and encoders, approach 0°, 90°, **120°** or 180° slowly with the pointer and snap to that angle. Preserve rotation about the part's own center. Define speed, angular tolerance, release/hysteresis and wraparound during clarification; do not silently substitute a conventional 90°-only set. Owner: 012/019.
 3. **Topology round trip.** With automatic wiring, switching Keyboard topology from unibody to split separates the wiring; switching back must restore the appropriate unibody arrangement immediately. It must not require hiding the Wiring block to redraw correctly. Owners: 032/033, 013.
 4. **Larger resizable left panel.** Increase the left editing block's usable width and let the user resize it horizontally. Its controls, labels and layout must adapt to the available width while retaining usable canvas space. Identify the intended panel, default/minimum/maximum width and persistence rules during specification. Owners: 001/033.

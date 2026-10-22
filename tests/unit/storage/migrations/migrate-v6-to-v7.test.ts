@@ -11,7 +11,7 @@ import { getResultValue } from '../../../helpers/result';
 it('loads v6 without rerouting or changing bindings and round-trips v7', () => {
   const old = { ...UNIBODY_PRESET, schemaVersion: 6 };
   const project = getResultValue(parseProjectFile(JSON.stringify(old)));
-  expect(project.schemaVersion).toBe(12);
+  expect(project.schemaVersion).toBe(13);
   expect(project.wires).toEqual(old.wires);
   expect(project.insulatedCrossings).toEqual(old.insulatedCrossings);
   expect(project.layers).toEqual(old.layers);
@@ -20,7 +20,7 @@ it('loads v6 without rerouting or changing bindings and round-trips v7', () => {
 it('rejects dangling terminal references instead of stripping electrical assignments', () => {
   const project = {
     ...UNIBODY_PRESET,
-    schemaVersion: 12,
+    schemaVersion: 13,
     encoders: [],
     combos: [],
     macros: [],

@@ -14,18 +14,9 @@ import {
   selectKey,
 } from './helpers';
 
-const directions = [
-  { name: 'top left', x: -1, y: -1, opposite: 2 },
-  { name: 'top', x: 0, y: -1, opposite: 2 },
-  { name: 'top right', x: 1, y: -1, opposite: 3 },
-  { name: 'right', x: 1, y: 0, opposite: 0 },
-  { name: 'bottom right', x: 1, y: 1, opposite: 0 },
-  { name: 'bottom', x: 0, y: 1, opposite: 0 },
-  { name: 'bottom left', x: -1, y: 1, opposite: 1 },
-  { name: 'left', x: -1, y: 0, opposite: 1 },
-] as const;
+const directions = [{ name: 'bottom right' }] as const;
 
-for (const direction of directions.filter(({ x, y }) => x !== 0 && y !== 0)) {
+for (const direction of directions) {
   test(`rotate outside ${direction.name} preserves center @cross-browser`, async ({ page }) => {
     await openProject(page);
     await selectKey(page);

@@ -9,6 +9,11 @@ export type WireCheck =
   | { readonly resourceError: string };
 
 function isResolved(project: Project, end: WireEnd): boolean {
+  if (end.kind === 'encoder-pin') {
+    return project.encoders.some(
+      (encoder) => encoder.id === end.encoderId && encoder.wiringMode === 'schematic',
+    );
+  }
   if (end.kind === 'key-pin') {
     return project.keys.some((key) => key.id === end.keyId);
   }
@@ -25,18 +30,18 @@ export function canAddWire(
   input: { readonly start: WireEnd; readonly end: WireEnd; readonly bends?: readonly WirePoint[] },
 ): WireCheck {
   const { start, end } = input;
-  if (start.kind !== 'key-pin' && end.kind !== 'key-pin') {
+  if (
+    start.kind !== 'key-pin' &&
+    end.kind !== 'key-pin' &&
+    start.kind !== 'encoder-pin' &&
+    end.kind !== 'encoder-pin'
+  ) {
     return 'no-key-pin';
   }
   if (!isResolved(project, start) || !isResolved(project, end)) {
     return 'missing-reference';
   }
-  const isSamePin =
-    start.kind === 'key-pin' &&
-    end.kind === 'key-pin' &&
-    start.keyId === end.keyId &&
-    start.pin === end.pin;
-  if (isSamePin) {
+  if (sameContact(start, end)) {
     return 'same-pin';
   }
   const resourceError = getProjectResourceError({
@@ -52,4 +57,17 @@ export function canAddWire(
     ],
   });
   return resourceError === undefined ? 'ok' : { resourceError };
+}
+
+function sameContact(start: WireEnd, end: WireEnd): boolean {
+  return (
+    (start.kind === 'key-pin' &&
+      end.kind === 'key-pin' &&
+      start.keyId === end.keyId &&
+      start.pin === end.pin) ||
+    (start.kind === 'encoder-pin' &&
+      end.kind === 'encoder-pin' &&
+      start.encoderId === end.encoderId &&
+      start.pin === end.pin)
+  );
 }

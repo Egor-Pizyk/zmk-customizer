@@ -39,6 +39,7 @@ function partitions(project: Project): string {
     getNets(project)
       .map((net) =>
         [
+          ...(net.encoderPins ?? []).map((pin) => `encoder:${pin.encoderId}:${pin.pin}`),
           ...net.pins.map((pin) => `pin:${pin.keyId}:${pin.pin}`),
           ...net.terminalIds.map((id) => `terminal:${id}`),
           ...net.boardPins.map((pin) => `board:${pin.wireId}:${pin.side}:${pin.boardPin}`),

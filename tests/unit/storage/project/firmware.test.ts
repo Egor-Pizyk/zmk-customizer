@@ -9,7 +9,7 @@ it('migrates an untouched v7 project without losing wiring/bindings', () => {
   expect(parsed).toEqual({
     ok: true,
     value: {
-      schemaVersion: 12,
+      schemaVersion: 13,
       encoders: [],
       combos: [],
       macros: [],

@@ -1,3 +1,4 @@
+import { getEncoderGeometry } from '@domain/geometry';
 import { removeOrphanWires } from '@domain/wires';
 import { getKeyPinPosition, getWirePinContacts } from '@domain/wires/geometry';
 import { pruneInsulatedCrossings } from '@domain/crossings';
@@ -20,6 +21,8 @@ export function removeKey(project: Project, input: { readonly keyId: string }): 
       (wire) =>
         wire.start.kind !== 'key-pin' &&
         wire.end.kind !== 'key-pin' &&
+        wire.start.kind !== 'encoder-pin' &&
+        wire.end.kind !== 'encoder-pin' &&
         getWirePinContacts(project, wire).length === 0,
     )
     .map((wire) => wire.id);
@@ -32,6 +35,7 @@ export function removeKey(project: Project, input: { readonly keyId: string }): 
             contact !== false && contact.keyId === key.id ? false : contact,
           ),
         }),
+    encoders: unlinkEncoders(project, key),
     keys: project.keys.filter((candidate) => candidate.id !== input.keyId),
     wires,
     layers: project.layers.map((layer) => ({
@@ -62,4 +66,14 @@ function withoutKeyContacts(project: Project, wire: Wire, key: Key): Wire {
     start: freeKeyPin(wire.start, key),
     end: freeKeyPin(wire.end, key),
   };
+}
+
+function unlinkEncoders(project: Project, key: Key) {
+  return project.encoders.map((encoder) => {
+    if (encoder.pushKeyId !== key.id) {
+      return encoder;
+    }
+    const { pushKeyId: _removed, ...rest } = encoder;
+    return { ...rest, ...getEncoderGeometry(project, encoder) };
+  });
 }

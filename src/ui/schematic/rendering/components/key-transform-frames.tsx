@@ -1,9 +1,11 @@
-import { getKeyCenter, getKeyGeometry } from '@domain/geometry';
+import { getEncoderGeometry, getKeyCenter, getKeyGeometry } from '@domain/geometry';
 import type { Key, Project } from '@domain';
 import { toScreenPoint } from '@ui/canvas/logic';
 import type { ContentView } from '@ui/canvas/logic';
 import { getSelectedKeyIds, TRANSFORM_HANDLES } from '@ui/schematic/interaction';
 import type { SchematicSelection } from '@ui/schematic/interaction';
+
+const BOTTOM_RIGHT_HANDLE = TRANSFORM_HANDLES.find((handle) => handle.name === 'bottom right');
 
 export function KeyTransformFrames({
   project,
@@ -15,10 +17,98 @@ export function KeyTransformFrames({
   readonly view: ContentView;
 }) {
   const keyIds = getSelectedKeyIds(selection);
-  return project.keys.map((key, keyIndex) =>
-    keyIds.includes(key.id) ? (
-      <KeyTransformFrame key={key.id} schematicKey={key} keyIndex={keyIndex} view={view} />
-    ) : null,
+  const encoder =
+    selection?.kind === 'encoder'
+      ? project.encoders.find((entry) => entry.id === selection.encoderId)
+      : undefined;
+  return (
+    <>
+      {project.keys.map((key, keyIndex) =>
+        keyIds.includes(key.id) ? (
+          <KeyTransformFrame key={key.id} schematicKey={key} keyIndex={keyIndex} view={view} />
+        ) : null,
+      )}
+      {encoder === undefined ? null : (
+        <EncoderTransformFrame
+          encoderId={encoder.id}
+          encoderIndex={project.encoders.indexOf(encoder)}
+          geometry={getEncoderGeometry(project, encoder)}
+          view={view}
+        />
+      )}
+    </>
+  );
+}
+
+type EncoderTransformFrameProps = {
+  readonly encoderId: string;
+  readonly encoderIndex: number;
+  readonly geometry: { readonly xU: number; readonly yU: number; readonly rotationDeg: number };
+  readonly view: ContentView;
+};
+
+function EncoderTransformFrame({
+  encoderId,
+  encoderIndex,
+  geometry,
+  view,
+}: EncoderTransformFrameProps) {
+  const center = toScreenPoint(view, {
+    xU: geometry.xU + 0.5,
+    yU: geometry.yU + 0.5,
+  });
+  const size = view.pxPerU;
+  return (
+    <g transform={`translate(${center.xPx} ${center.yPx}) rotate(${geometry.rotationDeg})`}>
+      <rect
+        className="pointer-events-none fill-none stroke-accent"
+        x={-size / 2}
+        y={-size / 2}
+        width={size}
+        height={size}
+        strokeWidth={1}
+      />
+      {BOTTOM_RIGHT_HANDLE === undefined ? null : (
+        <EncoderTransformHandle
+          encoderId={encoderId}
+          encoderIndex={encoderIndex}
+          handle={BOTTOM_RIGHT_HANDLE}
+          size={size}
+        />
+      )}
+    </g>
+  );
+}
+
+function EncoderTransformHandle({
+  encoderId,
+  encoderIndex,
+  handle,
+  size,
+}: {
+  readonly encoderId: string;
+  readonly encoderIndex: number;
+  readonly handle: (typeof TRANSFORM_HANDLES)[number];
+  readonly size: number;
+}) {
+  const offset = 20;
+  const x = handle.x * (size / 2 + offset);
+  const y = handle.y * (size / 2 + offset);
+  return (
+    <g data-encoder-rotate={encoderId} className="cursor-grab">
+      <circle cx={x} cy={y} r={12} className="fill-none" pointerEvents="all" strokeWidth={0} />
+      <text
+        aria-hidden="true"
+        className="pointer-events-none fill-accent text-base"
+        dominantBaseline="central"
+        textAnchor="middle"
+        x={x}
+        y={y}
+      >
+        ↻
+      </text>
+      <title>{`Rotate encoder ${encoderIndex} ${handle.name}`}</title>
+    </g>
   );
 }
 
@@ -42,16 +132,15 @@ function KeyTransformFrame({ schematicKey, keyIndex, view }: KeyTransformFramePr
         height={height}
         strokeWidth={1}
       />
-      {TRANSFORM_HANDLES.filter((handle) => handle.x !== 0 && handle.y !== 0).map((handle) => (
+      {BOTTOM_RIGHT_HANDLE === undefined ? null : (
         <TransformHandle
-          key={`rotate-${handle.name}`}
           keyId={schematicKey.id}
           keyIndex={keyIndex}
-          handle={handle}
+          handle={BOTTOM_RIGHT_HANDLE}
           width={width}
           height={height}
         />
-      ))}
+      )}
     </g>
   );
 }
@@ -91,10 +180,7 @@ function TransformHandle({ keyId, keyIndex, handle, width, height }: TransformHa
 
 function HandleMark() {
   return (
-    <span
-      aria-hidden="true"
-      className="text-accent opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"
-    >
+    <span aria-hidden="true" className="text-accent">
       ↻
     </span>
   );

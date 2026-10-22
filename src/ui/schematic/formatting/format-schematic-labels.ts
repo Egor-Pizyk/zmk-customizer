@@ -56,6 +56,9 @@ export function formatKeyLabel(
 
 export function formatWireEnd(project: Project, end: WireEnd): string {
   switch (end.kind) {
+    case 'encoder-pin': {
+      return `encoder ${project.encoders.findIndex((encoder) => encoder.id === end.encoderId)} ${end.pin}`;
+    }
     case 'key-pin': {
       const keyIndex = project.keys.findIndex((key) => key.id === end.keyId);
       return `key ${keyIndex} pin ${end.pin}`;
@@ -69,6 +72,9 @@ export function formatWireEnd(project: Project, end: WireEnd): string {
         const pinLabel =
           terminal.boardPin === undefined ? 'unassigned' : formatBoardPin(terminal.boardPin);
         return `${terminal.half} ${terminal.kind} ${terminal.id}: ${terminal.kind === 'ground' ? 'GND' : pinLabel}`;
+      }
+      if (end.ground === true) {
+        return 'GND';
       }
       return end.boardPin === undefined
         ? 'a free end'

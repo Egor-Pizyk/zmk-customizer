@@ -5,7 +5,7 @@ import { getHoverPreview } from './get-hover-preview';
 import type { Hover } from './get-hover-preview';
 import { getPreviewProject } from './pointer-preview';
 import { clickWireTool } from './pointer-create';
-import { placeKeyAt } from './place-key-at';
+import { placeKeyAt, placeEncoderAt } from './place-key-at';
 import { endSelectDrag, moveSelectDrag, pressSelectTool } from './pointer-select';
 import type { Drag, PointerState, SchematicPointerOptions } from './pointer-types';
 import { readCanvasHit } from './read-canvas-hit';
@@ -17,6 +17,9 @@ function handlePress(state: PointerState, world: WirePoint, event: PointerEvent<
     return;
   }
   state.onHintClear();
+  if (state.activeToolId === 'add-encoder') {
+    placeEncoderAt(state, world);
+  }
   if (state.activeToolId === 'add-key') {
     placeKeyAt(state, world);
   }

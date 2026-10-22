@@ -10,7 +10,7 @@
 Add EC11 rotary encoders to a custom keyboard, configure their wiring and rotation response, and download a ZMK v0.3 configuration that includes them.
 
 **In scope**: Encoders with editable layout position, half, A/B GPIO pins, electrical steps per rotation and action triggers per rotation; per-layer clockwise/counterclockwise actions; validation, persistence, undo/redo and export.
-**Non-goals**: Other sensor types, encoder push buttons as special entities (add an ordinary key instead), lighting, live hardware input and firmware flashing.
+**Non-goals**: Other sensor types, encoder push buttons as special entities, lighting, live hardware input and firmware flashing. Feature 036 item 1 later links an optional ordinary key to an encoder; it does not introduce a special switch entity.
 **Existing contracts to preserve**: Existing project files, key wiring and bindings, deterministic exports without encoders, immutable editing and keyboard access.
 
 ## User scenarios and acceptance

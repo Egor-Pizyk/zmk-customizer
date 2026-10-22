@@ -11,6 +11,13 @@ export const encoderSchema = z.strictObject({
   xU: z.number(),
   yU: z.number(),
   half: z.enum(['left', 'right']),
+  rotationDeg: z.number().exactOptional(),
+  wiringMode: z.literal('schematic').exactOptional(),
+  pushKeyId: z
+    .string()
+    .regex(/^k\d+$/u)
+    .max(PROJECT_BUDGET.idLength)
+    .exactOptional(),
   aPin: z.int().min(0).max(31).exactOptional(),
   bPin: z.int().min(0).max(31).exactOptional(),
   steps: z.number(),

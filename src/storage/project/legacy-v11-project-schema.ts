@@ -1,3 +1,4 @@
+import { legacyEncoderSchema } from './legacy-encoder-schema';
 import { encoderBindingsSchema } from './encoder-schema';
 import { projectContentSchema } from './project-content-schema';
 import { bindingSchema, layerIdSchema } from './binding-schema';
@@ -154,6 +155,7 @@ export const legacyV11ProjectSchema = z
   .object({
     schemaVersion: z.literal(11),
     ...projectContentSchema.shape,
+    encoders: z.array(legacyEncoderSchema).max(16),
     wiring: wiringSchema.exactOptional(),
     controllerId: z.enum(CONTROLLER_BOARDS.map((board) => board.id)),
     name: z.string().max(PROJECT_BUDGET.stringLength),
@@ -212,7 +214,7 @@ export const legacyV11ProjectSchema = z
       }
     }
     const issues = [
-      ...findTerminalIssues({ ...project, schemaVersion: 12 }),
+      ...findTerminalIssues({ ...project, schemaVersion: 13 }),
       ...findDuplicateIds(project.keys, 'keys'),
       ...findDuplicateIds(project.encoders, 'encoders'),
       ...findEncoderBindingIssues(project),

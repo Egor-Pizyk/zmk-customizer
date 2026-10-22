@@ -1,6 +1,8 @@
 import type { KeyPin, WireEndSide } from '@domain';
 
 export type CanvasHit =
+  | { readonly kind: 'encoder'; readonly encoderId: string; readonly rotate: boolean }
+  | { readonly kind: 'encoder-pin'; readonly encoderId: string; readonly pin: 'A' | 'COM' | 'B' }
   | { readonly kind: 'section'; readonly sectionId: string }
   | { readonly kind: 'pin'; readonly keyId: string; readonly pin: KeyPin }
   | { readonly kind: 'bend'; readonly wireId: string; readonly bendIndex: number }
@@ -19,6 +21,10 @@ function closestData(target: Element, attribute: string): DOMStringMap | undefin
 export function readCanvasHit(target: EventTarget | null): CanvasHit {
   if (!(target instanceof Element)) {
     return { kind: 'empty' };
+  }
+  const encoderHit = readEncoderHit(target);
+  if (encoderHit !== null) {
+    return encoderHit;
   }
   if (target.closest('button') !== null) {
     return { kind: 'control' };
@@ -49,4 +55,29 @@ export function readCanvasHit(target: EventTarget | null): CanvasHit {
   }
   const key = closestData(target, 'key-id');
   return key?.['keyId'] === undefined ? { kind: 'empty' } : { kind: 'key', keyId: key['keyId'] };
+}
+
+function readEncoderHit(target: Element): CanvasHit | null {
+  const encoderPin = closestData(target, 'encoder-pin');
+  if (
+    encoderPin?.['encoderId'] !== undefined &&
+    (encoderPin['encoderPin'] === 'A' ||
+      encoderPin['encoderPin'] === 'COM' ||
+      encoderPin['encoderPin'] === 'B')
+  ) {
+    return {
+      kind: 'encoder-pin',
+      encoderId: encoderPin['encoderId'],
+      pin: encoderPin['encoderPin'],
+    };
+  }
+  const rotation = closestData(target, 'encoder-rotate');
+  if (rotation?.['encoderRotate'] !== undefined) {
+    return { kind: 'encoder', encoderId: rotation['encoderRotate'], rotate: true };
+  }
+  const encoder = closestData(target, 'encoder-id');
+  if (encoder?.['encoderId'] !== undefined) {
+    return { kind: 'encoder', encoderId: encoder['encoderId'], rotate: false };
+  }
+  return null;
 }

@@ -1,20 +1,14 @@
-import { getSelectedKeyIds } from './get-selected-key-ids';
+import { startEncoderDrag, moveEncoderDrag, endEncoderDrag } from './pointer-encoder';
 import { isKeyPositionFree } from '@domain/geometry';
+import { getSelectedKeyIds } from './get-selected-key-ids';
 import { moveKeys } from '@domain/keys';
 import { setWireBends, getWireBendsResourceError } from '@domain/wires/editing';
 import type { Key, WirePoint } from '@domain';
 import { isKeyCellInMarquee } from '@ui/canvas/logic';
-import type { PointerState } from './pointer-types';
-import type { CanvasHit } from './read-canvas-hit';
+import type { PointerState, SelectionPress } from './pointer-types';
 import { snapPoint } from './snap-point';
 
-import type { PointerEvent } from 'react';
-
-type Press = {
-  readonly hit: CanvasHit;
-  readonly world: WirePoint;
-  readonly event: PointerEvent<SVGSVGElement>;
-};
+type Press = SelectionPress;
 
 // Below this the marquee is treated as a click on empty space, not a drag.
 const MARQUEE_MIN_SIZE_U = 0.05;
@@ -32,11 +26,7 @@ function isKeyInMarquee(key: Key, marquee: { start: WirePoint; end: WirePoint })
   return isKeyCellInMarquee(key, marquee);
 }
 
-function startMultiKeyDrag(
-  state: PointerState,
-  world: WirePoint,
-  event: PointerEvent<SVGSVGElement>,
-) {
+function startMultiKeyDrag(state: PointerState, world: WirePoint, event: Press['event']) {
   if (state.selection?.kind !== 'multi') {
     return;
   }
@@ -61,7 +51,7 @@ function startMultiKeyDrag(
 function startSingleKeyDrag(
   state: PointerState,
   world: WirePoint,
-  event: PointerEvent<SVGSVGElement> & { keyId: string },
+  event: Press['event'] & { keyId: string },
 ) {
   const key = state.project.keys.find((candidate) => candidate.id === event.keyId);
   state.onSelectionChange({ kind: 'key', keyId: event.keyId });
@@ -79,20 +69,11 @@ function startSingleKeyDrag(
 }
 
 export function pressSelectTool(state: PointerState, { hit, world, event }: Press) {
+  if (startEncoderDrag(state, { hit, world, event })) {
+    return;
+  }
   if (hit.kind === 'key' || hit.kind === 'pin') {
-    if (event.ctrlKey || event.metaKey || event.shiftKey) {
-      const selected = getSelectedKeyIds(state.selection);
-      const keyIds = selected.includes(hit.keyId)
-        ? selected.filter((id) => id !== hit.keyId)
-        : [...selected, hit.keyId];
-      state.onSelectionChange({ kind: 'multi', keyIds, wireIds: [] });
-      return;
-    }
-    if (state.selection?.kind === 'multi' && state.selection.keyIds.includes(hit.keyId)) {
-      startMultiKeyDrag(state, world, event);
-      return;
-    }
-    startSingleKeyDrag(state, world, { ...event, keyId: hit.keyId });
+    pressKey(state, { hit, world, event });
     return;
   }
   if (hit.kind === 'bend') {
@@ -119,6 +100,10 @@ export function pressSelectTool(state: PointerState, { hit, world, event }: Pres
 
 export function moveSelectDrag(state: PointerState, world: WirePoint) {
   const { drag } = state;
+  if (drag?.kind === 'encoder') {
+    moveEncoderDrag(state, drag, world);
+    return;
+  }
   if (drag?.kind === 'key') {
     const moved = {
       xU: drag.keyStart.xU + world.xU - drag.origin.xU,
@@ -217,6 +202,10 @@ function endSingleKeyDrag(state: PointerState, project: PointerState['project'])
 export function endSelectDrag(state: PointerState) {
   const { drag, project } = state;
   state.onDragChange();
+  if (drag?.kind === 'encoder') {
+    endEncoderDrag(state, drag);
+    return;
+  }
   if (drag?.kind === 'bend') {
     const bends = project.wires.find((wire) => wire.id === drag.wireId)?.bends ?? [];
     const next = bends.with(drag.bendIndex, drag.point);
@@ -271,4 +260,23 @@ function commitKeyMove(state: PointerState, moves: Parameters<typeof moveKeys>[1
     return;
   }
   state.commit((current) => (current === state.project ? next : current));
+}
+
+function pressKey(state: PointerState, { hit, world, event }: Press) {
+  if (hit.kind !== 'key' && hit.kind !== 'pin') {
+    return;
+  }
+  if (event.ctrlKey || event.metaKey || event.shiftKey) {
+    const selected = getSelectedKeyIds(state.selection);
+    const keyIds = selected.includes(hit.keyId)
+      ? selected.filter((id) => id !== hit.keyId)
+      : [...selected, hit.keyId];
+    state.onSelectionChange({ kind: 'multi', keyIds, wireIds: [] });
+    return;
+  }
+  if (state.selection?.kind === 'multi' && state.selection.keyIds.includes(hit.keyId)) {
+    startMultiKeyDrag(state, world, event);
+    return;
+  }
+  startSingleKeyDrag(state, world, { ...event, keyId: hit.keyId });
 }

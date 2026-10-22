@@ -6,6 +6,12 @@ import { formatWireCheck } from '@ui/schematic/formatting';
 /** What the pointer hit; `point` is the pin position, the nearest wire point or the snapped spot. */
 export type DraftTarget =
   | {
+      readonly kind: 'encoder-pin';
+      readonly encoderId: string;
+      readonly pin: 'A' | 'COM' | 'B';
+      readonly point: WirePoint;
+    }
+  | {
       readonly kind: 'key-pin';
       readonly keyId: string;
       readonly pin: KeyPin;
@@ -52,6 +58,9 @@ const DOUBLE_CLICK_TOLERANCE_U = 0.15;
 
 function toEnd(target: DraftTarget): WireEnd {
   switch (target.kind) {
+    case 'encoder-pin': {
+      return { kind: 'encoder-pin', encoderId: target.encoderId, pin: target.pin };
+    }
     case 'key-pin': {
       return { kind: 'key-pin', keyId: target.keyId, pin: target.pin };
     }

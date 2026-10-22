@@ -1,9 +1,21 @@
+import type { PointerEvent } from 'react';
+import type { CanvasHit } from './read-canvas-hit';
 import type { Project, WirePoint } from '@domain';
 import type { WireDraft } from './reduce-wire-draft';
 import type { SchematicSelection, SelectionChange } from './schematic-selection';
 import type { ToolId } from '@ui/schematic/tools/logic';
 
 export type Drag =
+  | {
+      readonly kind: 'encoder';
+      readonly encoderId: string;
+      readonly rotate: boolean;
+      readonly origin: WirePoint;
+      readonly bodyStart: WirePoint;
+      readonly angleStart: number;
+      readonly position: WirePoint;
+      readonly angle: number;
+    }
   | {
       readonly kind: 'key';
       readonly keyId: string;
@@ -50,4 +62,10 @@ export type PointerState = SchematicPointerOptions & {
   readonly onDragChange: (drag?: Drag) => void;
   readonly draft: WireDraft | undefined;
   readonly onDraftChange: (draft?: WireDraft) => void;
+};
+
+export type SelectionPress = {
+  readonly hit: CanvasHit;
+  readonly world: WirePoint;
+  readonly event: PointerEvent<SVGSVGElement>;
 };

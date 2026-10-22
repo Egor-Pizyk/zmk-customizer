@@ -49,6 +49,7 @@ function validateFreeEnds(project: Project): ValidationIssue[] {
           end.kind === 'free' &&
           end.boardPin === undefined &&
           end.terminalId === undefined &&
+          end.ground !== true &&
           !pins.some((pin) => Math.hypot(pin.xU - end.at.xU, pin.yU - end.at.yU) < 1e-4)
         );
       })
@@ -200,6 +201,7 @@ export function validateSchematic(
     ...validateFreeEnds(project),
     ...validateBoardPinConflicts(located),
     ...validateShortedBoardPins(located),
+    ...validateGroundShorts(project, nets),
     ...validateShortedKeys(project, nets),
     ...validateParallelKeys(project, nets),
     ...validateNetsWithoutBoardPin(
@@ -207,4 +209,37 @@ export function validateSchematic(
       nets.filter((net) => net.wireIds.length > 0),
     ),
   ];
+}
+
+function validateGroundShorts(project: Project, nets: readonly Net[]): ValidationIssue[] {
+  return nets.flatMap((net) => {
+    const hasGround =
+      net.terminalIds.some(
+        (id) =>
+          project.wiring?.terminals.some(
+            (terminal) => terminal.id === id && terminal.kind === 'ground',
+          ) === true,
+      ) ||
+      project.wires.some(
+        (wire) =>
+          net.wireIds.includes(wire.id) &&
+          [wire.start, wire.end].some((end) => end.kind === 'free' && end.ground === true),
+      );
+    const first = net.boardPins[0];
+    if (!hasGround || first === undefined) {
+      return [];
+    }
+    return [
+      {
+        code: 'board-pins-shorted',
+        message: `GPIO ${first.boardPin} is connected to GND. Remove the short or insulate the crossing.`,
+        path: [
+          'wires',
+          project.wires.findIndex((wire) => wire.id === first.wireId),
+          first.side,
+          'boardPin',
+        ],
+      },
+    ];
+  });
 }

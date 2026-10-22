@@ -16,7 +16,7 @@ Existing strict TypeScript, React, zod and SVG; static app. Up to 16 encoders, 3
 
 ## Scope and preserved contracts
 
-All FR-001–008; no new drag tool, sensor types or push-button model. Numbered passive schematic markers are positioned through fields. Zero-encoder generator bytes stay unchanged. Every edit uses generic commit/history, schema parsing remains the trust boundary.
+All FR-001–008; the original 019 delivery used no new drag tool, sensor types or push-button model. Feature 036 item 1 supersedes the passive-marker UI with placement/rotation and links an optional ordinary key while preserving the original encoder identity/actions. Zero-encoder generator bytes stay unchanged. Every edit uses generic commit/history, schema parsing remains the trust boundary.
 
 ## Constitution check
 

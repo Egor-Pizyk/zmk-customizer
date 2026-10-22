@@ -18,11 +18,11 @@ function useAddWireEnds(project: PartsTableProps['project']) {
   const from = isFromListed && fromValue !== undefined ? fromValue : (pinOptions[0]?.value ?? '');
   const isToListed =
     toValue === FREE_END_VALUE ||
+    toValue === 'ground' ||
     pinOptions.some((option) => option.value === toValue) ||
     project.wires.some((wire) => `wire:${wire.id}` === toValue);
   const startPin = toStartPin(from);
-  const start: WireEnd | undefined =
-    startPin === undefined ? undefined : { kind: 'key-pin', ...startPin };
+  const start = startPin === undefined ? undefined : startEndpoint(startPin);
   const end =
     startPin === undefined
       ? undefined
@@ -97,6 +97,7 @@ function WireEndSelects({ project, state }: WireEndSelectsProps) {
       <label className="flex flex-col gap-1">
         <span className="text-xs text-text-muted">To</span>
         <select className={INPUT_CLASSES} onChange={handleToChange} value={state.toValue}>
+          <option value="ground">GND</option>
           <option value={FREE_END_VALUE}>Free end</option>
           <PinOptions options={state.pinOptions} />
           {project.wires.map((wire, wireIndex) => (
@@ -109,4 +110,11 @@ function WireEndSelects({ project, state }: WireEndSelectsProps) {
       </label>
     </>
   );
+}
+
+function startEndpoint(pin: NonNullable<ReturnType<typeof toStartPin>>): WireEnd {
+  if ('encoderId' in pin) {
+    return { kind: 'encoder-pin', ...pin };
+  }
+  return { kind: 'key-pin', ...pin };
 }

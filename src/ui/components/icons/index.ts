@@ -3,6 +3,7 @@ export { BindingsIcon } from './bindings-icon';
 export { CenterViewIcon } from './center-view-icon';
 export { ChevronIcon } from './chevron-icon';
 export { CloseIcon } from './close-icon';
+export { EncoderIcon } from './encoder-icon';
 export { ExportIcon } from './export-icon';
 export { ExternalLinkIcon } from './external-link-icon';
 export { FirmwareIcon } from './firmware-icon';

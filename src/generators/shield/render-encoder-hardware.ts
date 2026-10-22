@@ -1,3 +1,4 @@
+import { getEncoderOutputPins } from '@domain/encoders';
 import type { ControllerBoard, Project } from '@domain';
 
 export function renderEncoderHardware(
@@ -13,8 +14,8 @@ export function renderEncoderHardware(
       (encoder, index) => `
     encoder_${index}: encoder_${index} {
         compatible = "alps,ec11";
-        a-gpios = <&${target.connector} ${encoder.aPin} (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
-        b-gpios = <&${target.connector} ${encoder.bPin} (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
+        a-gpios = <&${target.connector} ${getEncoderOutputPins(project, encoder).aPin} (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
+        b-gpios = <&${target.connector} ${getEncoderOutputPins(project, encoder).bPin} (GPIO_ACTIVE_HIGH | GPIO_PULL_UP)>;
         steps = <${encoder.steps}>;
         status = "${status}";
     };`,

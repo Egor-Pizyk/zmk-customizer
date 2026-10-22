@@ -30,8 +30,18 @@ export function BoardPinSelect(props: BoardPinSelectProps) {
     if (wire === undefined || event.target.value === DROPPED) {
       return;
     }
-    const next = event.target.value === NOT_CONNECTED ? undefined : Number(event.target.value);
-    commit((current) => setWireEndBoardPin(current, { wireId: wire.id, side, boardPin: next }));
+    const next =
+      event.target.value === NOT_CONNECTED || event.target.value === 'ground'
+        ? undefined
+        : Number(event.target.value);
+    commit((current) =>
+      setWireEndBoardPin(current, {
+        wireId: wire.id,
+        side,
+        boardPin: next,
+        ground: event.target.value === 'ground',
+      }),
+    );
   }
 
   return (
@@ -60,7 +70,9 @@ function NativePinSelect(props: NativePinSelectProps) {
   const endPath = `wires.${wireIndex}.${side}`;
   const hasUnavailablePin = boardPin !== undefined && !board.gpioPins.includes(boardPin);
   const assignedValue = boardPin === undefined ? NOT_CONNECTED : String(boardPin);
-  const value = dropped === undefined ? assignedValue : DROPPED;
+  const end = wire?.[side];
+  const previousValue = dropped === undefined ? assignedValue : DROPPED;
+  const value = end?.kind === 'free' && end.ground === true ? 'ground' : previousValue;
   return (
     <select
       {...controlProps}
@@ -70,9 +82,7 @@ function NativePinSelect(props: NativePinSelectProps) {
       onChange={handleChange}
       value={value}
     >
-      <option value={NOT_CONNECTED}>
-        {dropped === undefined ? 'Not connected' : 'Clear assignment'}
-      </option>
+      <AssignmentOptions hasDropped={dropped !== undefined} />
       {dropped === undefined ? undefined : (
         <option value={DROPPED} disabled>{`Unassigned (was ${dropped})`}</option>
       )}
@@ -111,4 +121,13 @@ function getEndpointAssignment(props: NativePinSelectProps) {
     terminal?.droppedBoardPin ?? (end?.kind === 'free' ? end.droppedBoardPin : undefined);
 
   return { terminal, boardPin, dropped };
+}
+
+function AssignmentOptions({ hasDropped }: { readonly hasDropped: boolean }) {
+  return (
+    <>
+      <option value="ground">GND</option>
+      <option value={NOT_CONNECTED}>{hasDropped ? 'Clear assignment' : 'Not connected'}</option>
+    </>
+  );
 }

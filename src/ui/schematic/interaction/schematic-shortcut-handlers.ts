@@ -1,12 +1,13 @@
+import { removeEncoder } from '@domain/encoders';
+import { placeEncoderAt } from './place-key-at';
 import { PROJECT_BUDGET } from '@storage/project';
 import { addKey, removeKey } from '@domain/keys';
 import { createEntityId } from '@domain/project';
 import { findFreeKeyPosition } from '@domain/geometry';
 import { removeWire, removeWireSections } from '@domain/wires/editing';
 import type { Project } from '@domain';
-import type { Commit } from './pointer-types';
+import type { Commit, PointerState } from './pointer-types';
 import type { SchematicSelection, SelectionChange } from './schematic-selection';
-import type { ToolId } from '@ui/schematic/tools/logic';
 
 export function focusKeyLater(keyId: string) {
   requestAnimationFrame(() => {
@@ -26,8 +27,8 @@ type ShortcutHandlerInput = {
   readonly commit: Commit;
   readonly selection: SchematicSelection;
   readonly onSelectionChange: SelectionChange;
-  readonly activeToolId: ToolId;
-  readonly onToolChange: (toolId: ToolId) => void;
+  readonly activeToolId: PointerState['activeToolId'];
+  readonly onToolChange: (toolId: PointerState['activeToolId']) => void;
   readonly hasDraft: boolean;
   readonly announce?: (message: string) => void;
   readonly onDraftCancel: () => void;
@@ -35,6 +36,10 @@ type ShortcutHandlerInput = {
 
 function deleteSelection(input: ShortcutHandlerInput) {
   const { project, commit, selection, onSelectionChange } = input;
+  if (selection?.kind === 'encoder') {
+    deleteEncoderSelection(input);
+    return;
+  }
   if (selection?.kind === 'sections') {
     deleteSectionSelection(input);
     return;
@@ -84,11 +89,25 @@ function placeKey(input: ShortcutHandlerInput) {
 
 export function createShortcutHandlers(input: ShortcutHandlerInput) {
   return {
-    onToolChange: (toolId: ToolId) => {
+    onToolChange: (toolId: PointerState['activeToolId']) => {
       input.onDraftCancel();
       input.onToolChange(toolId);
     },
     onPlaceKey: () => {
+      if (input.activeToolId === 'add-encoder') {
+        placeEncoderAt(
+          {
+            project: input.project,
+            commit: input.commit,
+            onHint: (text) => input.announce?.(text),
+          },
+          (() => {
+            const position = findFreeKeyPosition(input.project);
+            return { xU: position.xU + 0.5, yU: position.yU + 0.5 };
+          })(),
+        );
+        return;
+      }
       if (input.activeToolId === 'add-key') {
         placeKey(input);
       }
@@ -145,6 +164,18 @@ function deleteMultiSelection(input: ShortcutHandlerInput) {
       }
       return next;
     });
+    onSelectionChange();
+    focusCanvasLater();
+  }
+}
+
+function deleteEncoderSelection(input: ShortcutHandlerInput) {
+  const { commit, selection, onSelectionChange } = input;
+  if (selection?.kind === 'encoder') {
+    commit(
+      (current) => removeEncoder(current, selection.encoderId),
+      'Deleted encoder. Undo to restore.',
+    );
     onSelectionChange();
     focusCanvasLater();
   }
