@@ -1,6 +1,11 @@
 import { getWirePath } from '@domain/wires/geometry';
+import {
+  getWireBendsAfterInsertion,
+  getWireBendsResourceError,
+  setWireBends,
+} from '@domain/wires/editing';
 import type { Project, WirePoint } from '@domain';
-import type { Drag } from './pointer-types';
+import type { Drag, PointerState } from './pointer-types';
 
 type BendDrag = Extract<Drag, { readonly kind: 'bend' }>;
 
@@ -14,6 +19,23 @@ export function getBendDragBends(project: Project, drag: BendDrag): readonly Wir
   return isPointOnPath(drag.point, pathWithoutDraggedBend, drag.collapseToleranceU)
     ? withoutDraggedBend
     : wire.bends.with(drag.bendIndex, drag.point);
+}
+
+export function insertBendAt(
+  state: PointerState,
+  input: { readonly wireId: string; readonly point: WirePoint },
+) {
+  const bends = getWireBendsAfterInsertion(state.project, input);
+  if (bends === undefined) {
+    return;
+  }
+  const resourceError = getWireBendsResourceError(state.project, { wireId: input.wireId, bends });
+  if (resourceError !== undefined) {
+    state.onHint(resourceError);
+    return;
+  }
+  state.onSelectionChange({ kind: 'wire', wireId: input.wireId });
+  state.commit((current) => setWireBends(current, { wireId: input.wireId, bends }));
 }
 
 function isPointOnPath(point: WirePoint, path: readonly WirePoint[], toleranceU: number): boolean {

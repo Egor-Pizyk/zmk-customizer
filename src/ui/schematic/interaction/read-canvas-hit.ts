@@ -3,7 +3,7 @@ import type { KeyPin, WireEndSide } from '@domain';
 export type CanvasHit =
   | { readonly kind: 'encoder'; readonly encoderId: string; readonly rotate: boolean }
   | { readonly kind: 'encoder-pin'; readonly encoderId: string; readonly pin: 'A' | 'COM' | 'B' }
-  | { readonly kind: 'section'; readonly sectionId: string }
+  | { readonly kind: 'section'; readonly sectionId: string; readonly wireId: string }
   | { readonly kind: 'pin'; readonly keyId: string; readonly pin: KeyPin }
   | { readonly kind: 'bend'; readonly wireId: string; readonly bendIndex: number }
   | { readonly kind: 'wire-end'; readonly wireId: string; readonly side: WireEndSide }
@@ -46,8 +46,8 @@ export function readCanvasHit(target: EventTarget | null): CanvasHit {
     };
   }
   const section = closestData(target, 'section-id');
-  if (section?.['sectionId'] !== undefined) {
-    return { kind: 'section', sectionId: section['sectionId'] };
+  if (section?.['sectionId'] !== undefined && section['wireId'] !== undefined) {
+    return { kind: 'section', sectionId: section['sectionId'], wireId: section['wireId'] };
   }
   const wire = closestData(target, 'wire-id');
   if (wire?.['wireId'] !== undefined) {

@@ -7,7 +7,7 @@ import type { Key, WirePoint } from '@domain';
 import { isKeyCellInMarquee } from '@ui/canvas/logic';
 import type { PointerState, SelectionPress } from './pointer-types';
 import { snapPoint } from './snap-point';
-import { getBendDragBends } from './get-bend-drag-bends';
+import { getBendDragBends, insertBendAt } from './get-bend-drag-bends';
 
 type Press = SelectionPress;
 
@@ -97,6 +97,15 @@ export function pressSelectTool(state: PointerState, { hit, world, event }: Pres
   // Empty space: start marquee selection
   event.currentTarget.setPointerCapture(event.pointerId);
   state.onDragChange({ kind: 'marquee', start: world, end: world });
+}
+
+export function doubleClickSelectTool(
+  state: PointerState,
+  input: { readonly hit: Press['hit']; readonly world: WirePoint },
+) {
+  if (input.hit.kind === 'section' || input.hit.kind === 'wire') {
+    insertBendAt(state, { wireId: input.hit.wireId, point: input.world });
+  }
 }
 
 export function moveSelectDrag(state: PointerState, world: WirePoint) {

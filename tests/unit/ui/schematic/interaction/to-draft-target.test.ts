@@ -49,7 +49,7 @@ it('connects a newly drawn wire to a selectable section', () => {
   });
   expect(
     toDraftTarget(project, {
-      hit: { kind: 'section', sectionId: 'w1:0:0' },
+      hit: { kind: 'section', sectionId: 'w1:0:0', wireId: 'w1' },
       world: { xU: 1, yU: 0 },
       snapped: { xU: 1, yU: 0 },
     }),

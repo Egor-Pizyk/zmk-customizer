@@ -66,6 +66,13 @@ test('a wire stays selected while and after dragging a bend @cross-browser', asy
   await page.mouse.up();
   await expect(page.locator('[data-bend-index]')).toHaveCount(0);
   expect((await saved(page)).wires[0]?.bends).toEqual([]);
+
+  const bendPoint = await sectionPoint(
+    page.locator('[data-section-id] path[pointer-events="stroke"]').first(),
+  );
+  await page.mouse.dblclick(bendPoint.x, bendPoint.y);
+  await expect(page.locator('[data-bend-index]')).toHaveCount(1);
+  expect((await saved(page)).wires[0]?.bends).toHaveLength(1);
 });
 
 test('drawn intermediate connections survive a real endpoint move and section deletion @cross-browser', async ({
