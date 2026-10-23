@@ -24,6 +24,6 @@ make test-e2e
 make zmk-build
 ```
 
-Run changed E2E scenarios three sequential times without retries in the isolated production runner. Run controlled sensitivity regressions separately/alone, restore exact files and require intended behavioral failures. Do not run destructive cleanup to prepare checks. Reinvoke ui-ux-pro-max and inspect actual rendered UI, then record findings/evidence in verification.md.
+Run changed E2E scenarios three sequential times without retries in the isolated production runner. Run controlled sensitivity regressions separately/alone, restore exact files and require intended behavioral failures. Do not run destructive cleanup to prepare checks. Review the specification and project UI/accessibility guidelines and inspect actual rendered UI, then record findings/evidence in verification.md.
 
 Manual acceptance covers keyboard, VoiceOver/Safari, OS theme/reduced-motion and 200% zoom; automation does not establish speech or manual acceptance. Unperformed mandatory checks remain open. Before delivery re-read git-flow; keep this feature's spec/code/tests in one feature PR, release:minor, and submit auto-merge only after applicable acceptance gates; no CI polling.

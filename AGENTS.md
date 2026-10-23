@@ -34,7 +34,7 @@ Read all matching rows before working in that area. Conditional reading is manda
 | Implement existing feature work | Relevant `spec.md`, `plan.md`, `tasks.md` and contracts; other artifacts only when cited or needed |
 | Domain / TypeScript code | `docs/domain-model.md`, `docs/guidelines/code-quality/typescript.md`, `control-flow.md`, and both `naming/*.md` in that directory |
 | Errors, validation, storage / migrations | Above code-quality rules, `docs/guidelines/code-quality/observability.md`, relevant storage and compatibility contracts |
-| Frontend / interface design, implementation or review | `.agents/skills/ui-ux-pro-max/SKILL.md`; mandatory before/after UI workflow in `docs/workflow.md` and review evidence in `docs/testing.md` |
+| Frontend / interface design, implementation or review | Before/after UI workflow in `docs/workflow.md` and review evidence in `docs/testing.md` |
 | React / UI behavior | Code-quality rules, `docs/guidelines/frontend/react.md`, `accessibility.md`, `admin-ui.md` |
 | Styles / design tokens | `docs/guidelines/frontend/tailwind.md`, `accessibility.md`, existing `src/styles.css` tokens |
 | ZMK output / catalog facts | `docs/zmk/README.md`, relevant reference pages, generator/catalog contracts and independent fixtures |
