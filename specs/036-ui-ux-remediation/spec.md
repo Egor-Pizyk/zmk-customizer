@@ -1,6 +1,6 @@
 # 036 — UI/UX remediation
 
-**Branch**: `feature/036-ui-ux-remediation`. **Date**: 2026-10-22. **Status**: Items 1–8 implemented; items 9–10 authorized; manual acceptance remains open.
+**Branch**: `feature/036-ui-ux-remediation`. **Date**: 2026-10-22. **Status**: Items 1–9 implemented; item 10 verified without production changes; manual acceptance remains open.
 
 ## Goal and scope
 
@@ -100,3 +100,9 @@ Acceptance: first verify existing wired and fresh/unwired Rebuild/Complete previ
 - **FR-022**: In a hand-drawn 2×2 matrix, permit upper-right key movement left/right and vertically when final geometry preserves its electrical networks and resource limits. Connected crossings displaced by a move must not be mistaken for new unrelated connections. Keep pin identities, wire references, fixed bends/anchors, diode/bindings, incidental-crossing insulation and legitimate overlap/limit refusal. Pointer preview is unsaved, release commits once, Escape cancels; existing numeric/nudge alternatives and one-step Undo/Redo/reload remain.
 
 Acceptance: reproduce horizontal refusal with a hand-drawn connected crossing and vertical control; verify both horizontal directions, complete pin partitions, unrelated conductors, cancellation/history/reload, new incidental insulation and unsafe overlap/resource refusal. Preserve current selection/feedback, themes, layout and reduced motion; no new controls or schema.
+
+## US8 — Select both sides of a crossing (item 10)
+
+- **FR-023**: On either arm of an L-shaped wire, a connected crossing divides it into independently selectable sections on both sides. Plain click replaces selection; Shift toggles; the Parts section checkboxes provide the same keyboard choice. Accent plus thickness and endpoint markers identify the exact extent. Selection never changes saved geometry or crossing state. Escape clears it; section deletion keeps the unselected side and supports one-step Undo. Preserve 033 semantics: insulated crossings are bridges within one continuous section, without joining the crossing wire; bends alone are not electrical boundaries.
+
+Acceptance: audit current behavior before changing code. Check horizontal/vertical L arms by pointer and list, single/multiple selection, saved state and deletion/history. Check connected versus insulated geometry and nets independently. If the original failure no longer reproduces, add regression evidence without speculative production changes. Retain themes, focus/keyboard paths, layout and reduced motion; native speech/zoom stay E008.

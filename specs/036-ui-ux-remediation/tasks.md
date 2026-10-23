@@ -58,4 +58,9 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 ## Item 9
 
 - [x] M001 [FR-022] Reproduce hand-drawn 2×2 horizontal refusal with vertical/automatic controls; repair domain crossing continuity, retain partition/overlap/resource protection.
-- [ ] M002 [FR-022] Real pointer preview/cancel/history/reload, numeric/nudge coverage, rendered review, changed checks, evidence and separate item-9 commit; then item 10 is authorized.
+- [x] M002 [FR-022] Real pointer preview/cancel/history/reload, numeric/nudge coverage, rendered review, changed checks, evidence and separate item-9 commit; then item 10 is authorized.
+
+## Item 10
+
+- [x] C001 [FR-023] Audit connected L crossings on both arms and both sides; add independent section/net regressions, repair only reproduced failures.
+- [x] C002 [FR-023] Real pointer/Shift/list selection, safe deletion/Undo, insulated continuity, rendered light/dark review and changed checks; record results, separate item-10 commit and update existing draft PR. Stop before item 11.

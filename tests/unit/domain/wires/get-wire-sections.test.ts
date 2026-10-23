@@ -1,3 +1,4 @@
+import { getNets } from '@domain/wires/nets';
 import { expect, it } from 'vitest';
 import { getWireSections, getKeyPinWires } from '@domain/wires';
 import { addWire, removeWireSections } from '@domain/wires/editing';
@@ -128,3 +129,75 @@ it('treats identical bent spans with different collinear bend counts as one cond
     getResultValue(removeWireSections(project, { base: project, sectionIds: ['w1:0:0'] })).wires,
   ).toEqual([]);
 });
+
+it.each([
+  {
+    crossing: { xU: 2, yU: 0 },
+    start: { xU: 2, yU: -2 },
+    end: { xU: 2, yU: 2 },
+    expected: [
+      [
+        { xU: 0, yU: 0 },
+        { xU: 2, yU: 0 },
+      ],
+      [
+        { xU: 2, yU: 0 },
+        { xU: 4, yU: 0 },
+        { xU: 4, yU: 4 },
+      ],
+    ],
+  },
+  {
+    crossing: { xU: 4, yU: 2 },
+    start: { xU: 2, yU: 2 },
+    end: { xU: 6, yU: 2 },
+    expected: [
+      [
+        { xU: 0, yU: 0 },
+        { xU: 4, yU: 0 },
+        { xU: 4, yU: 2 },
+      ],
+      [
+        { xU: 4, yU: 2 },
+        { xU: 4, yU: 4 },
+      ],
+    ],
+  },
+])(
+  'splits both sides of an L at $crossing but keeps an insulated bridge continuous',
+  ({ start, end, expected }) => {
+    const project = buildProject({
+      wires: [
+        {
+          id: 'w1',
+          start: { kind: 'free', at: { xU: 0, yU: 0 } },
+          end: { kind: 'free', at: { xU: 4, yU: 4 } },
+          bends: [],
+        },
+        { id: 'w2', start: { kind: 'free', at: start }, end: { kind: 'free', at: end }, bends: [] },
+      ],
+    });
+    expect(
+      getWireSections(project)
+        .filter((section) => section.wireId === 'w1')
+        .map((section) => section.path),
+    ).toEqual(expected);
+    expect(getNets(project).map((net) => net.wireIds)).toEqual([['w1', 'w2']]);
+    const insulated = {
+      ...project,
+      insulatedCrossings: [{ wireIds: ['w1', 'w2'] as const, ordinal: 0 }],
+    };
+    expect(
+      getWireSections(insulated)
+        .filter((section) => section.wireId === 'w1')
+        .map((section) => section.path),
+    ).toEqual([
+      [
+        { xU: 0, yU: 0 },
+        { xU: 4, yU: 0 },
+        { xU: 4, yU: 4 },
+      ],
+    ]);
+    expect(getNets(insulated).map((net) => net.wireIds)).toEqual([['w1'], ['w2']]);
+  },
+);
