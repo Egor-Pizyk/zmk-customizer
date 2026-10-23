@@ -17,7 +17,7 @@
 ## Verification and completion
 
 - [x] T007 Run staged npm run check:changed and diagnostic sensitivity test as applicable; record exact tree/logs/results in verification.md.
-- [x] T008 Review with ui-ux-pro-max after implementation; fix findings and record rendered evidence in verification.md.
+- [x] T008 Review with UI/UX guidance after implementation; fix findings and record rendered evidence in verification.md.
 - [x] T009 Reconcile docs/roadmap.md, specs/README.md and task status; prepare one draft PR under docs/guidelines/git-flow.md (delivery evidence in the PR).
 - [ ] T010 Perform required manual keyboard/screen-reader/OS acceptance from docs/testing.md; remains open until actual evidence is supplied (draft PR meanwhile).
 

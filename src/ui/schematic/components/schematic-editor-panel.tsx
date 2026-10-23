@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import type { ReactNode, RefObject } from 'react';
+import type { CSSProperties, ReactNode, RefObject } from 'react';
 import { Button } from '@ui/components/components';
+import { usePreferences } from '@ui/preferences';
+import { EditorResizeHandle } from './editor-resize-handle';
 import { REVEAL_ISSUE_EVENT } from '@ui/issues';
 
 type SchematicEditorPanelProps = {
@@ -9,6 +11,49 @@ type SchematicEditorPanelProps = {
 };
 
 export function SchematicEditorPanel({ children, onDismissPreview }: SchematicEditorPanelProps) {
+  const resize = useEditorWidth();
+  const mode = useEditorMode(onDismissPreview);
+  return (
+    <section
+      aria-label="Schematic editors"
+      style={resize.style}
+      className={mode.mode === 'open' ? 'schematic-editor-pane' : 'shrink-0'}
+    >
+      {mode.mode === 'open' ? <EditorResizeHandle {...resize.handlers} /> : undefined}
+      <EditorHeader {...mode} />
+      <div
+        id="schematic-editor-content"
+        className="min-h-0 overflow-auto xl:mr-6"
+        hidden={mode.mode !== 'open'}
+      >
+        {children}
+      </div>
+    </section>
+  );
+}
+
+function useEditorWidth() {
+  const { preferences, changePreferences } = usePreferences();
+  const [draftWidthPx, setDraftWidthPx] = useState<number | undefined>();
+  const style: CSSProperties & { readonly '--schematic-editor-width': string } = {
+    '--schematic-editor-width': `${draftWidthPx ?? preferences.schematicEditorWidthPx}px`,
+  };
+  return {
+    style,
+    handlers: {
+      onDraft: setDraftWidthPx,
+      onCancel: () => {
+        setDraftWidthPx(undefined);
+      },
+      onCommit: (widthPx: number) => {
+        setDraftWidthPx(undefined);
+        changePreferences({ schematicEditorWidthPx: widthPx });
+      },
+    },
+  };
+}
+
+function useEditorMode(onDismissPreview: () => void) {
   const [mode, setMode] = useState<'open' | 'collapsed' | 'closed'>('open');
   const opener = useRef<HTMLButtonElement>(null);
   useEffect(() => {
@@ -34,17 +79,7 @@ export function SchematicEditorPanel({ children, onDismissPreview }: SchematicEd
       opener.current?.focus();
     });
   }
-  return (
-    <section
-      aria-label="Schematic editors"
-      className={mode === 'open' ? 'schematic-editor-pane' : 'shrink-0'}
-    >
-      <EditorHeader mode={mode} opener={opener} onExpand={handleExpand} onClose={handleClose} />
-      <div id="schematic-editor-content" className="min-h-0 overflow-auto" hidden={mode !== 'open'}>
-        {children}
-      </div>
-    </section>
-  );
+  return { mode, opener, onExpand: handleExpand, onClose: handleClose };
 }
 
 function EditorHeader({
@@ -64,7 +99,7 @@ function EditorHeader({
     closed: 'Open editors',
   } as const;
   return (
-    <div className="flex flex-wrap items-center gap-2 border-b border-border p-2">
+    <div className="flex flex-wrap items-center gap-2 border-b border-border p-2 xl:mr-6">
       <h2 className="font-semibold">Editors</h2>
       <Button
         ref={opener}

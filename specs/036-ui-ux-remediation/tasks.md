@@ -35,3 +35,10 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 - [x] T001 [FR-013] Reproduce automatic-wiring unibody→split→unibody without closing Wiring; fix owning routing/preview layer with regression coverage.
 - [x] T002 [FR-013] Verify immediate canvas/table agreement, Cancel/Apply, history/reload and rendered UI/UX review.
 - [x] T003 [FR-013] Changed checks, journal, one item-3 commit and existing PR update; stop before panel resizing.
+
+## Items 4–5
+
+- [x] P001 [FR-014–016] Specify limits/persistence; storage regressions first, implement additive preference and live pointer/keyboard resize with responsive layout.
+- [ ] P002 [FR-014–016] Browser drag/limits/cancel/reload/keyboard/viewport persistence and rendered light/dark review; sensitivity check, changed checks, journal and item-4 commit.
+- [ ] P003 [FR-017] Remove global Collapse/Close modes/buttons and obsolete reveal listener; preserve individual sections and repair focus; update integration/browser checks.
+- [ ] P004 [FR-017] Changed checks, final rendered review, journal and item-5 commit; update existing PR and deliver manual acceptance steps.

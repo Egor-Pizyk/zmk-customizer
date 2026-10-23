@@ -10,6 +10,8 @@
   },
   "ignorePatterns": [
     "package-lock.json",
+    ".changed-files.json",
+    ".tooling-tests.json",
     "**/*.md",
     ".claude/**",
     ".agents/**",

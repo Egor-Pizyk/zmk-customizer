@@ -37,6 +37,7 @@ export type Preferences = {
   readonly isAutoAdvanceEnabled: boolean;
   /** Bindings Action panel width in px; clamped to the resize limits, missing → default. */
   readonly actionPanelWidthPx: number;
+  readonly schematicEditorWidthPx: number;
   /** Bindings: position of the open layer (spec 007 R6); clamped to the project's layers in render. */
   readonly bindingsLayerIndex: number;
   readonly viewByWorkspace: Readonly<Record<CanvasWorkspaceId, Viewport>>;
@@ -67,6 +68,7 @@ export const DEFAULT_PREFERENCES: Preferences = {
   isBindingsTableOpen: false,
   isAutoAdvanceEnabled: true,
   actionPanelWidthPx: 448,
+  schematicEditorWidthPx: 448,
   bindingsLayerIndex: 0,
   viewByWorkspace: { schematic: DEFAULT_VIEWPORT, bindings: DEFAULT_VIEWPORT },
 };
@@ -99,6 +101,11 @@ const preferencesSchema = z.object({
   isBindingsTableOpen: z.boolean().catch(DEFAULT_PREFERENCES.isBindingsTableOpen),
   isAutoAdvanceEnabled: z.boolean().catch(DEFAULT_PREFERENCES.isAutoAdvanceEnabled),
   actionPanelWidthPx: z.number().min(240).max(640).catch(DEFAULT_PREFERENCES.actionPanelWidthPx),
+  schematicEditorWidthPx: z
+    .number()
+    .min(320)
+    .max(640)
+    .catch(DEFAULT_PREFERENCES.schematicEditorWidthPx),
   bindingsLayerIndex: z.int().min(0).catch(DEFAULT_PREFERENCES.bindingsLayerIndex),
   viewByWorkspace: z
     .object({

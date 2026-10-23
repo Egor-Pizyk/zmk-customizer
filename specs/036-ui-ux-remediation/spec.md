@@ -6,7 +6,7 @@
 
 Resolve the 21 original roadmap reports and two additional 035 observations sequentially. User delivery contract: one original numbered item per commit, stop after each with manual acceptance instructions, and wait for approval before the next. Items 1–3 are authorized for implementation; item 2 thresholds approved 2026-10-23. Research basis: PR #23 / 035-R01; audit remains a separate draft PR. Starting a second active branch is explicitly authorized by the user's request to implement itemwise; branch starts from current origin/main, not an audit stack.
 
-Preserve existing projects and electrical wiring, stable IDs, per-layer actions, one-step Undo/Redo, deterministic v0.3.0 exports, static/offline operation and keyboard alternatives. No new dependency or visual identity. Items 4–23 remain roadmap/research scope, not implicit authorization in this plan.
+Preserve existing projects and electrical wiring, stable IDs, per-layer actions, one-step Undo/Redo, deterministic v0.3.0 exports, static/offline operation and keyboard alternatives. No new dependency or visual identity. Items 4–5 are now explicitly authorized together; items 6–23 remain roadmap/research scope.
 
 ## User scenarios and acceptance
 
@@ -71,3 +71,12 @@ Encoder retains its identity/actions. Optional schematic mode adds orientation a
 ## Assumptions and open questions
 
 User approved optional button after being offered A/COM/B plus two switch contacts and symbolic layout. New encoders start with push enabled; it can be disabled explicitly. Existing encoders remain direct mode and buttonless. COM is electrical GND, not a GPIO. Button contacts are ordinary kscan contacts; no physical manufacturer pinout is asserted. All later original items remain unimplemented until separately approved.
+
+## US4 — Resizable Schematic editors (items 4–5)
+
+- **FR-014**: The existing Schematic Editors block docks to the left of the canvas at widths ≥1280px. Default width is 448 CSS px, minimum 320px, maximum 640px, additionally capped to 45% of the editing area so the canvas retains at least 55%. Drag its right edge with the primary pointer; show a live width preview, save once on release. Escape, pointer cancellation and lost capture restore the saved size. Resizing changes no project data, wiring preview or Undo/Redo history.
+- **FR-015**: Save the preferred width in app preferences, preserving it across reload/workspace switches. Missing or invalid older preferences use 448px without resetting other fields. A smaller viewport temporarily constrains the display without overwriting the preferred width. Below 1280px retain the full-width lower panel, its existing ≤45% height budget and ≥50% canvas height; hide the horizontal resize control.
+- **FR-016**: The resize control has an accessible name, visible focus and keyboard alternatives: Right/Left grow/shrink by 16px (64px with Shift), Home/End choose available limits, double-click resets to default. Controls and labels wrap, tables scroll within the panel, no horizontal page overflow, both themes and 200% zoom remain usable. No new motion or dependencies.
+- **FR-017**: Remove editor-wide Collapse/Close and their reopen controls after item 4. Keep the Editors heading and existing individual section summaries. Switching sections retains preview cancellation and issue repair focus. Editors remain available in empty and populated projects without an extra opener.
+
+Acceptance: drag 448→smaller/larger and verify limits plus canvas budget; cancel a drag; use all resize keys; reload and switch workspaces; shrink then widen viewport and recover preferred size; inspect long fields/tables in both themes and 390/768/1024/1280/1440px; verify individual summaries and issue navigation, unchanged saved project/history, and absent editor-wide buttons.

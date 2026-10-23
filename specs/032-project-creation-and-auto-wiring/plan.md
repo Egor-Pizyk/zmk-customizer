@@ -8,7 +8,7 @@ Reuse creation and wiring previews; allocate GPIOs in pure domain only for expli
 
 ## Relevant context
 
-`docs/{product,principles,workflow,agent-rules,architecture,folder-structure,tooling,domain-model,testing,commands}.md`; `docs/guidelines/git-flow.md`; `docs/guidelines/code-quality/{typescript,control-flow,observability,naming/functions,naming/variables}.md`; `docs/guidelines/frontend/{react,accessibility,admin-ui,tailwind}.md`; `docs/zmk/{README,boards,kscan}.md`; `specs/013-matrix-wiring-editor/contracts/wiring.md`; `specs/031-keyboard-presets/spec.md`; `.agents/skills/ui-ux-pro-max/SKILL.md`.
+`docs/{product,principles,workflow,agent-rules,architecture,folder-structure,tooling,domain-model,testing,commands}.md`; `docs/guidelines/git-flow.md`; `docs/guidelines/code-quality/{typescript,control-flow,observability,naming/functions,naming/variables}.md`; `docs/guidelines/frontend/{react,accessibility,admin-ui,tailwind}.md`; `docs/zmk/{README,boards,kscan}.md`; `specs/013-matrix-wiring-editor/contracts/wiring.md`; `specs/031-keyboard-presets/spec.md`; `docs/workflow.md`.
 
 ## Technical context
 
