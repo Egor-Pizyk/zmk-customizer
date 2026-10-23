@@ -1,7 +1,7 @@
 import { IconButton } from '@ui/components/components';
-import { MagnetIcon, MinusIcon, PlusIcon, ResetViewIcon } from '@ui/components/icons';
+import { MagnetIcon, MinusIcon, PlusIcon } from '@ui/components/icons';
 import { usePreferences } from '@ui/preferences';
-import { ZOOM_STEP, resetViewport, zoomAt, surfaceCenter } from '@ui/canvas/logic';
+import { ZOOM_STEP, zoomAt, surfaceCenter } from '@ui/canvas/logic';
 
 import { CenterKeysButton } from './center-keys-button';
 import type { CenterKeysButtonProps } from './center-keys-button';
@@ -28,10 +28,6 @@ export function SurfaceControls({
     handleViewportCommit(zoomAt(viewport, 1 / ZOOM_STEP, surfaceCenter(svgRef.current)));
   }
 
-  function handleResetClick() {
-    handleViewportCommit(resetViewport());
-  }
-
   return (
     <div className="absolute top-7 right-2 flex gap-1 rounded-md border border-border bg-surface-raised p-1">
       <IconButton
@@ -47,7 +43,6 @@ export function SurfaceControls({
         svgRef={svgRef}
         viewport={viewport}
       />
-      <IconButton icon={<ResetViewIcon />} label="Reset view" onClick={handleResetClick} />
     </div>
   );
 }

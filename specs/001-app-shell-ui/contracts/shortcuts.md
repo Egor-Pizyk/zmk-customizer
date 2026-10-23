@@ -28,7 +28,6 @@ Work only while a canvas (`<svg role="application" data-canvas-workspace>`) has 
 | `toggle-grid` | `g` | Toggle grid visibility |
 | `zoom-in` | `=`, `+` | Zoom in, anchored at the canvas center |
 | `zoom-out` | `-` | Zoom out, anchored at the canvas center |
-| `reset-view` | `0` | Reset the canvas view |
 | `pan-left`, `pan-right`, `pan-up`, `pan-down` | Arrow keys | Pan 1 grid step (WCAG 2.1.1: keyboard pan) |
 | `pan-left-1u`, `pan-right-1u`, `pan-up-1u`, `pan-down-1u` | Shift+Arrow keys | Pan 1u |
 | `open-help` | `?` | Open the shortcut help dialog |
@@ -58,7 +57,7 @@ Canvas scope, only while the Schematic canvas (or an element in it) has focus. M
 | `v` / `k` / `e` / `w` | `select-tool` / `add-key-tool` / `add-encoder-tool` / `wire-tool` | Select / Key / Encoder / Wire tool |
 | Enter | `place-key` | Key tool: add a key at the next free spot |
 | Delete, Backspace | `delete-selection` | Delete the selected key or wire |
-| Escape | `cancel` | Cancel the wire being drawn, else clear the selection |
+| Escape | `cancel` | Cancel the active draft first, else clear selection and activate Select |
 
 Key scope (`scope: 'key'`), matched by `matchKeyShortcut` in the focused key's own `onKeyDown`, which stops propagation so canvas pan does not also run:
 

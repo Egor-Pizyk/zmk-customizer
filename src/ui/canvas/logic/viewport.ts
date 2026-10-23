@@ -51,10 +51,6 @@ export function zoomAt(viewport: Viewport, factor: number, anchor: ScreenPoint):
   };
 }
 
-export function resetViewport(): Viewport {
-  return { zoom: 1, panXPx: 0, panYPx: 0 };
-}
-
 export function centerViewportAt(
   viewport: Viewport,
   input: { readonly world: WorldPoint; readonly screen: ScreenPoint },

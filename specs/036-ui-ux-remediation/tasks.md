@@ -71,3 +71,12 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 - [x] Q002 [FR-024–026] Shared mixed selection, intersecting/Shift marquee, pointer/keyboard/list parity, rendering/counts and atomic deletion feedback.
 - [x] Q003 [FR-024–026] Real wire/mixed/Shift/cancel/list/delete/history/reload browser scenarios, sensitivity and rendered review.
 - [x] Q004 [FR-024–026] Changed checks, journal/manual acceptance status, one item-11 commit and existing draft PR update; stop before item 12.
+
+
+## Items 12–15 (jointly authorized)
+
+- [ ] U012 [FR-027] Remove Reset view UI/shortcut/helper/icon and reconcile 001 contracts/tests; real browser viewport/history preservation and rendered review; separate item-12 commit.
+- [ ] U013 [FR-028] Gear SVG; keyboard Settings/focus/theme review; separate item-13 commit.
+- [ ] U014 [FR-029] Record exact user-selected Wiring action, remove redundant entry point, preserve retained lifecycle and compatibility; separate item-14 commit.
+- [ ] U015 [FR-030] Reproduce/audit Key Escape, repair owning interaction only if failing; draft/dialog precedence and real browser Select/no-placement/history assertions; separate item-15 commit.
+- [ ] U016 [FR-027–030] Changed checks, final rendered review/evidence, update existing PR and deliver combined manual checklist; stop before item 16.

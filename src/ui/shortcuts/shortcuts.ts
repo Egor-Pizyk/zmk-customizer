@@ -39,7 +39,6 @@ export const SHORTCUTS = [
   { scope: 'canvas', id: 'toggle-grid', keys: ['g'], label: 'Show or hide the grid' },
   { scope: 'canvas', id: 'zoom-in', keys: ['=', '+'], label: 'Zoom in' },
   { scope: 'canvas', id: 'zoom-out', keys: ['-'], label: 'Zoom out' },
-  { scope: 'canvas', id: 'reset-view', keys: ['0'], label: 'Reset view' },
   {
     scope: 'canvas',
     id: 'pan-left',

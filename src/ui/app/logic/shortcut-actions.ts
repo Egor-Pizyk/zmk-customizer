@@ -1,11 +1,5 @@
 import type { CanvasWorkspaceId, Preferences, Viewport, WorkspaceId } from '@storage/preferences';
-import {
-  SHARED_VIEW_WORKSPACE_ID,
-  ZOOM_STEP,
-  panViewportByU,
-  resetViewport,
-  zoomAt,
-} from '@ui/canvas/logic';
+import { SHARED_VIEW_WORKSPACE_ID, ZOOM_STEP, panViewportByU, zoomAt } from '@ui/canvas/logic';
 import type { PanDelta, ScreenPoint } from '@ui/canvas/logic';
 import type { ShortcutId } from '@ui/shortcuts';
 
@@ -41,7 +35,6 @@ function pan(dxU: number, dyU: number, isGridStep: boolean): ViewChange {
 const VIEW_CHANGE_BY_SHORTCUT: Partial<Record<ShortcutId, ViewChange>> = {
   'zoom-in': (viewport, { surfaceCenter }) => zoomAt(viewport, ZOOM_STEP, surfaceCenter),
   'zoom-out': (viewport, { surfaceCenter }) => zoomAt(viewport, 1 / ZOOM_STEP, surfaceCenter),
-  'reset-view': () => resetViewport(),
   'pan-left': pan(-1, 0, true),
   'pan-right': pan(1, 0, true),
   'pan-up': pan(0, -1, true),

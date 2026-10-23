@@ -22,7 +22,6 @@ export {
   ZOOM_STEP,
   WHEEL_ZOOM_STEP,
   zoomAt,
-  resetViewport,
   centerViewportAt,
   panViewportByU,
   SHARED_VIEW_WORKSPACE_ID,

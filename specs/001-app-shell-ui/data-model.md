@@ -51,7 +51,7 @@ Constant `PX_PER_U = 48` at zoom 1. World point (u) → screen px: `x * PX_PER_U
 Operations (pure, tested):
 
 - `zoomAt(viewport, factor, anchorPx)` keeps the world point under the anchor fixed and clamps zoom.
-- `resetViewport()` returns `DEFAULT_VIEWPORT`.
+- 036 FR-027 removes the Reset view action/helper; defaults still initialize missing preferences.
 - `screenToWorld(pointPx, viewport)` returns a point in u.
 - `displayGridStep(gridSizeU, zoom)` doubles the step until `step * PX_PER_U * zoom ≥ 6`. Render only.
 

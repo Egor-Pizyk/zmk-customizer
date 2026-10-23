@@ -11,7 +11,6 @@ export { HelpIcon } from './help-icon';
 export { MagnetIcon } from './magnet-icon';
 export { MinusIcon } from './minus-icon';
 export { PlusIcon } from './plus-icon';
-export { ResetViewIcon } from './reset-view-icon';
 export { SchematicIcon } from './schematic-icon';
 export { SelectIcon } from './select-icon';
 export { SettingsIcon } from './settings-icon';

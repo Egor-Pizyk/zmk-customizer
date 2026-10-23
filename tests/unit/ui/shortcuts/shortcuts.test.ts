@@ -62,7 +62,7 @@ describe('matchShortcut: canvas single keys', () => {
     ['=', false, 'zoom-in'],
     ['+', true, 'zoom-in'],
     ['-', false, 'zoom-out'],
-    ['0', false, 'reset-view'],
+    ['0', false, undefined],
     ['?', true, 'open-help'],
     ['ArrowLeft', false, 'pan-left'],
     ['ArrowLeft', true, 'pan-left-1u'],
