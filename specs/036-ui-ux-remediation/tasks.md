@@ -77,6 +77,6 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 
 - [x] U012 [FR-027] Remove Reset view UI/shortcut/helper/icon and reconcile 001 contracts/tests; real browser viewport/history preservation and rendered review; separate item-12 commit.
 - [x] U013 [FR-028] Gear SVG; keyboard Settings/focus/theme review; separate item-13 commit.
-- [ ] U014 [FR-029] Record exact user-selected Wiring action, remove redundant entry point, preserve retained lifecycle and compatibility; separate item-14 commit.
-- [ ] U015 [FR-030] Reproduce/audit Key Escape, repair owning interaction only if failing; draft/dialog precedence and real browser Select/no-placement/history assertions; separate item-15 commit.
-- [ ] U016 [FR-027–030] Changed checks, final rendered review/evidence, update existing PR and deliver combined manual checklist; stop before item 16.
+- [x] U014 [FR-029] Record exact user-selected Wiring action, remove redundant entry point, preserve retained lifecycle and compatibility; separate item-14 commit.
+- [x] U015 [FR-030] Reproduce/audit Key Escape, repair owning interaction only if failing; draft/dialog precedence and real browser Select/no-placement/history assertions; separate item-15 commit.
+- [x] U016 [FR-027–030] Changed checks, final rendered review/evidence, update existing PR and deliver combined manual checklist; stop before item 16.

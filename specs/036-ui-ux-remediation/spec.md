@@ -1,6 +1,6 @@
 # 036 — UI/UX remediation
 
-**Branch**: `feature/036-ui-ux-remediation`. **Date**: 2026-10-22. **Status**: Items 1–9 and 11 implemented; item 10 verified without production changes; item-11 manual acceptance remains open.
+**Branch**: `feature/036-ui-ux-remediation`. **Date**: 2026-10-22. **Status**: Items 1–15 implemented or regression-verified (10 and 15 required no production repair); combined item-12–15 manual acceptance remains open, plus E008 native checks.
 
 ## Goal and scope
 
