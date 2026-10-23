@@ -15,3 +15,5 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 - [x] E010 [FR-008] Deduplicate coincident corner handles across saved/derived points and wires; reproduce rendering regression, fix and verify separately.
 
 - [x] E011 [FR-008] Remove redundant collinear handles, retain one handle on a straight wire and preserve actual turns; red/green rendering tests and browser regression checks.
+
+- [x] E012 [FR-008] Fix corner expansion without obsolete-waypoint loops; test adjacent-corner movement, both turn orientations, fixed anchors and browser Undo.

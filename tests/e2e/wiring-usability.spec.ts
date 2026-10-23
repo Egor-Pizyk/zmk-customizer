@@ -11,6 +11,7 @@ import {
   downloadZip,
 } from './helpers';
 import { getNets } from '@domain/wires/nets';
+import { getWirePath } from '@domain/wires/geometry';
 import { getKeyPinWires } from '@domain/wires';
 import { getWiringCells } from '@domain/wiring/matrix';
 import type { Locator } from '@playwright/test';
@@ -98,7 +99,18 @@ test('every right-angle wire corner stays visible and can be dragged', async ({ 
   await page.mouse.up();
 
   await expect(page.locator('[data-wire-bend]')).not.toHaveCount(0);
-  expect((await saved(page)).wires[0]?.bends).toHaveLength(1);
+  const moved = await saved(page);
+  const wire = moved.wires[0];
+  if (wire === undefined) {
+    throw new Error('Missing dragged wire');
+  }
+  expect(getWirePath(moved, wire)).toEqual([
+    { xU: 5, yU: 5 },
+    { xU: 5, yU: 6 },
+    { xU: 8, yU: 6 },
+    { xU: 8, yU: 7 },
+    { xU: 9, yU: 7 },
+  ]);
 });
 
 test('drawn intermediate connections survive a real endpoint move and section deletion @cross-browser', async ({
@@ -212,3 +224,46 @@ function pinsOnMiddle(project: Project) {
   return getNets(project).find((net) => net.pins.some((pin) => pin.keyId === 'k1' && pin.pin === 1))
     ?.pins;
 }
+
+test('dragging an upward-to-right corner expands adjacent sections without a loop', async ({
+  page,
+}) => {
+  await openProject(page, {
+    ...source,
+    wires: [
+      {
+        id: 'w1',
+        start: { kind: 'free', at: { xU: 5, yU: 9 } },
+        end: { kind: 'free', at: { xU: 11, yU: 5 } },
+        bends: [
+          { xU: 7, yU: 9 },
+          { xU: 7, yU: 7 },
+          { xU: 11, yU: 7 },
+        ],
+      },
+    ],
+  });
+  const start = await center(
+    page.locator('[data-wire-bend][data-bend-x-u="7"][data-bend-y-u="7"]'),
+  );
+  await drag(page, start, { x: start.x - 48, y: start.y - 48 });
+  const moved = await saved(page);
+  const wire = moved.wires[0];
+  expect(wire).toBeDefined();
+  if (wire === undefined) {
+    throw new Error('Missing dragged wire');
+  }
+  expect(getWirePath(moved, wire)).toEqual([
+    { xU: 5, yU: 9 },
+    { xU: 6, yU: 9 },
+    { xU: 6, yU: 6 },
+    { xU: 11, yU: 6 },
+    { xU: 11, yU: 5 },
+  ]);
+  await history(page, 'Undo').click();
+  expect((await saved(page)).wires[0]?.bends).toEqual([
+    { xU: 7, yU: 9 },
+    { xU: 7, yU: 7 },
+    { xU: 11, yU: 7 },
+  ]);
+});

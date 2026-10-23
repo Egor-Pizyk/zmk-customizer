@@ -5,3 +5,4 @@ export { setWireEndBoardPin } from './set-wire-end-board-pin';
 export { getWireBendsResourceError } from './get-wire-bends-resource-error';
 export { getWireBendsAfterInsertion } from './get-wire-bends-after-insertion';
 export { removeWireSections } from './remove-wire-sections';
+export { getWireBendsAfterCornerMove } from './get-wire-bends-after-corner-move';

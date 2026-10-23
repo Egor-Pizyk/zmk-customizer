@@ -19,3 +19,5 @@ Wire corner follow-up (FR-008): render one shared handle layer over complete der
 Coincident wire handles: derive a single coordinate-indexed list before rendering, deduplicating both repeated points within one wire and shared corners between wires. Keep the first wire owner deterministically; electrical connectivity and saved wire data are preserved.
 
 Straight-line handle follow-up: derive handles from actual path turns; omit saved collinear intermediary points. A wholly straight wire with saved bends retains its first saved point as one movable handle. Preserve actual corner handles, saved geometry, and coordinate deduplication.
+
+Corner dragging follow-up: a pure wire-editing query simplifies the source path, shifts neighboring internal corners along their existing axes and adds endpoint doglegs only where fixed terminals require them. Encode only vertical-to-horizontal corners as explicit bends because horizontal-to-vertical corners are derived by the existing router. Preserve anchors, contact attachment, cancellation, one-step history and the no-op click.

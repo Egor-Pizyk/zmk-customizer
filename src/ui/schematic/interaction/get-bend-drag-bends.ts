@@ -1,5 +1,6 @@
 import { getWirePath } from '@domain/wires/geometry';
 import {
+  getWireBendsAfterCornerMove,
   getWireBendsAfterInsertion,
   getWireBendsResourceError,
   setWireBends,
@@ -14,11 +15,19 @@ export function getBendDragBends(project: Project, drag: BendDrag): readonly Wir
   if (wire === undefined) {
     return [];
   }
+  const origin = drag.sourceBends[drag.bendIndex];
+  if (origin?.xU === drag.point.xU && origin.yU === drag.point.yU) {
+    return wire.bends;
+  }
   const withoutDraggedBend = drag.sourceBends.toSpliced(drag.bendIndex, 1);
   const pathWithoutDraggedBend = getWirePath(project, { ...wire, bends: withoutDraggedBend });
   return isPointOnPath(drag.point, pathWithoutDraggedBend, drag.collapseToleranceU)
     ? withoutDraggedBend
-    : drag.sourceBends.with(drag.bendIndex, drag.point);
+    : getWireBendsAfterCornerMove(project, {
+        wire: { ...wire, bends: drag.sourceBends },
+        bendIndex: drag.bendIndex,
+        point: drag.point,
+      });
 }
 
 export function insertBendAt(
