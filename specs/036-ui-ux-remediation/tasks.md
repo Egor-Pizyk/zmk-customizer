@@ -42,3 +42,8 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 - [x] P002 [FR-014–016] Browser drag/limits/cancel/reload/keyboard/viewport persistence and rendered light/dark review; sensitivity check, changed checks, journal and item-4 commit.
 - [x] P003 [FR-017] Remove global Collapse/Close modes/buttons and obsolete reveal listener; preserve individual sections and repair focus; update integration/browser checks.
 - [x] P004 [FR-017] Changed checks, final rendered review, journal and item-5 commit; update existing PR and deliver manual acceptance steps.
+
+## Item 6
+
+- [x] D001 [FR-018] Specify the shared matrix/diode link, reproduce duplicate destinations in the real browser, remove the duplicate and retain catalog/topology sources.
+- [x] D002 [FR-018] Verify mode/topology/link focus, unchanged project, light/dark desktop/narrow rendered review and changed checks; record evidence, one commit, update draft PR and stop.

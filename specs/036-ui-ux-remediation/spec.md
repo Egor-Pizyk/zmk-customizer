@@ -1,12 +1,12 @@
 # 036 — UI/UX remediation
 
-**Branch**: `feature/036-ui-ux-remediation`. **Date**: 2026-10-22. **Status**: Items 1–5 implemented; manual acceptance remains open; later items require user approval.
+**Branch**: `feature/036-ui-ux-remediation`. **Date**: 2026-10-22. **Status**: Items 1–6 implemented; manual acceptance remains open; later items require user approval.
 
 ## Goal and scope
 
-Resolve the 21 original roadmap reports and two additional 035 observations sequentially. User delivery contract: one original numbered item per commit, stop after each with manual acceptance instructions and wait for approval before the next unless the user explicitly authorizes consecutive items together. Items 1–5 are authorized for implementation; item 2 thresholds approved 2026-10-23. Research basis: PR #23 / 035-R01; audit remains a separate draft PR. Starting a second active branch is explicitly authorized by the user's request to implement itemwise; branch starts from current origin/main, not an audit stack.
+Resolve the 21 original roadmap reports and two additional 035 observations sequentially. User delivery contract: one original numbered item per commit, stop after each with manual acceptance instructions and wait for approval before the next unless the user explicitly authorizes consecutive items together. Items 1–6 are authorized for implementation; item 2 thresholds approved 2026-10-23. Research basis: PR #23 / 035-R01; audit remains a separate draft PR. Starting a second active branch is explicitly authorized by the user's request to implement itemwise; branch starts from current origin/main, not an audit stack.
 
-Preserve existing projects and electrical wiring, stable IDs, per-layer actions, one-step Undo/Redo, deterministic v0.3.0 exports, static/offline operation and keyboard alternatives. No new dependency or visual identity. Items 4–5 are now explicitly authorized together; items 6–23 remain roadmap/research scope.
+Preserve existing projects and electrical wiring, stable IDs, per-layer actions, one-step Undo/Redo, deterministic v0.3.0 exports, static/offline operation and keyboard alternatives. No new dependency or visual identity. Items 4–5 are now explicitly authorized together; item 6 is now separately authorized; items 7–23 remain roadmap/research scope.
 
 ## User scenarios and acceptance
 
@@ -80,3 +80,9 @@ User approved optional button after being offered A/COM/B plus two switch contac
 - **FR-017**: Remove editor-wide Collapse/Close and their reopen controls after item 4. Keep the Editors heading and existing individual section summaries. Switching sections retains preview cancellation and issue repair focus. Editors remain available in empty and populated projects without an extra opener.
 
 Acceptance: drag 448→smaller/larger and verify limits plus canvas budget; cancel a drag; use all resize keys; reload and switch workspaces; shrink then widen viewport and recover preferred size; inspect long fields/tables in both themes and 390/768/1024/1280/1440px; verify individual summaries and issue navigation, unchanged saved project/history, and absent editor-wide buttons.
+
+## US5 — Wiring documentation without duplicate destinations (item 6)
+
+- **FR-018**: Below the wiring options show exactly two distinct documentation destinations: the current scanning driver and the current keyboard topology, using existing pinned v0.3 catalog URLs. Matrix uses a single shared Matrix Driver link explaining both scanning and diode direction; its accessible name and hover title name both topics. Direct uses the Direct GPIO Driver link with no diode topic. Remove the redundant separate diode-direction link. Keep topology-specific documentation for unibody and split. Existing labeled options, inline explanations, icon style, focus, new-tab indication and rel behavior remain. Links fit/wrap in both themes at 390px and desktop without changing project/history, previews or exports.
+
+Acceptance: open Wiring for Matrix and see two links with distinct hrefs and an explicitly named shared scanning/diode source; change diode direction and retain the same two destinations; change Direct and see the direct-driver source without diode text; choose BLE split and see the split source. Keyboard focus reaches each retained link. No new loading/error/disabled states or motion. Screen-reader speech/native zoom remain manual E008.
