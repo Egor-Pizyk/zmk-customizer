@@ -29,3 +29,9 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 - [x] R002 [FR-012] Integrate shared pure rotation queries into key and encoder transient pointer gestures; preserve numeric editing and history.
 - [x] R003 [FR-012] Real key/encoder slow rotation, release/cancel/Undo/Redo and rendered UI/UX review; prove behavioral sensitivity.
 - [x] R004 [FR-012] Changed snapshot checks, journal, one item-2 commit and existing draft PR update; stop before topology work. Manual E008 stays open.
+
+## Item 3
+
+- [x] T001 [FR-013] Reproduce automatic-wiring unibody→split→unibody without closing Wiring; fix owning routing/preview layer with regression coverage.
+- [x] T002 [FR-013] Verify immediate canvas/table agreement, Cancel/Apply, history/reload and rendered UI/UX review.
+- [x] T003 [FR-013] Changed checks, journal, one item-3 commit and existing PR update; stop before panel resizing.

@@ -1,12 +1,12 @@
 # 036 — UI/UX remediation
 
-**Branch**: `feature/036-ui-ux-remediation`. **Date**: 2026-10-22. **Status**: Items 1–2 implemented; manual acceptance remains open; later items require user approval.
+**Branch**: `feature/036-ui-ux-remediation`. **Date**: 2026-10-22. **Status**: Items 1–3 implemented; manual acceptance remains open; later items require user approval.
 
 ## Goal and scope
 
-Resolve the 21 original roadmap reports and two additional 035 observations sequentially. User delivery contract: one original numbered item per commit, stop after each with manual acceptance instructions, and wait for approval before the next. Items 1 and 2 are authorized for implementation; item 2 thresholds approved 2026-10-23. Research basis: PR #23 / 035-R01; audit remains a separate draft PR. Starting a second active branch is explicitly authorized by the user's request to implement itemwise; branch starts from current origin/main, not an audit stack.
+Resolve the 21 original roadmap reports and two additional 035 observations sequentially. User delivery contract: one original numbered item per commit, stop after each with manual acceptance instructions, and wait for approval before the next. Items 1–3 are authorized for implementation; item 2 thresholds approved 2026-10-23. Research basis: PR #23 / 035-R01; audit remains a separate draft PR. Starting a second active branch is explicitly authorized by the user's request to implement itemwise; branch starts from current origin/main, not an audit stack.
 
-Preserve existing projects and electrical wiring, stable IDs, per-layer actions, one-step Undo/Redo, deterministic v0.3.0 exports, static/offline operation and keyboard alternatives. No new dependency or visual identity. Items 3–23 remain roadmap/research scope, not implicit authorization in this plan.
+Preserve existing projects and electrical wiring, stable IDs, per-layer actions, one-step Undo/Redo, deterministic v0.3.0 exports, static/offline operation and keyboard alternatives. No new dependency or visual identity. Items 4–23 remain roadmap/research scope, not implicit authorization in this plan.
 
 ## User scenarios and acceptance
 
@@ -28,6 +28,12 @@ Preserve existing projects and electrical wiring, stable IDs, per-layer actions,
 3. Fast movement does not acquire a target. Snap off disables magnetic capture/hold immediately. Shift takes priority and rounds to 15° for keys and encoders independently of Snap; releasing Shift resets magnetic capture. Nonpositive sample time never acquires a target.
 4. Pointer release commits the displayed angle once; Escape/pointercancel discards it. No movement preserves history. Numeric controls remain exact, unchanged keyboard alternatives. No new animation, layout or theme tokens; existing selection frame and live geometry preview provide feedback in both themes. Shortcut help explains slow Snap and Shift rotation.
 
+### US3 — Round-trip automatic wiring topology
+
+1. With automatic matrix/direct wiring and Wiring open, choose split: the table and canvas immediately show separate left/right circuits in an unsaved preview. Choose unibody again: both immediately show a unified circuit using all keys and the appropriate unibody rows/columns/output placement. No panel collapse, tool change or unrelated action is needed. A topology-only round trip restores the pre-switch project/preview exactly, including GPIO assignments of axes temporarily absent in split mode; it introduces no history entry. Other explicit wiring edits establish a new starting point and are not silently rolled back.
+2. Menu changes remain preview-only. Cancel/Escape restore the saved circuit exactly; Apply commits the displayed topology once. Applied split → unibody also recomputes immediately; Undo/Redo and reload preserve the committed circuit. Geometry, bindings and unrelated manual circuits remain unchanged; existing capacity/controller restrictions remain explicit refusals.
+3. Retain labeled native topology selection, preview summary and Apply/Cancel, focus, themes, narrow-panel behavior and reduced motion. This is a lifecycle/routing repair, not a change to automatic GPIO allocation or the later Rebuild/Complete preview reports.
+
 ## Requirements
 
 - **FR-001**: Encoder placement tool and numeric alternative, stable IDs, center-preserving move/rotation, one-step gesture history and cancellation (US1.1–2).
@@ -45,6 +51,8 @@ Preserve existing projects and electrical wiring, stable IDs, per-layer actions,
 - **FR-011**: Selecting a wire by its bend keeps all of that wire’s visible sections accented and thicker during preview and after release, including derived bends. Other wires remain unselected; Escape clears highlighting. Section-only selection retains its existing scope and stale-project guard. Gesture persistence, cancellation and one-step Undo/Redo remain unchanged.
 
 - **FR-012**: Apply the approved slow magnetic rotation contract US2.1–4 equally to keys and encoders, preserving center, connections, preview/cancel, one-step history and existing exact numeric alternatives.
+
+- **FR-013**: Restore immediate, coherent topology round trips under US3 without dismissing Wiring, preserving existing preview/Apply/Cancel and history contracts (033 FR-003/013).
 
 ## Edge cases
 
