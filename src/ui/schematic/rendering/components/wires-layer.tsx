@@ -11,12 +11,10 @@ type WiresLayerProps = Pick<
 
 export function WiresLayer({ project, view, paths, selection, crossings }: WiresLayerProps) {
   const sections = getWireSections(project);
-  const selectedWireIds = getSelectedWireIds({ project, sections, selection });
   return (
     <>
       {sections.map((section) => (
         <WireShape
-          bends={[]}
           isSelected={
             selection?.kind === 'sections' &&
             selection.base === project &&
@@ -30,11 +28,7 @@ export function WiresLayer({ project, view, paths, selection, crossings }: Wires
           sectionId={section.id}
         />
       ))}
-      {project.wires
-        .filter((wire) => selectedWireIds.has(wire.id))
-        .map((wire) => (
-          <BendHandles key={wire.id} wireId={wire.id} bends={wire.bends} pxPerU={view.pxPerU} />
-        ))}
+      <AllBendHandles project={project} paths={paths} pxPerU={view.pxPerU} />
       {crossings
         .filter((crossing) => crossing.isInsulated)
         .map((crossing) => (
@@ -49,22 +43,18 @@ export function WiresLayer({ project, view, paths, selection, crossings }: Wires
   );
 }
 
-function getSelectedWireIds({
+function AllBendHandles({
   project,
-  sections,
-  selection,
-}: Pick<WiresLayerProps, 'project' | 'selection'> & {
-  readonly sections: ReturnType<typeof getWireSections>;
-}) {
-  if (selection?.kind === 'wire') {
-    return new Set([selection.wireId]);
-  }
-  if (selection?.kind !== 'sections' || selection.base !== project) {
-    return new Set<string>();
-  }
-  return new Set(
-    sections
-      .filter((section) => selection.sectionIds.includes(section.id))
-      .map((section) => section.wireId),
-  );
+  paths,
+  pxPerU,
+}: Pick<WiresLayerProps, 'project' | 'paths'> & { readonly pxPerU: number }) {
+  return project.wires.map((wire) => (
+    <BendHandles
+      key={wire.id}
+      wireId={wire.id}
+      path={paths.get(wire.id) ?? []}
+      bends={wire.bends}
+      pxPerU={pxPerU}
+    />
+  ));
 }

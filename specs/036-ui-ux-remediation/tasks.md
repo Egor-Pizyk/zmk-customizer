@@ -8,5 +8,6 @@
 - [x] E006 [FR-001–006] Real browser lifecycle/download/geometry/connection cases, sensitive behavioral regression and rendered pre/post skill review; record verification.md.
 - [ ] E007 Verify changed checks, review diff, make one item-1 commit, deliver manual checklist and stop. No subsequent item until user approval.
 - [ ] E008 User manual keyboard/speech/native zoom and physical wiring review; record supplied results only.
+- [x] E009 [FR-008] Show and drag handles for every saved or derived right-angle wire corner; verify the rendered and persisted result, commit separately, and stop for manual acceptance.
 
 Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentation groups may run as parallel agent work under the implementation skill; shared types and nets have one owner. E008 is manual, not inferred from automated tests. Traceability is this task mapping with exact checks in verification.md.

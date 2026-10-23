@@ -69,6 +69,7 @@ it('explains a byte-budget bend drag refusal without dispatching a history chang
       kind: 'bend',
       wireId: 'w1',
       bendIndex: 0,
+      sourceBends: [{ xU: 1, yU: 1 }],
       point: { xU: 123_456_789, yU: 1 },
       collapseToleranceU: 0.125,
     },

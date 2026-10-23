@@ -2,12 +2,12 @@ import { startEncoderDrag, moveEncoderDrag, endEncoderDrag } from './pointer-enc
 import { isKeyPositionFree } from '@domain/geometry';
 import { getSelectedKeyIds } from './get-selected-key-ids';
 import { moveKeys } from '@domain/keys';
-import { setWireBends, getWireBendsResourceError } from '@domain/wires/editing';
+import { getWireBendsResourceError, setWireBends } from '@domain/wires/editing';
 import type { Key, WirePoint } from '@domain';
 import { isKeyCellInMarquee } from '@ui/canvas/logic';
 import type { PointerState, SelectionPress } from './pointer-types';
 import { snapPoint } from './snap-point';
-import { getBendDragBends, insertBendAt } from './get-bend-drag-bends';
+import { getBendDragBends, insertBendAt, startBendDrag } from './get-bend-drag-bends';
 
 type Press = SelectionPress;
 
@@ -249,21 +249,6 @@ function selectSection(
     ? previous.filter((id) => id !== input.sectionId)
     : [...previous, input.sectionId];
   state.onSelectionChange({ kind: 'sections', base: state.project, sectionIds });
-}
-
-function startBendDrag(state: PointerState, { hit, world, event }: Press) {
-  if (hit.kind !== 'bend') {
-    return;
-  }
-  event.currentTarget.setPointerCapture(event.pointerId);
-  state.onSelectionChange({ kind: 'wire', wireId: hit.wireId });
-  state.onDragChange({
-    kind: 'bend',
-    wireId: hit.wireId,
-    bendIndex: hit.bendIndex,
-    point: world,
-    collapseToleranceU: (state.snapGridU ?? 2e-6) / 2,
-  });
 }
 
 function commitKeyMove(state: PointerState, moves: Parameters<typeof moveKeys>[1]['moves']) {

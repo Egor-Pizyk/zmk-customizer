@@ -19,6 +19,7 @@ Preserve existing projects and electrical wiring, stable IDs, per-layer actions,
 5. Save/Open/reload preserve geometry, associations and electrical contacts; old v12 and earlier files migrate without adding a button or changing existing A/B GPIOs. Invalid/dangling/duplicate ownership imports are rejected without replacing the current project.
 6. Labeled editor controls, symbolic contact descriptions, table wire creation and keyboard access remain available in light/dark, at existing desktop and 033 narrow sizes. No new effects/animation; reduced motion is unchanged. Deleting returns focus to Add encoder. Existing Bindings key chooser edits the push key; rotary actions remain separate.
 7. The part is visually one encoder in Schematic and Bindings. A/COM/B and optional SW1/SW2 use the existing connected/unconnected pin language at their wire attachment points. The linked push key does not render a second keycap or expose keycap resizing. Selecting a key or encoder immediately reveals the same corner rotation affordances; numeric rotation remains the non-drag alternative.
+8. Every visible 90-degree wire corner shows a square drag handle, including corners derived automatically between endpoints. Dragging a derived corner creates the required saved bend and commits the gesture once.
 
 ## Requirements
 
@@ -29,6 +30,7 @@ Preserve existing projects and electrical wiring, stable IDs, per-layer actions,
 - **FR-005**: Keyboard/field/wire-list alternatives, labels/feedback, themes/responsive review and retained focus/rotary-action semantics (US1.6).
 - **FR-006**: Verified pinned output uses wire-derived GPIOs for schematic encoders and ordinary kscan for push keys, with independent golden/export/build evidence. Zero-encoder output and legacy assignments remain unchanged.
 - **FR-007**: Render an integrated five-contact encoder when push is enabled, distinguish rotary and switch contacts in both workspaces, and show selected-part corner rotation controls without hover discovery (US1.7).
+- **FR-008**: Keep a square drag handle visible at every right-angle wire corner and let derived corners become editable bends through a single drag gesture (US1.8).
 
 ## Edge cases
 

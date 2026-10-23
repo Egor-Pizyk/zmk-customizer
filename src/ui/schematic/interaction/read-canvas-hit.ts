@@ -5,7 +5,12 @@ export type CanvasHit =
   | { readonly kind: 'encoder-pin'; readonly encoderId: string; readonly pin: 'A' | 'COM' | 'B' }
   | { readonly kind: 'section'; readonly sectionId: string; readonly wireId: string }
   | { readonly kind: 'pin'; readonly keyId: string; readonly pin: KeyPin }
-  | { readonly kind: 'bend'; readonly wireId: string; readonly bendIndex: number }
+  | {
+      readonly kind: 'bend';
+      readonly wireId: string;
+      readonly bendIndex?: number;
+      readonly point: { readonly xU: number; readonly yU: number };
+    }
   | { readonly kind: 'wire-end'; readonly wireId: string; readonly side: WireEndSide }
   | { readonly kind: 'wire'; readonly wireId: string }
   | { readonly kind: 'key'; readonly keyId: string }
@@ -33,9 +38,9 @@ export function readCanvasHit(target: EventTarget | null): CanvasHit {
   if (pin?.['keyId'] !== undefined) {
     return { kind: 'pin', keyId: pin['keyId'], pin: pin['pin'] === '2' ? 2 : 1 };
   }
-  const bend = closestData(target, 'bend-index');
-  if (bend?.['wireId'] !== undefined) {
-    return { kind: 'bend', wireId: bend['wireId'], bendIndex: Number(bend['bendIndex']) };
+  const bendHit = readBendHit(target);
+  if (bendHit !== null) {
+    return bendHit;
   }
   const end = closestData(target, 'wire-end');
   if (end?.['wireId'] !== undefined) {
@@ -55,6 +60,24 @@ export function readCanvasHit(target: EventTarget | null): CanvasHit {
   }
   const key = closestData(target, 'key-id');
   return key?.['keyId'] === undefined ? { kind: 'empty' } : { kind: 'key', keyId: key['keyId'] };
+}
+
+function readBendHit(target: Element): CanvasHit | null {
+  const bend = closestData(target, 'wire-bend');
+  if (
+    bend?.['wireId'] !== undefined &&
+    bend['bendXU'] !== undefined &&
+    bend['bendYU'] !== undefined
+  ) {
+    const bendIndex = bend['bendIndex'];
+    return {
+      kind: 'bend',
+      wireId: bend['wireId'],
+      ...(bendIndex === undefined ? {} : { bendIndex: Number(bendIndex) }),
+      point: { xU: Number(bend['bendXU']), yU: Number(bend['bendYU']) },
+    };
+  }
+  return null;
 }
 
 function readEncoderHit(target: Element): CanvasHit | null {

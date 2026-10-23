@@ -34,6 +34,7 @@ export type Drag =
       readonly kind: 'bend';
       readonly wireId: string;
       readonly bendIndex: number;
+      readonly sourceBends: readonly WirePoint[];
       readonly point: WirePoint;
       readonly collapseToleranceU: number;
     }

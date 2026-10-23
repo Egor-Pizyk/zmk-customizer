@@ -65,6 +65,7 @@ test('a wire stays selected while and after dragging a bend @cross-browser', asy
   await expect(page.locator('[data-bend-index]')).toHaveCount(0);
   await page.mouse.up();
   await expect(page.locator('[data-bend-index]')).toHaveCount(0);
+  await expect(page.locator('[data-wire-bend]')).toHaveCount(1);
   expect((await saved(page)).wires[0]?.bends).toEqual([]);
 
   const bendPoint = await sectionPoint(
@@ -72,6 +73,31 @@ test('a wire stays selected while and after dragging a bend @cross-browser', asy
   );
   await page.mouse.dblclick(bendPoint.x, bendPoint.y);
   await expect(page.locator('[data-bend-index]')).toHaveCount(1);
+  expect((await saved(page)).wires[0]?.bends).toHaveLength(1);
+});
+
+test('every right-angle wire corner stays visible and can be dragged', async ({ page }) => {
+  const project: Project = {
+    ...source,
+    wires: [
+      {
+        id: 'w1',
+        start: { kind: 'free', at: { xU: 5, yU: 5 } },
+        end: { kind: 'free', at: { xU: 9, yU: 7 } },
+        bends: [],
+      },
+    ],
+  };
+  await openProject(page, project);
+  const handle = page.locator('[data-wire-bend]:not([data-bend-index])');
+  await expect(handle).toBeVisible();
+  const start = await center(handle);
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down();
+  await page.mouse.move(start.x - 48, start.y + 48, { steps: 4 });
+  await page.mouse.up();
+
+  await expect(page.locator('[data-wire-bend]')).not.toHaveCount(0);
   expect((await saved(page)).wires[0]?.bends).toHaveLength(1);
 });
 
