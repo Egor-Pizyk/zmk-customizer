@@ -92,7 +92,7 @@ function createHandlers(
       handlePointerDown(state, doublePress, [world, event]);
     },
     handlePointerMove: (world: WirePoint, event: PointerEvent<SVGSVGElement>) => {
-      moveSelectDrag(state, world);
+      moveSelectDrag(state, world, event);
       if (state.activeToolId !== 'select') {
         setHover({ world, hit: readCanvasHit(event.target) });
       }

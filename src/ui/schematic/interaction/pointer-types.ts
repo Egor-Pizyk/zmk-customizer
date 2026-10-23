@@ -1,3 +1,4 @@
+import type { RotationSnap } from '@domain/geometry/transforms';
 import type { PointerEvent } from 'react';
 import type { CanvasHit } from './read-canvas-hit';
 import type { Project, WirePoint } from '@domain';
@@ -8,6 +9,7 @@ import type { ToolId } from '@ui/schematic/tools/logic';
 export type Drag =
   | {
       readonly kind: 'encoder';
+      readonly rotationSnap?: RotationSnap;
       readonly encoderId: string;
       readonly rotate: boolean;
       readonly origin: WirePoint;

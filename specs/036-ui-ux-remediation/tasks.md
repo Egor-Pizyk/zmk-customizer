@@ -22,3 +22,10 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 
 - [x] E014 [FR-010] Remove Bindings contact text; verify encoder artwork and push binding remain, Schematic labels remain; inspect rendered result.
 - [x] E015 [FR-011] Reproduce lost bend-drag highlight, render whole-wire selection during/after drag, verify section guards, Escape and existing history; record checks and update PR. Both follow-ups explicitly authorized together.
+
+## Item 2
+
+- [x] R001 [FR-012] Tests first: speed/capture/hold/release/wrap/Snap-off/Shift and center-preserving explicit key angle.
+- [x] R002 [FR-012] Integrate shared pure rotation queries into key and encoder transient pointer gestures; preserve numeric editing and history.
+- [x] R003 [FR-012] Real key/encoder slow rotation, release/cancel/Undo/Redo and rendered UI/UX review; prove behavioral sensitivity.
+- [x] R004 [FR-012] Changed snapshot checks, journal, one item-2 commit and existing draft PR update; stop before topology work. Manual E008 stays open.

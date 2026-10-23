@@ -1,4 +1,5 @@
 import { getKeyCenter, getKeyGeometry, roundU } from '@domain/geometry';
+import { getPointerRotationDeg } from './get-pointer-rotation-deg';
 import { setKeyGeometries } from '@domain/keys';
 import type { Project, WirePoint } from '@domain';
 
@@ -7,6 +8,7 @@ export type RotateKeyInput = {
   readonly start: WirePoint;
   readonly position: WirePoint;
   readonly isAngleSnapEnabled?: boolean;
+  readonly targetRotationDeg?: number;
 };
 
 function wrapAngle(angle: number) {
@@ -23,18 +25,15 @@ export function rotateKeyFromPointer(project: Project, input: RotateKeyInput): P
   }
   const geometry = getKeyGeometry(key);
   const center = getKeyCenter(key);
-  if (
-    Math.hypot(input.position.xU - center.xU, input.position.yU - center.yU) < 1e-8 ||
-    Math.hypot(input.start.xU - center.xU, input.start.yU - center.yU) < 1e-8
-  ) {
+  const angle = getPointerRotationDeg({
+    ...input,
+    center,
+    initialRotationDeg: geometry.rotationDeg,
+  });
+  if (angle === undefined) {
     return project;
   }
-  const from = Math.atan2(input.start.yU - center.yU, input.start.xU - center.xU);
-  const to = Math.atan2(input.position.yU - center.yU, input.position.xU - center.xU);
-  const angle = geometry.rotationDeg + wrapAngle(((to - from) * 180) / Math.PI);
-  const rotationDeg = roundU(
-    wrapAngle(input.isAngleSnapEnabled === true ? Math.round(angle / 15) * 15 : angle),
-  );
+  const rotationDeg = resolveRotationDeg(input, angle);
   if (Math.abs(wrapAngle(rotationDeg - geometry.rotationDeg)) < 0.0001) {
     return project;
   }
@@ -52,4 +51,11 @@ export function rotateKeyFromPointer(project: Project, input: RotateKeyInput): P
       },
     ],
   });
+}
+
+function resolveRotationDeg(input: RotateKeyInput, angle: number): number {
+  const target =
+    input.targetRotationDeg ??
+    (input.isAngleSnapEnabled === true ? Math.round(angle / 15) * 15 : angle);
+  return roundU(wrapAngle(target));
 }

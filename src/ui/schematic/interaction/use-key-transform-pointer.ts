@@ -1,6 +1,11 @@
 import type { ContentPointerHandler } from '@ui/canvas/logic';
-import { transformKeyFromPointer } from '@domain/geometry/transforms';
-import type { KeyPointerTransform } from '@domain/geometry/transforms';
+import { getKeyCenter, getKeyGeometry } from '@domain/geometry';
+import {
+  getPointerRotationDeg,
+  getRotationSnap,
+  transformKeyFromPointer,
+} from '@domain/geometry/transforms';
+import type { RotationSnap, KeyPointerTransform } from '@domain/geometry/transforms';
 import type { Project } from '@domain';
 import { getSelectedKeyIds } from './get-selected-key-ids';
 import type { SchematicPointerOptions } from './pointer-types';
@@ -21,6 +26,7 @@ type Draft = {
   readonly selectionKey: string;
   readonly pointerId: number;
   readonly gesture: KeyPointerTransform;
+  readonly rotationSnap?: RotationSnap;
 };
 
 export function useKeyTransformPointer(
@@ -116,6 +122,9 @@ function startTransform(
     selectionKey: state.selectionKey,
     pointerId: event.pointerId,
     gesture,
+    ...(gesture.kind === 'rotate'
+      ? { rotationSnap: initialRotationSnap(options.project, gesture.keyId, event.timeStamp) }
+      : {}),
   });
 }
 function moveTransform(
@@ -145,8 +154,12 @@ function moveTransform(
           position: world,
           ...(options.snapGridU === undefined ? {} : { snapGridU: options.snapGridU }),
         }
-      : { ...gesture, position: world, isAngleSnapEnabled: event.shiftKey };
-  state.setDraft({ ...state.current, gesture: next });
+      : gesture;
+  state.setDraft(
+    gesture.kind === 'rotate'
+      ? moveRotation(options, state.current, [world, event])
+      : { ...state.current, gesture: next },
+  );
 }
 
 function finishTransform(options: SchematicPointerOptions, { current, setDraft }: DraftHandlers) {
@@ -167,4 +180,43 @@ function finishTransform(options: SchematicPointerOptions, { current, setDraft }
     );
   }
   setDraft(undefined);
+}
+
+function initialRotationSnap(project: Project, keyId: string, timeMs: number): RotationSnap {
+  const key = project.keys.find((entry) => entry.id === keyId);
+  const angleDeg = key === undefined ? 0 : getKeyGeometry(key).rotationDeg;
+  return { angleDeg, rotationDeg: angleDeg, timeMs };
+}
+
+function moveRotation(
+  options: SchematicPointerOptions,
+  draft: Draft,
+  [world, event]: Parameters<ContentPointerHandler>,
+): Draft {
+  const gesture = draft.gesture;
+  const key = draft.base.keys.find((entry) => entry.id === gesture.keyId);
+  if (gesture.kind !== 'rotate' || key === undefined) {
+    return draft;
+  }
+  const angleDeg = getPointerRotationDeg({
+    center: getKeyCenter(key),
+    start: gesture.start,
+    position: world,
+    initialRotationDeg: getKeyGeometry(key).rotationDeg,
+  });
+  if (angleDeg === undefined) {
+    return draft;
+  }
+  const rotationSnap = getRotationSnap({
+    angleDeg,
+    timeMs: event.timeStamp,
+    previous: draft.rotationSnap,
+    isEnabled: options.snapGridU !== undefined,
+    isShiftPressed: event.shiftKey,
+  });
+  return {
+    ...draft,
+    rotationSnap,
+    gesture: { ...gesture, position: world, targetRotationDeg: rotationSnap.rotationDeg },
+  };
 }

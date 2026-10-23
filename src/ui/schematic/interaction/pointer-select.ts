@@ -108,10 +108,14 @@ export function doubleClickSelectTool(
   }
 }
 
-export function moveSelectDrag(state: PointerState, world: WirePoint) {
+export function moveSelectDrag(
+  state: PointerState,
+  world: WirePoint,
+  event?: Pick<Press['event'], 'timeStamp' | 'shiftKey'>,
+) {
   const { drag } = state;
   if (drag?.kind === 'encoder') {
-    moveEncoderDrag(state, drag, world);
+    moveEncoderDrag(state, drag, { world, event });
     return;
   }
   if (drag?.kind === 'key') {

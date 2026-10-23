@@ -1,3 +1,4 @@
+import { getPointerRotationDeg, getRotationSnap } from '@domain/geometry/transforms';
 import { getEncoderGeometry } from '@domain/geometry';
 import type { Encoder, WirePoint } from '@domain';
 import type { Drag, PointerState, SelectionPress } from './pointer-types';
@@ -36,32 +37,60 @@ export function startEncoderDrag(state: PointerState, { hit, world, event }: Pre
     angleStart: geometry.rotationDeg,
     position: geometry,
     angle: geometry.rotationDeg,
+    rotationSnap: {
+      angleDeg: geometry.rotationDeg,
+      rotationDeg: geometry.rotationDeg,
+      timeMs: event.timeStamp,
+    },
   });
   return true;
 }
 
-export function moveEncoderDrag(state: PointerState, drag: EncoderDrag, world: WirePoint) {
+type EncoderMove = {
+  readonly world: WirePoint;
+  readonly event: Pick<Press['event'], 'timeStamp' | 'shiftKey'> | undefined;
+};
+
+export function moveEncoderDrag(state: PointerState, drag: EncoderDrag, input: EncoderMove) {
   if (drag.rotate) {
-    const cx = drag.bodyStart.xU + 0.5;
-    const cy = drag.bodyStart.yU + 0.5;
-    const delta =
-      ((Math.atan2(world.yU - cy, world.xU - cx) -
-        Math.atan2(drag.origin.yU - cy, drag.origin.xU - cx)) *
-        180) /
-      Math.PI;
-    state.onDragChange({ ...drag, angle: drag.angleStart + delta });
-  } else {
-    state.onDragChange({
-      ...drag,
-      position: snapPoint(
-        {
-          xU: drag.bodyStart.xU + world.xU - drag.origin.xU,
-          yU: drag.bodyStart.yU + world.yU - drag.origin.yU,
-        },
-        state.snapGridU,
-      ),
-    });
+    moveEncoderRotation(state, drag, input);
+    return;
   }
+  state.onDragChange({
+    ...drag,
+    position: snapPoint(
+      {
+        xU: drag.bodyStart.xU + input.world.xU - drag.origin.xU,
+        yU: drag.bodyStart.yU + input.world.yU - drag.origin.yU,
+      },
+      state.snapGridU,
+    ),
+  });
+}
+
+function moveEncoderRotation(
+  state: PointerState,
+  drag: EncoderDrag,
+  { world, event }: EncoderMove,
+) {
+  const center = { xU: drag.bodyStart.xU + 0.5, yU: drag.bodyStart.yU + 0.5 };
+  const angleDeg = getPointerRotationDeg({
+    center,
+    start: drag.origin,
+    position: world,
+    initialRotationDeg: drag.angleStart,
+  });
+  if (angleDeg === undefined) {
+    return;
+  }
+  const rotationSnap = getRotationSnap({
+    angleDeg,
+    timeMs: event?.timeStamp ?? 0,
+    previous: drag.rotationSnap,
+    isEnabled: state.snapGridU !== undefined,
+    isShiftPressed: event?.shiftKey ?? false,
+  });
+  state.onDragChange({ ...drag, rotationSnap, angle: rotationSnap.rotationDeg });
 }
 export function endEncoderDrag(state: PointerState, drag: EncoderDrag) {
   const next = getPreviewProject(state.project, drag);
