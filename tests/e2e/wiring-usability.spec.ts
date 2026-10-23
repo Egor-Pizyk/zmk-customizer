@@ -28,6 +28,34 @@ const source: Project = {
   layers: [{ id: 'l0', name: 'Base', bindings: {} }],
 };
 
+test('a wire stays selected while and after dragging a bend @cross-browser', async ({ page }) => {
+  const bent: Project = {
+    ...source,
+    wires: [
+      {
+        id: 'w1',
+        start: { kind: 'key-pin', keyId: 'k0', pin: 1 },
+        end: { kind: 'free', at: { xU: 9, yU: 7 }, boardPin: 4 },
+        bends: [{ xU: 7, yU: 7 }],
+      },
+    ],
+  };
+  await openProject(page, bent);
+  const section = page.locator('[data-section-id] path[pointer-events="stroke"]').first();
+  const sectionCenter = await sectionPoint(section);
+  await page.mouse.click(sectionCenter.x, sectionCenter.y);
+  const handle = page.locator('[data-bend-index="0"]');
+  await expect(handle).toBeVisible();
+  const start = await center(handle);
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down();
+  await page.mouse.move(start.x + 48, start.y - 48, { steps: 4 });
+  await expect(page.locator('[data-bend-index]')).toHaveCount(1);
+  await page.mouse.up();
+  await expect(page.locator('[data-bend-index]')).toHaveCount(1);
+  expect((await saved(page)).wires[0]?.bends[0]).not.toEqual(bent.wires[0]?.bends[0]);
+});
+
 test('drawn intermediate connections survive a real endpoint move and section deletion @cross-browser', async ({
   page,
 }) => {

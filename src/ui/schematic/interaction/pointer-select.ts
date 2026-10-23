@@ -248,6 +248,7 @@ function startBendDrag(state: PointerState, { hit, world, event }: Press) {
     return;
   }
   event.currentTarget.setPointerCapture(event.pointerId);
+  state.onSelectionChange({ kind: 'wire', wireId: hit.wireId });
   state.onDragChange({ kind: 'bend', wireId: hit.wireId, bendIndex: hit.bendIndex, point: world });
 }
 
