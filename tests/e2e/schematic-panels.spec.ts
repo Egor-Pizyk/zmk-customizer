@@ -5,7 +5,10 @@ test('keeps the canvas visible beside or above a bounded editor @cross-browser',
   page,
 }) => {
   await openProject(page);
-  await expect(page.getByRole('button', { name: 'Collapse editors', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Editors', exact: true })).toBeVisible();
+  await expect(
+    page.getByRole('button', { name: /^(?:Collapse|Close|Open|Expand) editors$/u }),
+  ).toHaveCount(0);
   for (const size of [
     { width: 1440, height: 900 },
     { width: 1024, height: 768 },
@@ -48,10 +51,12 @@ test('keeps the canvas visible beside or above a bounded editor @cross-browser',
       JSON.stringify(overflow),
     ).toBe(true);
   }
-  await page.getByRole('button', { name: 'Collapse editors', exact: true }).click();
-  await page.getByRole('button', { name: 'Expand editors', exact: true }).click();
-  await page.getByRole('button', { name: 'Close editors', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Open editors', exact: true })).toBeFocused();
+  await page.getByText('Controller', { exact: true }).click();
+  await expect(
+    page.getByText('Controller', { exact: true }).locator('xpath=ancestor::details'),
+  ).toHaveAttribute('open', '');
+  await page.getByText('Parts', { exact: true }).click();
+  await expect(page.getByRole('region', { name: 'Wire sections' })).toBeVisible();
 });
 
 test('keeps Settings compact and editor switches transient in both themes @cross-browser', async ({
@@ -107,6 +112,20 @@ test('resizes editors with pointer and keyboard, cancels and retains preferred s
   await page.keyboard.press('Escape');
   await page.mouse.up();
   await expect.poll(width).toBe(448);
+  for (const [delta, expected] of [
+    [1000, 640],
+    [-1000, 320],
+  ] as const) {
+    const edge = await handle.boundingBox();
+    if (edge === null) {
+      throw new Error('Missing resize handle');
+    }
+    await page.mouse.move(edge.x + edge.width / 2, edge.y + 40);
+    await page.mouse.down();
+    await page.mouse.move(edge.x + edge.width / 2 + delta, edge.y + 40, { steps: 8 });
+    await page.mouse.up();
+    await expect.poll(width).toBe(expected);
+  }
   await handle.focus();
   await page.keyboard.press('Home');
   await expect.poll(width).toBe(320);
@@ -145,6 +164,13 @@ test('resizes editors with pointer and keyboard, cancels and retains preferred s
   await expect(handle).toBeHidden();
   await page.setViewportSize({ width: 1920, height: 1080 });
   await expect.poll(width).toBe(512);
+  await page.getByText('Wiring', { exact: true }).click();
+  await page.getByRole('button', { name: 'Complete wiring', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toBeVisible();
+  await handle.focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Cancel wiring', exact: true }).click();
   expect(await saved(page)).toEqual(original);
   for (const theme of ['Light', 'Dark']) {
     await page.getByRole('button', { name: 'Settings', exact: true }).click();
@@ -156,6 +182,17 @@ test('resizes editors with pointer and keyboard, cancels and retains preferred s
     await page.screenshot({
       path: info.outputPath(`resizable-editors-${theme.toLowerCase()}.png`),
     });
+    for (const viewportWidth of [390, 1280]) {
+      await page.setViewportSize({ width: viewportWidth, height: 844 });
+      await expect(page.getByRole('heading', { name: 'Editors', exact: true })).toBeVisible();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+        true,
+      );
+      await page.screenshot({
+        path: info.outputPath(`editors-${viewportWidth}-${theme.toLowerCase()}.png`),
+      });
+    }
+    await page.setViewportSize({ width: 1920, height: 1080 });
   }
   await handle.dblclick();
   await expect.poll(width).toBe(448);

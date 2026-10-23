@@ -638,7 +638,7 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 ### 036 — ui-ux-remediation — large first-major bugfix sweep
 
-**Status (2026-10-23).** Item 1 and its approved follow-ups are implemented in the 036 branch; manual acceptance remains open. Item 2 is implemented with agreed thresholds and automated verification; manual acceptance remains open. Item 3 topology round-trip verification and proposal-state repair are implemented; manual acceptance remains open. Items 4–21 and the two audit follow-ups remain unstarted and require separate approval under the one-item/one-commit delivery contract.
+**Status (2026-10-23).** Item 1 and its approved follow-ups are implemented in the 036 branch; manual acceptance remains open. Item 2 is implemented with agreed thresholds and automated verification; manual acceptance remains open. Item 3 topology round-trip verification and proposal-state repair are implemented; manual acceptance remains open. Items 4–5 are implemented (resizable left Editors panel and removal of editor-wide buttons), manual acceptance remains open. Items 6–21 and the two audit follow-ups remain unstarted and require separate approval under the one-item/one-commit delivery contract.
 
 **Goal.** Resolve the reported editing, wiring, selection, rotation and interface problems before the first major release. Complete after 035 audit/specification and before 037 onboarding, so the tour and final README describe the corrected product. Include the applicable audit findings without losing or replacing this explicit user backlog.
 

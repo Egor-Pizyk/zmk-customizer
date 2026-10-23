@@ -20,12 +20,7 @@ export function SchematicWorkspace() {
       <div className="schematic-canvas-pane">
         <WorkspaceCanvas workspace={workspace} marks={marks} />
       </div>
-      <SchematicEditorPanel
-        onDismissPreview={() => {
-          workspace.wiring.handleCancel();
-          workspace.layout.handleCancel();
-        }}
-      >
+      <SchematicEditorPanel>
         <ControllerPanel project={project} commit={commit} />
         <WorkspaceLayoutControls workspace={workspace} />
         <WiringControls {...workspace.wiring} />

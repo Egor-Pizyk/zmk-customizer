@@ -39,6 +39,6 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 ## Items 4–5
 
 - [x] P001 [FR-014–016] Specify limits/persistence; storage regressions first, implement additive preference and live pointer/keyboard resize with responsive layout.
-- [ ] P002 [FR-014–016] Browser drag/limits/cancel/reload/keyboard/viewport persistence and rendered light/dark review; sensitivity check, changed checks, journal and item-4 commit.
-- [ ] P003 [FR-017] Remove global Collapse/Close modes/buttons and obsolete reveal listener; preserve individual sections and repair focus; update integration/browser checks.
-- [ ] P004 [FR-017] Changed checks, final rendered review, journal and item-5 commit; update existing PR and deliver manual acceptance steps.
+- [x] P002 [FR-014–016] Browser drag/limits/cancel/reload/keyboard/viewport persistence and rendered light/dark review; sensitivity check, changed checks, journal and item-4 commit.
+- [x] P003 [FR-017] Remove global Collapse/Close modes/buttons and obsolete reveal listener; preserve individual sections and repair focus; update integration/browser checks.
+- [x] P004 [FR-017] Changed checks, final rendered review, journal and item-5 commit; update existing PR and deliver manual acceptance steps.

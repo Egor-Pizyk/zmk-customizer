@@ -1,10 +1,10 @@
 # 036 — UI/UX remediation
 
-**Branch**: `feature/036-ui-ux-remediation`. **Date**: 2026-10-22. **Status**: Items 1–3 implemented; manual acceptance remains open; later items require user approval.
+**Branch**: `feature/036-ui-ux-remediation`. **Date**: 2026-10-22. **Status**: Items 1–5 implemented; manual acceptance remains open; later items require user approval.
 
 ## Goal and scope
 
-Resolve the 21 original roadmap reports and two additional 035 observations sequentially. User delivery contract: one original numbered item per commit, stop after each with manual acceptance instructions, and wait for approval before the next. Items 1–3 are authorized for implementation; item 2 thresholds approved 2026-10-23. Research basis: PR #23 / 035-R01; audit remains a separate draft PR. Starting a second active branch is explicitly authorized by the user's request to implement itemwise; branch starts from current origin/main, not an audit stack.
+Resolve the 21 original roadmap reports and two additional 035 observations sequentially. User delivery contract: one original numbered item per commit, stop after each with manual acceptance instructions and wait for approval before the next unless the user explicitly authorizes consecutive items together. Items 1–5 are authorized for implementation; item 2 thresholds approved 2026-10-23. Research basis: PR #23 / 035-R01; audit remains a separate draft PR. Starting a second active branch is explicitly authorized by the user's request to implement itemwise; branch starts from current origin/main, not an audit stack.
 
 Preserve existing projects and electrical wiring, stable IDs, per-layer actions, one-step Undo/Redo, deterministic v0.3.0 exports, static/offline operation and keyboard alternatives. No new dependency or visual identity. Items 4–5 are now explicitly authorized together; items 6–23 remain roadmap/research scope.
 
