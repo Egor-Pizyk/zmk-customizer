@@ -1,6 +1,7 @@
 export { FREE_END_VALUE, listPinOptions, toStartPin, toTargetEnd } from './add-wire-ends';
 export { focusAfterDelete } from './focus-after-delete';
 export { getHoverPreview } from './get-hover-preview';
+export { getBendDragBends } from './get-bend-drag-bends';
 export type { Hover, HoverPreview } from './get-hover-preview';
 export { getSchematicGeometry } from './get-schematic-geometry';
 export type { DiodePlacement } from './get-schematic-geometry';

@@ -65,7 +65,13 @@ it('explains a byte-budget bend drag refusal without dispatching a history chang
     onDragChange: vi.fn<PointerState['onDragChange']>(),
     draft: undefined,
     onDraftChange: vi.fn<PointerState['onDraftChange']>(),
-    drag: { kind: 'bend', wireId: 'w1', bendIndex: 0, point: { xU: 123_456_789, yU: 1 } },
+    drag: {
+      kind: 'bend',
+      wireId: 'w1',
+      bendIndex: 0,
+      point: { xU: 123_456_789, yU: 1 },
+      collapseToleranceU: 0.125,
+    },
   });
   expect(onHint).toHaveBeenCalledWith(expect.stringContaining('byte budget'));
   expect(commit).not.toHaveBeenCalled();

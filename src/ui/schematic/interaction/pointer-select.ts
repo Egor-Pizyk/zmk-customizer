@@ -7,6 +7,7 @@ import type { Key, WirePoint } from '@domain';
 import { isKeyCellInMarquee } from '@ui/canvas/logic';
 import type { PointerState, SelectionPress } from './pointer-types';
 import { snapPoint } from './snap-point';
+import { getBendDragBends } from './get-bend-drag-bends';
 
 type Press = SelectionPress;
 
@@ -207,9 +208,7 @@ export function endSelectDrag(state: PointerState) {
     return;
   }
   if (drag?.kind === 'bend') {
-    const bends = project.wires.find((wire) => wire.id === drag.wireId)?.bends ?? [];
-    const next = bends.with(drag.bendIndex, drag.point);
-    const input = { wireId: drag.wireId, bends: next };
+    const input = { wireId: drag.wireId, bends: getBendDragBends(project, drag) };
     const resourceError = getWireBendsResourceError(project, input);
     if (resourceError !== undefined) {
       state.onHint(resourceError);
@@ -249,7 +248,13 @@ function startBendDrag(state: PointerState, { hit, world, event }: Press) {
   }
   event.currentTarget.setPointerCapture(event.pointerId);
   state.onSelectionChange({ kind: 'wire', wireId: hit.wireId });
-  state.onDragChange({ kind: 'bend', wireId: hit.wireId, bendIndex: hit.bendIndex, point: world });
+  state.onDragChange({
+    kind: 'bend',
+    wireId: hit.wireId,
+    bendIndex: hit.bendIndex,
+    point: world,
+    collapseToleranceU: (state.snapGridU ?? 2e-6) / 2,
+  });
 }
 
 function commitKeyMove(state: PointerState, moves: Parameters<typeof moveKeys>[1]['moves']) {

@@ -35,6 +35,7 @@ export type Drag =
       readonly wireId: string;
       readonly bendIndex: number;
       readonly point: WirePoint;
+      readonly collapseToleranceU: number;
     }
   | {
       readonly kind: 'marquee';
