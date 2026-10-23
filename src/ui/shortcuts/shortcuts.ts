@@ -70,6 +70,7 @@ export const SHORTCUTS = [
   // Schematic canvas (spec 003); handled by schematic/use-schematic-shortcuts.ts.
   { scope: 'canvas', id: 'select-tool', keys: ['v'], label: 'Schematic: Select tool' },
   { scope: 'canvas', id: 'add-key-tool', keys: ['k'], label: 'Schematic: Key tool' },
+  { scope: 'canvas', id: 'add-encoder-tool', keys: ['e'], label: 'Schematic: Encoder tool' },
   { scope: 'canvas', id: 'wire-tool', keys: ['w'], label: 'Schematic: Wire tool' },
   {
     scope: 'canvas',

@@ -16,6 +16,7 @@ type SchematicShortcutHandlers = {
 const TOOL_BY_SHORTCUT: Partial<Record<ShortcutId, ToolId>> = {
   'select-tool': 'select',
   'add-key-tool': 'add-key',
+  'add-encoder-tool': 'add-encoder',
   'wire-tool': 'wire',
 };
 

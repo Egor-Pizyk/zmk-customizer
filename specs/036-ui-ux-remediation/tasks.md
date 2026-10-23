@@ -17,3 +17,5 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 - [x] E011 [FR-008] Remove redundant collinear handles, retain one handle on a straight wire and preserve actual turns; red/green rendering tests and browser regression checks.
 
 - [x] E012 [FR-008] Fix corner expansion without obsolete-waypoint loops; test adjacent-corner movement, both turn orientations, fixed anchors and browser Undo.
+
+- [x] E013 [FR-009] Add Encoder E shortcut and shared icon/help hint, verify real keyboard placement and guards, review rendered tooltip, commit and update existing PR; leave contact labels and wire highlight for subsequent steps.

@@ -235,3 +235,31 @@ async function openEmpty(page: Page) {
   await importText(page, JSON.stringify(empty));
   await expect(page.getByRole('textbox', { name: 'Name', exact: true })).toHaveValue(empty.name);
 }
+
+test('Encoder shortcut and icon hint agree with keyboard placement', async ({ page }) => {
+  await openEmpty(page);
+  const tool = page.getByRole('radio', { name: 'Encoder', exact: true });
+  await tool.locator('..').hover();
+  await expect(page.getByRole('tooltip', { name: 'Encoder (E)', exact: true })).toBeVisible();
+  await tool.focus();
+  await expect(page.getByRole('tooltip', { name: 'Encoder (E)', exact: true })).toBeVisible();
+  await page.screenshot({ path: test.info().outputPath('encoder-shortcut.png') });
+  await page.getByRole('textbox', { name: 'Name', exact: true }).press('e');
+  await expect(tool).not.toBeChecked();
+  const canvas = page.locator('[data-canvas-workspace="schematic"]');
+  await canvas.focus();
+  await page.keyboard.press('Control+e');
+  await expect(tool).not.toBeChecked();
+  await page.keyboard.press('e');
+  await expect(tool).toBeChecked();
+  expect((await saved(page)).encoders).toHaveLength(0);
+  await page.keyboard.press('Enter');
+  await expect(encoder(page)).toBeVisible();
+  expect((await saved(page)).encoders).toHaveLength(1);
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('radio', { name: 'Select', exact: true })).toBeChecked();
+  await page.keyboard.press('?');
+  await expect(
+    page.getByRole('dialog').getByText('Schematic: Encoder tool', { exact: true }),
+  ).toBeVisible();
+});

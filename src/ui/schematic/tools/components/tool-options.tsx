@@ -16,6 +16,7 @@ const ICON_BY_TOOL: Record<ToolId, ReactNode> = {
 const SHORTCUT_BY_TOOL: Partial<Record<ToolId, ShortcutId>> = {
   select: 'select-tool',
   'add-key': 'add-key-tool',
+  'add-encoder': 'add-encoder-tool',
   wire: 'wire-tool',
 };
 

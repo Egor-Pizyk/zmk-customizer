@@ -55,7 +55,7 @@ Canvas scope, only while the Schematic canvas (or an element in it) has focus. M
 
 | Key | Id | Action |
 |---|---|---|
-| `v` / `k` / `w` | `select-tool` / `add-key-tool` / `wire-tool` | Select / Key / Wire tool |
+| `v` / `k` / `e` / `w` | `select-tool` / `add-key-tool` / `add-encoder-tool` / `wire-tool` | Select / Key / Encoder / Wire tool |
 | Enter | `place-key` | Key tool: add a key at the next free spot |
 | Delete, Backspace | `delete-selection` | Delete the selected key or wire |
 | Escape | `cancel` | Cancel the wire being drawn, else clear the selection |

@@ -31,3 +31,17 @@ FR-008 / E011: horizontal and vertical wires with three collinear saved points f
 ## Corner expansion — 2026-10-23
 
 FR-008 / E012: new pointer regressions first failed because dragging an upward-to-right corner retained obsolete intermediate/neighbor positions. A pure geometry query now moves adjacent sections and simplifies the route while preserving fixed ends and contact anchors. Domain tests cover mirrored expansion, both turn orientations and anchors; browser tests assert the full resulting orthogonal path and exact Undo. Existing collapse and double-click behavior remains covered. The prior automatic-corner browser test now asserts actual path geometry rather than the former one-bend storage encoding, because preserving turn orientation can require two explicit bends. Final staged checks are retained in `.check-logs/`; user manual acceptance is pending for the reported corner gesture.
+
+## Encoder shortcut — 2026-10-23
+
+FR-009 / E013. Base `0de08dc5611e84a002ab2f06a42c9aa2f2d43b8d`, clean tree; resolved feature 036 matches the request and existing draft PR #24. Scope is E selection and Encoder (E) hint/help; contact labels in Bindings and selected-wire highlight remain queued. No domain, persistence, history or export format changes.
+
+Pre/post ui-ux-pro-max queries: `keyboard shortcuts discoverability` / `keyboard shortcuts` (ux), `keyboard event cleanup` (react); applied keyboard access, focus and stable accessible names using existing listener/tooltip. No new layout/tokens/motion; mobile native checklist does not apply to this desktop web control.
+
+Diagnostic red: shortcut unit cases for e/E failed (2 failed, 56 passed). First browser diagnostic omitted navigation; corrected test setup. Changed snapshot `7522eeb9d105d7b6c12d0adee86d09e11750416f` passed static/unit checks but exposed UX-E01: visible tooltip text polluted the radio accessible name, affecting both new and previous encoder journeys. Fix: explicit option label on native radio, tooltip remains its description. Focused browser regression and final changed-check results recorded below. Logs are under `.check-logs/`; diagnostic logs `/tmp/encoder-shortcut-*.log`.
+
+Manual limits: no OS/screen-reader speech or native zoom review; existing E008 remains open.
+
+UX-E01 fixed: both focused Chromium encoder scenarios passed (2/2): existing pointer move/rotate and new shortcut/hint/Enter/typing/modifier/help flow. Inspected `test-results/encoder-schematic-Encoder--c1f20-ree-with-keyboard-placement-chromium/encoder-shortcut.png`: Encoder (E) is readable next to the icon without clipping. Final snapshot verification uses check:changed receipt under `.check-logs/` (includes this journal).
+
+Final production snapshot `50e68c815f5a5a6f9e03222ba49401c50b472a52` passed `npm run check:changed`: typecheck, browser types, architecture/guidelines, lint/format, 224 related unit tests and 76 Chromium scenarios. Receipt: `.check-logs/50e68c815f5a-0de08dc5611e/passed.json`. Follow-up documentation closes E013; user manual acceptance remains E008.

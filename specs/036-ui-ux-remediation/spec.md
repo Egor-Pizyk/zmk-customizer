@@ -32,6 +32,8 @@ Preserve existing projects and electrical wiring, stable IDs, per-layer actions,
 - **FR-007**: Render an integrated five-contact encoder when push is enabled, distinguish rotary and switch contacts in both workspaces, and show selected-part corner rotation controls without hover discovery (US1.7).
 - **FR-008**: Keep a square drag handle visible at every right-angle wire corner and let derived corners become editable bends through a single drag gesture (US1.8). Coincident handles at the same coordinates render as one square. Collinear intermediary points do not add handles between real turns; a wholly straight wire with saved bends exposes one handle. Moving a corner shifts its adjacent straight sections together, preserving the turn orientation and fixed endpoints/contact anchors without returning through obsolete waypoints.
 
+- **FR-009**: With Schematic canvas focus, `E` (case-insensitive) activates Encoder, using the same draft cancellation as other tools. The icon shows `Encoder (E)` on hover and keyboard focus; shortcut help lists it. Typing, dialogs, modifiers and Bindings do not activate this tool. Tool selection alone does not edit the project or history.
+
 ## Edge cases
 
 No encoders/keys; 16-encoder and key budget; last encoder deletion; missing COM; A/B joined together/ground; reused controller pin or switch net; wrong half; dangling endpoint; deleted push key; duplicate push ownership; independent ordinary key edits; unsaved cancelled gesture; no button; older files with no contacts or new fields; invalid counts remain repairable as in 019.

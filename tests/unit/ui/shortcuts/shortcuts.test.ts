@@ -176,6 +176,8 @@ describe('matchShortcut: Schematic tools and editing (spec 003)', () => {
   it.each([
     ['v', 'select-tool'],
     ['k', 'add-key-tool'],
+    ['e', 'add-encoder-tool'],
+    ['E', 'add-encoder-tool'],
     ['W', 'wire-tool'],
     ['Enter', 'place-key'],
     ['Delete', 'delete-selection'],
