@@ -19,6 +19,7 @@ type SchematicCanvasProps = Omit<SchematicLayerProps, 'view' | 'paths' | 'crossi
   /** The tool window overlay. */
   readonly children: ReactNode;
   readonly hasTransformFrames: boolean;
+  readonly isReadOnly?: boolean;
 };
 
 type ContentInput = Omit<SchematicCanvasProps, 'children' | keyof PointerHandlers>;
@@ -28,7 +29,8 @@ type PointerHandlers = Pick<
 >;
 
 function createSurfaceContent(input: ContentInput, handlers: PointerHandlers): SurfaceContent {
-  const { project, hoverPreview, commit, marquee, hasTransformFrames, ...layerProps } = input;
+  const { project, hoverPreview, commit, marquee, hasTransformFrames, isReadOnly, ...layerProps } =
+    input;
   const crossings = getProjectAnalysis(project).crossings;
   const { paths } = getSchematicGeometry(project);
   return {
@@ -48,6 +50,7 @@ function createSurfaceContent(input: ContentInput, handlers: PointerHandlers): S
     renderScreen: (view) => (
       <SchematicEditingScreenLayer
         crossings={crossings}
+        isReadOnly={isReadOnly}
         commit={commit}
         project={project}
         view={view}

@@ -5,24 +5,20 @@ import { Button } from '@ui/components/components';
 import type { PartsTableProps } from './parts-list';
 import type { KeyboardEvent } from 'react';
 
-export function PartsWireSectionsTable({
-  project,
-  selection,
-  onSelectionChange,
-  commit,
-}: PartsTableProps) {
+type SectionTableProps = PartsTableProps & { readonly isReadOnly?: boolean };
+
+export function PartsWireSectionsTable(props: SectionTableProps) {
   const [focused, setFocused] = useState(0);
-  const { sections, selected, handleDelete, toggle, handleKey, failure } = useSectionActions({
-    project,
-    selection,
-    onSelectionChange,
-    commit,
-  });
+  const { sections, selected, handleDelete, toggle, handleKey, failure } = useSectionActions(props);
   return (
     <section aria-label="Wire sections" className="flex flex-col gap-2">
       <h3 className="font-semibold">Wire sections</h3>
       {failure === undefined ? undefined : <p role="alert">{failure}</p>}
-      <p className="text-text-muted">Delete sections; keep keys and other branches.</p>
+      <p className="text-text-muted">
+        {props.isReadOnly === true
+          ? 'Select sections to inspect the preview.'
+          : 'Delete sections; keep keys and other branches.'}
+      </p>
       <SectionChoices
         sections={sections}
         selected={selected}
@@ -31,9 +27,11 @@ export function PartsWireSectionsTable({
         toggle={toggle}
         onKey={handleKey}
       />
-      <Button onClick={handleDelete} isDisabled={selected.length === 0}>
-        Delete selected sections
-      </Button>
+      {props.isReadOnly === true ? null : (
+        <Button onClick={handleDelete} isDisabled={selected.length === 0}>
+          Delete selected sections
+        </Button>
+      )}
     </section>
   );
 }
@@ -43,7 +41,8 @@ function useSectionActions({
   selection,
   onSelectionChange,
   commit,
-}: Omit<PartsTableProps, 'issues'>) {
+  isReadOnly,
+}: Omit<SectionTableProps, 'issues'>) {
   const [failure, setFailure] = useState<string>();
   const sections = getWireSections(project);
   const selected =
@@ -55,6 +54,9 @@ function useSectionActions({
     onSelectionChange({ kind: 'sections', base: project, sectionIds });
   }
   function handleDelete() {
+    if (isReadOnly === true) {
+      return;
+    }
     const result = removeWireSections(project, { base: project, sectionIds: selected });
     if (!result.ok) {
       setFailure(result.error);
@@ -68,14 +70,7 @@ function useSectionActions({
     onSelectionChange();
     requestAnimationFrame(focusCanvas);
   }
-  const handleKey = (event: KeyboardEvent<HTMLInputElement>, index: number) => {
-    if (event.key === 'Delete' || event.key === 'Backspace') {
-      event.preventDefault();
-      handleDelete();
-      return;
-    }
-    focusSection(event, { sections, index });
-  };
+  const handleKey = createSectionKeyHandler({ sections, handleDelete });
   return { sections, selected, handleDelete, toggle, handleKey, failure };
 }
 
@@ -133,4 +128,21 @@ function SectionChoices({
 
 function focusCanvas() {
   document.querySelector<SVGSVGElement>('[data-canvas-workspace="schematic"]')?.focus();
+}
+
+function createSectionKeyHandler({
+  sections,
+  handleDelete,
+}: {
+  readonly sections: ReturnType<typeof getWireSections>;
+  readonly handleDelete: () => void;
+}) {
+  return (event: KeyboardEvent<HTMLInputElement>, index: number) => {
+    if (event.key === 'Delete' || event.key === 'Backspace') {
+      event.preventDefault();
+      handleDelete();
+      return;
+    }
+    focusSection(event, { sections, index });
+  };
 }

@@ -19,7 +19,7 @@ Product acceptance remains in [spec.md](../spec.md); implementation representati
 
 ## Layout and focus
 
-Workspace dimensions mean content area after shared navigation/header/heading/status chrome. Desktop max editor width = min(360 CSS px, 35% workspace); canvas >=60% width. Narrow lower panel <=45% height and canvas >=50% height; 1024px is also tested. One expanded editor; Tools remains compact. Internal scroll containers keep actions/fields reachable. Close/collapse/reopen preserves project/history and restores sensible focus. Editor switching cancels uncommitted wiring preview; no background Apply.
+Workspace dimensions mean content area after shared navigation/header/heading/status chrome. Desktop sizing follows 036 FR-014–016: preferred 448px, 320–640px capped at 45% workspace; canvas >=55% width. Narrow lower panel <=45% height and canvas >=50% height; 1024px is also tested. One expanded editor; Tools remains compact. Internal scroll containers keep actions/fields reachable. Editors remain available through individual summaries under 036 FR-017, preserving project/history and sensible focus. Editor switching cancels uncommitted wiring preview; no background Apply.
 
 Settings remains native modal with <=480px desktop width, viewport margins and internal scrolling. Other dialogs and Bindings panel sizing stay unchanged. Existing token density/minimum 24px target rule governs; no new raw color/inline styling. Base/lg/xl layout conventions remain; narrow acceptance is scoped to these panels.
 
@@ -28,3 +28,7 @@ Settings remains native modal with <=480px desktop width, viewport margins and i
 Update 003 FR-009/FR-012 and project-schema/UI contracts: stored conductor fragments need not end at a key; creating a wire still follows attachment rules; deleting sections preserves independent branches. Update 003 FR-010 and movement/edge cases: capture pass-through pins when wiring is created, preserve explicit identities through transforms; geometric coincidence during moves never connects a new pin. Pin/junction/insulation state and visible conductor geometry must agree.
 
 Update 013 wiring contract and final 032 contract/UI names: Complete wiring is additive, Rebuild wiring retains former explicit Auto assign behavior, partial axes remain retained. Neither changes mode/topology implicitly. Update 001 UI regions for the editor host and the Parts list slot while preserving accessible names/landmarks. Update frontend Tailwind/admin guidance to document this feature's narrow-layout exception and docked editor. Scope historical schema sections by version rather than rewriting old-file formats.
+
+## 036 proposal inspection amendment
+
+FR-019–021 permit non-mutating key/encoder/section/wire selection during wiring preview. A read-only reuse of the wire-section list inside Wiring provides the keyboard alternative; Delete and pointer drags cannot change the proposal or saved data. Select/tool attempts no longer silently cancel. Apply saves once; Cancel/Escape or explicit editor dismissal restores and announces saved state. Preview connection feedback and persistent Preview marker describe the displayed circuit; saved-project Problems/export remain isolated. Actual routing/allocation and no-op/refusal behavior are unchanged.

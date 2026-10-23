@@ -23,10 +23,13 @@ type SchematicKeyboardOptions = {
 
 // Canvas-wide keys (tools, Enter, Delete, Escape) plus the handler for a focused key's own keys.
 export function useSchematicKeyboard(options: SchematicKeyboardOptions) {
-  const { project, commit, gridSizeU, pointer } = options;
+  const { project, gridSizeU, pointer } = options;
+  const commit = getKeyboardCommit(options);
   useSchematicShortcuts({
     ...createShortcutHandlers({
       ...options,
+      commit,
+      isReadOnly: options.wiring?.hasPreview === true,
       hasDraft: pointer.hasDraft || options.layout.hasPreview,
       onDraftCancel: () => {
         pointer.cancelDraft();
@@ -46,5 +49,15 @@ export function useSchematicKeyboard(options: SchematicKeyboardOptions) {
   });
   return (keyId: string, event: KeyboardEvent<SVGGElement>) => {
     keyKeyboard(keyId, event);
+  };
+}
+
+function getKeyboardCommit(options: SchematicKeyboardOptions): Commit {
+  return (change, message) => {
+    if (options.wiring?.hasPreview === true) {
+      options.announce?.('Apply or cancel wiring before editing.');
+      return;
+    }
+    options.commit(change, message);
   };
 }

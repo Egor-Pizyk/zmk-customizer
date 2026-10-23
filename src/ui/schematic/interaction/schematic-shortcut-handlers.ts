@@ -30,6 +30,7 @@ type ShortcutHandlerInput = {
   readonly activeToolId: PointerState['activeToolId'];
   readonly onToolChange: (toolId: PointerState['activeToolId']) => void;
   readonly hasDraft: boolean;
+  readonly isReadOnly?: boolean;
   readonly announce?: (message: string) => void;
   readonly onDraftCancel: () => void;
 };
@@ -90,30 +91,17 @@ function placeKey(input: ShortcutHandlerInput) {
 export function createShortcutHandlers(input: ShortcutHandlerInput) {
   return {
     onToolChange: (toolId: PointerState['activeToolId']) => {
-      input.onDraftCancel();
       input.onToolChange(toolId);
     },
     onPlaceKey: () => {
-      if (input.activeToolId === 'add-encoder') {
-        placeEncoderAt(
-          {
-            project: input.project,
-            commit: input.commit,
-            onHint: (text) => input.announce?.(text),
-          },
-          (() => {
-            const position = findFreeKeyPosition(input.project);
-            return { xU: position.xU + 0.5, yU: position.yU + 0.5 };
-          })(),
-        );
-        return;
-      }
-      if (input.activeToolId === 'add-key') {
-        placeKey(input);
+      if (!refuseReadOnlyEdit(input)) {
+        placeFromTool(input);
       }
     },
     onDeleteSelection: () => {
-      deleteSelection(input);
+      if (!refuseReadOnlyEdit(input)) {
+        deleteSelection(input);
+      }
     },
     onCancel: () => {
       if (input.hasDraft) {
@@ -179,4 +167,32 @@ function deleteEncoderSelection(input: ShortcutHandlerInput) {
     onSelectionChange();
     focusCanvasLater();
   }
+}
+
+function placeFromTool(input: ShortcutHandlerInput) {
+  if (input.activeToolId === 'add-encoder') {
+    placeEncoderAt(
+      {
+        project: input.project,
+        commit: input.commit,
+        onHint: (text) => input.announce?.(text),
+      },
+      (() => {
+        const position = findFreeKeyPosition(input.project);
+        return { xU: position.xU + 0.5, yU: position.yU + 0.5 };
+      })(),
+    );
+    return;
+  }
+  if (input.activeToolId === 'add-key') {
+    placeKey(input);
+  }
+}
+
+function refuseReadOnlyEdit(input: ShortcutHandlerInput): boolean {
+  if (input.isReadOnly !== true) {
+    return false;
+  }
+  input.announce?.('Apply or cancel wiring before editing.');
+  return true;
 }

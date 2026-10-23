@@ -27,3 +27,4 @@ export { useKeyTransformPointer } from './use-key-transform-pointer';
 export { useSchematicKeyboard } from './use-schematic-keyboard';
 export { useSchematicPointer } from './use-schematic-pointer';
 export { useSchematicShortcuts } from './use-schematic-shortcuts';
+export { getWiringPreviewSelection } from './get-wiring-preview-selection';

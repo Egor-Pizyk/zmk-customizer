@@ -2,7 +2,7 @@ import { SchematicEditorPanel } from './schematic-editor-panel';
 import { EncoderPanel } from '@ui/schematic/encoders/components';
 import { WiringControls, ControllerPanel } from '@ui/schematic/wiring/components';
 import { LayoutControls } from '@ui/schematic/layout/components';
-import { PartsList } from '@ui/schematic/parts/components';
+import { PartsList, PartsWireSectionsTable } from '@ui/schematic/parts/components';
 import { SchematicCanvas } from './schematic-canvas';
 import { getSchematicMarks } from '@ui/schematic/rendering/logic';
 import { ToolWindow } from '@ui/schematic/tools/components';
@@ -13,7 +13,9 @@ import { useState } from 'react';
 export function SchematicWorkspace() {
   const workspace = useSchematicWorkspace();
   const { project, issues, commit, selection } = workspace;
-  const marks = getSchematicMarks(issues.filter((issue) => issue.workspaceId === 'schematic'));
+  const marks = getSchematicMarks(
+    workspace.canvasIssues.filter((issue) => issue.workspaceId === 'schematic'),
+  );
 
   return (
     <section aria-label="Schematic editing area" className="schematic-editing-area">
@@ -23,7 +25,7 @@ export function SchematicWorkspace() {
       <SchematicEditorPanel>
         <ControllerPanel project={project} commit={commit} />
         <WorkspaceLayoutControls workspace={workspace} />
-        <WiringControls {...workspace.wiring} />
+        <WorkspaceWiringControls workspace={workspace} />
         <EncoderPanel />
         <PartsList
           commit={commit}
@@ -39,13 +41,12 @@ export function SchematicWorkspace() {
 
 type Workspace = ReturnType<typeof useSchematicWorkspace>;
 
-function WorkspaceCanvas({
-  workspace,
-  marks,
-}: {
+type WorkspaceCanvasProps = {
   readonly workspace: Workspace;
   readonly marks: ReturnType<typeof getSchematicMarks>;
-}) {
+};
+
+function WorkspaceCanvas({ workspace, marks }: WorkspaceCanvasProps) {
   const { project, commit, selection, pointer, activeToolId } = workspace;
   const [focusedKeyId, setFocusedKeyId] = useState<string | undefined>();
   function handleKeyFocus(keyId: string) {
@@ -61,6 +62,7 @@ function WorkspaceCanvas({
       activeKeyId={getActiveKeyId(project, selection, focusedKeyId)}
       commit={commit}
       hoverPreview={pointer.hoverPreview}
+      isReadOnly={workspace.wiring.hasPreview}
       hasTransformFrames={
         activeToolId === 'select' && !workspace.layout.hasPreview && !workspace.wiring.hasPreview
       }
@@ -123,4 +125,19 @@ function getPreviewProject(workspace: Workspace) {
   return workspace.layout.hasPreview
     ? workspace.layout.previewProject
     : workspace.pointer.previewProject;
+}
+
+function WorkspaceWiringControls({ workspace }: { readonly workspace: Workspace }) {
+  return (
+    <WiringControls {...workspace.wiring}>
+      <PartsWireSectionsTable
+        isReadOnly
+        project={workspace.wiring.previewProject}
+        issues={[]}
+        selection={workspace.selection}
+        onSelectionChange={workspace.handleSelectionChange}
+        commit={workspace.commit}
+      />
+    </WiringControls>
+  );
 }
