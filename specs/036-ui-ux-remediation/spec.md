@@ -1,12 +1,12 @@
 # 036 — UI/UX remediation
 
-**Branch**: `feature/036-ui-ux-remediation`. **Date**: 2026-10-22. **Status**: Items 1–8 implemented; manual acceptance remains open; later items require user approval.
+**Branch**: `feature/036-ui-ux-remediation`. **Date**: 2026-10-22. **Status**: Items 1–8 implemented; items 9–10 authorized; manual acceptance remains open.
 
 ## Goal and scope
 
-Resolve the 21 original roadmap reports and two additional 035 observations sequentially. User delivery contract: one original numbered item per commit, stop after each with manual acceptance instructions and wait for approval before the next unless the user explicitly authorizes consecutive items together. Items 1–8 are authorized for implementation; item 2 thresholds approved 2026-10-23. Research basis: PR #23 / 035-R01; audit remains a separate draft PR. Starting a second active branch is explicitly authorized by the user's request to implement itemwise; branch starts from current origin/main, not an audit stack.
+Resolve the 21 original roadmap reports and two additional 035 observations sequentially. User delivery contract: one original numbered item per commit, stop after each with manual acceptance instructions and wait for approval before the next unless the user explicitly authorizes consecutive items together. Items 1–10 are authorized for implementation; item 2 thresholds approved 2026-10-23. Research basis: PR #23 / 035-R01; audit remains a separate draft PR. Starting a second active branch is explicitly authorized by the user's request to implement itemwise; branch starts from current origin/main, not an audit stack.
 
-Preserve existing projects and electrical wiring, stable IDs, per-layer actions, one-step Undo/Redo, deterministic v0.3.0 exports, static/offline operation and keyboard alternatives. No new dependency or visual identity. Items 4–5 are now explicitly authorized together; item 6 is now separately authorized; items 7–8 are now jointly authorized after an audit of existing behavior; items 9–23 remain roadmap/research scope.
+Preserve existing projects and electrical wiring, stable IDs, per-layer actions, one-step Undo/Redo, deterministic v0.3.0 exports, static/offline operation and keyboard alternatives. No new dependency or visual identity. Items 4–5 are now explicitly authorized together; item 6 is now separately authorized; items 7–8 are now jointly authorized after an audit of existing behavior; items 9–10 are now jointly authorized; items 11–23 remain roadmap/research scope.
 
 ## User scenarios and acceptance
 
@@ -94,3 +94,9 @@ Acceptance: open Wiring for Matrix and see two links with distinct hrefs and an 
 - **FR-021**: Complete wiring and Rebuild wiring from no initial wires produce inspectable proposals under FR-019–020 for matrix/direct. A persistent Preview marker in the Wiring summary and visible instructions explain inspection, Apply/Cancel/Escape and cancellation when opening another editor. Apply commits exactly once and the displayed circuit survives selection/tool changes, reload and Undo/Redo; Cancel/Escape restore saved data/routes without a history entry, announce cancellation, and never resurrect on Undo. Explicit editor dismissal still cancels (033 contract), with feedback. Applied results are not cancelled by tool changes. External saved-project changes invalidate stale proposals as before. Refusal/no-op semantics, retained manual circuits, topology rules and existing field alternatives stay intact.
 
 Acceptance: first verify existing wired and fresh/unwired Rebuild/Complete preview→Apply route equality; independently inspect orthogonal paths and fixed key locations. During preview select a real visible section and a key, use Select and an editing tool/shortcut, try a drag and keyboard nudge/Delete, and verify the same proposal remains with unchanged saved JSON. On fresh circuits connection marks agree with the displayed wires. Apply, select, switch tools, reload and Undo/Redo preserve the committed result; Cancel/Escape and closing Wiring restore/announce saved state. Inspect both themes and a narrow panel. Native screen-reader speech/OS zoom remain manual E008; no new motion, dependencies or ZMK syntax.
+
+## US7 — Move connected keys (item 9)
+
+- **FR-022**: In a hand-drawn 2×2 matrix, permit upper-right key movement left/right and vertically when final geometry preserves its electrical networks and resource limits. Connected crossings displaced by a move must not be mistaken for new unrelated connections. Keep pin identities, wire references, fixed bends/anchors, diode/bindings, incidental-crossing insulation and legitimate overlap/limit refusal. Pointer preview is unsaved, release commits once, Escape cancels; existing numeric/nudge alternatives and one-step Undo/Redo/reload remain.
+
+Acceptance: reproduce horizontal refusal with a hand-drawn connected crossing and vertical control; verify both horizontal directions, complete pin partitions, unrelated conductors, cancellation/history/reload, new incidental insulation and unsafe overlap/resource refusal. Preserve current selection/feedback, themes, layout and reduced motion; no new controls or schema.

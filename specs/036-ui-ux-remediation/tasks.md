@@ -54,3 +54,8 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 - [x] W002 [FR-019–020] Repair wired proposal inspection, preview-scoped selection/marks and mutation guards; verify pointer/keyboard/Select behavior, render review, checks, journal and item-7 commit.
 - [x] W003 [FR-021] Verify fresh/no-wire matrix/direct Rebuild/Complete inspection, explicit cancellation and applied lifecycle; fix any remaining item-8 gaps without changing routing unless reproduced.
 - [x] W004 [FR-021] Sensitivity, relevant cross-engine/rendered checks, changed checks, accurate evidence/task status, item-8 commit and existing draft PR update; stop before item 9.
+
+## Item 9
+
+- [x] M001 [FR-022] Reproduce hand-drawn 2×2 horizontal refusal with vertical/automatic controls; repair domain crossing continuity, retain partition/overlap/resource protection.
+- [ ] M002 [FR-022] Real pointer preview/cancel/history/reload, numeric/nudge coverage, rendered review, changed checks, evidence and separate item-9 commit; then item 10 is authorized.
