@@ -166,13 +166,13 @@ For new or changed user journeys, add or update Playwright E2E tests and include
 - Retain useful failure traces/screenshots. Record scenario → risk → existing coverage → new E2E → visible assertion → saved/exported assertion, verification results and remaining limits in feature artifacts. Commands and artifact handling are documented in `docs/testing.md`.
 - Never weaken assertions to make CI green or claim absence of user problems solely from passing tests.
 
-## Post-implementation UI/UX skill review (Codex)
+## Post-implementation UI/UX review (Codex)
 
-After creating or changing an interface, invoke the project-local [$ui-ux-pro-max](../.agents/skills/ui-ux-pro-max/SKILL.md) again as required by [workflow.md](workflow.md#frontend-uiux-workflow-codex). Review the implemented interface against its specification and the skill's applicable guidance, including `references/quick-reference.md` and `references/pro-rules.md`. Apply web-relevant checks within the supported product scope; record native-only or unrelated items as inapplicable with a reason.
+After creating or changing an interface, review the implemented result against its specification and project UI/accessibility guidelines as required by [workflow.md](workflow.md#frontend-uiux-workflow-codex). Apply web-relevant checks within the supported product scope; record unrelated items as inapplicable with a reason.
 
 - Check affected flows and relevant empty, error, disabled and success states; labels, hierarchy, consistency and feedback; keyboard navigation, focus visibility/order/restoration, accessible names and non-pointer alternatives; contrast in supported themes, overflow/responsive layout, text zoom and reduced motion where applicable.
-- Inspect the actual rendered result in isolated Playwright under the browser rules above. Local search output or source inspection alone is not rendered-interface verification. Use the required automated checks from [commands.md](commands.md); skill review supplements those checks.
-- Record the reviewed scope, skill queries/guidance used, acceptance criteria, findings, fixes, check commands/results and remaining manual limits in the owning feature's verification artifacts. Give each finding a stable ID and status and link its requirement/task/check without duplicating an existing traceability mapping.
+- Inspect the actual rendered result in isolated Playwright under the browser rules above. Local search output or source inspection alone is not rendered-interface verification. Use the required automated checks from [commands.md](commands.md); UI/UX review supplements those checks.
+- Record the reviewed scope, design guidance used, acceptance criteria, findings, fixes, check commands/results and remaining manual limits in the owning feature's verification artifacts. Give each finding a stable ID and status and link its requirement/task/check without duplicating an existing traceability mapping.
 - Reproduce regressions before fixes and rerun affected checks after fixes. An unresolved acceptance failure keeps its task open and blocks completion. Never label unperformed keyboard, screen-reader, visual or other manual checks as passed.
 
 ## Mutation runner implementation
