@@ -17,3 +17,5 @@ User requires one commit for the whole item; all spec/code/tests/evidence are in
 Wire corner follow-up (FR-008): render one shared handle layer over complete derived paths, including unselected wires. A derived corner becomes a temporary bend in gesture state; preview and release use that same bend list, preserving cancellation and one-step history. Use existing square marker tokens and size; no dependencies or schema changes. User explicitly excluded ui-ux-pro-max for this work.
 
 Coincident wire handles: derive a single coordinate-indexed list before rendering, deduplicating both repeated points within one wire and shared corners between wires. Keep the first wire owner deterministically; electrical connectivity and saved wire data are preserved.
+
+Straight-line handle follow-up: derive handles from actual path turns; omit saved collinear intermediary points. A wholly straight wire with saved bends retains its first saved point as one movable handle. Preserve actual corner handles, saved geometry, and coordinate deduplication.

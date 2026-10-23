@@ -23,3 +23,7 @@ FR-008 / E009: square handles now follow every actual right-angle corner, includ
 ## Coincident corner handles — 2026-10-23
 
 FR-008 / E010: the new rendering regression first failed with two squares at one shared corner, then passed with one square after coordinate-based deduplication. Covers repeated saved bends and two wires sharing an automatic corner. Existing corner, section re-selection and double-click handle tests remain passing. The change affects handle presentation and preserves persisted wires and electrical connections. Staged checks use the receipt under `.check-logs/`; manual acceptance remains pending for dragging overlapping handles.
+
+## Straight-line handles — 2026-10-23
+
+FR-008 / E011: horizontal and vertical wires with three collinear saved points first failed the single-handle assertion, and an orthogonal two-turn path first failed by exposing three extra intermediary handles. All three regressions pass after deriving handles from real turns and retaining only one saved handle on a wholly straight wire. Existing rendering tests and focused Chromium bend dragging/collapse/double-click scenarios pass. Persisted geometry and electrical state are unchanged; final staged snapshot checks are retained by check:changed under `.check-logs/`. Manual acceptance: multiple points on one straight wire show one square; real turns remain movable.

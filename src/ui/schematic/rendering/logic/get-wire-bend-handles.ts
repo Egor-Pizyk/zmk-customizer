@@ -12,7 +12,8 @@ export function getWireBendHandles(
 ): readonly WireBendHandle[] {
   const handles = new Map<string, WireBendHandle>();
   for (const wire of project.wires) {
-    const points = [...getWireCorners(paths.get(wire.id) ?? []), ...wire.bends];
+    const corners = getWireCorners(paths.get(wire.id) ?? []);
+    const points = corners.length > 0 ? corners : wire.bends.slice(0, 1);
     for (const point of points) {
       const positionKey = `${point.xU}:${point.yU}`;
       if (handles.has(positionKey)) {
