@@ -97,17 +97,15 @@ function encoderContacts(xU: number, yU: number): readonly Contact[] {
 
 function EncoderContact({ contact }: { readonly contact: Contact }) {
   return (
-    <g aria-hidden="true">
-      <circle className="fill-text" cx={contact.xU} cy={contact.yU} r={0.07} />
-      <text
-        className="fill-text-muted"
-        fontSize={0.1}
-        textAnchor="middle"
-        x={contact.xU}
-        y={contact.yU - 0.1}
-      >
-        {contact.label}
-      </text>
-    </g>
+    <text
+      aria-hidden="true"
+      className="fill-text-muted"
+      fontSize={0.1}
+      textAnchor="middle"
+      x={contact.xU}
+      y={contact.yU - 0.1}
+    >
+      {contact.label}
+    </text>
   );
 }
