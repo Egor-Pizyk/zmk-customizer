@@ -2,12 +2,6 @@ import { getKeyGeometry } from '@domain/geometry';
 import type { Key } from '@domain';
 import type { ReactNode } from 'react';
 
-type Contact = {
-  readonly label: string;
-  readonly xU: number;
-  readonly yU: number;
-};
-
 type EncoderKeycapArtProps = {
   readonly bindingKey: Key;
   readonly hasConflict: boolean;
@@ -23,9 +17,6 @@ export function EncoderKeycapArt(props: EncoderKeycapArtProps) {
     <>
       <EncoderBody cx={cx} cy={cy} />
       <EncoderLegs xU={xU} yU={yU} />
-      {encoderContacts(xU, yU).map((contact) => (
-        <EncoderContact contact={contact} key={contact.label} />
-      ))}
       {children}
       {hasConflict ? (
         <path
@@ -107,29 +98,4 @@ function encoderLegs(xU: number, yU: number) {
       to: { xU: xU + 0.85, yU: yU - 0.15 },
     },
   ] as const;
-}
-
-function encoderContacts(xU: number, yU: number): readonly Contact[] {
-  return [
-    { label: 'A', xU: xU + 0.15, yU: yU - 0.15 },
-    { label: 'COM', xU: xU + 0.5, yU: yU - 0.15 },
-    { label: 'B', xU: xU + 0.85, yU: yU - 0.15 },
-    { label: 'SW1', xU: xU + 0.3, yU: yU + 0.37 },
-    { label: 'SW2', xU: xU + 0.63, yU: yU + 0.23 },
-  ];
-}
-
-function EncoderContact({ contact }: { readonly contact: Contact }) {
-  return (
-    <text
-      aria-hidden="true"
-      className="fill-text-muted"
-      fontSize={0.1}
-      textAnchor="middle"
-      x={contact.xU}
-      y={contact.yU - 0.1}
-    >
-      {contact.label}
-    </text>
-  );
 }

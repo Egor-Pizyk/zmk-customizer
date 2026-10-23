@@ -17,9 +17,10 @@ export function WiresLayer({ project, view, paths, selection, crossings }: Wires
       {sections.map((section) => (
         <WireShape
           isSelected={
-            selection?.kind === 'sections' &&
-            selection.base === project &&
-            selection.sectionIds.includes(section.id)
+            (selection?.kind === 'wire' && selection.wireId === section.wireId) ||
+            (selection?.kind === 'sections' &&
+              selection.base === project &&
+              selection.sectionIds.includes(section.id))
           }
           key={section.id}
           label={`Wire section ${section.id}`}

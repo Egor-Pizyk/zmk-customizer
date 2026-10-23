@@ -117,3 +117,25 @@ it('renders one square when repeated bends and another wire share a corner', () 
   );
   expect(markup.match(/data-wire-bend=""/gu)).toHaveLength(1);
 });
+
+it('highlights only the whole wire selected by a bend drag', () => {
+  const project = buildProject({
+    wires: [
+      { id: 'w1', start: freeEnd(0, 0), end: freeEnd(4, 2), bends: [] },
+      { id: 'w2', start: freeEnd(0, 4), end: freeEnd(4, 6), bends: [] },
+    ],
+  });
+  const markup = renderToStaticMarkup(
+    <svg>
+      <WiresLayer
+        project={project}
+        view={{ pxPerU: 48, zoom: 1, panXPx: 0, panYPx: 0 }}
+        paths={new Map(project.wires.map((wire) => [wire.id, getWirePath(project, wire)]))}
+        selection={{ kind: 'wire', wireId: 'w1' }}
+        crossings={[]}
+      />
+    </svg>,
+  );
+  expect(markup.match(/data-selected="true"/gu)).toHaveLength(1);
+  expect(markup.match(/stroke-width="3"/gu)).toHaveLength(1);
+});

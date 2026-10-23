@@ -174,6 +174,9 @@ test('encoder contacts and ordinary push key export together; deletion is atomic
   await connectRotary(page);
   await assignPush(page);
   await expect(page.locator('[data-encoder-keycap="e1"]')).toBeVisible();
+  await expect(
+    page.locator('[data-encoder-keycap="e1"] text').filter({ hasText: /^(A|COM|B|SW1|SW2)$/u }),
+  ).toHaveCount(0);
   await page.screenshot({ path: info.outputPath('encoder-bindings.png') });
   const project = await saved(page);
   expect(project.layers[0]?.bindings['k1']).toEqual({

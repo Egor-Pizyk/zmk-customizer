@@ -29,10 +29,13 @@ Preserve existing projects and electrical wiring, stable IDs, per-layer actions,
 - **FR-004**: Versioned migration, safe structural/ownership parsing and round-trip compatibility, including legacy direct-mode encoders (US1.5).
 - **FR-005**: Keyboard/field/wire-list alternatives, labels/feedback, themes/responsive review and retained focus/rotary-action semantics (US1.6).
 - **FR-006**: Verified pinned output uses wire-derived GPIOs for schematic encoders and ordinary kscan for push keys, with independent golden/export/build evidence. Zero-encoder output and legacy assignments remain unchanged.
-- **FR-007**: Render an integrated five-contact encoder when push is enabled, distinguish rotary and switch contacts in both workspaces, and show selected-part corner rotation controls without hover discovery (US1.7).
+- **FR-007**: Render an integrated five-contact encoder when push is enabled, distinguish rotary and switch contacts in Schematic; Bindings shows encoder artwork and binding legends without electrical contact text, and show selected-part corner rotation controls without hover discovery (US1.7).
 - **FR-008**: Keep a square drag handle visible at every right-angle wire corner and let derived corners become editable bends through a single drag gesture (US1.8). Coincident handles at the same coordinates render as one square. Collinear intermediary points do not add handles between real turns; a wholly straight wire with saved bends exposes one handle. Moving a corner shifts its adjacent straight sections together, preserving the turn orientation and fixed endpoints/contact anchors without returning through obsolete waypoints.
 
 - **FR-009**: With Schematic canvas focus, `E` (case-insensitive) activates Encoder, using the same draft cancellation as other tools. The icon shows `Encoder (E)` on hover and keyboard focus; shortcut help lists it. Typing, dialogs, modifiers and Bindings do not activate this tool. Tool selection alone does not edit the project or history.
+
+- **FR-010**: Bindings encoder artwork omits A/COM/B/SW1/SW2 text, preserving the encoder body, rotary legs, binding legend, selection and accessible key name. Schematic retains electrical contact labels.
+- **FR-011**: Selecting a wire by its bend keeps all of that wire’s visible sections accented and thicker during preview and after release, including derived bends. Other wires remain unselected; Escape clears highlighting. Section-only selection retains its existing scope and stale-project guard. Gesture persistence, cancellation and one-step Undo/Redo remain unchanged.
 
 ## Edge cases
 

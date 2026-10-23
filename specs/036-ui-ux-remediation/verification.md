@@ -45,3 +45,17 @@ Manual limits: no OS/screen-reader speech or native zoom review; existing E008 r
 UX-E01 fixed: both focused Chromium encoder scenarios passed (2/2): existing pointer move/rotate and new shortcut/hint/Enter/typing/modifier/help flow. Inspected `test-results/encoder-schematic-Encoder--c1f20-ree-with-keyboard-placement-chromium/encoder-shortcut.png`: Encoder (E) is readable next to the icon without clipping. Final snapshot verification uses check:changed receipt under `.check-logs/` (includes this journal).
 
 Final production snapshot `50e68c815f5a5a6f9e03222ba49401c50b472a52` passed `npm run check:changed`: typecheck, browser types, architecture/guidelines, lint/format, 224 related unit tests and 76 Chromium scenarios. Receipt: `.check-logs/50e68c815f5a-0de08dc5611e/passed.json`. Follow-up documentation closes E013; user manual acceptance remains E008.
+
+## Bindings labels and dragged-wire highlight — 2026-10-23
+
+FR-010/011 / E014/E015. Clean base `d0c113b3eadb9b455a7abc5b76c8e05ff118de57`; resolver selects 036, existing draft PR #24. User explicitly authorized both remaining follow-ups together. No domain, storage, schema, dependency, history or export changes. Existing normative context from this session reused; Tailwind and 003 UI contracts reviewed for these rendering changes.
+
+Pre/post ui-ux-pro-max: `selection state feedback` returned off-topic mobile/navigation advice; retry `color not only` supports accent plus thickness/endpoint markers, React `derive state render` supports selection-derived rendering. Native/mobile/new-page recommendations inapplicable. Existing focus/labels/themes/layout/motion retained.
+
+Diagnostic red Playwright run `/tmp/two-followups-red.log`: both scenarios failed as expected, five contact texts in Bindings and no selected path during bend preview. Fix removes decorative contact text/data from EncoderKeycapArt and renders whole-wire selection by stable wireId alongside existing project-scoped section selection. The first green run exposed an incorrect new test assumption: the fixture wire has two electrical sections at its intermediate key contact; both are correctly highlighted. Corrected the expectation to two and retained the requirement that all sections highlight.
+
+Post-review findings: UX-F01 (contact clutter) removed; UX-F02 (lost wire feedback) fixed through existing accent, thicker stroke and endpoint markers. Focused and staged-check results follow; manual OS/screen-reader/native zoom review remains open under E008.
+
+Focused Chromium diagnostics passed 3/3 (`/tmp/two-followups-green.log`): encoder binding/export/deletion lifecycle without contact text, selected saved-bend drag and Escape, and derived-corner drag. Inspected actual `encoder-bindings.png` and `wire-selected-after-drag.png` from their test-results scenario folders: encoder body/binding remain without A/COM/B/SW text, and the full routed wire remains visibly blue with thicker stroke and endpoint marks after release. No new theme token or layout changes; independent dark-mode/OS acceptance not claimed. Authoritative staged snapshot check receipt is retained under `.check-logs/`.
+
+Final production snapshot `06912f81a813838af7e119184badb042e46a9ed2` passed `npm run check:changed`: typecheck, E2E types, architecture/guidelines, lint/format, 116 related unit tests and all 76 Chromium scenarios. Receipt `.check-logs/06912f81a813-d0c113b3eadb/passed.json`. E014/E015 complete; manual review limits above remain explicit. Documentation closure checked separately before amending the same commit.

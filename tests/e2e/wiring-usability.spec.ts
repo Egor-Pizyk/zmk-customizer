@@ -52,9 +52,16 @@ test('a wire stays selected while and after dragging a bend @cross-browser', asy
   await page.mouse.down();
   await page.mouse.move(start.x + 48, start.y - 48, { steps: 4 });
   await expect(page.locator('[data-bend-index]')).toHaveCount(1);
+  await expect(page.locator('[data-section-id] path[data-selected]')).toHaveCount(2);
   await page.mouse.up();
   await expect(page.locator('[data-bend-index]')).toHaveCount(1);
   expect((await saved(page)).wires[0]?.bends[0]).not.toEqual(bent.wires[0]?.bends[0]);
+  await expect(page.locator('[data-section-id] path[data-selected]')).toHaveCount(2);
+  await expect(page.locator('[data-section-id] path[data-selected]').first()).toHaveAttribute(
+    'stroke-width',
+    '3',
+  );
+  await page.screenshot({ path: test.info().outputPath('wire-selected-after-drag.png') });
 
   const straightPoint = await sectionPoint(
     page.locator('[data-section-id] path[pointer-events="stroke"]').first(),
@@ -75,6 +82,8 @@ test('a wire stays selected while and after dragging a bend @cross-browser', asy
   await page.mouse.dblclick(bendPoint.x, bendPoint.y);
   await expect(page.locator('[data-bend-index]')).toHaveCount(1);
   expect((await saved(page)).wires[0]?.bends).toHaveLength(1);
+  await page.keyboard.press('Escape');
+  await expect(page.locator('[data-section-id] path[data-selected]')).toHaveCount(0);
 });
 
 test('every right-angle wire corner stays visible and can be dragged', async ({ page }) => {
@@ -99,6 +108,7 @@ test('every right-angle wire corner stays visible and can be dragged', async ({ 
   await page.mouse.up();
 
   await expect(page.locator('[data-wire-bend]')).not.toHaveCount(0);
+  await expect(page.locator('[data-section-id] path[data-selected]')).toHaveCount(1);
   const moved = await saved(page);
   const wire = moved.wires[0];
   if (wire === undefined) {
