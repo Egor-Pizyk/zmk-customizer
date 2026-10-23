@@ -21,19 +21,7 @@ export function EncoderKeycapArt(props: EncoderKeycapArtProps) {
   const cy = yU + 0.5;
   return (
     <>
-      <circle
-        className="fill-surface-muted stroke-border-strong group-focus-visible:stroke-focus group-focus-visible:stroke-3 group-data-conflict:stroke-danger group-data-selected:stroke-accent group-data-selected:stroke-3"
-        cx={cx}
-        cy={cy}
-        r={0.4}
-        strokeWidth={1.5}
-        vectorEffect="non-scaling-stroke"
-      />
-      <path
-        d={`M ${cx} ${cy - 0.34} v 0.18`}
-        className="pointer-events-none stroke-accent"
-        strokeWidth={0.05}
-      />
+      <EncoderBody cx={cx} cy={cy} />
       <EncoderLegs xU={xU} yU={yU} />
       {encoderContacts(xU, yU).map((contact) => (
         <EncoderContact contact={contact} key={contact.label} />
@@ -46,6 +34,42 @@ export function EncoderKeycapArt(props: EncoderKeycapArtProps) {
           d={`M ${xU + 0.78} ${yU + 0.12} l 0.1 0.18 h -0.2 z`}
         />
       ) : undefined}
+    </>
+  );
+}
+
+function EncoderBody({ cx, cy }: { readonly cx: number; readonly cy: number }) {
+  return (
+    <>
+      <circle
+        className="fill-surface-muted stroke-border-strong group-focus-visible:stroke-focus group-focus-visible:stroke-3 group-data-conflict:stroke-danger group-data-selected:stroke-accent group-data-selected:stroke-3"
+        cx={cx}
+        cy={cy}
+        r={0.42}
+        strokeWidth={1.5}
+        vectorEffect="non-scaling-stroke"
+      />
+      <circle
+        className="fill-surface-raised stroke-border"
+        cx={cx}
+        cy={cy - 0.035}
+        r={0.31}
+        strokeWidth={1}
+        vectorEffect="non-scaling-stroke"
+      />
+      <path
+        aria-hidden="true"
+        className="fill-none stroke-surface"
+        d={`M ${cx - 0.19} ${cy - 0.18} A 0.27 0.27 0 0 1 ${cx + 0.17} ${cy - 0.2}`}
+        strokeLinecap="round"
+        strokeWidth={1.5}
+        vectorEffect="non-scaling-stroke"
+      />
+      <path
+        d={`M ${cx} ${cy - 0.34} v 0.18`}
+        className="pointer-events-none stroke-accent"
+        strokeWidth={0.05}
+      />
     </>
   );
 }
