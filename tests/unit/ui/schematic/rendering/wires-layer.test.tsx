@@ -88,3 +88,32 @@ it('retains a saved straight-line bend handle so a double-clicked point can be d
   expect(markup.match(/data-wire-bend=""/gu)).toHaveLength(1);
   expect(markup).toContain('data-bend-index="0"');
 });
+
+it('renders one square when repeated bends and another wire share a corner', () => {
+  const project = buildProject({
+    wires: [
+      {
+        id: 'w1',
+        start: freeEnd(0, 0),
+        end: freeEnd(4, 2),
+        bends: [
+          { xU: 4, yU: 0 },
+          { xU: 4, yU: 0 },
+        ],
+      },
+      { id: 'w2', start: freeEnd(2, 0), end: freeEnd(4, 3), bends: [] },
+    ],
+  });
+  const markup = renderToStaticMarkup(
+    <svg>
+      <WiresLayer
+        project={project}
+        view={{ pxPerU: 48, zoom: 1, panXPx: 0, panYPx: 0 }}
+        paths={new Map(project.wires.map((wire) => [wire.id, getWirePath(project, wire)]))}
+        selection={undefined}
+        crossings={[]}
+      />
+    </svg>,
+  );
+  expect(markup.match(/data-wire-bend=""/gu)).toHaveLength(1);
+});

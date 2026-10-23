@@ -30,7 +30,7 @@ Preserve existing projects and electrical wiring, stable IDs, per-layer actions,
 - **FR-005**: Keyboard/field/wire-list alternatives, labels/feedback, themes/responsive review and retained focus/rotary-action semantics (US1.6).
 - **FR-006**: Verified pinned output uses wire-derived GPIOs for schematic encoders and ordinary kscan for push keys, with independent golden/export/build evidence. Zero-encoder output and legacy assignments remain unchanged.
 - **FR-007**: Render an integrated five-contact encoder when push is enabled, distinguish rotary and switch contacts in both workspaces, and show selected-part corner rotation controls without hover discovery (US1.7).
-- **FR-008**: Keep a square drag handle visible at every right-angle wire corner and let derived corners become editable bends through a single drag gesture (US1.8).
+- **FR-008**: Keep a square drag handle visible at every right-angle wire corner and let derived corners become editable bends through a single drag gesture (US1.8). Coincident handles at the same coordinates render as one square.
 
 ## Edge cases
 

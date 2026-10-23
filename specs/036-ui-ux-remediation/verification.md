@@ -19,3 +19,7 @@ Direct focused runs were diagnostic because this item changed domain, storage, g
 ## Wire corner handles — 2026-10-23
 
 FR-008 / E009: square handles now follow every actual right-angle corner, including automatically routed corners, and remain visible without selection. Derived-corner dragging uses temporary bends and persists once on release; no schema change. Rendering regression checks exact handle counts and coordinates; Chromium exercises dragging an unsaved corner and the existing collapse/double-click journey. Focused diagnostic tests, lint and typecheck passed. Final staged snapshot checks are recorded in `.check-logs/` by `npm run check:changed`. Manual acceptance: inspect an unselected L-shaped wire, drag each square, check Undo/Redo and cancellation; user acceptance remains pending. User instruction excludes ui-ux-pro-max for this follow-up.
+
+## Coincident corner handles — 2026-10-23
+
+FR-008 / E010: the new rendering regression first failed with two squares at one shared corner, then passed with one square after coordinate-based deduplication. Covers repeated saved bends and two wires sharing an automatic corner. Existing corner, section re-selection and double-click handle tests remain passing. The change affects handle presentation and preserves persisted wires and electrical connections. Staged checks use the receipt under `.check-logs/`; manual acceptance remains pending for dragging overlapping handles.

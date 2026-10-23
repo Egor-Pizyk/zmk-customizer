@@ -1,6 +1,7 @@
 import { getWireSections } from '@domain/wires';
 import { BendHandles } from './bend-handles';
 import { CrossingBridge } from './crossing-bridge';
+import { getWireBendHandles } from '@ui/schematic/rendering/logic';
 import type { SchematicLayerProps } from '@ui/schematic/rendering/logic';
 import { WireShape } from './wire-shape';
 
@@ -28,7 +29,7 @@ export function WiresLayer({ project, view, paths, selection, crossings }: Wires
           sectionId={section.id}
         />
       ))}
-      <AllBendHandles project={project} paths={paths} pxPerU={view.pxPerU} />
+      <BendHandles handles={getWireBendHandles(project, paths)} pxPerU={view.pxPerU} />
       {crossings
         .filter((crossing) => crossing.isInsulated)
         .map((crossing) => (
@@ -41,20 +42,4 @@ export function WiresLayer({ project, view, paths, selection, crossings }: Wires
         ))}
     </>
   );
-}
-
-function AllBendHandles({
-  project,
-  paths,
-  pxPerU,
-}: Pick<WiresLayerProps, 'project' | 'paths'> & { readonly pxPerU: number }) {
-  return project.wires.map((wire) => (
-    <BendHandles
-      key={wire.id}
-      wireId={wire.id}
-      path={paths.get(wire.id) ?? []}
-      bends={wire.bends}
-      pxPerU={pxPerU}
-    />
-  ));
 }
