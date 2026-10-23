@@ -50,6 +50,14 @@ test commands require a diagnostic or acute-need reason in the task journal. No
 mandatory repeated full local or three-run browser gate remains. Preserve tests-first,
 manual UI acceptance and meaningful behavioral assertions.
 
+Keep tests-first red/green diagnosis early. Finish planned production changes,
+regression scenarios and applicable lint/format fixes before the mandatory staged
+check, so avoidable omissions do not repeatedly trigger the broad local selection.
+After success, rerun when executable changes, failures or unresolved concerns
+invalidate evidence; do not manually repeat suites already covered for that revision.
+Reporting-only edits follow the documentation route. The final-index hook, exact-tree
+receipts, conservative browser selection and CI/manual gates remain mandatory.
+
 CI publishes one bot coverage comment per PR with the checked SHA, metrics, threshold
 outcome and run link. New runs replace it; stale heads/attempts cannot overwrite current
 results. Missing/failed coverage is explicit. The publisher runs trusted main code with

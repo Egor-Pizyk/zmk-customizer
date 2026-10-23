@@ -1,6 +1,7 @@
 # Git flow
 
-Owner of branch, PR and delivery rules. Read at startup and again before delivery.
+Owner of branch, PR and delivery rules. Review at startup and before delivery;
+reuse unchanged rules available in context under `AGENTS.md` rather than rereading.
 [Workflow](../workflow.md) owns SDD; [testing](../testing.md) owns verification.
 
 ## Start
