@@ -34,7 +34,7 @@ export function useKeyTransformPointer(
   options: SchematicPointerOptions,
 ): EditingPointer {
   const [draft, setDraft] = useState<Draft | undefined>();
-  const selectionKey = getSelectedKeyIds(options.selection).join(',');
+  const selectionKey = getSelectedKeyIds(options.selection, { project: options.project }).join(',');
   const current =
     draft?.base === options.project &&
     draft.selectionKey === selectionKey &&

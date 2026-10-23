@@ -141,6 +141,8 @@ test('drawn intermediate connections survive a real endpoint move and section de
   const moved = await saved(page);
   expect(getKeyPinWires(moved)({ keyId: 'k1', pin: 1 })).toEqual([0]);
   await expect(page.locator('[data-section-id]')).toHaveCount(3);
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('checkbox', { name: 'Select key 0', exact: true })).not.toBeChecked();
   const section = page.getByRole('checkbox', { name: /^Section 1,/u });
   await section.check();
   await page.getByRole('button', { name: 'Delete selected sections', exact: true }).click();

@@ -1,3 +1,4 @@
+import { getSelectedKeyIds } from '@ui/schematic/interaction';
 import { getKeyPinWires } from '@domain/wires';
 import { formatKeyLabel } from '@ui/schematic/formatting';
 import { KeyShape } from './key-shape';
@@ -23,8 +24,8 @@ export function KeysLayer(props: SchematicLayerProps) {
       return null;
     }
     const isSelected =
-      (selection?.kind === 'key' && selection.keyId === key.id) ||
-      (selection?.kind === 'multi' && selection.keyIds.includes(key.id));
+      !(selection?.kind === 'sections' && selection.base !== project) &&
+      getSelectedKeyIds(selection).includes(key.id);
     const problems = marks.problemsByKeyIndex.get(keyIndex) ?? [];
     return (
       <KeyShape

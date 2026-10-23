@@ -16,7 +16,7 @@ export function KeyTransformFrames({
   readonly selection: SchematicSelection;
   readonly view: ContentView;
 }) {
-  const keyIds = getSelectedKeyIds(selection);
+  const keyIds = getSelectedKeyIds(selection, { project });
   const encoder =
     selection?.kind === 'encoder'
       ? project.encoders.find((entry) => entry.id === selection.encoderId)

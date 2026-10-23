@@ -18,7 +18,7 @@ type Draft = { readonly base: Project; readonly selectionKey: string; readonly e
 
 export function LayoutControls(props: LayoutControlsProps) {
   const { project, selection } = props;
-  const keyIds = getSelectedKeyIds(selection).filter((id) =>
+  const keyIds = getSelectedKeyIds(selection, { project }).filter((id) =>
     project.keys.some((key) => key.id === id),
   );
   const selectionKey = keyIds.join(',');

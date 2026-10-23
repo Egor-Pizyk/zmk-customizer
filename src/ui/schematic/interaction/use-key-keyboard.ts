@@ -1,3 +1,5 @@
+import { getKeySectionSelection } from './get-key-section-selection';
+import { getSelectedSectionIds } from './get-selected-section-ids';
 import { isKeyPositionFree } from '@domain/geometry';
 import { moveKeys } from '@domain/keys';
 import { getSelectedKeyIds } from './get-selected-key-ids';
@@ -93,11 +95,16 @@ function toggleSelection(
   if ((event.ctrlKey || event.metaKey) && !event.altKey && event.code === 'Space') {
     event.preventDefault();
     event.stopPropagation();
-    const selected = getSelectedKeyIds(options.selection);
+    const selected = getSelectedKeyIds(options.selection, { project: options.project });
     const keyIds = selected.includes(keyId)
       ? selected.filter((id) => id !== keyId)
       : [...selected, keyId];
-    options.onSelectionChange({ kind: 'multi', keyIds, wireIds: [] });
+    options.onSelectionChange(
+      getKeySectionSelection(options.project, {
+        keyIds,
+        sectionIds: getSelectedSectionIds(options.project, options.selection),
+      }),
+    );
     return true;
   }
   return false;
@@ -110,7 +117,7 @@ function nudgeSelection(
     nudge,
   }: { readonly keyId: string; readonly nudge: { readonly dx: number; readonly dy: number } },
 ) {
-  const selected = getSelectedKeyIds(options.selection);
+  const selected = getSelectedKeyIds(options.selection, { project: options.project });
   const keyIds = selected.includes(keyId) ? selected : [keyId];
   const moves = options.project.keys
     .filter((candidate) => keyIds.includes(candidate.id))

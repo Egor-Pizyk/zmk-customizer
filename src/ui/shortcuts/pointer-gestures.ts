@@ -15,6 +15,10 @@ export const POINTER_GESTURES = [
     gesture: 'Schematic: selected-layout number fields and Preview / Apply',
     action: 'Resize, rotate or move selected keys in one undo step',
   },
+  {
+    gesture: 'Schematic, Select tool: drag empty canvas',
+    action: 'Select intersected keys and wire sections; Shift adds to selection',
+  },
   { gesture: 'Schematic, Select tool: drag a key', action: 'Move the key' },
   {
     gesture: 'Schematic: drag outside a selected key or encoder corner',

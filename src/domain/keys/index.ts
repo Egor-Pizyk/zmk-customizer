@@ -12,3 +12,5 @@ export type { KeyGeometryChange } from './set-key-geometries';
 export { setKeycapSize } from './set-keycap-size';
 export type { KeycapSizeInput } from './set-keycap-size';
 export { preserveKeyWiring } from './preserve-key-wiring';
+
+export { removeKeysAndSections } from './remove-keys-and-sections';

@@ -51,7 +51,11 @@ function WorkspaceCanvas({ workspace, marks }: WorkspaceCanvasProps) {
   const [focusedKeyId, setFocusedKeyId] = useState<string | undefined>();
   function handleKeyFocus(keyId: string) {
     setFocusedKeyId(keyId);
-    if (selection?.kind !== 'multi' && !(selection?.kind === 'key' && selection.keyId === keyId)) {
+    if (
+      selection?.kind !== 'multi' &&
+      selection?.kind !== 'sections' &&
+      !(selection?.kind === 'key' && selection.keyId === keyId)
+    ) {
       workspace.handleSelectionChange({ kind: 'key', keyId });
     }
   }

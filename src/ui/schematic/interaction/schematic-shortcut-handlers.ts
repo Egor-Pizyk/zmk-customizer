@@ -1,10 +1,10 @@
 import { removeEncoder } from '@domain/encoders';
 import { placeEncoderAt } from './place-key-at';
 import { PROJECT_BUDGET } from '@storage/project';
-import { addKey, removeKey } from '@domain/keys';
+import { addKey, removeKey, removeKeysAndSections } from '@domain/keys';
 import { createEntityId } from '@domain/project';
 import { findFreeKeyPosition } from '@domain/geometry';
-import { removeWire, removeWireSections } from '@domain/wires/editing';
+import { removeWire } from '@domain/wires/editing';
 import type { Project } from '@domain';
 import type { Commit, PointerState } from './pointer-types';
 import type { SchematicSelection, SelectionChange } from './schematic-selection';
@@ -123,11 +123,15 @@ function deleteSectionSelection(input: ShortcutHandlerInput) {
       onSelectionChange();
       return;
     }
-    const result = removeWireSections(project, { base: project, sectionIds: selection.sectionIds });
+    const result = removeKeysAndSections(project, {
+      base: project,
+      sectionIds: selection.sectionIds,
+      keyIds: selection.keyIds ?? [],
+    });
     if (result.ok) {
       commit(
         (current) => (current === project ? result.value : current),
-        `Deleted ${selection.sectionIds.length} wire sections. Undo`,
+        `Deleted ${selection.keyIds?.length ?? 0} keys and ${selection.sectionIds.length} wire sections. Undo`,
       );
     }
     if (!result.ok) {

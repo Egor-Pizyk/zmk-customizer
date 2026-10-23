@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { getWireSections } from '@domain/wires';
-import { removeWireSections } from '@domain/wires/editing';
+import { removeKeysAndSections } from '@domain/keys';
+import {
+  getKeySectionSelection,
+  getSelectedKeyIds,
+  getSelectedSectionIds,
+} from '@ui/schematic/interaction';
 import { Button } from '@ui/components/components';
 import type { PartsTableProps } from './parts-list';
 import type { KeyboardEvent } from 'react';
@@ -9,7 +14,8 @@ type SectionTableProps = PartsTableProps & { readonly isReadOnly?: boolean };
 
 export function PartsWireSectionsTable(props: SectionTableProps) {
   const [focused, setFocused] = useState(0);
-  const { sections, selected, handleDelete, toggle, handleKey, failure } = useSectionActions(props);
+  const { sections, selected, handleDelete, toggle, handleKey, failure, keyIds } =
+    useSectionActions(props);
   return (
     <section aria-label="Wire sections" className="flex flex-col gap-2">
       <h3 className="font-semibold">Wire sections</h3>
@@ -17,8 +23,11 @@ export function PartsWireSectionsTable(props: SectionTableProps) {
       <p className="text-text-muted">
         {props.isReadOnly === true
           ? 'Select sections to inspect the preview.'
-          : 'Delete sections; keep keys and other branches.'}
+          : 'Delete only the selected objects; keep other branches.'}
       </p>
+      {keyIds.length > 0 ? (
+        <p>{`Selected keys: ${keyIds.length}; wire sections: ${selected.length}.`}</p>
+      ) : null}
       <SectionChoices
         sections={sections}
         selected={selected}
@@ -29,7 +38,7 @@ export function PartsWireSectionsTable(props: SectionTableProps) {
       />
       {props.isReadOnly === true ? null : (
         <Button onClick={handleDelete} isDisabled={selected.length === 0}>
-          Delete selected sections
+          {keyIds.length > 0 ? 'Delete selected keys and sections' : 'Delete selected sections'}
         </Button>
       )}
     </section>
@@ -45,33 +54,36 @@ function useSectionActions({
 }: Omit<SectionTableProps, 'issues'>) {
   const [failure, setFailure] = useState<string>();
   const sections = getWireSections(project);
-  const selected =
-    selection?.kind === 'sections' && selection.base === project ? selection.sectionIds : [];
+  const selected = getSelectedSectionIds(project, selection);
+  const keyIds =
+    selection?.kind === 'sections' && selection.base !== project
+      ? []
+      : getSelectedKeyIds(selection);
   function toggle(id: string) {
     const sectionIds = selected.includes(id)
       ? selected.filter((entry) => entry !== id)
       : [...selected, id];
-    onSelectionChange({ kind: 'sections', base: project, sectionIds });
+    onSelectionChange(getKeySectionSelection(project, { keyIds, sectionIds }));
   }
   function handleDelete() {
     if (isReadOnly === true) {
       return;
     }
-    const result = removeWireSections(project, { base: project, sectionIds: selected });
+    const result = removeKeysAndSections(project, { base: project, sectionIds: selected, keyIds });
     if (!result.ok) {
       setFailure(result.error);
       return;
     }
     commit(
       (current) => (current === project ? result.value : current),
-      `Deleted ${selected.length} wire sections. Undo`,
+      `Deleted ${keyIds.length} keys and ${selected.length} wire sections. Undo`,
     );
     setFailure(undefined);
     onSelectionChange();
     requestAnimationFrame(focusCanvas);
   }
   const handleKey = createSectionKeyHandler({ sections, handleDelete });
-  return { sections, selected, handleDelete, toggle, handleKey, failure };
+  return { sections, selected, handleDelete, toggle, handleKey, failure, keyIds };
 }
 
 function focusSection(

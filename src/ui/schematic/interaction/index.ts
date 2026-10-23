@@ -28,3 +28,7 @@ export { useSchematicKeyboard } from './use-schematic-keyboard';
 export { useSchematicPointer } from './use-schematic-pointer';
 export { useSchematicShortcuts } from './use-schematic-shortcuts';
 export { getWiringPreviewSelection } from './get-wiring-preview-selection';
+
+export { getMarqueeSelection } from './get-marquee-selection';
+export { getSelectedSectionIds } from './get-selected-section-ids';
+export { getKeySectionSelection } from './get-key-section-selection';

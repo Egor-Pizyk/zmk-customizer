@@ -64,3 +64,10 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 
 - [x] C001 [FR-023] Audit connected L crossings on both arms and both sides; add independent section/net regressions, repair only reproduced failures.
 - [x] C002 [FR-023] Real pointer/Shift/list selection, safe deletion/Undo, insulated continuity, rendered light/dark review and changed checks; record results, separate item-10 commit and update existing draft PR. Stop before item 11.
+
+## Item 11
+
+- [x] Q001 [FR-024, FR-026] Failing segment/marquee and immutable mixed-deletion/stale/refusal/free-conductor regressions before owning-layer fixes.
+- [x] Q002 [FR-024–026] Shared mixed selection, intersecting/Shift marquee, pointer/keyboard/list parity, rendering/counts and atomic deletion feedback.
+- [x] Q003 [FR-024–026] Real wire/mixed/Shift/cancel/list/delete/history/reload browser scenarios, sensitivity and rendered review.
+- [x] Q004 [FR-024–026] Changed checks, journal/manual acceptance status, one item-11 commit and existing draft PR update; stop before item 12.

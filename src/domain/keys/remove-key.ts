@@ -16,16 +16,7 @@ export function removeKey(project: Project, input: { readonly keyId: string }): 
     return project;
   }
   const wires = project.wires.map((wire) => withoutKeyContacts(project, wire, key));
-  const orphanIds = wires
-    .filter(
-      (wire) =>
-        wire.start.kind !== 'key-pin' &&
-        wire.end.kind !== 'key-pin' &&
-        wire.start.kind !== 'encoder-pin' &&
-        wire.end.kind !== 'encoder-pin' &&
-        getWirePinContacts(project, wire).length === 0,
-    )
-    .map((wire) => wire.id);
+  const orphanIds = getOrphanIds(project, wires, key);
   const withoutKey = {
     ...project,
     ...(project.wireContacts === undefined
@@ -76,4 +67,27 @@ function unlinkEncoders(project: Project, key: Key) {
     const { pushKeyId: _removed, ...rest } = encoder;
     return { ...rest, ...getEncoderGeometry(project, encoder) };
   });
+}
+
+function getOrphanIds(project: Project, wires: readonly Wire[], key: Key) {
+  const affectedIds = new Set(
+    project.wires
+      .filter((wire) =>
+        [wire.start, wire.end, ...getWirePinContacts(project, wire)].some(
+          (end) => 'keyId' in end && end.keyId === key.id,
+        ),
+      )
+      .map((wire) => wire.id),
+  );
+  return wires
+    .filter(
+      (wire) =>
+        affectedIds.has(wire.id) &&
+        wire.start.kind !== 'key-pin' &&
+        wire.end.kind !== 'key-pin' &&
+        wire.start.kind !== 'encoder-pin' &&
+        wire.end.kind !== 'encoder-pin' &&
+        getWirePinContacts(project, wire).length === 0,
+    )
+    .map((wire) => wire.id);
 }

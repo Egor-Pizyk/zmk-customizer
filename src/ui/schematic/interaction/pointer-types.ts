@@ -42,6 +42,8 @@ export type Drag =
     }
   | {
       readonly kind: 'marquee';
+      readonly base: Project;
+      readonly additive: boolean;
       readonly start: WirePoint;
       readonly end: WirePoint;
     };

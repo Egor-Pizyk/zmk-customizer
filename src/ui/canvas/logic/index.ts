@@ -3,7 +3,7 @@ export type { Direction } from './find-nearest-key';
 export { formatKeyTransform } from './format-key-transform';
 export { getBoardPinLabels } from './get-board-pin-labels';
 export type { BoardPinLabel } from './get-board-pin-labels';
-export { isPointInMarquee, isKeyCellInMarquee } from './marquee-select';
+export { isPointInMarquee, isPathInMarquee, isKeyCellInMarquee } from './marquee-select';
 export { snapToGrid } from './snap';
 export { surfaceCenter } from './surface-center';
 export { toWorldPoint, toContentView } from './surface-content';

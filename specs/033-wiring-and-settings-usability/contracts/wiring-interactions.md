@@ -15,7 +15,7 @@ Product acceptance remains in [spec.md](../spec.md); implementation representati
 - Section selection: Select tool, plain click replace, Shift-click toggle, blank/Escape clear. Section list has labeled checkboxes with the same state and roving keyboard behavior; native field arrows/delete stay native.
 - Selected conductor has a visible extent and endpoint markers. Connected/insulated crossing controls keep their own action and target priority.
 - Delete selected sections / scoped Delete/Backspace removes only selected sections, announces count and Undo, then focuses next surviving section/row or canvas.
-- Marquee remains key-only to avoid mixed destructive selection. Existing whole-wire endpoint repair remains explicitly named in Parts; no hidden fallback from section deletion to whole-net deletion.
+- Under 036 FR-024–026, intersecting marquee selects keys and sections; Shift unions sets and mixed deletion resolves sections against the immutable base before key cleanup in one undoable edit. Existing whole-wire endpoint repair remains explicitly named in Parts; no hidden fallback from section deletion to whole-net deletion.
 
 ## Layout and focus
 
