@@ -101,3 +101,6 @@ Empty project; fully completed no-op; matrix/direct and unibody/split; unequal/r
 ## Delivery authorization — 2026-10-21
 
 The owner requested fixing PR #15 conflicts and enabling automatic merge after CI. This supersedes the earlier draft-only delivery boundary for this PR. T031 manual checks remain unperformed and must not be reported as passed; SC-005 evidence and full manual acceptance remain open. This is a delivery exception for PR #15, not a change to keyboard/accessibility behavior or general acceptance policy.
+
+
+036 FR-029 supersedes the Complete wiring UI requirement: on explicit user selection (2026-10-23), remove its button and retain Rebuild wiring as the sole automatic action with replacement explanation and unchanged preview/Apply/Cancel/history contracts. Additive domain operations/tests remain historical supported contracts, without a UI entry point.

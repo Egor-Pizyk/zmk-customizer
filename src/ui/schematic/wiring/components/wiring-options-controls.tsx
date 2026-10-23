@@ -124,14 +124,6 @@ function WiringAutoActions({ project, onEdit: handleEdit }: WiringOptionsControl
   const { gridSizeU } = usePreferences().preferences;
   return (
     <>
-      <Button
-        variant="secondary"
-        onClick={() => {
-          handleEdit({ kind: 'complete', gridStepU: gridSizeU, board });
-        }}
-      >
-        Complete wiring
-      </Button>
       <p className="text-text-muted">
         Rebuild wiring replaces managed connections and cells. Review the preview before applying.
       </p>

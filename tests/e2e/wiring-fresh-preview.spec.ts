@@ -5,7 +5,7 @@ import { center, history, key, openProject, saved } from './helpers';
 import { readPaths, visibleSection } from './wiring-preview-helpers';
 
 for (const mode of ['matrix', 'direct']) {
-  for (const action of ['Rebuild wiring', 'Complete wiring']) {
+  for (const action of ['Rebuild wiring']) {
     test(`fresh ${mode} ${action} keeps proposal feedback and selection until Apply or Cancel @cross-browser`, async ({
       page,
     }, info) => {
@@ -65,7 +65,7 @@ for (const mode of ['matrix', 'direct']) {
   }
 }
 
-for (const action of ['Rebuild wiring', 'Complete wiring']) {
+for (const action of ['Rebuild wiring']) {
   test(`no-wire project with existing assignments retains ${action} until explicit cancellation @cross-browser`, async ({
     page,
   }) => {
@@ -107,7 +107,7 @@ test('a stale no-wire proposal never returns after an external edit and Undo @cr
   const source = buildProject({ keys: UNIBODY_PRESET.keys });
   await openProject(page, source);
   await page.getByText('Wiring', { exact: true }).click();
-  await page.getByRole('button', { name: 'Complete wiring', exact: true }).click();
+  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toBeVisible();
   await page.getByRole('textbox', { name: 'Name', exact: true }).fill('Edited after preview');
   await page.getByRole('textbox', { name: 'Name', exact: true }).press('Tab');

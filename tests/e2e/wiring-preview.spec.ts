@@ -4,7 +4,7 @@ import { UNIBODY_PRESET } from '../helpers/unibody-preset';
 import { buildProject } from '../helpers/build-project';
 import { center, history, key, openProject, saved } from './helpers';
 
-for (const action of ['Rebuild wiring', 'Complete wiring']) {
+for (const action of ['Rebuild wiring']) {
   test(`${action} already draws the same fresh circuit before and after Apply`, async ({
     page,
   }, info) => {

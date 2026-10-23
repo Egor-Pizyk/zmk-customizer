@@ -32,3 +32,6 @@ Update 013 wiring contract and final 032 contract/UI names: Complete wiring is a
 ## 036 proposal inspection amendment
 
 FR-019–021 permit non-mutating key/encoder/section/wire selection during wiring preview. A read-only reuse of the wire-section list inside Wiring provides the keyboard alternative; Delete and pointer drags cannot change the proposal or saved data. Select/tool attempts no longer silently cancel. Apply saves once; Cancel/Escape or explicit editor dismissal restores and announces saved state. Preview connection feedback and persistent Preview marker describe the displayed circuit; saved-project Problems/export remain isolated. Actual routing/allocation and no-op/refusal behavior are unchanged.
+
+
+036 FR-029 supersedes the Complete wiring UI requirement: on explicit user selection (2026-10-23), remove its button and retain Rebuild wiring as the sole automatic action with replacement explanation and unchanged preview/Apply/Cancel/history contracts. Additive domain operations/tests remain historical supported contracts, without a UI entry point.
