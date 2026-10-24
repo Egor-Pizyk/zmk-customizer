@@ -101,4 +101,4 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 ## Items 22–23 (jointly authorized)
 
 - [x] J022 [FR-037] Reproduce Tools overlap in real browser; reserve toolbar space, verify moved/expanded Tools, painted pointer/keyboard controls, hints/themes/reflow and unchanged project; separate commit.
-- [ ] J023 [FR-038] Reproduce hidden preview actions while nested editor scrolls; compose persistent status/actions, preserve refusal/Cancel/Apply/history, browser rendered review and staged changed checks; separate commit, journal and existing draft PR update. Native acceptance remains open.
+- [x] J023 [FR-038] Reproduce hidden preview actions while nested editor scrolls; compose persistent status/actions, preserve refusal/Cancel/Apply/history, browser rendered review and staged changed checks; separate commit, journal and existing draft PR update. Native acceptance remains open.

@@ -35,3 +35,6 @@ FR-019–021 permit non-mutating key/encoder/section/wire selection during wirin
 
 
 036 FR-029 supersedes the Complete wiring UI requirement: on explicit user selection (2026-10-23), remove its button and retain Rebuild wiring as the sole automatic action with replacement explanation and unchanged preview/Apply/Cancel/history contracts. Additive domain operations/tests remain historical supported contracts, without a UI entry point.
+
+
+036 FR-038 keeps the active wiring/layout preview status and Apply/Cancel in a non-scrolling editor footer outside both nested content scroll areas. Detailed proposal inspection and validation remain in the editor; save/cancel/history behavior is unchanged.

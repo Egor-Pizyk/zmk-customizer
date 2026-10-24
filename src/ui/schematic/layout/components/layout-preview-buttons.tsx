@@ -20,7 +20,7 @@ export function LayoutPreviewButtons({
     onCancel();
   }
   return (
-    <div className="flex gap-2">
+    <div className="flex flex-wrap gap-2">
       <Button isDisabled={!hasPreview || !canApply} onClick={handleApplyClick} size="sm">
         Apply layout
       </Button>

@@ -1,11 +1,15 @@
 import { useState } from 'react';
-import type { CSSProperties, ReactNode } from 'react';
+import type { ComponentProps, CSSProperties, ReactNode } from 'react';
 import { usePreferences } from '@ui/preferences';
+import { SchematicPreviewBar } from './schematic-preview-bar';
 import { EditorResizeHandle } from './editor-resize-handle';
 
-type SchematicEditorPanelProps = { readonly children: ReactNode };
+type SchematicEditorPanelProps = {
+  readonly children: ReactNode;
+  readonly preview: ComponentProps<typeof SchematicPreviewBar>;
+};
 
-export function SchematicEditorPanel({ children }: SchematicEditorPanelProps) {
+export function SchematicEditorPanel({ children, preview }: SchematicEditorPanelProps) {
   const resize = useEditorWidth();
   return (
     <section aria-label="Schematic editors" style={resize.style} className="schematic-editor-pane">
@@ -16,6 +20,7 @@ export function SchematicEditorPanel({ children }: SchematicEditorPanelProps) {
       <div id="schematic-editor-content" className="min-h-0 overflow-auto xl:mr-6">
         {children}
       </div>
+      <SchematicPreviewBar {...preview} />
     </section>
   );
 }

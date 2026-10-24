@@ -4,7 +4,6 @@ import { WiringHalfControls } from './wiring-half-controls';
 import { getControllerBoard } from '@catalog/controllers';
 import { initializeWiring } from '@domain/wiring/editing';
 import type { Half, Project } from '@domain';
-import { Button } from '@ui/components/components';
 import { WiringTable } from './wiring-table';
 import type { useWiringPreview } from '@ui/schematic/wiring/logic';
 import { getProjectAnalysis } from '@ui/project/logic';
@@ -74,7 +73,6 @@ function WiringContent(props: WiringControlsProps & { readonly project: Project 
       )}
       <WiringTable project={project} onAssignCell={handleCell} />
       <WiringFeedback {...props} />
-      <WiringActions {...props} />
     </div>
   );
 }
@@ -108,24 +106,6 @@ function WiringFeedback(props: WiringControlsProps) {
   );
 }
 
-function WiringActions(props: WiringControlsProps) {
-  return (
-    <>
-      {' '}
-      {props.hasPreview ? (
-        <div className="flex gap-2">
-          <Button variant="primary" onClick={props.handleApply}>
-            Apply wiring
-          </Button>
-          <Button variant="secondary" onClick={props.handleCancel}>
-            Cancel wiring
-          </Button>
-        </div>
-      ) : undefined}
-    </>
-  );
-}
-
 function WiringProposalSummary(props: WiringControlsProps) {
   return (
     <>
@@ -140,7 +120,6 @@ function WiringProposalSummary(props: WiringControlsProps) {
 function WiringPreviewInfo(props: WiringControlsProps) {
   return (
     <>
-      <p className="font-semibold">Wiring preview</p>
       <p>
         Select keys and wires to inspect. Apply to save; Cancel or Escape to discard. Opening
         another editor discards this preview.

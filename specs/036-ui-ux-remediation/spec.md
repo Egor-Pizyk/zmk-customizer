@@ -1,6 +1,6 @@
 # 036 — UI/UX remediation
 
-**Branch**: `feature/036-ui-ux-remediation`. **Date**: 2026-10-22. **Status**: Items 1–21 implemented or regression-verified (10 and 15 required no production repair); item-12–21 manual acceptance remains open, plus E008 native checks.
+**Branch**: `feature/036-ui-ux-remediation`. **Date**: 2026-10-22. **Status**: Items 1–23 implemented or regression-verified (10 and 15 required no production repair); item-12–23 manual acceptance remains open, plus E008 native checks.
 
 ## Goal and scope
 
@@ -70,7 +70,7 @@ Encoder retains its identity/actions. Optional schematic mode adds orientation a
 
 ## Assumptions and open questions
 
-User approved optional button after being offered A/COM/B plus two switch contacts and symbolic layout. New encoders start with push enabled; it can be disabled explicitly. Existing encoders remain direct mode and buttonless. COM is electrical GND, not a GPIO. Button contacts are ordinary kscan contacts; no physical manufacturer pinout is asserted. All later original items remain unimplemented until separately approved.
+User approved optional button after being offered A/COM/B plus two switch contacts and symbolic layout. New encoders start with push enabled; it can be disabled explicitly. Existing encoders remain direct mode and buttonless. COM is electrical GND, not a GPIO. Button contacts are ordinary kscan contacts; no physical manufacturer pinout is asserted. Later numbered items require user authorization; current approvals and implementation status are recorded above.
 
 ## US4 — Resizable Schematic editors (items 4–5)
 

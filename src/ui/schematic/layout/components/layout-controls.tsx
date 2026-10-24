@@ -3,7 +3,6 @@ import type { Key, Project } from '@domain';
 import { getSelectedKeyIds } from '@ui/schematic/interaction';
 import { LayoutActions } from './layout-actions';
 import { LayoutFields } from './layout-fields';
-import { LayoutPreviewButtons } from './layout-preview-buttons';
 import type { PartsTableProps } from '@ui/schematic/parts/components';
 import { useState } from 'react';
 
@@ -43,13 +42,6 @@ export function LayoutControls(props: LayoutControlsProps) {
       data-layout-controls
     >
       <LayoutActions {...props} />
-      {props.hasPreview ? <LayoutPreviewButtons {...props} /> : null}
-      {props.hasPreview && !props.canApply ? (
-        <output>
-          No layout changes: existing electrical connections and processing limits are preserved.
-          Adjust the geometry or repair the affected wires.
-        </output>
-      ) : null}
       <PreciseProperties {...props} first={first} edit={edit} onEditChange={handleEditChange} />
     </section>
   );

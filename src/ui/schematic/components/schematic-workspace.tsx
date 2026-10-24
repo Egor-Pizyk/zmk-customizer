@@ -22,7 +22,7 @@ export function SchematicWorkspace() {
       <div className="schematic-canvas-pane">
         <WorkspaceCanvas workspace={workspace} marks={marks} />
       </div>
-      <SchematicEditorPanel>
+      <SchematicEditorPanel preview={{ workspace }}>
         <ControllerPanel project={project} commit={commit} />
         <WorkspaceLayoutControls workspace={workspace} />
         <WorkspaceWiringControls workspace={workspace} />
