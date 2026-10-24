@@ -1,10 +1,12 @@
-import { matchShortcut, readShortcutInput } from '@ui/shortcuts';
+import { SHORTCUTS, matchShortcut, readShortcutInput } from '@ui/shortcuts';
 import type { ShortcutId } from '@ui/shortcuts';
 import type { ToolId } from '@ui/schematic/tools/logic';
 
 import { useEffect, useEffectEvent } from 'react';
 
 type SchematicShortcutHandlers = {
+  readonly onCopy?: () => void;
+  readonly onPaste?: () => void;
   readonly onWiringCancel?: (() => void) | undefined;
   readonly hasWiringPreview?: boolean | undefined;
   readonly onToolChange: (toolId: ToolId) => void;
@@ -56,6 +58,9 @@ export function useSchematicShortcuts(handlers: SchematicShortcutHandlers) {
       return;
     }
     const input = readShortcutInput(event);
+    if (handleClipboardShortcut(event, handlers)) {
+      return;
+    }
     if (input.focusedCanvas !== 'schematic' || event.repeat) {
       return;
     }
@@ -74,4 +79,43 @@ export function useSchematicShortcuts(handlers: SchematicShortcutHandlers) {
       globalThis.removeEventListener('keydown', handleNativeKeyDown);
     };
   }, []);
+}
+
+function handleClipboardShortcut(
+  event: KeyboardEvent,
+  handlers: SchematicShortcutHandlers,
+): boolean {
+  const input = readShortcutInput(event);
+  const isTable =
+    event.target instanceof Element && event.target.closest('[data-parts-keys]') !== null;
+  if (
+    !(input.focusedCanvas === 'schematic' || isTable) ||
+    input.isTypingTarget ||
+    input.isDialogOpen ||
+    event.repeat ||
+    !(event.ctrlKey || event.metaKey) ||
+    event.altKey ||
+    event.shiftKey
+  ) {
+    return false;
+  }
+  const shortcut = SHORTCUTS.find(
+    (entry) => entry.scope === 'schematic' && entry.code === event.code,
+  );
+  if (shortcut?.id === 'copy-keys') {
+    return invokeClipboard(event, handlers.onCopy);
+  }
+  if (shortcut?.id === 'paste-keys') {
+    return invokeClipboard(event, handlers.onPaste);
+  }
+  return false;
+}
+
+function invokeClipboard(event: KeyboardEvent, handler: (() => void) | undefined): boolean {
+  if (handler === undefined) {
+    return false;
+  }
+  event.preventDefault();
+  handler();
+  return true;
 }

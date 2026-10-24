@@ -17,3 +17,7 @@ Bindings gains only explicit standard-size editing through the contextual Keycap
 FR-021 supersedes earlier Schematic sizing requirements (FR-003/004/013/014/016/017): Schematic offers no switch resize handles or editable width/height, either in the Keys table or Precise properties. Retain selection frame, four exterior rotation targets, numeric rotation/origin, movement and history. Existing/custom project dimensions remain unchanged and loadable. Bindings keycap size chooser remains the only size-editing UI.
 
 Acceptance: select a switch; no Resize controls or width/height inputs appear, including after opening Precise properties. Rotate from an exterior corner: visible center and dimensions stay fixed, preview remains unsaved, release commits once, Undo/Redo restore exact projects. Rotation remains keyboard-editable. Change keycap size in Bindings and return: dimensions persist with no Schematic size editor.
+
+## Numeric rotation amendment (036 items 18–19)
+
+036 FR-034 supersedes implicit common-origin angle editing: numeric angle alone rotates each selected key about its own visible center. Explicitly editing an Origin coordinate retains deliberate absolute-origin transforms. Pointer rotation and persisted geometry representation remain unchanged. Clipboard semantics are defined by 036 FR-033.

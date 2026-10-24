@@ -4,6 +4,7 @@ import type { SchematicSelection, SelectionChange } from './schematic-selection'
 import { createShortcutHandlers, focusKeyLater } from './schematic-shortcut-handlers';
 import type { ToolId } from '@ui/schematic/tools/logic';
 import { createKeyKeyboardHandler } from './use-key-keyboard';
+import { useKeyClipboard } from './use-key-clipboard';
 import { useSchematicShortcuts } from './use-schematic-shortcuts';
 import type { KeyboardEvent } from 'react';
 
@@ -25,7 +26,13 @@ type SchematicKeyboardOptions = {
 export function useSchematicKeyboard(options: SchematicKeyboardOptions) {
   const { project, gridSizeU, pointer } = options;
   const commit = getKeyboardCommit(options);
+  const clipboard = useKeyClipboard({
+    selection: options.selection,
+    onSelectionChange: options.onSelectionChange,
+    hasDraft: pointer.hasDraft || options.layout.hasPreview || options.wiring?.hasPreview === true,
+  });
   useSchematicShortcuts({
+    ...clipboard,
     ...createShortcutHandlers({
       ...options,
       commit,

@@ -72,12 +72,14 @@ export function createFileActions(
       change((latest) => ({ ...latest, rejectedFile: undefined }));
     },
     startNewProject: () => {
+      session.begin();
       startNewProject(change);
     },
     startLayoutPresetProject: (input: {
       readonly preset: PresetLayout;
       readonly bindingMode: PresetBindingMode;
     }) => {
+      session.begin();
       startLayoutPresetProject(change, input);
     },
     downloadKeptBackup: () => {

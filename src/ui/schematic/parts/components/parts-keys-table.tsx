@@ -33,7 +33,7 @@ export function PartsKeysTable(props: PartsTableProps & { readonly wiresOf: Wire
         </p>
       ) : (
         <div className="overflow-auto">
-          <table className="w-full min-w-240 text-left">
+          <table data-parts-keys className="w-full min-w-240 text-left">
             <PartsTableHead columns={COLUMNS} hasActions />
             <tbody>
               <PartsKeysTableRows
