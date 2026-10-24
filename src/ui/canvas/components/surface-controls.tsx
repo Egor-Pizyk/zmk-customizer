@@ -14,9 +14,10 @@ export function SurfaceControls({
   svgRef,
   onViewportCommit: handleViewportCommit,
 }: SurfaceControlsProps) {
+  const { activeWorkspaceId } = usePreferences().preferences;
   return (
     <div className="absolute top-7 right-2 flex gap-1 rounded-md border border-border bg-surface-raised p-1">
-      <SnapButton />
+      {activeWorkspaceId === 'schematic' ? <SnapButton /> : undefined}
       <ZoomButtons viewport={viewport} svgRef={svgRef} onViewportCommit={handleViewportCommit} />
       <CenterKeysButton
         onViewportCommit={handleViewportCommit}
@@ -48,7 +49,7 @@ function SnapButton() {
   );
 }
 
-function ZoomButtons({ viewport, svgRef, onViewportCommit }: SurfaceControlsProps) {
+function ZoomButtons({ viewport, svgRef, onViewportCommit }: CenterKeysButtonProps) {
   function handleZoomInClick() {
     onViewportCommit(zoomAt(viewport, ZOOM_STEP, surfaceCenter(svgRef.current)));
   }

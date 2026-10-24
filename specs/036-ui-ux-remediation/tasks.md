@@ -90,3 +90,9 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 
 - [x] B018 [FR-033] Tests-first clipboard snapshot/filter/paste and shortcut scope; implement domain/UI/help, real Meta/Ctrl/native-field/Bindings/history/persistence verification and rendered review; changed checks, separate item-18 commit.
 - [x] B019 [FR-034] Reproduce numeric displacement, pure own-center/table/batch fix with explicit-origin compatibility; audit encoders, real browser centers/corners/history/cancel/reload and themes; changed checks, separate item-19 commit, journal and update draft PR.
+
+
+## Items 20–21 (jointly authorized)
+
+- [x] H020 [FR-035] Remove Bindings Snap only, preserve shared Settings/Schematic preference/shortcuts; browser persistence/history/hints and rendered review, changed checks, separate commit.
+- [ ] H021 [FR-036] Conditional danger Problems text/count, neutral zero; browser live count/theme/keyboard panel and rendered review, changed checks, separate commit and existing PR update.
