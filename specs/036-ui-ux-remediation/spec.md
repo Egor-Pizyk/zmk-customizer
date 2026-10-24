@@ -1,10 +1,10 @@
 # 036 — UI/UX remediation
 
-**Branch**: `feature/036-ui-ux-remediation`. **Date**: 2026-10-22. **Status**: Items 1–19 implemented or regression-verified (10 and 15 required no production repair); item-12–19 manual acceptance remains open, plus E008 native checks.
+**Branch**: `feature/036-ui-ux-remediation`. **Date**: 2026-10-22. **Status**: Items 1–21 implemented or regression-verified (10 and 15 required no production repair); item-12–21 manual acceptance remains open, plus E008 native checks.
 
 ## Goal and scope
 
-Resolve the 21 original roadmap reports and two additional 035 observations sequentially. User delivery contract: one original numbered item per commit, stop after each with manual acceptance instructions and wait for approval before the next unless the user explicitly authorizes consecutive items together. Items 1–19 are authorized for implementation; item 2 thresholds approved 2026-10-23. Research basis: PR #23 / 035-R01; audit remains a separate draft PR. Starting a second active branch is explicitly authorized by the user's request to implement itemwise; branch starts from current origin/main, not an audit stack.
+Resolve the 21 original roadmap reports and two additional 035 observations sequentially. User delivery contract: one original numbered item per commit, stop after each with manual acceptance instructions and wait for approval before the next unless the user explicitly authorizes consecutive items together. Items 1–21 are authorized for implementation; item 2 thresholds approved 2026-10-23. Research basis: PR #23 / 035-R01; audit remains a separate draft PR. Starting a second active branch is explicitly authorized by the user's request to implement itemwise; branch starts from current origin/main, not an audit stack.
 
 Preserve existing projects and electrical wiring, stable IDs, per-layer actions, one-step Undo/Redo, deterministic v0.3.0 exports, static/offline operation and keyboard alternatives. No new dependency or visual identity. Items 4–5 are now explicitly authorized together; item 6 is now separately authorized; items 7–8 are now jointly authorized after an audit of existing behavior; items 9–10 are now jointly authorized; item 11 is now authorized; items 12–15 are jointly authorized with one combined manual acceptance after delivery; items 16–17 are jointly authorized; items 18–19 are jointly authorized; items 20–21 are jointly authorized; items 22–23 remain roadmap/research scope.
 
