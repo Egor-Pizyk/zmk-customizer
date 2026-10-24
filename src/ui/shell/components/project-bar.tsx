@@ -87,20 +87,12 @@ function ProjectNameFields() {
   );
 }
 
-function ProjectActions({ onNewClick, onOpenClick, onAgentClick }: ProjectBarProps) {
+function ProjectActions({
+  onNewClick: handleNewClick,
+  onOpenClick: handleOpenClick,
+  onAgentClick: handleAgentClick,
+}: ProjectBarProps) {
   const { saveProjectFile } = useProject();
-
-  function handleAgentClick() {
-    onAgentClick();
-  }
-
-  function handleNewClick() {
-    onNewClick();
-  }
-
-  function handleOpenClick() {
-    onOpenClick();
-  }
 
   function handleSaveClick() {
     saveProjectFile();
@@ -117,10 +109,22 @@ function ProjectActions({ onNewClick, onOpenClick, onAgentClick }: ProjectBarPro
       <Button onClick={handleSaveClick} size="sm">
         Save
       </Button>
-      <Button onClick={handleAgentClick} size="sm">
-        Create with agent
-      </Button>
       <HistoryButtons />
+      <Button
+        aria-label="Create with agent"
+        className="ml-auto"
+        onClick={handleAgentClick}
+        size="sm"
+        variant="secondary"
+      >
+        Create with agent
+        <span
+          aria-hidden="true"
+          className="rounded-sm border border-border-strong px-1 text-xs text-text-muted"
+        >
+          AI
+        </span>
+      </Button>
     </div>
   );
 }

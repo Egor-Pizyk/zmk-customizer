@@ -83,5 +83,5 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 
 ## Items 16–17 (jointly authorized)
 
-- [ ] V016 [FR-031] Reproduce missing/state/clipped hints; implement canvas hover/focus hints, empty-state explanation and viewport alignment; browser/rendered review, changed checks and separate item-16 commit.
-- [ ] V017 [FR-032] Move agent action after history, secondary outline/AI badge with stable name; keyboard/dialog/focus and wrapped light/dark rendered verification, changed checks and separate item-17 commit; update PR, stop before 18–19.
+- [x] V016 [FR-031] Reproduce missing/state/clipped hints; implement canvas hover/focus hints, empty-state explanation and viewport alignment; browser/rendered review, changed checks and separate item-16 commit.
+- [x] V017 [FR-032] Move agent action after history, secondary outline/AI badge with stable name; keyboard/dialog/focus and wrapped light/dark rendered verification, changed checks and separate item-17 commit; update PR, stop before 18–19.
