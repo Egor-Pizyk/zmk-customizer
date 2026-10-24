@@ -8,7 +8,7 @@ import type { CenterKeysButtonProps } from './center-keys-button';
 
 type SurfaceControlsProps = CenterKeysButtonProps;
 
-// Top-right cluster; the tool window owns the top-left.
+// Separate row keeps floating tools from covering controls or their focus targets.
 export function SurfaceControls({
   viewport,
   svgRef,
@@ -16,7 +16,7 @@ export function SurfaceControls({
 }: SurfaceControlsProps) {
   const { activeWorkspaceId } = usePreferences().preferences;
   return (
-    <div className="absolute top-7 right-2 flex gap-1 rounded-md border border-border bg-surface-raised p-1">
+    <div className="flex shrink-0 justify-end gap-1 border-b border-border bg-surface-raised p-1">
       {activeWorkspaceId === 'schematic' ? <SnapButton /> : undefined}
       <ZoomButtons viewport={viewport} svgRef={svgRef} onViewportCommit={handleViewportCommit} />
       <CenterKeysButton

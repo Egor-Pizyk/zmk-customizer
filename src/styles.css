@@ -82,7 +82,8 @@ body {
   display: flex;
   flex-direction: column;
   flex: 1 1 55%;
-  min-height: calc(50% + 2rem);
+  /* Reserve toolbar (2.5rem + border) and status (2rem) without shrinking the drawing budget. */
+  min-height: calc(50% + 4.5rem + 1px);
   min-width: 0;
   overflow: hidden;
   & > div {
