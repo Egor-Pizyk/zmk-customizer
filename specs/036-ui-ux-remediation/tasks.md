@@ -80,3 +80,8 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 - [x] U014 [FR-029] Record exact user-selected Wiring action, remove redundant entry point, preserve retained lifecycle and compatibility; separate item-14 commit.
 - [x] U015 [FR-030] Reproduce/audit Key Escape, repair owning interaction only if failing; draft/dialog precedence and real browser Select/no-placement/history assertions; separate item-15 commit.
 - [x] U016 [FR-027–030] Changed checks, final rendered review/evidence, update existing PR and deliver combined manual checklist; stop before item 16.
+
+## Items 16–17 (jointly authorized)
+
+- [ ] V016 [FR-031] Reproduce missing/state/clipped hints; implement canvas hover/focus hints, empty-state explanation and viewport alignment; browser/rendered review, changed checks and separate item-16 commit.
+- [ ] V017 [FR-032] Move agent action after history, secondary outline/AI badge with stable name; keyboard/dialog/focus and wrapped light/dark rendered verification, changed checks and separate item-17 commit; update PR, stop before 18–19.
