@@ -96,7 +96,8 @@ function LayoutEditorBody(
     <>
       <p className="text-xs text-text-muted">
         {edit.keyIds.length} selected. Fields start with the first selected key’s values. Entered
-        properties apply to every selected key. Preview is unsaved until Apply.
+        properties apply to every selected key. Angle alone keeps each key’s center fixed; entering
+        an origin uses that absolute point. Preview is unsaved until Apply.
       </p>
       <LayoutFields edit={edit} onEditChange={handleEditChange} schematicKey={first} />
     </>

@@ -88,5 +88,5 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 
 ## Items 18–19 (jointly authorized)
 
-- [ ] B018 [FR-033] Tests-first clipboard snapshot/filter/paste and shortcut scope; implement domain/UI/help, real Meta/Ctrl/native-field/Bindings/history/persistence verification and rendered review; changed checks, separate item-18 commit.
-- [ ] B019 [FR-034] Reproduce numeric displacement, pure own-center/table/batch fix with explicit-origin compatibility; audit encoders, real browser centers/corners/history/cancel/reload and themes; changed checks, separate item-19 commit, journal and update draft PR.
+- [x] B018 [FR-033] Tests-first clipboard snapshot/filter/paste and shortcut scope; implement domain/UI/help, real Meta/Ctrl/native-field/Bindings/history/persistence verification and rendered review; changed checks, separate item-18 commit.
+- [x] B019 [FR-034] Reproduce numeric displacement, pure own-center/table/batch fix with explicit-origin compatibility; audit encoders, real browser centers/corners/history/cancel/reload and themes; changed checks, separate item-19 commit, journal and update draft PR.

@@ -1,6 +1,6 @@
 import type { Encoder } from '@domain';
 import { getEncoderGeometry } from '@domain/geometry';
-import { replaceEncoder } from '@domain/encoders';
+import { replaceEncoder, rotateEncoder } from '@domain/encoders';
 import { ZMK_LIMITS } from '@catalog/firmware';
 import { ENCODER_OPTIONS } from '@catalog/encoders';
 import { useProject } from '@ui/project/logic';
@@ -72,7 +72,11 @@ function EncoderNumberControl({
       issuePath={`encoders.${index}.${property}`}
       isInvalid={control['aria-invalid'] === true}
       onCommit={(value) => {
-        commit((current) => replaceEncoder(current, { ...encoder, [property]: value }));
+        commit((current) =>
+          property === 'rotationDeg'
+            ? rotateEncoder(current, { encoderId: encoder.id, rotationDeg: value })
+            : replaceEncoder(current, { ...encoder, [property]: value }),
+        );
       }}
     />
   );
