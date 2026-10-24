@@ -30,7 +30,14 @@ for (const commit of ['Enter', 'blur']) {
     await expectGeometry(page, before.keys[0] ?? { id: 'k0', xU: 5, yU: 5 });
     expect(await saved(page)).toEqual(before);
     await rotation.press(commit === 'Enter' ? 'Enter' : 'Tab');
-    await expectGeometry(page, { id: 'k0', xU: 5, yU: 5, rotationDeg: 2 });
+    await expectGeometry(page, {
+      id: 'k0',
+      xU: 5,
+      yU: 5,
+      rotationDeg: 2,
+      rotationOriginXU: 5.5,
+      rotationOriginYU: 5.5,
+    });
     expect(await saved(page)).toEqual(before);
     if (commit === 'Enter') {
       await page.getByRole('button', { name: 'Cancel preview', exact: true }).click();
@@ -63,12 +70,26 @@ test('table typing, Enter, blur and native Escape have visible committed stages 
   await expectGeometry(page, before.keys[0] ?? { id: 'k0', xU: 5, yU: 5 });
   expect(await saved(page)).toEqual(before);
   await rotation.press('Enter');
-  await expectGeometry(page, { id: 'k0', xU: 5, yU: 5, rotationDeg: 2 });
+  await expectGeometry(page, {
+    id: 'k0',
+    xU: 5,
+    yU: 5,
+    rotationDeg: 2,
+    rotationOriginXU: 5.5,
+    rotationOriginYU: 5.5,
+  });
   expect((await saved(page)).keys[0]?.rotationDeg).toBe(2);
   const origin = page.getByRole('spinbutton', { name: 'Key 0 Origin X (u)', exact: true });
   await origin.fill('1.5');
   await origin.press('Tab');
-  await expectGeometry(page, { id: 'k0', xU: 5, yU: 5, rotationDeg: 2, rotationOriginXU: 1.5 });
+  await expectGeometry(page, {
+    id: 'k0',
+    xU: 5,
+    yU: 5,
+    rotationDeg: 2,
+    rotationOriginXU: 1.5,
+    rotationOriginYU: 5.5,
+  });
   const committed = await saved(page);
   await origin.fill('7');
   await origin.press('Escape');

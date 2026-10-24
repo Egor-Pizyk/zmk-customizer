@@ -18,7 +18,7 @@ Independent ZMK/domain review found invalid/duplicate encoder reservations and l
 
 ## UI/UX review
 
-Applied ui-ux-pro-max before and after implementation. Queries covered keyboard focus/modal behavior, React controlled dialogs, responsive button groups, consistent Tailwind button sizing, unobscured focus and actionable error recovery. Re-read quick-reference and canonical pro-rules. Native-only safe areas, haptics and Dynamic Type are inapplicable; no new palette, icons or animations. Existing Button sizing remains 32px, with placement-only width classes.
+Applied UI/UX guidance before and after implementation. Queries covered keyboard focus/modal behavior, React controlled dialogs, responsive button groups, consistent Tailwind button sizing, unobscured focus and actionable error recovery. Re-read quick-reference and canonical pro-rules. Native-only safe areas, haptics and Dynamic Type are inapplicable; no new palette, icons or animations. Existing Button sizing remains 32px, with placement-only width classes.
 
 Rendered screenshots were inspected directly from isolated Playwright output. New actions have equal dimensions, a red Cancel, readable light/dark presentation and scrollable reflow at 640×500. Native keyboard Tab reaches each action and scrolls focused Cancel into view; Escape returns focus to New. The real automatic-wiring preview, inspected with existing pan/zoom, shows distinct D0–D4 labels outside the keys. Local review images are ignored artifacts in `.e2e-mutations/032-ui-review/`.
 

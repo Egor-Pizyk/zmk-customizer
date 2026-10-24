@@ -9,6 +9,7 @@ import { formatCrossingLabel } from '@ui/schematic/formatting';
 
 type SchematicScreenLayerProps = {
   readonly project: Project;
+  readonly isReadOnly?: boolean | undefined;
   readonly view: ContentView;
   readonly crossings: readonly Crossing[];
   readonly commit: (change: (project: Project) => Project) => void;
@@ -51,8 +52,12 @@ export function SchematicScreenLayer(props: SchematicScreenLayerProps) {
           </text>
         );
       })}
-      <DiodeButtons commit={props.commit} project={project} view={view} />
-      {view.zoom < CROSSING_BUTTON_MIN_ZOOM ? undefined : <CrossingButtons {...props} />}
+      {props.isReadOnly === true ? null : (
+        <DiodeButtons commit={props.commit} project={project} view={view} />
+      )}
+      {props.isReadOnly === true || view.zoom < CROSSING_BUTTON_MIN_ZOOM ? undefined : (
+        <CrossingButtons {...props} />
+      )}
     </>
   );
 }

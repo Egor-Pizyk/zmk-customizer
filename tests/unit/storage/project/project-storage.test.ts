@@ -56,7 +56,7 @@ describe('loadProject', () => {
 
   it('returns the stored project', () => {
     const project = {
-      schemaVersion: 12,
+      schemaVersion: 13,
       encoders: [],
       combos: [],
       macros: [],

@@ -34,19 +34,41 @@ export function HoverPreviewLayer({ preview, view }: HoverPreviewLayerProps) {
           vectorEffect="non-scaling-stroke"
         />
       )}
-      {ghostKey === undefined ? undefined : (
-        <rect
-          className={ghostKey.isFree ? 'fill-none stroke-accent' : 'fill-none stroke-danger'}
-          height={0.92}
-          rx={0.08}
-          strokeDasharray="4 3"
-          strokeWidth={2}
-          vectorEffect="non-scaling-stroke"
-          width={0.92}
-          x={ghostKey.position.xU + 0.04}
-          y={ghostKey.position.yU + 0.04}
-        />
-      )}
+      <PlacementPreview ghost={ghostKey} />
     </g>
+  );
+}
+
+function PlacementPreview({ ghost }: { readonly ghost: HoverPreview['ghostKey'] }) {
+  if (ghost === undefined) {
+    return null;
+  }
+  const className = ghost.isFree ? 'fill-none stroke-accent' : 'fill-none stroke-danger';
+  if (ghost.kind === 'encoder') {
+    return (
+      <circle
+        className={className}
+        cx={ghost.position.xU + 0.5}
+        cy={ghost.position.yU + 0.5}
+        data-encoder-preview="true"
+        r={0.4}
+        strokeDasharray="4 3"
+        strokeWidth={2}
+        vectorEffect="non-scaling-stroke"
+      />
+    );
+  }
+  return (
+    <rect
+      className={className}
+      height={0.92}
+      rx={0.08}
+      strokeDasharray="4 3"
+      strokeWidth={2}
+      vectorEffect="non-scaling-stroke"
+      width={0.92}
+      x={ghost.position.xU + 0.04}
+      y={ghost.position.yU + 0.04}
+    />
   );
 }

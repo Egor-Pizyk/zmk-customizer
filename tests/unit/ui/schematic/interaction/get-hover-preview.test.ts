@@ -18,7 +18,11 @@ describe('getHoverPreview', () => {
       snapGridU: 0.25,
       draft: undefined,
     });
-    expect(free.ghostKey).toEqual({ position: { xU: 2.5, yU: 2.5 }, isFree: true });
+    expect(free.ghostKey).toEqual({
+      position: { xU: 2.5, yU: 2.5 },
+      isFree: true,
+      kind: 'key',
+    });
     const taken = getHoverPreview(PROJECT, {
       activeToolId: 'add-key',
       hover: { world: { xU: 0.6, yU: 0.6 }, hit: { kind: 'key', keyId: 'k1' } },
@@ -28,10 +32,27 @@ describe('getHoverPreview', () => {
     expect(taken.ghostKey?.isFree).toBe(false);
   });
 
+  it('marks the encoder placement preview as round encoder art', () => {
+    const preview = getHoverPreview(PROJECT, {
+      activeToolId: 'add-encoder',
+      hover: { world: { xU: 3.1, yU: 2.9 }, hit: { kind: 'empty' } },
+      snapGridU: 0.25,
+      draft: undefined,
+    });
+    expect(preview.ghostKey).toEqual({
+      position: { xU: 2.5, yU: 2.5 },
+      isFree: true,
+      kind: 'encoder',
+    });
+  });
+
   it('snaps the wire being drawn to the pin under the cursor before the click', () => {
     const preview = getHoverPreview(PROJECT, {
       activeToolId: 'wire',
-      hover: { world: { xU: 0.35, yU: 0.4 }, hit: { kind: 'pin', keyId: 'k1', pin: 1 } },
+      hover: {
+        world: { xU: 0.35, yU: 0.4 },
+        hit: { kind: 'pin', keyId: 'k1', pin: 1 },
+      },
       snapGridU: 0.25,
       draft: DRAFT,
     });
@@ -42,7 +63,10 @@ describe('getHoverPreview', () => {
   it('marks the pin under the cursor even before the wire starts', () => {
     const preview = getHoverPreview(PROJECT, {
       activeToolId: 'wire',
-      hover: { world: { xU: 0.62, yU: 0.25 }, hit: { kind: 'pin', keyId: 'k1', pin: 2 } },
+      hover: {
+        world: { xU: 0.62, yU: 0.25 },
+        hit: { kind: 'pin', keyId: 'k1', pin: 2 },
+      },
       snapGridU: 0.25,
       draft: undefined,
     });
@@ -57,6 +81,10 @@ describe('getHoverPreview', () => {
       snapGridU: 0.25,
       draft: undefined,
     });
-    expect(preview).toEqual({ draftPath: undefined, snapTarget: undefined, ghostKey: undefined });
+    expect(preview).toEqual({
+      draftPath: undefined,
+      snapTarget: undefined,
+      ghostKey: undefined,
+    });
   });
 });

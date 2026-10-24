@@ -1,12 +1,13 @@
+import { removeEncoder } from '@domain/encoders';
+import { placeEncoderAt } from './place-key-at';
 import { PROJECT_BUDGET } from '@storage/project';
-import { addKey, removeKey } from '@domain/keys';
+import { addKey, removeKey, removeKeysAndSections } from '@domain/keys';
 import { createEntityId } from '@domain/project';
 import { findFreeKeyPosition } from '@domain/geometry';
-import { removeWire, removeWireSections } from '@domain/wires/editing';
+import { removeWire } from '@domain/wires/editing';
 import type { Project } from '@domain';
-import type { Commit } from './pointer-types';
+import type { Commit, PointerState } from './pointer-types';
 import type { SchematicSelection, SelectionChange } from './schematic-selection';
-import type { ToolId } from '@ui/schematic/tools/logic';
 
 export function focusKeyLater(keyId: string) {
   requestAnimationFrame(() => {
@@ -26,15 +27,20 @@ type ShortcutHandlerInput = {
   readonly commit: Commit;
   readonly selection: SchematicSelection;
   readonly onSelectionChange: SelectionChange;
-  readonly activeToolId: ToolId;
-  readonly onToolChange: (toolId: ToolId) => void;
+  readonly activeToolId: PointerState['activeToolId'];
+  readonly onToolChange: (toolId: PointerState['activeToolId']) => void;
   readonly hasDraft: boolean;
+  readonly isReadOnly?: boolean;
   readonly announce?: (message: string) => void;
   readonly onDraftCancel: () => void;
 };
 
 function deleteSelection(input: ShortcutHandlerInput) {
   const { project, commit, selection, onSelectionChange } = input;
+  if (selection?.kind === 'encoder') {
+    deleteEncoderSelection(input);
+    return;
+  }
   if (selection?.kind === 'sections') {
     deleteSectionSelection(input);
     return;
@@ -84,17 +90,18 @@ function placeKey(input: ShortcutHandlerInput) {
 
 export function createShortcutHandlers(input: ShortcutHandlerInput) {
   return {
-    onToolChange: (toolId: ToolId) => {
-      input.onDraftCancel();
+    onToolChange: (toolId: PointerState['activeToolId']) => {
       input.onToolChange(toolId);
     },
     onPlaceKey: () => {
-      if (input.activeToolId === 'add-key') {
-        placeKey(input);
+      if (!refuseReadOnlyEdit(input)) {
+        placeFromTool(input);
       }
     },
     onDeleteSelection: () => {
-      deleteSelection(input);
+      if (!refuseReadOnlyEdit(input)) {
+        deleteSelection(input);
+      }
     },
     onCancel: () => {
       if (input.hasDraft) {
@@ -116,11 +123,15 @@ function deleteSectionSelection(input: ShortcutHandlerInput) {
       onSelectionChange();
       return;
     }
-    const result = removeWireSections(project, { base: project, sectionIds: selection.sectionIds });
+    const result = removeKeysAndSections(project, {
+      base: project,
+      sectionIds: selection.sectionIds,
+      keyIds: selection.keyIds ?? [],
+    });
     if (result.ok) {
       commit(
         (current) => (current === project ? result.value : current),
-        `Deleted ${selection.sectionIds.length} wire sections. Undo`,
+        `Deleted ${selection.keyIds?.length ?? 0} keys and ${selection.sectionIds.length} wire sections. Undo`,
       );
     }
     if (!result.ok) {
@@ -148,4 +159,44 @@ function deleteMultiSelection(input: ShortcutHandlerInput) {
     onSelectionChange();
     focusCanvasLater();
   }
+}
+
+function deleteEncoderSelection(input: ShortcutHandlerInput) {
+  const { commit, selection, onSelectionChange } = input;
+  if (selection?.kind === 'encoder') {
+    commit(
+      (current) => removeEncoder(current, selection.encoderId),
+      'Deleted encoder. Undo to restore.',
+    );
+    onSelectionChange();
+    focusCanvasLater();
+  }
+}
+
+function placeFromTool(input: ShortcutHandlerInput) {
+  if (input.activeToolId === 'add-encoder') {
+    placeEncoderAt(
+      {
+        project: input.project,
+        commit: input.commit,
+        onHint: (text) => input.announce?.(text),
+      },
+      (() => {
+        const position = findFreeKeyPosition(input.project);
+        return { xU: position.xU + 0.5, yU: position.yU + 0.5 };
+      })(),
+    );
+    return;
+  }
+  if (input.activeToolId === 'add-key') {
+    placeKey(input);
+  }
+}
+
+function refuseReadOnlyEdit(input: ShortcutHandlerInput): boolean {
+  if (input.isReadOnly !== true) {
+    return false;
+  }
+  input.announce?.('Apply or cancel wiring before editing.');
+  return true;
 }

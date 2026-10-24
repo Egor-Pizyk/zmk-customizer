@@ -1,3 +1,4 @@
+import { legacyV12ProjectSchema } from './legacy-v12-project-schema';
 import { legacyV11ProjectSchema } from './legacy-v11-project-schema';
 import { serializeProject } from './serialize-project';
 import * as z from 'zod';
@@ -32,6 +33,34 @@ function toNotProject(error: z.ZodError): ProjectFileError {
   return { kind: 'not-project', issues };
 }
 
+function parseLegacyProject(
+  value: unknown,
+  version: number,
+): Result<{ value: unknown; version: number }, ProjectFileError> {
+  const input = { value, version };
+  if (input.version <= 11) {
+    const legacy = legacyV11ProjectSchema.safeParse(
+      migrateProject(input.value, { fromVersion: input.version, toVersion: 11 }),
+    );
+    if (!legacy.success) {
+      return { ok: false, error: toNotProject(legacy.error) };
+    }
+    input.value = legacy.data;
+    input.version = 11;
+  }
+  if (input.version <= 12) {
+    const legacy = legacyV12ProjectSchema.safeParse(
+      migrateProject(input.value, { fromVersion: input.version, toVersion: 12 }),
+    );
+    if (!legacy.success) {
+      return { ok: false, error: toNotProject(legacy.error) };
+    }
+    input.value = legacy.data;
+    input.version = 12;
+  }
+  return { ok: true, value: input };
+}
+
 // One trust boundary for files and stored state (contracts/project-file.md "Reading rules").
 export function parseProjectFile(raw: string): Result<Project, ProjectFileError> {
   if (
@@ -53,17 +82,11 @@ export function parseProjectFile(raw: string): Result<Project, ProjectFileError>
   if (version.data.schemaVersion > CURRENT_SCHEMA_VERSION) {
     return { ok: false, error: { kind: 'newer-version' } };
   }
-  const input = { value: json.value, version: version.data.schemaVersion };
-  if (input.version <= 11) {
-    const legacy = legacyV11ProjectSchema.safeParse(
-      migrateProject(input.value, { fromVersion: input.version, toVersion: 11 }),
-    );
-    if (!legacy.success) {
-      return { ok: false, error: toNotProject(legacy.error) };
-    }
-    input.value = legacy.data;
-    input.version = 11;
+  const legacy = parseLegacyProject(json.value, version.data.schemaVersion);
+  if (!legacy.ok) {
+    return legacy;
   }
+  const input = legacy.value;
   const migrated = migrateProject(input.value, { fromVersion: input.version });
   const project = projectSchema.safeParse(migrated);
   if (!project.success) {

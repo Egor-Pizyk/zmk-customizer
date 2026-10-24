@@ -2,7 +2,7 @@ import { getWirePinContacts } from './get-wire-pin-contacts';
 import { getKeyPinPosition } from './get-key-pin-position';
 import { assertNever } from '@domain';
 import type { Project, Wire, WireEnd, WirePoint } from '@domain';
-import { getNearestPointOnPath } from '@domain/geometry';
+import { getEncoderPinPosition, getNearestPointOnPath } from '@domain/geometry';
 
 function isSamePoint(first: WirePoint, second: WirePoint): boolean {
   return first.xU === second.xU && first.yU === second.yU;
@@ -25,14 +25,14 @@ function toOrthogonal(points: readonly WirePoint[]): WirePoint[] {
 }
 
 function getRoughEndPoint(
-  project: Pick<Project, 'keys' | 'wires' | 'wireContacts'>,
+  project: Pick<Project, 'keys' | 'wires' | 'wireContacts'> & Partial<Pick<Project, 'encoders'>>,
   end: WireEnd,
 ): WirePoint {
   return end.kind === 'junction' ? end.at : getEndPoint(project, end);
 }
 
 function getRoughPath(
-  project: Pick<Project, 'keys' | 'wires' | 'wireContacts'>,
+  project: Pick<Project, 'keys' | 'wires' | 'wireContacts'> & Partial<Pick<Project, 'encoders'>>,
   wire: Wire,
 ): WirePoint[] {
   const start = getRoughEndPoint(project, wire.start);
@@ -47,10 +47,17 @@ function getRoughPath(
 }
 
 function getEndPoint(
-  project: Pick<Project, 'keys' | 'wires' | 'wireContacts'>,
+  project: Pick<Project, 'keys' | 'wires' | 'wireContacts'> & Partial<Pick<Project, 'encoders'>>,
   end: WireEnd,
 ): WirePoint {
   switch (end.kind) {
+    case 'encoder-pin': {
+      const encoder = project.encoders?.find((entry) => entry.id === end.encoderId);
+      if (encoder === undefined) {
+        throw new Error(`Wire references missing encoder ${end.encoderId}`);
+      }
+      return getEncoderPinPosition(project, encoder, end.pin);
+    }
     case 'key-pin': {
       const key = project.keys.find((candidate) => candidate.id === end.keyId);
       if (key === undefined) {
@@ -71,7 +78,7 @@ function getEndPoint(
 }
 
 export function getWirePath(
-  project: Pick<Project, 'keys' | 'wires' | 'wireContacts'>,
+  project: Pick<Project, 'keys' | 'wires' | 'wireContacts'> & Partial<Pick<Project, 'encoders'>>,
   wire: Wire,
 ): readonly WirePoint[] {
   const start = getEndPoint(project, wire.start);
@@ -86,7 +93,7 @@ export function getWirePath(
 }
 
 function getJunctionPoint(
-  project: Pick<Project, 'keys' | 'wires' | 'wireContacts'>,
+  project: Pick<Project, 'keys' | 'wires' | 'wireContacts'> & Partial<Pick<Project, 'encoders'>>,
   end: Extract<WireEnd, { readonly kind: 'junction' }>,
 ): WirePoint {
   const target = project.wires.find((candidate) => candidate.id === end.wireId);

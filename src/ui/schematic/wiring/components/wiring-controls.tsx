@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { WiringOptionsControls } from './wiring-options-controls';
 import { WiringHalfControls } from './wiring-half-controls';
 import { getControllerBoard } from '@catalog/controllers';
@@ -9,7 +10,9 @@ import type { useWiringPreview } from '@ui/schematic/wiring/logic';
 import { getProjectAnalysis } from '@ui/project/logic';
 import { useState } from 'react';
 
-type WiringControlsProps = ReturnType<typeof useWiringPreview>;
+type WiringControlsProps = ReturnType<typeof useWiringPreview> & {
+  readonly children?: ReactNode;
+};
 export function WiringControls(props: WiringControlsProps) {
   const [isOpen, setIsOpen] = useState(false);
   const board = getControllerBoard(props.previewProject.controllerId);
@@ -29,6 +32,7 @@ export function WiringControls(props: WiringControlsProps) {
       >
         <summary className="cursor-pointer px-4 py-2 focus-visible:outline-2 focus-visible:outline-focus">
           <h2 className="inline text-base font-semibold">Wiring</h2>
+          {props.hasPreview ? <span className="ml-2 text-xs text-warning">Preview</span> : null}
         </summary>
         <WiringContent {...props} project={project} />
       </details>
@@ -48,12 +52,12 @@ function WiringContent(props: WiringControlsProps & { readonly project: Project 
   };
   return (
     <div className="flex max-h-96 flex-col gap-4 overflow-auto px-4 pb-4">
-      {props.hasPreview ? <p className="font-semibold">Wiring preview</p> : undefined}
+      {props.hasPreview ? <WiringPreviewInfo {...props} /> : undefined}
       <p className="text-text-muted">
         Assignments change the actual schematic connections. Inspect rerouted wires and diode
         changes before applying. Rebuild wiring uses visible centers and the current grid; adjust
-        irregular clusters in the table. Completion and rebuilding propose free GPIOs; review these
-        against your physical hardware before applying. These pins are not detected hardware wiring.
+        irregular clusters in the table. Rebuilding proposes free GPIOs; review these against your
+        physical hardware before applying. These pins are not detected hardware wiring.
       </p>
       <WiringProposalSummary {...props} />
       <WiringOptionsControls project={project} onEdit={props.handleEdit} />
@@ -129,6 +133,24 @@ function WiringProposalSummary(props: WiringControlsProps) {
         <output>{`Retained ${props.summary.retained}; added ${props.summary.added}; rerouted ${props.summary.rerouted}; removed ${props.summary.removed}. Keys: ${props.summary.keyIds.join(', ') || 'none'}; terminals: ${props.summary.terminalIds.join(', ') || 'none'}.`}</output>
       )}
       {props.message === undefined ? undefined : <output>{props.message}</output>}
+    </>
+  );
+}
+
+function WiringPreviewInfo(props: WiringControlsProps) {
+  return (
+    <>
+      <p className="font-semibold">Wiring preview</p>
+      <p>
+        Select keys and wires to inspect. Apply to save; Cancel or Escape to discard. Opening
+        another editor discards this preview.
+      </p>
+      <details aria-label="Inspect wire sections">
+        <summary className="cursor-pointer focus-visible:outline-2 focus-visible:outline-focus">
+          Inspect wire sections
+        </summary>
+        {props.children}
+      </details>
     </>
   );
 }

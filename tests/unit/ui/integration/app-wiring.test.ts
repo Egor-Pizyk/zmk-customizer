@@ -71,3 +71,40 @@ function unavailableFirstRow(
 ) {
   return terminal.id === 't0' ? { ...terminal, boardPin: 31 } : terminal;
 }
+
+it('restores an automatic unibody circuit and GPIOs after a topology-only preview round trip', async () => {
+  const { user } = renderApp(UNIBODY_PRESET);
+  await user.click(screen.getByText('Wiring', { exact: true }));
+  await user.click(screen.getByRole('button', { name: 'Rebuild wiring' }));
+  await user.click(screen.getByRole('button', { name: 'Apply wiring' }));
+  const before = loadProject().project;
+  const pin = screen.getByRole('combobox', { name: 'left col 2 pin' });
+  const originalOption = within(pin).getByRole('option', { selected: true }).getAttribute('value');
+  await user.selectOptions(screen.getByRole('combobox', { name: 'Keyboard topology' }), 'split');
+  await user.selectOptions(screen.getByRole('combobox', { name: 'Keyboard topology' }), 'unibody');
+  expect(
+    within(screen.getByRole('combobox', { name: 'left col 2 pin' }))
+      .getByRole('option', { selected: true })
+      .getAttribute('value'),
+  ).toBe(originalOption);
+  expect(screen.queryByText('Wiring preview', { exact: true })).toBeNull();
+  expect(loadProject().project).toEqual(before);
+});
+
+it('retains explicit pin edits made before or between topology choices', async () => {
+  const { user } = renderApp(UNIBODY_PRESET);
+  await user.click(screen.getByText('Wiring', { exact: true }));
+  await user.selectOptions(screen.getByRole('combobox', { name: 'left row 0 pin' }), '21');
+  await user.selectOptions(screen.getByRole('combobox', { name: 'Keyboard topology' }), 'split');
+  await user.selectOptions(screen.getByRole('combobox', { name: 'Keyboard topology' }), 'unibody');
+  expect(screen.getByRole('combobox', { name: 'left row 0 pin' })).toHaveProperty('value', '21');
+  expect(screen.getByText('Wiring preview', { exact: true })).toBeDefined();
+  await user.click(screen.getByRole('button', { name: 'Apply wiring' }));
+  const before = loadProject().project;
+  await user.selectOptions(screen.getByRole('combobox', { name: 'Keyboard topology' }), 'split');
+  await user.selectOptions(screen.getByRole('combobox', { name: 'left row 0 pin' }), '20');
+  await user.selectOptions(screen.getByRole('combobox', { name: 'Keyboard topology' }), 'unibody');
+  expect(screen.getByRole('combobox', { name: 'left row 0 pin' })).toHaveProperty('value', '20');
+  await user.click(screen.getByRole('button', { name: 'Cancel wiring' }));
+  expect(loadProject().project).toEqual(before);
+});

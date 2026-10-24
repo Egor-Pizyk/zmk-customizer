@@ -1,32 +1,30 @@
-import type { WirePoint } from '@domain';
-import { toSlotKeys } from '@ui/schematic/parts/logic';
+import type { WireBendHandle } from '@ui/schematic/rendering/logic';
 
 type BendHandlesProps = {
-  readonly wireId: string;
-  readonly bends: readonly WirePoint[];
+  readonly handles: readonly WireBendHandle[];
   readonly pxPerU: number;
 };
 
 const MARKER_SIZE_PX = 8;
 
-// Drag targets for the bends of the selected wire; `data-bend-index` is read by read-canvas-hit.
-export function BendHandles({ wireId, bends, pxPerU }: BendHandlesProps) {
+// Every visible right-angle corner is a drag target, including corners derived from endpoints.
+export function BendHandles({ handles, pxPerU }: BendHandlesProps) {
   const markerSizeU = MARKER_SIZE_PX / pxPerU;
-  return toSlotKeys({ prefix: wireId, count: bends.length }).map((slotKey, bendIndex) => {
-    const bend = bends[bendIndex] ?? { xU: 0, yU: 0 };
-    return (
-      <rect
-        className="fill-surface stroke-accent"
-        data-bend-index={bendIndex}
-        data-wire-id={wireId}
-        height={markerSizeU}
-        key={slotKey}
-        strokeWidth={1.5}
-        vectorEffect="non-scaling-stroke"
-        width={markerSizeU}
-        x={bend.xU - markerSizeU / 2}
-        y={bend.yU - markerSizeU / 2}
-      />
-    );
-  });
+  return handles.map(({ wireId, point, bendIndex }) => (
+    <rect
+      className="fill-surface stroke-accent"
+      data-wire-bend=""
+      data-bend-index={bendIndex}
+      data-bend-x-u={point.xU}
+      data-bend-y-u={point.yU}
+      data-wire-id={wireId}
+      height={markerSizeU}
+      key={`${point.xU}:${point.yU}`}
+      strokeWidth={1.5}
+      vectorEffect="non-scaling-stroke"
+      width={markerSizeU}
+      x={point.xU - markerSizeU / 2}
+      y={point.yU - markerSizeU / 2}
+    />
+  ));
 }

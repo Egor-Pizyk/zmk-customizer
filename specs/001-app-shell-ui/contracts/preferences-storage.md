@@ -23,6 +23,7 @@ The browser `localStorage` is the only persisted interface in this feature. Two 
   "isBindingsPanelOpen": true,
   "isBindingsTableOpen": false,
   "isAutoAdvanceEnabled": true,
+  "schematicEditorWidthPx": 448,
   "viewByWorkspace": {
     "schematic": { "zoom": 1, "panXPx": 0, "panYPx": 0 },
     "bindings": { "zoom": 1, "panXPx": 0, "panYPx": 0 }
@@ -59,3 +60,5 @@ Field rules: `data-model.md`. `isPartsListOpen` (added by spec 003, optional, de
 A future `version: 2` adds a `v1 → v2` migration in `src/storage/`. Until then, any other version reads as `corrupt`.
 
 Maintenance 2026-10-12: `isMinimapVisible` is removed; the preferences parser ignores that obsolete field in older values without resetting other settings.
+
+036 FR-014–016 adds `schematicEditorWidthPx`: finite number in 320..640, default 448 when missing or invalid; version remains 1. Display limits do not overwrite the preference. Resize saves on pointer release or keyboard action; cancellation does not write. Settings reset preserves this field. Project files/history are unchanged.

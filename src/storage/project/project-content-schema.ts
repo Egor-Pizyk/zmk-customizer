@@ -1,3 +1,4 @@
+import { legacyEncoderSchema } from './legacy-encoder-schema';
 import * as z from 'zod';
 import { encoderSchema } from './encoder-schema';
 import { comboSchema, macroSchema, conditionalLayerSchema } from './advanced-keymap-schema';
@@ -11,4 +12,8 @@ export const projectContentSchema = z.object({
   conditionalLayers: z.array(conditionalLayerSchema).max(128),
   behaviors: z.array(customBehaviorSchema).max(128),
   firmware: firmwareSchema,
+});
+
+export const legacyProjectContentSchema = projectContentSchema.extend({
+  encoders: z.array(legacyEncoderSchema).max(16),
 });

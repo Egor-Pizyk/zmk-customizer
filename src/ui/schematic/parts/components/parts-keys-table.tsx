@@ -32,17 +32,19 @@ export function PartsKeysTable(props: PartsTableProps & { readonly wiresOf: Wire
           No keys yet. Pick the Key tool and click the canvas, or add one here.
         </p>
       ) : (
-        <table className="w-full text-left">
-          <PartsTableHead columns={COLUMNS} hasActions />
-          <tbody>
-            <PartsKeysTableRows
-              {...props}
-              activeKeyId={activeKeyId}
-              onActiveKeyChange={handleActiveKeyChange}
-              wiresOf={wiresOf}
-            />
-          </tbody>
-        </table>
+        <div className="overflow-auto">
+          <table data-parts-keys className="w-full min-w-240 text-left">
+            <PartsTableHead columns={COLUMNS} hasActions />
+            <tbody>
+              <PartsKeysTableRows
+                {...props}
+                activeKeyId={activeKeyId}
+                onActiveKeyChange={handleActiveKeyChange}
+                wiresOf={wiresOf}
+              />
+            </tbody>
+          </table>
+        </div>
       )}
       <AddKeyButton project={project} commit={commit} />
     </div>

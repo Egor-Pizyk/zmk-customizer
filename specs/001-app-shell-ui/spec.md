@@ -100,16 +100,16 @@ In the Schematic workspace a small floating window shows the tools that will be 
 
 ### User Story 5 - Navigate the work surface (Priority: P3)
 
-The user can zoom the work surface in and out and pan it, so that large keyboards fit and details can be inspected. A "fit / reset view" action returns to the default view. The current zoom level is visible. Each workspace keeps its own view.
+The user can zoom the work surface in and out and pan it, so that large keyboards fit and details can be inspected. Center keyboard centers key bounds while preserving zoom; Reset view and its shortcut are removed by 036 FR-027. The current zoom level is visible. Each workspace keeps its own view.
 
 **Why this priority**: Not requested explicitly, but a grid surface without pan and zoom becomes unusable as soon as a real keyboard is placed on it. It is cheap to add together with the grid.
 
-**Independent Test**: Zoom in twice, pan, reset — the view returns to default; grid lines and snapped readout stay correct at every zoom level.
+**Independent Test**: Zoom in twice, pan, center — the keyboard is centered without resetting zoom; grid lines and snapped readout stay correct at every zoom level.
 
 **Acceptance Scenarios**:
 
 1. **Given** a workspace is shown, **When** the user zooms with the mouse wheel (with modifier) or zoom buttons, **Then** the grid scales around the pointer or center and the zoom level readout updates.
-2. **Given** the view is zoomed or panned, **When** the user activates reset view, **Then** the default zoom and position are restored.
+2. **Given** the view is zoomed or panned, **When** the user activates Center keyboard, **Then** the keyboard bounds are centered and zoom is retained.
 3. **Given** a zoomed view, **When** snapping is on, **Then** the readout still shows multiples of the grid size in key units, independent of zoom.
 4. **Given** zoom limits are reached, **When** the user tries to zoom further, **Then** the zoom stays at the limit.
 5. **Given** a canvas has keyboard focus, **When** the user presses the arrow keys (with Shift for larger steps), **Then** the view pans one grid step (Shift: 1u) in that direction, so panning needs no pointer.
@@ -153,7 +153,7 @@ A problems panel lists issues found in the project, each with its workspace and 
 
 ### User Story 8 - Keyboard shortcuts and help (Priority: P3)
 
-Common actions have keyboard shortcuts. App-wide shortcuts use Alt+Shift (Option+Shift on macOS) with a key: switch to workspace 1–4, open settings, toggle the problems panel, open shortcut help. Single-key shortcuts work only while a canvas has focus and act on that canvas: toggle snap, toggle grid, zoom in, zoom out, reset view, pan with the arrow keys, open shortcut help (`?`). Alt+Shift+/ anywhere, `?` on a focused canvas, or a help button opens a window listing every shortcut. Shortcuts never fire while the user types in a text field.
+Common actions have keyboard shortcuts. App-wide shortcuts use Alt+Shift (Option+Shift on macOS) with a key: switch to workspace 1–4, open settings, toggle the problems panel, open shortcut help. Single-key shortcuts work only while a canvas has focus and act on that canvas: toggle snap, toggle grid, zoom in, zoom out, pan with the arrow keys, open shortcut help (`?`). Alt+Shift+/ anywhere, `?` on a focused canvas, or a help button opens a window listing every shortcut. Shortcuts never fire while the user types in a text field.
 
 **Why this priority**: An editor app is used for long sessions; shortcuts make it fast. The help window makes them discoverable.
 
@@ -219,7 +219,7 @@ Canvas workspaces show rulers along the top and left edges of the work surface, 
 - **FR-010**: Grid visibility MUST be a setting independent of snapping. Default: visible.
 - **FR-011**: The work surface MUST show a pointer position readout in key units, rounded to the grid when snapping is on.
 - **FR-012**: Grid size, grid visibility and snap settings MUST be shared: one value applies to all canvas workspaces.
-- **FR-013**: Users MUST be able to zoom (within fixed limits, default 100%) and pan each work surface, by pointer and by keyboard, see the current zoom level and reset the view; each canvas workspace keeps its own view.
+- **FR-013**: Users MUST be able to zoom (within fixed limits, default 100%) and pan each work surface, by pointer and by keyboard, see the current zoom level and center the keyboard; each canvas workspace keeps its own view.
 - **FR-013a**: Each canvas work surface MUST have a snap toggle control that reflects and changes the same snap setting as the settings window.
 - **FR-013b**: Canvas workspaces MUST show rulers along the top and left edges in key units that follow pan and zoom and mark the pointer position.
 - **FR-013c**: Canvas workspaces MUST show a minimap with the visible-area rectangle; dragging the rectangle or clicking the minimap MUST move the view.
@@ -256,7 +256,7 @@ Canvas workspaces show rulers along the top and left edges of the work surface, 
 
 **Keyboard shortcuts**
 
-- **FR-038**: The app MUST provide app-wide shortcuts (Alt+Shift with a key) for: switch to workspace 1–4, open settings, toggle problems panel, open shortcut help; and canvas shortcuts (single keys, active only while a canvas has focus, acting on that canvas) for: toggle snap, toggle grid, zoom in, zoom out, reset view, pan by one grid step with the arrow keys (1u with Shift), open shortcut help. No single-key shortcut MAY act while focus is outside a canvas (WCAG 2.1.4).
+- **FR-038**: The app MUST provide app-wide shortcuts (Alt+Shift with a key) for: switch to workspace 1–4, open settings, toggle problems panel, open shortcut help; and canvas shortcuts (single keys, active only while a canvas has focus, acting on that canvas) for: toggle snap, toggle grid, zoom in, zoom out, pan by one grid step with the arrow keys (1u with Shift), open shortcut help. No single-key shortcut MAY act while focus is outside a canvas (WCAG 2.1.4).
 - **FR-039**: Shortcuts MUST NOT fire while focus is in a text field or while a modal window is open.
 - **FR-040**: A shortcut help window MUST open with Alt+Shift+/, with `?` on a focused canvas and from a visible help button, and MUST list exactly the shortcuts that exist with their scope, with platform-appropriate modifier names (Option/Cmd on macOS, Alt/Ctrl elsewhere).
 
@@ -302,7 +302,7 @@ Canvas workspaces show rulers along the top and left edges of the work surface, 
 ### Measurable Outcomes
 
 - **SC-001**: A first-time user visits all four workspaces and opens settings within 15 seconds without instructions.
-- **SC-002**: All controls in the shell, settings window, tool window, project bar, status bar, problems panel and help window can be operated with the keyboard alone; a keyboard-only walkthrough completes every acceptance scenario of stories 1–9 except minimap dragging, which has a keyboard alternative (arrow-key pan, zoom and reset view on the focused canvas).
+- **SC-002**: All controls in the shell, settings window, tool window, project bar, status bar, problems panel and help window can be operated with the keyboard alone; a keyboard-only walkthrough completes every acceptance scenario of stories 1–9 except minimap dragging, which has a keyboard alternative (arrow-key pan, zoom on the focused canvas).
 - **SC-003**: Switching workspace or theme updates the whole screen in under 100 ms as perceived by the user (no visible intermediate state).
 - **SC-004**: After a reload, 100% of interface preferences (theme, grid size, grid visibility, snapping, rulers, minimap, active workspace, tool window position and collapsed state, problems panel state) are restored exactly.
 - **SC-008**: The shortcut help window lists 100% of the working shortcuts and no shortcut that does not work.
@@ -319,7 +319,7 @@ Canvas workspaces show rulers along the top and left edges of the work surface, 
 - The tool window starts in the top-left corner of the Schematic work surface, expanded; the minimap sits in the bottom-right corner.
 - The workspace for ZMK settings is named **Firmware** so it is not confused with the app's own Settings window.
 - Rulers and minimap are on by default.
-- Default shortcuts (`contracts/shortcuts.md`, research R9): app-wide Alt+Shift+1–4 workspaces, Alt+Shift+`,` settings, Alt+Shift+P problems panel, Alt+Shift+/ help; on a focused canvas S snap, G grid, `+`/`-` zoom, 0 reset view, arrows pan, `?` help. Plain single-key globals are rejected (WCAG 2.1.4); Alt alone and Ctrl/Cmd+`,` are rejected because browsers reserve them.
+- Default shortcuts (`contracts/shortcuts.md`, research R9): app-wide Alt+Shift+1–4 workspaces, Alt+Shift+`,` settings, Alt+Shift+P problems panel, Alt+Shift+/ help; on a focused canvas S snap, G grid, `+`/`-` zoom, arrows pan, `?` help. Plain single-key globals are rejected (WCAG 2.1.4); Alt alone and Ctrl/Cmd+`,` are rejected because browsers reserve them.
 - Zoom range 25%–400%, default 100%; zoom with Ctrl/Cmd + wheel, pan with middle-button drag, scroll or the arrow keys on a focused canvas.
 - Supported browsers: current Chrome, Firefox, Safari and Edge on desktop.
 - The original roadmap (`docs/roadmap.md`) planned five steps (Layout, Wiring, Keymap, Settings, Export). This feature replaces them with four workspaces: layout and wiring belong to Schematic, keymap to Bindings, ZMK settings to Firmware, export to Export. The roadmap is updated to match.

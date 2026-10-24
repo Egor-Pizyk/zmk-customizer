@@ -40,3 +40,7 @@ Add controlled browser regressions for lost rewiring, preview saved before Apply
 ## Feature 033 interaction extension
 
 Complete wiring is additive: retain each existing known axis, half, GPIO and deliberate conductor, filling only missing compatible connections with preview. Rebuild wiring is a separate explicit action with the former Auto assign replacement behavior and 032 output/allocation rules. Refused/cancelled proposals do not write saved state. Actual schematic connectivity remains authoritative.
+
+### 036 items 7–8 preview inspection amendment
+
+Read-only wiring proposals allow selection against the displayed proposal, including a keyboard wire-section inspector. Select and refused editing-tool/shortcut attempts preserve that proposal. Canvas edits require Apply/Cancel; explicit Cancel/Escape/editor dismissal announces saved-circuit restoration. Preview connection marks describe the proposal, while saved Problems/export eligibility remain unchanged. See 036 FR-019–021 and its verification journal.

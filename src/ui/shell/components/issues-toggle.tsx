@@ -19,7 +19,9 @@ export function IssuesToggle() {
       onClick={handleClick}
       size="sm"
     >
-      {`Problems (${issues.length})`}
+      <span className={issues.length > 0 ? 'text-danger' : undefined}>
+        {`Problems (${issues.length})`}
+      </span>
     </Button>
   );
 }

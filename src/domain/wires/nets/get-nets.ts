@@ -10,6 +10,7 @@ export type NetBoardPin = {
 };
 
 export type Net = {
+  readonly encoderPins?: readonly { readonly encoderId: string; readonly pin: 'A' | 'COM' | 'B' }[];
   readonly terminalIds: readonly string[];
   readonly pins: readonly { readonly keyId: string; readonly pin: KeyPin }[];
   readonly wireIds: readonly string[];
@@ -54,6 +55,9 @@ function joinProject(
   for (const wire of project.wires) {
     for (const side of SIDES) {
       const end = wire[side];
+      if (end.kind === 'encoder-pin') {
+        union(`wire:${wire.id}`, `encoder:${end.encoderId}:${end.pin}`);
+      }
       if (end.kind === 'free' && end.terminalId !== undefined) {
         union(`wire:${wire.id}`, `terminal:${end.terminalId}`);
       }
@@ -78,6 +82,7 @@ function joinProject(
 }
 
 type MutableNet = {
+  encoderPins?: { encoderId: string; pin: 'A' | 'COM' | 'B' }[];
   terminalIds: string[];
   pins: Net['pins'][number][];
   wireIds: string[];
@@ -99,7 +104,15 @@ export function getNets(
     if (existing !== undefined) {
       return existing;
     }
-    const created: MutableNet = { terminalIds: [], pins: [], wireIds: [], boardPins: [] };
+    const created: MutableNet = {
+      terminalIds: [],
+      pins: [],
+      wireIds: [],
+      boardPins: [],
+      ...(project.encoders.some((encoder) => encoder.wiringMode === 'schematic')
+        ? { encoderPins: [] }
+        : {}),
+    };
     netByRoot.set(root, created);
     return created;
   }
@@ -119,6 +132,13 @@ export function getNets(
 function appendWireEnds(project: Project, wire: Wire, net: MutableNet) {
   for (const side of SIDES) {
     const end = wire[side];
+    if (
+      end.kind === 'encoder-pin' &&
+      net.encoderPins !== undefined &&
+      !net.encoderPins.some((pin) => pin.encoderId === end.encoderId && pin.pin === end.pin)
+    ) {
+      net.encoderPins.push({ encoderId: end.encoderId, pin: end.pin });
+    }
     if (end.kind === 'free') {
       const terminal = project.wiring?.terminals.find((entry) => entry.id === end.terminalId);
       if (end.terminalId !== undefined && !net.terminalIds.includes(end.terminalId)) {

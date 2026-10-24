@@ -15,6 +15,7 @@ Tailwind CSS v4 is the design system (ADR 0011). Tokens live only in `src/styles
 - The default palette, radii and fonts are cleared in `@theme`, so `bg-gray-500` or `rounded-xl` produce no CSS. Treat them as errors, not as "unused".
 - No arbitrary values in feature code: `w-[137px]`, `text-[#333]`, `grid-cols-[1fr_2fr]`, `top-[3px]`. Need a value that does not exist → add a token to `src/styles.css` in the same change, then use its utility. Arbitrary *variants* on attributes (`aria-[current=page]:`) are allowed when no built-in variant exists; use the canonical form lint suggests (`aria-invalid:`, not `aria-[invalid=true]:`).
 - Spacing, sizing and type scale are Tailwind defaults (`p-2`, `gap-3`, `h-8`, `text-sm`). Do not add spacing tokens.
+- Dynamic user-resized widths in ActionPanel and SchematicEditorPanel use CSSOM sizing (scoped lint exceptions); visual styling stays in tokens/classes.
 - No `style` prop for looks. SVG geometry (`x`, `y`, `width`, `height`, `transform`) is SVG attributes computed from `u`, never classes and never `style`.
 
 ```tsx

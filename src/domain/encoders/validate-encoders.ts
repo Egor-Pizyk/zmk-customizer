@@ -1,3 +1,5 @@
+import { getEncoderGeometry } from '@domain/geometry';
+import { getEncoderConnections } from './get-encoder-connections';
 import type { ControllerBoard, Encoder, Project, ValidationIssue } from '@domain';
 import { getWireHalf } from '@domain/wiring';
 import { validateAdvancedBinding } from '@domain/advanced-keymap';
@@ -46,7 +48,12 @@ function createIssue(
   };
 }
 function validateHardware(project: Project, input: HardwareInput): readonly ValidationIssue[] {
-  return [...validateProperties(project, input), ...validatePins(project, input)];
+  return [
+    ...validateProperties(project, input),
+    ...(input.encoder.wiringMode === 'schematic'
+      ? validateSchematicPins(project, input)
+      : validatePins(project, input)),
+  ];
 }
 function validateProperties(project: Project, input: HardwareInput): readonly ValidationIssue[] {
   const { encoder, catalog } = input;
@@ -78,13 +85,13 @@ function validateProperties(project: Project, input: HardwareInput): readonly Va
       }),
     );
   }
-  return [...issues, ...validatePositions(input)];
+  return [...issues, ...validatePositions(project, input)];
 }
-function validatePositions(input: HardwareInput): readonly ValidationIssue[] {
+function validatePositions(project: Project, input: HardwareInput): readonly ValidationIssue[] {
   const { encoder, catalog } = input;
   const issues: ValidationIssue[] = [];
   for (const property of ['xU', 'yU'] as const) {
-    const value = encoder[property] * 100;
+    const value = getEncoderGeometry(project, encoder)[property] * 100;
     if (
       !Number.isFinite(value) ||
       value < catalog.shieldLimits.minLayoutCell ||
@@ -150,7 +157,7 @@ function hasEncoderConflict(
   },
 ): boolean {
   return project.encoders.some((other) => {
-    if (other.half !== input.encoder.half) {
+    if (other.wiringMode === 'schematic' || other.half !== input.encoder.half) {
       return false;
     }
     if (other.id === input.encoder.id) {
@@ -188,4 +195,67 @@ export function validateEncoders(
       }),
     ),
   ];
+}
+
+function validateSchematicPins(project: Project, input: HardwareInput): readonly ValidationIssue[] {
+  const connections = getEncoderConnections(project, input.encoder);
+  const issues = (['aPin', 'bPin'] as const).flatMap((property) =>
+    validateSchematicChannel(project, input, { property, value: connections[property] }),
+  );
+  if (!connections.hasGround) {
+    issues.push(
+      createIssue(input, {
+        code: 'encoder-pin-missing',
+        property: 'wiringMode',
+        message: 'connect COM to GND on the same half.',
+      }),
+    );
+  }
+  if (connections.hasConflict) {
+    issues.push(
+      createIssue(input, {
+        code: 'encoder-pin-conflict',
+        property: 'wiringMode',
+        message:
+          'keep A and B on separate GPIO-only nets, COM on ground, and all contacts on their own half.',
+      }),
+    );
+  }
+  return issues;
+}
+
+function hasLegacyPinConflict(project: Project, encoder: Encoder, pin: number): boolean {
+  return project.encoders.some(
+    (other) =>
+      other.id !== encoder.id &&
+      other.half === encoder.half &&
+      other.wiringMode !== 'schematic' &&
+      (other.aPin === pin || other.bPin === pin),
+  );
+}
+
+function validateSchematicChannel(
+  project: Project,
+  input: HardwareInput,
+  channel: { readonly property: 'aPin' | 'bPin'; readonly value: number | undefined },
+): ValidationIssue[] {
+  const { property, value } = channel;
+  if (value === undefined || !input.board.gpioPins.includes(value)) {
+    return [
+      createIssue(input, {
+        code: 'encoder-pin-missing',
+        property,
+        message: `connect ${property === 'aPin' ? 'A' : 'B'} through a wire to one available controller GPIO.`,
+      }),
+    ];
+  }
+  return hasLegacyPinConflict(project, input.encoder, value)
+    ? [
+        createIssue(input, {
+          code: 'encoder-pin-conflict',
+          property,
+          message: 'GPIO is used by another encoder. Choose a separate pin.',
+        }),
+      ]
+    : [];
 }

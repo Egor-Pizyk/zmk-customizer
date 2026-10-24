@@ -90,7 +90,8 @@ body {
   }
   @media (min-width: 80rem) {
     min-height: 0;
-    min-width: 60%;
+    min-width: 55%;
+    flex: 1 1 0;
   }
 }
 @utility schematic-editor-pane {
@@ -103,8 +104,9 @@ body {
   min-height: 0;
   min-width: 0;
   @media (min-width: 80rem) {
-    flex: 0 1 22.5rem;
-    max-width: 35%;
+    order: -1;
+    flex: 0 0 clamp(320px, var(--schematic-editor-width, 448px), 640px);
+    max-width: 45%;
     max-height: 100%;
   }
 }

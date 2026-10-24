@@ -14,7 +14,7 @@ Replace geometry-only intermediate-pin membership with explicit durable contacts
 - Implementation: `docs/guidelines/code-quality/{typescript,control-flow,observability}.md`, `docs/guidelines/code-quality/naming/{functions,variables}.md`; `docs/guidelines/frontend/{react,accessibility,admin-ui,tailwind}.md`; `src/styles.css`.
 - Contracts: `specs/002-project-foundation/contracts/project-file.md`, `specs/003-schematic-switches-wires/{spec.md,contracts/project-schema.md,contracts/ui.md}`, `specs/013-matrix-wiring-editor/contracts/wiring.md`, `specs/001-app-shell-ui/contracts/ui-regions.md`.
 - Dependency 032: its spec/verification and `assign-auto-pins.ts`, `get-retained-wires.ts`, `get-output-position.ts` on `origin/feature/032-project-creation-and-auto-wiring`. These are absent from this main-based checkout until 032 is integrated. Re-read final merged contracts before code.
-- UI guidance: project-local `.agents/skills/ui-ux-pro-max/SKILL.md` in the original workspace; accepted search results/limitations are recorded in spec.md. Reuse installed skill without adding its untracked files to 033. For future changes, follow the current UI/UX workflow in docs/workflow.md.
+- UI guidance: project-local `docs/workflow.md` in the original workspace; accepted search results/limitations are recorded in spec.md. Reuse installed skill without adding its untracked files to 033. For future changes, follow the current UI/UX workflow in docs/workflow.md.
 - No ZMK syntax/catalog changes are planned. If generator syntax changes become necessary, first load `docs/zmk/README.md` and the relevant pinned reference pages; amend tasks and independent output fixtures.
 
 ## Technical context

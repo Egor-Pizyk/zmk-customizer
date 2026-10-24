@@ -18,6 +18,11 @@ const pointSchema = z.strictObject({ xU: z.number(), yU: z.number() });
 
 const wireEndSchema = z.discriminatedUnion('kind', [
   z.strictObject({ kind: z.literal('key-pin'), keyId: z.string(), pin: z.literal([1, 2]) }),
+  z.strictObject({
+    kind: z.literal('encoder-pin'),
+    encoderId: z.string(),
+    pin: z.enum(['A', 'COM', 'B']),
+  }),
   z.strictObject({ kind: z.literal('junction'), wireId: z.string(), at: pointSchema }),
   z.strictObject({
     kind: z.literal('free'),
@@ -33,14 +38,16 @@ const wireEndSchema = z.discriminatedUnion('kind', [
       .max(PROJECT_BUDGET.idLength)
       .exactOptional(),
     droppedBoardPin: z.string().min(1).max(160).exactOptional(),
+    ground: z.literal(true).exactOptional(),
   }),
 ]);
 
 const checkedWireEndSchema = wireEndSchema.refine(
   (end) =>
     end.kind !== 'free' ||
-    [end.boardPin, end.droppedBoardPin, end.terminalId].filter((value) => value !== undefined)
-      .length <= 1,
+    [end.boardPin, end.droppedBoardPin, end.terminalId, end.ground].filter(
+      (value) => value !== undefined,
+    ).length <= 1,
   { message: 'An assigned pin cannot also be a dropped assignment' },
 );
 
@@ -81,10 +88,14 @@ function findEndIssues(input: {
   readonly wire: Wire;
   readonly keyIds: ReadonlySet<string>;
   readonly wireIds: ReadonlySet<string>;
+  readonly encoderIds: ReadonlySet<string>;
 }): Issue[] {
-  const { end, path, wire, keyIds, wireIds } = input;
+  const { end, path, wire, keyIds, wireIds, encoderIds } = input;
   if (end.kind === 'key-pin' && !keyIds.has(end.keyId)) {
     return [{ message: `No key with id ${end.keyId}`, path: [...path, 'keyId'] }];
+  }
+  if (end.kind === 'encoder-pin' && !encoderIds.has(end.encoderId)) {
+    return [{ message: `No encoder with id ${end.encoderId}`, path: [...path, 'encoderId'] }];
   }
   if (end.kind === 'junction' && (end.wireId === wire.id || !wireIds.has(end.wireId))) {
     return [{ message: `No other wire with id ${end.wireId}`, path: [...path, 'wireId'] }];
@@ -94,6 +105,9 @@ function findEndIssues(input: {
 
 function isSamePin(wire: Wire): boolean {
   const { start, end } = wire;
+  if (start.kind === 'encoder-pin' && end.kind === 'encoder-pin') {
+    return start.encoderId === end.encoderId && start.pin === end.pin;
+  }
   return (
     start.kind === 'key-pin' &&
     end.kind === 'key-pin' &&
@@ -105,12 +119,13 @@ function isSamePin(wire: Wire): boolean {
 function findWireIssues(project: Project): Issue[] {
   const keyIds = new Set(project.keys.map((key) => key.id));
   const wireIds = new Set(project.wires.map((wire) => wire.id));
+  const encoderIds = new Set(project.encoders.map((encoder) => encoder.id));
   const sides: readonly WireEndSide[] = ['start', 'end'];
   const issues: Issue[] = [];
   for (const [index, wire] of project.wires.entries()) {
     for (const side of sides) {
       const path = ['wires', index, side];
-      issues.push(...findEndIssues({ end: wire[side], path, wire, keyIds, wireIds }));
+      issues.push(...findEndIssues({ end: wire[side], path, wire, keyIds, wireIds, encoderIds }));
     }
     issues.push(...findWireContactReferenceIssues(project, wire, index));
     if (isSamePin(wire)) {
@@ -153,7 +168,7 @@ function findCrossingIssues(project: Project): Issue[] {
 // every nested node is strict so a malformed binding, wire or key is rejected at its own path.
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(12),
+    schemaVersion: z.literal(13),
     wireContacts: z
       .array(z.union([contactSchema, z.literal(false)]))
       .max(1024)
@@ -210,6 +225,7 @@ export const projectSchema = z
       ...findDuplicateIds(project.keys, 'keys'),
       ...findDuplicateIds(project.encoders, 'encoders'),
       ...findEncoderBindingIssues(project),
+      ...findEncoderOwnershipIssues(project),
       ...findDuplicateIds(project.wires, 'wires'),
       ...findWireIssues(project),
       ...findContactPoolIssues(project),
@@ -258,4 +274,24 @@ function findContactIssues(project: Project): Issue[] {
   }
 
   return issues;
+}
+
+function findEncoderOwnershipIssues(project: Project): Issue[] {
+  const keys = new Set(project.keys.map((key) => key.id));
+  const owned = new Set<string>();
+  return project.encoders.flatMap((encoder, index) => {
+    if (encoder.pushKeyId === undefined) {
+      return [];
+    }
+    const valid = keys.has(encoder.pushKeyId) && !owned.has(encoder.pushKeyId);
+    owned.add(encoder.pushKeyId);
+    return valid
+      ? []
+      : [
+          {
+            message: 'Expected an existing push key owned by one encoder',
+            path: ['encoders', index, 'pushKeyId'],
+          },
+        ];
+  });
 }

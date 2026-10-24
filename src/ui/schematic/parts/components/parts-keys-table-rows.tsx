@@ -32,13 +32,15 @@ type KeyRowProps = PartsTableProps &
 function KeyRow(props: KeyRowProps) {
   const { issues, selection, onSelectionChange, commit, schematicKey, keyIndex, wiresOf } = props;
   const problems = issues.filter((issue) => issue.path.join('.') === `keys.${keyIndex}`);
-  const isSelected = getSelectedKeyIds(selection).includes(schematicKey.id);
+  const isSelected = getSelectedKeyIds(selection, { project: props.project }).includes(
+    schematicKey.id,
+  );
 
   function handleFocus(event: FocusEvent<HTMLTableRowElement>) {
     if (event.target instanceof HTMLInputElement && event.target.type === 'checkbox') {
       return;
     }
-    if (!getSelectedKeyIds(selection).includes(schematicKey.id)) {
+    if (!getSelectedKeyIds(selection, { project: props.project }).includes(schematicKey.id)) {
       onSelectionChange({ kind: 'key', keyId: schematicKey.id });
     }
   }

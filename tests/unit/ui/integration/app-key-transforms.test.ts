@@ -76,7 +76,7 @@ it('shows numeric changes immediately in the collapsed precise editor without a 
   await user.clear(rotation);
   await user.type(rotation, '2{Enter}');
   expect(screen.getByRole('graphics-symbol', { name: /^Key 0\b/u }).getAttribute('transform')).toBe(
-    'rotate(2 0 0)',
+    'rotate(2 0.5 0.5)',
   );
   expect(loadProject().project).toEqual(before);
   expect(screen.queryByRole('button', { name: 'Preview layout' })).toBeNull();

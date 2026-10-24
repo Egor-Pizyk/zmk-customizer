@@ -17,9 +17,15 @@ export function SchematicContent({ hoverPreview, ...layerProps }: SchematicConte
   return (
     <>
       <KeysLayer {...layerProps} />
-      <EncodersLayer project={layerProps.project} />
       <WiresLayer {...layerProps} />
       <WireEndsLayer {...layerProps} />
+      <EncodersLayer
+        selectedEncoderId={
+          layerProps.selection?.kind === 'encoder' ? layerProps.selection.encoderId : undefined
+        }
+        project={layerProps.project}
+        pxPerU={layerProps.view.pxPerU}
+      />
       <PinsLayer {...layerProps} />
       <MarqueeLayer marquee={layerProps.marquee} />
       <HoverPreviewLayer preview={hoverPreview} view={layerProps.view} />

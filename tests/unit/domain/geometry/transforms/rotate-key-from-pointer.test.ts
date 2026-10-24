@@ -60,3 +60,15 @@ it('takes the short delta across the angle branch cut', () => {
     }).keys[0]?.rotationDeg,
   ).toBe(2);
 });
+
+it('applies a resolved magnetic angle about the visible center', () => {
+  const project = buildProject({ keys: [{ id: 'k0', xU: 2, yU: 3 }] });
+  const result = rotateKeyFromPointer(project, {
+    keyId: 'k0',
+    start: { xU: 3.5, yU: 3.5 },
+    position: { xU: 2.5, yU: 4.5 },
+    targetRotationDeg: 120,
+  });
+  expect(result.keys[0]?.rotationDeg).toBe(120);
+  expect(getKeyCenter(getDefinedValue(result.keys[0]))).toEqual({ xU: 2.5, yU: 3.5 });
+});

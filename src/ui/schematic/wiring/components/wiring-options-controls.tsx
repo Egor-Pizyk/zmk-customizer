@@ -98,7 +98,7 @@ function WiringOptionLinks({ project, onEdit: handleEdit }: WiringOptionsControl
           WIRING_OPTIONS.modes.find((option) => option.id === wiring.kind)?.docsUrl ??
           WIRING_OPTIONS.modes[0].docsUrl
         }
-        topic="Scanning type"
+        topic={wiring.kind === 'matrix' ? 'Scanning type and diode direction' : 'Scanning type'}
       />
       <DocsLink
         href={
@@ -107,9 +107,6 @@ function WiringOptionLinks({ project, onEdit: handleEdit }: WiringOptionsControl
         }
         topic="Keyboard topology"
       />
-      {wiring.kind === 'matrix' ? (
-        <DocsLink href={WIRING_OPTIONS.directions[0].docsUrl} topic="Diode direction" />
-      ) : undefined}
       <WiringAutoActions project={project} onEdit={handleEdit} />
     </div>
   );
@@ -127,14 +124,6 @@ function WiringAutoActions({ project, onEdit: handleEdit }: WiringOptionsControl
   const { gridSizeU } = usePreferences().preferences;
   return (
     <>
-      <Button
-        variant="secondary"
-        onClick={() => {
-          handleEdit({ kind: 'complete', gridStepU: gridSizeU, board });
-        }}
-      >
-        Complete wiring
-      </Button>
       <p className="text-text-muted">
         Rebuild wiring replaces managed connections and cells. Review the preview before applying.
       </p>

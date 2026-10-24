@@ -4,7 +4,7 @@ Static browser application for custom keyboard design and ready-to-build ZMK v0.
 
 ## Required startup context
 
-Read these imports before starting work. Claude Code expands `@path`; other agents must open the same files manually. Linked documents elsewhere are loaded only under the routing rules below.
+Read these imports once per session unless already supplied in full by the client. Follow-up messages do not restart startup reading. Reuse unchanged rules still available in context; reopen changed documents or recover missing applicable sections after compaction. Claude Code expands `@path`; other agents open the same files manually. Linked documents follow the routing below.
 
 @docs/product.md
 @docs/principles.md
@@ -28,7 +28,7 @@ Read all matching rows before working in that area. Conditional reading is manda
 
 | Task / area | Required context |
 |---|---|
-| Start/resume work, create a feature/branch; finish work, commit, push, open/merge PRs or release | `docs/guidelines/git-flow.md` (read before starting and re-read before delivery) |
+| Start/resume work, create a feature/branch; finish work, commit, push, open/merge PRs or release | `docs/guidelines/git-flow.md` (review at startup and delivery; reuse unchanged context) |
 | Find files or feature ownership | `docs/repository-map.md`, `specs/README.md`; relevant roadmap entry for scope |
 | Plan or change production code | `docs/architecture.md`, `docs/folder-structure.md`, `docs/tooling.md` |
 | Implement existing feature work | Relevant `spec.md`, `plan.md`, `tasks.md` and contracts; other artifacts only when cited or needed |

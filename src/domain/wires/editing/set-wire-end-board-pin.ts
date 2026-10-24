@@ -1,8 +1,11 @@
 import type { Project, WireEnd, WireEndSide } from '@domain';
 
-function withBoardPin(end: WireEnd, boardPin: number | undefined): WireEnd {
+function withBoardPin(end: WireEnd, boardPin: number | undefined, ground = false): WireEnd {
   if (end.kind !== 'free') {
     return end;
+  }
+  if (ground) {
+    return { kind: 'free', at: end.at, ground: true };
   }
   return boardPin === undefined
     ? { kind: 'free', at: end.at }
@@ -15,6 +18,7 @@ export function setWireEndBoardPin(
     readonly wireId: string;
     readonly side: WireEndSide;
     readonly boardPin: number | undefined;
+    readonly ground?: boolean;
   },
 ): Project {
   const end = project.wires.find((wire) => wire.id === input.wireId)?.[input.side];
@@ -30,7 +34,7 @@ export function setWireEndBoardPin(
   }
   const wires = project.wires.map((wire) =>
     wire.id === input.wireId
-      ? { ...wire, [input.side]: withBoardPin(wire[input.side], input.boardPin) }
+      ? { ...wire, [input.side]: withBoardPin(wire[input.side], input.boardPin, input.ground) }
       : wire,
   );
   return { ...project, wires };

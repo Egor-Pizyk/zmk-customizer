@@ -13,7 +13,7 @@ These are static reviews of instructions, not trials of independent agent sessio
 | Example task | Additional required context | Expected route and evidence |
 |---|---|---|
 | Fix key deletion violating an existing requirement | Relevant spec/contracts/tasks; architecture, folder ownership, domain model, TypeScript/control flow/naming, testing and commands | Existing-requirement bug; failing regression before repair; preserved identity/layers/undo; applicable code checks |
-| Add a UI gesture | Relevant feature artifacts, architecture/tooling, UI and code-quality guidelines, accessibility, testing and commands | Full SDD or existing-feature extension; keyboard alternative, one gesture/undo step, real-browser assertions and repeated changed E2E runs |
+| Add a UI gesture | Relevant feature artifacts, architecture/tooling, UI and code-quality guidelines, accessibility, testing and commands | Full SDD or existing-feature extension; keyboard alternative, one gesture/undo step, real-browser assertions and affected reruns after changes/failures |
 | Change generated shield syntax | Architecture/domain/tooling, relevant feature artifacts, ZMK index and construct pages, fixtures, testing and commands | Independent golden contract before implementation; pinned-version source, deterministic output and ZMK build evidence |
 | Improve prose documentation | Startup context and affected documents; decision index/ADR if changing policy | Direct documentation route; links/content/consistency checks, no product suite required |
 
@@ -33,3 +33,20 @@ Cross-area tasks take the union of matching rows. ADR history and unrelated feat
 No product code was changed for this documentation task. Product/browser/firmware suites were not run. Existing unrelated working-tree changes were preserved. Historical ADR bodies retain old section references as decision history; active agent instructions use current document paths.
 
 Observe the four routes in subsequent real tasks: does the agent find the owning requirement, read applicable rules before editing, preserve contracts and record actual evidence? Record missed routing or unnecessary reads here before adding more mandatory startup material. Client-specific import/rule deduplication and actual context token savings have not been measured.
+
+## 2026-10-23 efficiency refinement
+
+The 036 working session exposed repeated startup/Git-flow reads, oversized truncated
+file dumps, repeated journal history and investigation of unrelated baseline failures.
+The owning instructions now permit reuse of unchanged available rules across follow-ups,
+recover only missing applicable context after compaction, require focused log excerpts,
+bound unrelated diagnosis and sequence targeted checks before broad staged checks.
+The UI workflow wording is shortened while retaining pre-code specification, rendered
+review, accessibility, failure handling and evidence gates. This refines ADR 0018/0021;
+mandatory matching routes, tests-first, final-index checks and CI/manual gates remain.
+New-chat handoffs reuse feature artifacts instead of adding a parallel context store.
+
+This is a documentation review, not a measured token-saving benchmark. Current-task
+checks and revision are recorded in the existing PR body; no product behavior changed.
+The five startup documents decreased from 2,577 to 2,468 whitespace-delimited words;
+this measures document size, not tokens or savings from avoided rereads.

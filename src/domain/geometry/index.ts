@@ -8,3 +8,4 @@ export { getNearestPointOnPath } from './get-nearest-point-on-path';
 export { isKeyPositionFree } from './is-key-position-free';
 export { rotatePoint } from './rotate-point';
 export { roundU } from './round-u';
+export { getEncoderGeometry, getEncoderPinPosition } from './get-encoder-geometry';

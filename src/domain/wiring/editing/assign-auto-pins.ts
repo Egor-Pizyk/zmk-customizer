@@ -44,7 +44,7 @@ export function assignAutoPins(
 
 function getOccupiedPins(project: Project, half: Half, retainAllWires: boolean): readonly number[] {
   const encoderPins = project.encoders
-    .filter((encoder) => encoder.half === half)
+    .filter((encoder) => encoder.half === half && encoder.wiringMode !== 'schematic')
     .flatMap((encoder) => [encoder.aPin, encoder.bPin].filter((pin) => pin !== undefined));
   const retained = new Set(
     (retainAllWires ? project.wires : getRetainedWires(project)).map((wire) => wire.id),

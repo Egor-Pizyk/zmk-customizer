@@ -1,6 +1,6 @@
 # Schematic physical-layout UI/UX review — 2026-10-19
 
-Scope: a trial review requested by the user, using the project-local `ui-ux-pro-max` skill. No production fixes or new product requirements were implemented. Owning contracts: [012 spec](spec.md), especially US3, FR-003, FR-016 and SC-001; [001 shell spec](../001-app-shell-ui/spec.md), FR-031/032; [field validation rules](../../docs/guidelines/frontend/admin-ui.md#validation-display). Presets supply reproduction data, not feature ownership. The Spec Kit resolver selected 031 because of the current branch; this review concerns 012 and the shared shell.
+Scope: a trial review requested by the user, using the project-local `UI/UX guidance` skill. No production fixes or new product requirements were implemented. Owning contracts: [012 spec](spec.md), especially US3, FR-003, FR-016 and SC-001; [001 shell spec](../001-app-shell-ui/spec.md), FR-031/032; [field validation rules](../../docs/guidelines/frontend/admin-ui.md#validation-display). Presets supply reproduction data, not feature ownership. The Spec Kit resolver selected 031 because of the current branch; this review concerns 012 and the shared shell.
 
 ## Method and evidence
 

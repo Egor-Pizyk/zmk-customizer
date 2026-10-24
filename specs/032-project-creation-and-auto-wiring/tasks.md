@@ -24,7 +24,7 @@
 
 ## Verification and completion
 
-- [x] T011 Reinvoke ui-ux-pro-max, inspect isolated rendered UI and record findings in specs/032-project-creation-and-auto-wiring/verification.md.
+- [x] T011 Reinvoke UI/UX guidance, inspect isolated rendered UI and record findings in specs/032-project-creation-and-auto-wiring/verification.md.
 - [x] T012 Run make check, build, full E2E, changed tests three times, controlled sensitivity and make zmk-build; record actual results/limits in specs/032-project-creation-and-auto-wiring/verification.md.
 - [x] T013 Verify final consistency of specs/013-matrix-wiring-editor/contracts/wiring.md and specs/031-keyboard-presets/spec.md with 032 and update specs/README.md/docs/roadmap.md without including pre-existing edits.
 - [x] T014 Re-read docs/guidelines/git-flow.md and prepare the scoped diff, release:minor PR description and local verification evidence; delivery gates are tracked by the PR checks and final delivery report.
