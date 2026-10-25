@@ -187,3 +187,7 @@ FR-041: declare public/favicon.svg in index.html. Reproduce the missing declarat
 ## Keyboard shortcuts overflow repair
 
 Use existing wide Dialog size for shortcut help; allow shortcut key cells to wrap inside bounded table width. Add tests-first real-browser overflow/reachability/focus checks at 640/1024/1440px in both themes. Existing shell 001 owns FR-040/FR-032; resolver 036 is not this repair owner. Follow already loaded React/accessibility/admin UI/Tailwind/testing rules. Journal: firmware-overflow-verification.md.
+
+## Lower navigation hints
+
+FR-042: reuse Button/Tooltip hints, adding a right-side placement for lower navigation so bottom-edge controls cannot put hints outside the viewport. Preserve default placement for existing consumers. Add real-browser hover/focus/Escape/geometry tests; no effects/dependencies. Existing 001 owns shell; resolver 036 selection is unrelated. Relevant context: React, accessibility, admin UI, Tailwind, testing/commands and component contracts. Evidence: firmware-overflow-verification.md.

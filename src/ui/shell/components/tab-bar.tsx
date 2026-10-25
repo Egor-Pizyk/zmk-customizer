@@ -69,10 +69,27 @@ function NavigationFooter({
         data-onboarding-target="settings"
         icon={<SettingsIcon />}
         label="Settings"
+        hint="Settings"
+        hintPlacement="right"
+        isHintDecorative
         onClick={handleSettingsClick}
       />
-      <IconButton icon={<ReplayIcon />} label="Take the tour again" onClick={handleTourClick} />
-      <IconButton icon={<HelpIcon />} label="Keyboard shortcuts" onClick={handleHelpClick} />
+      <IconButton
+        icon={<ReplayIcon />}
+        label="Take the tour again"
+        hint="Take the tour again"
+        hintPlacement="right"
+        isHintDecorative
+        onClick={handleTourClick}
+      />
+      <IconButton
+        icon={<HelpIcon />}
+        label="Keyboard shortcuts"
+        hint="Keyboard shortcuts"
+        hintPlacement="right"
+        isHintDecorative
+        onClick={handleHelpClick}
+      />
     </div>
   );
 }

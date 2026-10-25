@@ -33,3 +33,12 @@ Initial merge check needed one formatter cleanup in app conflict resolution. Sta
 ## Manual acceptance and PR readiness — 2026-10-25
 
 The user confirmed completion of the outstanding keyboard/OS/screen-reader acceptance without findings on 2026-10-25; this supersedes the pending manual limits above and is user-reported evidence. Review of the current remote head `8bdb7e8` preserves the separately delivered Keyboard shortcuts repair and audit documents. Its executable tree retains the combined verification recorded above; this continuation changes acceptance reporting only. PR #28 includes the Firmware repair also proposed in #27. CI on the final pushed revision remains required before merge.
+
+
+## Lower navigation hints
+
+FR-042 → NAVH-1/2/3 → navigation-hints.spec.ts. Red: missing Settings tooltip in both Chromium themes. Added explicit decorative labels to Settings/replay/help and right-side placement through existing Button/Tooltip primitives; default placement unchanged. No onboarding step/target update needed: this only reveals existing button names, retaining their actions and anchors. No effects, runtime dependencies or data/history changes.
+
+Focused browser verification: 6/6 Chromium/Firefox/WebKit cases passed, each covering 390/1024/1440px and all three buttons; hover/readable text, viewport corners, pointer leave, keyboard focus/Escape and saved-project invariance. `.check-logs/navigation-hints-verified.log`. Initial diagnostic mixed hover with retained keyboard focus; corrected setup to isolate the two modes without changing product behavior. Rendered 390px/dark screenshot reviewed: help hint readable to the right, above bottom edge, no clipping; other geometry assertions cover both themes/sizes. Existing manual acceptance remains historical; new hint manual OS/screen-reader acceptance not performed. Final changed checks pending.
+
+Initial exact-snapshot check passed static gates and 125 related unit tests; Chromium finished 137/138, with keyboard onboarding failing to reach Other ways to start after export. Isolated unchanged scenario passed 1/1 (`.check-logs/navigation-onboarding-diagnostic.log`); no product/test changes made for this non-reproduced failure. Rerun the mandatory combined check and retain this failed attempt. Button helper accepts the hint directly to keep its function within the existing line limit; Escape behavior is equivalent.

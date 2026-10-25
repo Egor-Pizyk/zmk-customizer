@@ -345,3 +345,7 @@ FR-041: The browser tab shows a bundled green keyboard favicon with a transparen
 ## Keyboard shortcuts overflow repair
 
 FR-040/FR-032: Keyboard shortcuts dialog must fit its viewport without horizontal scrolling at 1024/1440px and 200% effective zoom (640 CSS px). Long shortcut combinations and section captions wrap without losing content; all shortcut groups remain reachable with vertical scrolling. Preserve keyboard opening, native Escape/focus return, both themes and reduced motion.
+
+## Lower navigation hints
+
+FR-042: Settings, Take the tour again and Keyboard shortcuts show readable text hints while hovered or keyboard-focused. Hints stay inside the viewport at 390/1024/1440px in both themes, remain while hovered, hide after pointer/focus leaves, and dismiss with Escape. Keep button accessible names/actions/order, project data/history and onboarding targets. No motion.
