@@ -333,3 +333,7 @@ User-requested updates supersede the minimap requirements above (US9 minimap sce
 - Add a keyboard-reachable “Center keyboard” button on both canvas workspaces. It pans the current view to the midpoint of the extreme key bounds on each axis, preserving zoom; wires are excluded. With no keys it is unavailable with an explanation. Camera changes remain interface preferences, shared between Schematic and Bindings, and do not alter the project or undo history.
 
 Acceptance: no minimap or switch; smaller reversible zoom steps; center an asymmetric layout at non-default zoom and negative coordinates; center follows moved/deleted keys; empty project states why centering is unavailable.
+
+## Firmware overflow regression (2026-10-25)
+
+FR-001/FR-006 clarification: long Firmware content scrolls within main. Wheel scrolling over the workspace navigation or beyond the content end must not scroll the document or move the sidebar/project bar out of the viewport. All settings remain reachable, including by keyboard, at 1024px and wider and in both themes. Search empty states retain the same bounded shell. No data, history, motion or validation changes.

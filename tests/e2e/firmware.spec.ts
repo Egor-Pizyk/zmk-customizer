@@ -149,3 +149,34 @@ test('split central-only Firmware configuration downloads actual half files', as
   expect(files['build.yaml']).toContain('shield: unibody_six_left');
   expect(files['build.yaml']).toContain('shield: unibody_six_right');
 });
+
+for (const width of [1024, 1440]) {
+  test(`Firmware keeps sidebar and document stationary at ${width}px @cross-browser`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 800 });
+    await page.emulateMedia({ colorScheme: width === 1024 ? 'dark' : 'light' });
+    await openProject(page, UNIBODY_PRESET);
+    await workspace(page, 'Firmware');
+    const navigation = page.getByRole('navigation', { name: 'Workspaces' });
+    await navigation.hover();
+    await page.mouse.wheel(0, 4000);
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollHeight)).toBe(800);
+    await expect.poll(() => navigation.boundingBox()).toMatchObject({ y: 0, height: 800 });
+    const main = page.getByRole('main');
+    await main.hover();
+    await expect(async () => {
+      await page.mouse.wheel(0, 10_000);
+      await expect(
+        page.getByRole('switch', { name: 'Report peripheral battery to host', exact: true }),
+      ).toBeInViewport({ timeout: 1000 });
+    }).toPass();
+    await page.screenshot({ path: `test-results/firmware-scroll-${width}.png` });
+    await expect(page.getByRole('button', { name: 'Settings', exact: true })).toBeInViewport();
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+    await page
+      .getByRole('searchbox', { name: 'Search firmware settings' })
+      .fill('no-settings-match');
+    await expect(page.getByText('No firmware settings match your search.')).toBeInViewport();
+  });
+}

@@ -532,3 +532,9 @@ Deviations from the task text, each smaller or forced by lint/type rules; code c
 - [X] Add Center keyboard on shared canvas controls, preserving zoom; test empty/single/asymmetric/negative layouts and viewport placement.
 - [X] `make check`: 698 tests pass; production build passes.
 - [ ] Browser smoke test: unavailable in this session (no browser connector; native Chrome access denied by Computer Use). Dev server runs at http://localhost:5173.
+
+## Firmware overflow repair (2026-10-25)
+
+- [x] FSO-1 Reproduce FR-001/FR-006 sidebar/document overflow with native wheel input at 1024/1440px.
+- [ ] FSO-2 Repair shell scroll ownership; verify bottom settings, sidebar and search empty state in browser.
+- [ ] FSO-3 Run changed checks and record rendered review and manual limits in [verification](firmware-overflow-verification.md).
