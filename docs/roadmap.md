@@ -639,7 +639,7 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 ### 036 — ui-ux-remediation — large first-major bugfix sweep
 
-**Status (2026-10-25).** All 23 reports are implemented or regression-verified (10 and 15 needed no production repair). The user reported all requested manual testing passed on 2026-10-25; see [acceptance evidence](../specs/036-ui-ux-remediation/verification.md#manual-acceptance-and-next-scope--2026-10-25). This is user-reported acceptance, not an agent-observed OS/speech/hardware run. PR #24 remains unmerged; its observed failing CI checks must be repaired in 036 before merge and must not be deferred into 038.
+**Status (2026-10-25).** All 23 reports are implemented or regression-verified (10 and 15 needed no production repair). The user reported all requested manual testing passed on 2026-10-25; see [acceptance evidence](../specs/036-ui-ux-remediation/verification.md#manual-acceptance-and-next-scope--2026-10-25). This is user-reported acceptance, not an agent-observed OS/speech/hardware run. The failed CI causes have been repaired and verified locally in 036; see the CI delivery repair journal. Protected final checks, PR #24 merge and minor release publication remain separate delivery states; none of this work is deferred into 038.
 
 **Goal.** Resolve the reported editing, wiring, selection, rotation and interface problems before the first major release. Complete after 035 audit/specification and before 037 onboarding, so the tour and final README describe the corrected product. Include the applicable audit findings without losing or replacing this explicit user backlog.
 
@@ -728,7 +728,7 @@ Parsing existing ZMK shield files back into a project (Devicetree parsing), cust
 
 ## TODO
 
-- [ ] Finish **036 delivery**: implementation and user-reported manual acceptance are complete; repair current CI failures and complete PR #24 before 038.
+- [ ] Finish **036 delivery**: implementation, user-reported manual acceptance and local CI repairs are complete; protected final CI/auto-merge and minor release must complete before 038.
 - [ ] Specify and deliver **038 — residual-ui-ux-fixes** from the reconciled audit register, then implement **037 onboarding**.
 
 - [ ] Revisit deferred **020 — zmk-studio-support** and agree when to resume it. Skipped for now on user request (2026-10-19); keep interactive onboarding (037) last when rescheduling.

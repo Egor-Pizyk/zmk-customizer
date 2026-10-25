@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { PointerEvent } from 'react';
 import type { WirePoint } from '@domain';
 import { getHoverPreview } from './get-hover-preview';
@@ -42,7 +42,7 @@ export function useSchematicPointer(options: SchematicPointerOptions) {
   const [drag, setDrag] = useState<Drag | undefined>();
   const [draft, setDraft] = useState<WireDraft | undefined>();
   const [hover, setHover] = useState<Hover | undefined>();
-  const [lastWirePress, setLastWirePress] = useState<LastWirePress | undefined>();
+  const wirePressHistory = useWirePressHistory();
   const state: PointerState = {
     ...options,
     drag,
@@ -51,7 +51,7 @@ export function useSchematicPointer(options: SchematicPointerOptions) {
     onDraftChange: setDraft,
   };
   const { activeToolId, snapGridU } = options;
-  const handlers = createHandlers(state, setHover, { lastWirePress, setLastWirePress });
+  const handlers = createHandlers(state, setHover, wirePressHistory);
   return {
     ...handlers,
     drag,
@@ -79,13 +79,21 @@ type LastWirePress = {
   readonly point: WirePoint;
 };
 
+// Event history must be synchronous even when React batches two native presses.
+function useWirePressHistory() {
+  const lastWirePress = useRef<LastWirePress | null>(null);
+  return {
+    getLastWirePress: () => lastWirePress.current ?? undefined,
+    setLastWirePress: (press: LastWirePress | undefined) => {
+      lastWirePress.current = press ?? null;
+    },
+  };
+}
+
 function createHandlers(
   state: PointerState,
   setHover: (hover?: Hover) => void,
-  doublePress: {
-    readonly lastWirePress: LastWirePress | undefined;
-    readonly setLastWirePress: (press: LastWirePress | undefined) => void;
-  },
+  doublePress: ReturnType<typeof useWirePressHistory>,
 ) {
   return {
     handlePointerDown: (world: WirePoint, event: PointerEvent<SVGSVGElement>) => {
@@ -116,7 +124,8 @@ function handlePointerDown(
 ) {
   const hit = readCanvasHit(event.target);
   const handled = handleDoubleWirePress(state, {
-    ...doublePress,
+    lastWirePress: doublePress.getLastWirePress(),
+    setLastWirePress: doublePress.setLastWirePress,
     hit,
     world,
     timeMs: event.timeStamp,

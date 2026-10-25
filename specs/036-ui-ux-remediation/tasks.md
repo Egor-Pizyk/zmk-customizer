@@ -102,3 +102,7 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 
 - [x] J022 [FR-037] Reproduce Tools overlap in real browser; reserve toolbar space, verify moved/expanded Tools, painted pointer/keyboard controls, hints/themes/reflow and unchanged project; separate commit.
 - [x] J023 [FR-038] Reproduce hidden preview actions while nested editor scrolls; compose persistent status/actions, preserve refusal/Cancel/Apply/history, browser rendered review and staged changed checks; separate commit, journal and existing draft PR update. User-reported manual acceptance recorded 2026-10-25; see verification.md.
+
+## CI delivery repair (explicitly authorized)
+
+- [x] CI036 Diagnose run 40180032666; restore current mutation anchors and actual detection, cover missing 036 UI branches without lowering thresholds, reproduce/repair native Firefox/WebKit bend/rotated-key failures with meaningful assertions. Run focused/full CI-equivalent checks where needed and final staged checks; record evidence. Update existing PR, retain exactly release:minor, mark ready and enable protected squash auto-merge. Local repair/check evidence is in verification.md; external ready/auto-merge state is recorded in PR #24 on delivery. Do not bypass checks or claim a release before publication.

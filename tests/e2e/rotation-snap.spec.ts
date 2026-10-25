@@ -63,6 +63,7 @@ for (const part of ['key', 'encoder'] as const) {
         await selectKey(page);
       }
       const before = await saved(page);
+      expect(before.keys[0]?.diode).toBeUndefined();
       const pivot = await center(
         part === 'key'
           ? page.locator('[data-key-focus-id="k0"] rect').first()

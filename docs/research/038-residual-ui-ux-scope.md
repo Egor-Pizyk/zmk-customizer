@@ -49,7 +49,7 @@ Each confirmed new issue needs a stable ID, baseline revision, fixture, environm
 
 ## Boundaries and delivery
 
-- Current failed CI checks for PR #24 belong to **036 delivery**, before merge/038; they are not residual UI defects to defer. On 2026-10-25 static/unit, Firefox/WebKit, mutations/browser-mutations and aggregate checks were observed failed, while Chromium/image passed. Causes were not investigated in this documentation task.
+- CI failures observed at the scope-reconciliation revision belong to **036 delivery**, before merge/038; they are not residual UI defects to defer. Static/unit, Firefox/WebKit, mutations/browser-mutations and aggregate checks failed while Chromium/image passed. Subsequent repairs and local verification are recorded in the 036 CI delivery journal; protected final CI, merge and release remain separate states.
 - Do not reopen the accepted 036 manual checklist or duplicate its encoder, wiring, clipboard, rotation, toolbar and preview work.
 - No broad mobile support for Bindings/Firmware/Export, visual redesign, deferred 020–022, mechanical module or tutorial implementation is authorized by this residual scope.
 - Finish current 036 delivery first. Specify/review/fix and verify the genuine 038 residue next. Only then implement **037**, whose steps must describe the final controls and flows. README/repository-description closeout follows onboarding.

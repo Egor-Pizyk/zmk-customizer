@@ -79,9 +79,20 @@ test('a wire stays selected while and after dragging a bend @cross-browser', asy
   const bendPoint = await sectionPoint(
     page.locator('[data-section-id] path[pointer-events="stroke"]').first(),
   );
+  const beforeInsert = await saved(page);
+  const sectionBounds = await section.boundingBox();
   await page.mouse.dblclick(bendPoint.x, bendPoint.y);
-  await expect(page.locator('[data-bend-index]')).toHaveCount(1);
-  expect((await saved(page)).wires[0]?.bends).toHaveLength(1);
+  await expect.poll(async () => (await saved(page)).wires[0]?.bends.length).toBe(1);
+  const inserted = await saved(page);
+  expect(inserted.wires[0]?.contacts).toEqual(beforeInsert.wires[0]?.contacts);
+  expect(await section.boundingBox()).toEqual(sectionBounds);
+  // Collinear saved points do not add redundant handles between actual turns (FR-008).
+  await expect(page.locator('[data-wire-bend]')).toHaveCount(1);
+  await history(page, 'Undo').click();
+  expect(await saved(page)).toEqual(beforeInsert);
+  await history(page, 'Redo').click();
+  expect(await saved(page)).toEqual(inserted);
+  await page.locator('[data-canvas-workspace="schematic"]').focus();
   await page.keyboard.press('Escape');
   await expect(page.locator('[data-section-id] path[data-selected]')).toHaveCount(0);
 });

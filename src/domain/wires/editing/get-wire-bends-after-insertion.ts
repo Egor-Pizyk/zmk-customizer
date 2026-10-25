@@ -1,3 +1,4 @@
+import { getNearestPointOnPath } from '@domain/geometry';
 import { getWirePath } from '@domain/wires/geometry';
 import type { Project, WirePoint } from '@domain';
 
@@ -9,15 +10,20 @@ export function getWireBendsAfterInsertion(
   if (wire === undefined) {
     return undefined;
   }
-  if (wire.bends.some((bend) => isSamePoint(bend, input.point))) {
+  const path = getWirePath(project, wire);
+  // Pointer coordinates may be rounded off the conductor; insertion must preserve its path.
+  const point = getNearestPointOnPath(path, input.point);
+  if (point === undefined) {
+    return undefined;
+  }
+  const segmentIndex = findClosestSegmentIndex(path, point);
+  if (wire.bends.some((bend) => isSamePoint(bend, point))) {
     return wire.bends;
   }
-  const path = getWirePath(project, wire);
-  const segmentIndex = findClosestSegmentIndex(path, input.point);
   const insertIndex = wire.bends.filter(
     (bend) => findPointIndex(path, bend) <= segmentIndex,
   ).length;
-  return wire.bends.toSpliced(insertIndex, 0, input.point);
+  return wire.bends.toSpliced(insertIndex, 0, point);
 }
 
 function findPointIndex(path: readonly WirePoint[], point: WirePoint): number {
