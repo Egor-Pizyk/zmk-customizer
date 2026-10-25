@@ -639,7 +639,7 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 ### 035 — ui-ux-audit-specification
 
-**Status (2026-10-25).** Historical [research and handoff](../specs/035-ui-ux-audit-specification/findings.md) delivered as a bounded record. All R01–R23 are reconciled with accepted, merged 036 (v0.5.0); remaining broader review coverage is scoped in 038. No complete manual audit claim; [journal](../specs/035-ui-ux-audit-specification/verification.md).
+**Status (2026-10-25).** Historical [research and handoff](../specs/035-ui-ux-audit-specification/findings.md) delivered as a bounded record. All R01–R23 are reconciled with accepted, merged 036 (v0.5.0); broader review limits remain documented; the proposed separate 038 stage was cancelled by the user. No complete manual audit claim; [journal](../specs/035-ui-ux-audit-specification/verification.md).
 
 **Goal and scope.** Review the delivered four-workspace product, shared controls and end-to-end creation/editing/export flows. Produce evidence-backed findings, coverage and verification gaps, and testable remediation requirements for 036. Preserve all 21 explicit 036 reports and their identities. Apply local UI/UX guidance, accessibility, themes, responsive and keyboard review; distinguish observed results from user reports and historical checks. No application fixes or new design system are included in this stage. Complete before 036 and final onboarding 037.
 
@@ -681,23 +681,11 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 **Done when.** All 21 original items and audit follow-ups 22–23 have agreed acceptance criteria and verified outcomes, including a 2×2 wired movement regression, topology round trips, initially empty wiring, both sides of L-shaped wire crossings, wire marquee selection, macOS clipboard use and center-preserving pointer/numeric rotation. Report unresolved items explicitly; do not silently treat them as completed or defer them beyond the first-major milestone.
 
-### 038 — residual-ui-ux-fixes (before 037)
-
-**Status / ordering (2026-10-25).** User-approved next scope: complete 036 delivery, then 038, then onboarding **037**. Keep the assigned numbers. 038 has no feature spec or implementation yet; this roadmap and the [residual audit register](research/038-residual-ui-ux-scope.md) define the input to its specification.
-
-**Goal.** Finish the remaining audit coverage from 035 on the accepted 036 product and fix only newly reproduced residual problems before the tour teaches those flows.
-
-**Updated scope.** All findings **035-R01–R23** already map to completed 036 work; do not schedule them again. Review the remaining coverage gaps: detailed state combinations in advanced Bindings editors; long labels/names and text-spacing overrides; measured contrast/focus across existing surfaces; the broader workspace/state/theme matrix not covered by the bounded 035 overviews. Reuse existing 036 evidence and accepted manual checks. These are investigation gaps, not confirmed bugs. For each newly reproduced defect, record steps, impact, owning requirement, acceptance and failing regression before its fix. Preserve stable original IDs and link any actual regression to its closed source finding.
-
-**Not in scope.** Reimplementing accepted 036 changes, rerunning accepted manual checks as unfinished work, repairing current PR #24 CI in a later feature, a visual redesign, broad phone support outside Schematic/Settings, deferred 020–022, mechanical features or onboarding itself.
-
-**Done when.** The residual register distinguishes reviewed/pass, confirmed/fixed and explicitly limited cases with current evidence; every confirmed in-scope defect has acceptance/regression and rendered verification, with compatibility/history/export preserved. An empty confirmed-defect list is valid: do not invent fixes merely to fill feature 038. Complete its delivery/acceptance before implementing 037.
-
 ### 037 — interactive-onboarding (implement last)
 
 **Goal.** Guide a first-time user through the product with short explanations and real actions, ending with their first simple custom keyboard built from scratch: a 3×3 macropad and its downloadable ZMK configuration.
 
-**Ordering.** Explicitly follows 038 residual audit fixes (user decision 2026-10-25); retain number 037. Added on user request after keyboard-presets. Implement after every other planned product feature so the tour describes the complete product. Keep it last when adding future roadmap items.
+**Ordering.** Next after delivered 036; the user removed the proposed 038 stage on 2026-10-25. Retain number 037. Added on user request after keyboard-presets. Implement after every other planned product feature so the tour describes the complete product. Keep it last when adding future roadmap items.
 
 **In scope**
 - Start the guide automatically once on the first visit in a browser profile. Persist that it has been offered separately from project data, so reloading, completing or dismissing it does not trigger another automatic start. No account or telemetry is needed.
@@ -735,7 +723,7 @@ Parsing existing ZMK shield files back into a project (Devicetree parsing), cust
 ## TODO
 
 - [x] Finish **036 delivery**: user-reported manual acceptance, protected CI and PR #24 merge completed; v0.5.0 published on 2026-10-25.
-- [ ] Specify and deliver **038 — residual-ui-ux-fixes** from the reconciled audit register, then implement **037 onboarding**.
+- [ ] Specify and deliver **037 — interactive-onboarding** next.
 
 - [ ] Revisit deferred **020 — zmk-studio-support** and agree when to resume it. Skipped for now on user request (2026-10-19); keep interactive onboarding (037) last when rescheduling.
 - [ ] Revisit deferred **021 — lighting-displays** and **022 — zmk-version-selection**. Skipped for now on user request (2026-10-19); keep the ZMK v0.3.0 target until version selection is explicitly resumed.
