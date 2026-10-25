@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './test';
 import { openProject, saved } from './helpers';
 
 test('keeps the canvas visible beside or above a bounded editor @cross-browser', async ({

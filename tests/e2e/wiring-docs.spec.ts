@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './test';
 import { openProject, saved } from './helpers';
 
 test('wiring documentation has distinct destinations and names the shared diode source', async ({

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './test';
 import { UNIBODY_PRESET } from '../helpers/unibody-preset';
 import { parseProjectFile } from '@storage/project';
 import { getResultValue } from '../helpers/result';

@@ -35,7 +35,10 @@ export function ProjectBar({ onNewClick, onOpenClick, onAgentClick }: ProjectBar
   }
 
   return (
-    <header className="flex min-h-12 shrink-0 flex-wrap items-end gap-3 border-b border-border bg-surface-raised px-4 py-2">
+    <header
+      data-onboarding-target="project"
+      className="flex min-h-12 shrink-0 flex-wrap items-end gap-3 border-b border-border bg-surface-raised px-4 py-2"
+    >
       <ProjectNameFields />
       <span className="self-center text-text-muted">{SAVE_STATUS_TEXT[saveStatus]}</span>
       <ProjectActions
@@ -67,7 +70,7 @@ function ProjectNameFields() {
   }
 
   return (
-    <>
+    <div data-onboarding-target="project-name" className="flex flex-wrap gap-3">
       <DraftTextField
         error={issueTextAt('name')}
         issuePath="name"
@@ -83,7 +86,7 @@ function ProjectNameFields() {
         placeholder={toShieldName(project.name)}
         value={project.shieldName ?? ''}
       />
-    </>
+    </div>
   );
 }
 
@@ -92,7 +95,7 @@ function ProjectActions({
   onOpenClick: handleOpenClick,
   onAgentClick: handleAgentClick,
 }: ProjectBarProps) {
-  const { saveProjectFile } = useProject();
+  const { saveProjectFile, tutorial } = useProject();
 
   function handleSaveClick() {
     saveProjectFile();
@@ -100,10 +103,10 @@ function ProjectActions({
 
   return (
     <div className="ml-auto flex flex-wrap gap-1 self-center">
-      <Button onClick={handleNewClick} size="sm">
+      <Button isDisabled={tutorial !== undefined} onClick={handleNewClick} size="sm">
         New
       </Button>
-      <Button onClick={handleOpenClick} size="sm">
+      <Button isDisabled={tutorial !== undefined} onClick={handleOpenClick} size="sm">
         Open
       </Button>
       <Button onClick={handleSaveClick} size="sm">
@@ -111,6 +114,7 @@ function ProjectActions({
       </Button>
       <HistoryButtons />
       <Button
+        isDisabled={tutorial !== undefined}
         aria-label="Create with agent"
         className="ml-auto"
         onClick={handleAgentClick}

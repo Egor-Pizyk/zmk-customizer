@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './test';
 import { history, openProject, saved, workspace } from './helpers';
 
 test('action and key pickers use one grouped list without category tabs @cross-browser', async ({

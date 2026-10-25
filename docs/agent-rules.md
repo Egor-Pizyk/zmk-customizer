@@ -6,6 +6,7 @@
 - Follow the mandatory context routing in `AGENTS.md`; load relevant rules before editing, not only after a check fails.
 - For unclear ZMK facts, read the pinned reference and linked upstream source; report what remains unverified rather than guessing.
 - Record actual checks and their limits. Never claim a manual accessibility check, firmware build or test was run when it was not.
+- When features or user flows are added, changed or removed, update affected onboarding steps, learning objectives, targets, text and verification in the same change. If no onboarding update is needed, record the reason in the feature verification evidence.
 - Comments explain non-obvious reasons and ZMK quirks; do not repeat code.
 - Never commit `dist/`, `coverage/`, `node_modules/` or other generated reports.
 - Review [Git flow](guidelines/git-flow.md) at startup and delivery under the context-reuse rule in `AGENTS.md`. Live working-tree/PR state and verification evidence must still be inspected for the current task.

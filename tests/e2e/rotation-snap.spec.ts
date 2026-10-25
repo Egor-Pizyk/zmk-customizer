@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './test';
 import type { Page } from '@playwright/test';
 import { center, fixture, history, openProject, saved, selectKey } from './helpers';
 import type { Point } from './helpers';

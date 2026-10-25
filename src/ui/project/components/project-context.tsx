@@ -3,6 +3,8 @@ import type { ReactNode } from 'react';
 import type { ProjectLoadResult } from '@storage/project';
 import {
   createHistoryActions,
+  createTutorialActions,
+  getTutorialConditions,
   getSaveStatus,
   getProjectAnalysis,
   getValidationIssues,
@@ -34,6 +36,10 @@ export function ProjectProvider({ initialLoad, children }: ProjectProviderProps)
   const value = useMemo<ProjectContextValue>(
     () => ({
       ...createHistoryActions(change),
+      ...createTutorialActions(change),
+      tutorial: state.tutorial,
+      sessionId: state.sessionId ?? 0,
+      tutorialConditions: state.tutorial === undefined ? undefined : getTutorialConditions(state),
       ...createFileActions(change, importSession),
       project: present,
       importSession,

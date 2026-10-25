@@ -44,6 +44,7 @@ const ROOT_UI = new Set([
   'dialogs',
   'downloads',
   'issues',
+  'onboarding',
 ]);
 const FEATURES = new Set(['schematic', 'bindings', 'firmware', 'export']);
 

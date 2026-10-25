@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './test';
 import type { Page } from '@playwright/test';
 import path from 'node:path';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';

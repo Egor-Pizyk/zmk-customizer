@@ -1,3 +1,4 @@
+import { useProject } from '@ui/project/logic';
 import { useState } from 'react';
 import { CONTROLLER_BOARDS, getControllerBoard } from '@catalog/controllers';
 import { changeController } from '@domain/project';
@@ -11,13 +12,14 @@ type ControllerPanelProps = {
 };
 
 export function ControllerPanel({ project, commit }: ControllerPanelProps) {
+  const { tutorial } = useProject();
   const [isOpen, setIsOpen] = useState(false);
   const { board, handleChange } = useControllerActions({ project, commit });
   return (
-    <section aria-labelledby="controller-title">
+    <section data-onboarding-target="controller" aria-labelledby="controller-title">
       <details
         name="schematic-editor"
-        open={isOpen}
+        open={isOpen || tutorial?.record.stepId === 'controller'}
         onToggle={(event) => {
           setIsOpen(event.currentTarget.open);
         }}

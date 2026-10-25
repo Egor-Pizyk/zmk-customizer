@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './test';
 import { fixture, openProject, saved, history, key, center } from './helpers';
 
 for (const theme of ['light', 'dark'] as const) {

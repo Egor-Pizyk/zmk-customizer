@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useProject } from '@ui/project/logic';
 import type { ReactNode } from 'react';
 import type { WorkspaceId } from '@storage/preferences';
 import { BindingsWorkspace } from '@ui/bindings/components';
@@ -20,6 +21,7 @@ type WorkspaceViewProps = {
 
 // Document title, <h1> and body of the active workspace.
 export function WorkspaceView({ workspaceId }: WorkspaceViewProps) {
+  const { sessionId } = useProject();
   const headingRef = useWorkspaceHeadingFocus(workspaceId);
   const label = getWorkspaceLabel(workspaceId);
   return (
@@ -28,7 +30,9 @@ export function WorkspaceView({ workspaceId }: WorkspaceViewProps) {
       <h1 className="px-4 pt-3 pb-2 text-lg font-semibold" ref={headingRef} tabIndex={-1}>
         {label}
       </h1>
-      {WORKSPACE_VIEWS[workspaceId]()}
+      <section className="flex min-h-0 flex-1 flex-col" key={sessionId}>
+        {WORKSPACE_VIEWS[workspaceId]()}
+      </section>
     </>
   );
 }
