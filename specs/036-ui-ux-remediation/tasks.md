@@ -106,3 +106,8 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 ## CI delivery repair (explicitly authorized)
 
 - [x] CI036 Diagnose run 40180032666; restore current mutation anchors and actual detection, cover missing 036 UI branches without lowering thresholds, reproduce/repair native Firefox/WebKit bend/rotated-key failures with meaningful assertions. Run focused/full CI-equivalent checks where needed and final staged checks; record evidence. Update existing PR, retain exactly release:minor, mark ready and enable protected squash auto-merge. Local repair/check evidence is in verification.md; external ready/auto-merge state is recorded in PR #24 on delivery. Do not bypass checks or claim a release before publication.
+
+## Right-docked Editors follow-up
+
+- [ ] RD001 [FR-014–017] Right desktop dock, left-edge pointer/keyboard resize and matching content/footer clearance; retain narrow layout and saved width.
+- [ ] RD002 [FR-014–017] Update real-browser geometry/resize coverage, inspect light/dark desktop/narrow renders, run staged changed checks and record verification/manual limits.
