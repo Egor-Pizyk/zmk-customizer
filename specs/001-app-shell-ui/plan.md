@@ -175,3 +175,19 @@ Config and doc files changed by this feature (tasks T002–T004):
 | `style` prop allowed in `floating-panel.tsx` only (lint override) | The tool window position is dynamic px coordinates with no token or class equivalent | A ref and effect writing `el.style` is the same CSSOM write with more code. SVG `foreignObject` breaks focus and layout. React's `style` uses CSSOM, which CSP allows (R7) and which is verified in the quickstart production check |
 | Canvas-scoped keys via the global `keydown` listener (`data-canvas-workspace`), not `onKeyDown` on the canvas; react.md amended in T003 | `onKeyDown` on `<svg role="application">` fails jsx-a11y `no-noninteractive-element-interactions`; one listener also keeps the global and canvas shortcuts in one tested matcher | A wrapper `<div>` with `onKeyDown` moves focus off the `role="application"` element and still fails the rule; a lint disable hides the a11y check instead of satisfying it |
 | Plain JS file `public/theme-init.js` outside the TS pipeline | Must run before the deferred module entry to prevent a theme flash (FR-022) | An inline script needs `'unsafe-inline'` or a CSP hash; hiding the page until mount is a visible blank delay |
+
+## Firmware overflow repair (2026-10-25)
+
+Establish main as the containing block for absolutely positioned screen-reader descriptions, preventing their overflow from escaping to the document. Repair shell sizing in `src/ui/app/components/app.tsx`, preserving main as the scroll owner and existing semantic tokens/landmarks. Reproduce first with real wheel input over navigation in `tests/e2e/firmware.spec.ts`; verify 1024/1440px, bottom settings and empty search. Context: workflow, architecture, folder structure, tooling, domain model, TypeScript/control flow/naming, React, accessibility, admin UI, Tailwind, testing/commands. Evidence: [overflow verification](firmware-overflow-verification.md).
+
+## Favicon repair
+
+FR-041: declare public/favicon.svg in index.html. Reproduce the missing declaration in production Playwright before implementation; check same-origin SVG delivery and rendered icon. Work on user-requested fix/pre-major-sweep. No dependencies or ZMK changes. Evidence: firmware-overflow-verification.md.
+
+## Keyboard shortcuts overflow repair
+
+Use existing wide Dialog size for shortcut help; allow shortcut key cells to wrap inside bounded table width. Add tests-first real-browser overflow/reachability/focus checks at 640/1024/1440px in both themes. Existing shell 001 owns FR-040/FR-032; resolver 036 is not this repair owner. Follow already loaded React/accessibility/admin UI/Tailwind/testing rules. Journal: firmware-overflow-verification.md.
+
+## Lower navigation hints
+
+FR-042: reuse Button/Tooltip hints, adding a right-side placement for lower navigation so bottom-edge controls cannot put hints outside the viewport. Preserve default placement for existing consumers. Add real-browser hover/focus/Escape/geometry tests; no effects/dependencies. Existing 001 owns shell; resolver 036 selection is unrelated. Relevant context: React, accessibility, admin UI, Tailwind, testing/commands and component contracts. Evidence: firmware-overflow-verification.md.

@@ -532,3 +532,27 @@ Deviations from the task text, each smaller or forced by lint/type rules; code c
 - [X] Add Center keyboard on shared canvas controls, preserving zoom; test empty/single/asymmetric/negative layouts and viewport placement.
 - [X] `make check`: 698 tests pass; production build passes.
 - [ ] Browser smoke test: unavailable in this session (no browser connector; native Chrome access denied by Computer Use). Dev server runs at http://localhost:5173.
+
+## Firmware overflow repair (2026-10-25)
+
+- [x] FSO-1 Reproduce FR-001/FR-006 sidebar/document overflow with native wheel input at 1024/1440px.
+- [x] FSO-2 Repair shell scroll ownership; verify bottom settings, sidebar and search empty state in browser.
+- [x] FSO-3 Run changed checks and record rendered review and manual limits in [verification](firmware-overflow-verification.md).
+
+## Favicon repair
+
+- [x] FAV-1 Reproduce missing favicon declaration (FR-041).
+- [x] FAV-2 Bundle local SVG icon, verify delivery and rendering.
+- [x] FAV-3 Run changed checks; record evidence in [sweep journal](firmware-overflow-verification.md).
+
+## Keyboard shortcuts overflow repair
+
+- [x] KSH-1 Reproduce horizontal overflow at supported and zoomed viewport sizes.
+- [x] KSH-2 Repair dialog width/wrapping; review all groups and keyboard dismissal/focus.
+- [x] KSH-3 Merge latest main preserving existing fixes; run changed checks and record evidence.
+
+## Lower navigation hints
+
+- [x] NAVH-1 Reproduce absent hints for three lower buttons (FR-042).
+- [x] NAVH-2 Add bounded hover/focus hints and review rendering.
+- [x] NAVH-3 Run changed checks; record evidence in sweep journal.

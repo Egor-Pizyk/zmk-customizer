@@ -1,6 +1,8 @@
-# 038 — residual audit scope after 036
+# Archived proposal — residual audit scope after 036
 
-**Decision: 2026-10-25.** The user confirmed that all requested manual testing passed and selected **036 delivery → 038 residual fixes → 037 onboarding**, keeping those feature numbers. This is a documentation reconciliation, not a new rendered audit or authorization to invent defects. No 038 feature spec/plan/tasks exist yet; use the normal workflow when starting it after 036 delivery.
+**Cancelled (2026-10-25).** The user removed 038 from the roadmap and selected 037 onboarding next. This document preserves the historical investigation proposal and its evidence only; it creates no active backlog or prerequisite for 037. The earlier ordering and delivery instructions below are superseded. No 038 feature directory was created.
+
+**Historical decision: 2026-10-25.** The user confirmed that all requested manual testing passed and selected **036 delivery → 038 residual fixes → 037 onboarding**, keeping those feature numbers. This is a documentation reconciliation, not a new rendered audit or authorization to invent defects. No 038 feature spec/plan/tasks exist yet; use the normal workflow when starting it after 036 delivery.
 
 ## Evidence and closed findings
 

@@ -333,3 +333,19 @@ User-requested updates supersede the minimap requirements above (US9 minimap sce
 - Add a keyboard-reachable “Center keyboard” button on both canvas workspaces. It pans the current view to the midpoint of the extreme key bounds on each axis, preserving zoom; wires are excluded. With no keys it is unavailable with an explanation. Camera changes remain interface preferences, shared between Schematic and Bindings, and do not alter the project or undo history.
 
 Acceptance: no minimap or switch; smaller reversible zoom steps; center an asymmetric layout at non-default zoom and negative coordinates; center follows moved/deleted keys; empty project states why centering is unavailable.
+
+## Firmware overflow regression (2026-10-25)
+
+FR-001/FR-006 clarification: long Firmware content scrolls within main. Wheel scrolling over the workspace navigation or beyond the content end must not scroll the document or move the sidebar/project bar out of the viewport. All settings remain reachable, including by keyboard, at 1024px and wider and in both themes. Search empty states retain the same bounded shell. No data, history, motion or validation changes.
+
+## Favicon repair (2026-10-25)
+
+FR-041: The browser tab shows a bundled green keyboard favicon with a transparent outer background on first load and reload, legible on light/dark tab surfaces, without external requests. No controls, focus, data or motion changes.
+
+## Keyboard shortcuts overflow repair
+
+FR-040/FR-032: Keyboard shortcuts dialog must fit its viewport without horizontal scrolling at 1024/1440px and 200% effective zoom (640 CSS px). Long shortcut combinations and section captions wrap without losing content; all shortcut groups remain reachable with vertical scrolling. Preserve keyboard opening, native Escape/focus return, both themes and reduced motion.
+
+## Lower navigation hints
+
+FR-042: Settings, Take the tour again and Keyboard shortcuts show readable text hints while hovered or keyboard-focused. Hints stay inside the viewport at 390/1024/1440px in both themes, remain while hovered, hide after pointer/focus leaves, and dismiss with Escape. Keep button accessible names/actions/order, project data/history and onboarding targets. No motion.

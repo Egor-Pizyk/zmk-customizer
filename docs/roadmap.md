@@ -638,7 +638,7 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 ### 035 — ui-ux-audit-specification
 
-**Status (2026-10-25).** Historical [research and handoff](../specs/035-ui-ux-audit-specification/findings.md) delivered as a bounded record. All R01–R23 are reconciled with accepted, merged 036 (v0.5.0); remaining broader review coverage is scoped in 038. No complete manual audit claim; [journal](../specs/035-ui-ux-audit-specification/verification.md).
+**Status (2026-10-25).** Historical [research and handoff](../specs/035-ui-ux-audit-specification/findings.md) delivered as a bounded record. All R01–R23 are reconciled with accepted, merged 036 (v0.5.0); broader review limits remain documented; the proposed separate 038 stage was cancelled by the user. No complete manual audit claim; [journal](../specs/035-ui-ux-audit-specification/verification.md).
 
 **Goal and scope.** Review the delivered four-workspace product, shared controls and end-to-end creation/editing/export flows. Produce evidence-backed findings, coverage and verification gaps, and testable remediation requirements for 036. Preserve all 21 explicit 036 reports and their identities. Apply local UI/UX guidance, accessibility, themes, responsive and keyboard review; distinguish observed results from user reports and historical checks. No application fixes or new design system are included in this stage. Complete before 036 and final onboarding 037.
 
@@ -686,6 +686,7 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 **Ordering.** Next after delivered 036; proposed 038 was cancelled by the user on 2026-10-25. Retain number 037. Added on user request after keyboard-presets. Implement after every other planned product feature so the tour describes the complete product. Keep it last when adding future roadmap items.
 
+
 **In scope**
 - Start the guide automatically once on the first visit in a browser profile. Persist that it has been offered separately from project data, so reloading, completing or dismissing it does not trigger another automatic start. No account or telemetry is needed.
 - A persistent “Take the tour again” button in the lower part of the app lets users restart it after completion or dismissal.
@@ -723,6 +724,7 @@ Parsing existing ZMK shield files back into a project (Devicetree parsing), cust
 
 - [x] Finish **036 delivery**: user-reported manual acceptance, protected CI and PR #24 merge completed; v0.5.0 published on 2026-10-25.
 - [ ] Deliver **037 — interactive-onboarding** next; [specification and tasks](../specs/037-interactive-onboarding/spec.md) define the current scope.
+
 
 - [ ] Revisit deferred **020 — zmk-studio-support** and agree when to resume it. Skipped for now on user request (2026-10-19); keep interactive onboarding (037) last when rescheduling.
 - [ ] Revisit deferred **021 — lighting-displays** and **022 — zmk-version-selection**. Skipped for now on user request (2026-10-19); keep the ZMK v0.3.0 target until version selection is explicitly resumed.

@@ -30,6 +30,7 @@ export type ButtonProps = NativeButtonProps & {
   /** Rendered as aria-disabled so the button stays focusable and its hint readable (R11). */
   readonly isDisabled?: boolean;
   readonly hint?: string | undefined;
+  readonly hintPlacement?: 'bottom' | 'right' | undefined;
   readonly hintAlignment?: 'center' | 'end' | undefined;
   /** Visibility of the hint only, e.g. `lg:hidden` when a visible label replaces it. */
   readonly hintClassName?: string | undefined;
@@ -46,17 +47,14 @@ export function Button({
   hint,
   hintClassName,
   hintAlignment,
+  hintPlacement,
   isHintDecorative = false,
   className = '',
   children,
   ...nativeProps
 }: ButtonProps) {
   const hintId = useId();
-  const { isTooltipDismissed, handlers } = useButtonHandlers({
-    isDisabled,
-    hasHint: hint !== undefined,
-    nativeProps,
-  });
+  const { isTooltipDismissed, handlers } = useButtonHandlers({ isDisabled, hint, nativeProps });
 
   return (
     <button
@@ -71,6 +69,7 @@ export function Button({
       {children}
       <Tooltip
         alignment={hintAlignment}
+        placement={hintPlacement}
         className={hintClassName}
         id={hintId}
         isDecorative={isHintDecorative}
@@ -82,13 +81,13 @@ export function Button({
 
 type ButtonHandlerOptions = {
   readonly isDisabled: boolean;
-  readonly hasHint: boolean;
+  readonly hint: string | undefined;
   readonly nativeProps: NativeButtonProps;
 };
 
 // aria-disabled swallows clicks (R11); Escape hides a visible hint until focus or pointer
 // leaves (WCAG 1.4.13).
-function useButtonHandlers({ isDisabled, hasHint, nativeProps }: ButtonHandlerOptions) {
+function useButtonHandlers({ isDisabled, hint, nativeProps }: ButtonHandlerOptions) {
   const [isTooltipDismissed, setIsTooltipDismissed] = useState(false);
   const { onClick, onKeyDown, onBlur, onPointerLeave } = nativeProps;
   const handlers = {
@@ -100,7 +99,7 @@ function useButtonHandlers({ isDisabled, hasHint, nativeProps }: ButtonHandlerOp
       onClick?.(event);
     },
     onKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => {
-      if (hasHint && event.key === 'Escape') {
+      if (hint !== undefined && event.key === 'Escape') {
         setIsTooltipDismissed(true);
       }
       onKeyDown?.(event);
