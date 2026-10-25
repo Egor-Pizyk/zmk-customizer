@@ -66,3 +66,7 @@ User confirmed 2026-10-20: retain correct pins, refuse conflicts/invalid pins, o
 ## Feature 033 interaction extension
 
 Complete wiring is additive: retain each existing known axis, half, GPIO and deliberate conductor, filling only missing compatible connections with preview. Rebuild wiring is a separate explicit action with the former Auto assign replacement behavior and 032 output/allocation rules. Refused/cancelled proposals do not write saved state. Actual schematic connectivity remains authoritative.
+
+## 038 matrix Rebuild refinement
+
+038 FR-002/FR-003 supersede dispersed output placement for matrix Rebuild: local net trees, one output per terminal and two vertical exterior blocks per half (rows inner, columns outer). Groups move outward together around obstructions; geometry/GPIO allocation and selected cells remain. Automatic matrix mode/topology reconstruction uses the same router to preserve deterministic topology round trips. Direct scan and individual cell/dimension routing retain the previous placement contract. See [038 specification](../038-automatic-wiring-routing/spec.md).

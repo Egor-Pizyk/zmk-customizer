@@ -38,14 +38,15 @@ export function SchematicScreenLayer(props: SchematicScreenLayerProps) {
   const { project, view } = props;
   return (
     <>
-      {getBoardPinLabels(project).map(({ id, at, boardPin, label }) => {
+      {getBoardPinLabels(project).map(({ id, at, boardPin, label, anchor }) => {
         const { xPx, yPx } = toScreenPoint(view, at);
         return (
           <text
             aria-hidden="true"
             className="fill-text text-xs font-medium"
             key={id}
-            x={xPx + 8}
+            x={xPx + (anchor === 'end' ? -8 : 8)}
+            textAnchor={anchor}
             y={yPx + 4}
           >
             {label ?? (boardPin === undefined ? '' : formatBoardPin(boardPin))}

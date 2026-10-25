@@ -43,7 +43,7 @@ function expectClearOutputs(project: Project) {
       const xs = points.map((point) => point.xU);
       const ys = points.map((point) => point.yU);
       const overlaps =
-        end.at.xU + 2 > Math.min(...xs) &&
+        end.at.xU + (end.at.xU < Math.min(...xs) ? 0 : 2) > Math.min(...xs) &&
         end.at.xU < Math.max(...xs) &&
         end.at.yU + 0.25 > Math.min(...ys) &&
         end.at.yU - 0.25 < Math.max(...ys);
@@ -85,11 +85,12 @@ it('puts right row endpoints beyond the right half', () => {
   expect(ends.map((end) => end.at.xU).every((xU) => xU >= maxX + 1)).toBe(true);
 });
 
-it('chooses bottom below an obstructing half and top above it, with fixed clearance', () => {
+it('keeps two outward blocks clear for vertically stacked halves', () => {
   const project = createSplitKeys({ left: { xU: 0, yU: 5 }, right: { xU: 0, yU: 0 } });
   const proposed = getResultValue(auto(project));
-  expect(columnOutput(proposed, 'left').yU).toBe(7.5);
-  expect(columnOutput(proposed, 'right').yU).toBe(-1.5);
+  expect(columnOutput(proposed, 'left')).toEqual({ xU: -6, yU: 5 });
+  expect(columnOutput(proposed, 'right')).toEqual({ xU: 7, yU: 0 });
+  expectClearOutputs(proposed);
   expect(getResultValue(auto(project))).toEqual(proposed);
 });
 
@@ -108,9 +109,37 @@ it('extends an obstructed left output outward in fixed half-unit steps', () => {
       .filter((entry) => entry.kind === 'free')
       .find((entry) => entry.terminalId === id),
   );
-  expect(end.at).toEqual({ xU: -9, yU: 0 });
+  expect(end.at).toEqual({ xU: -5, yU: 0 });
   expectClearOutputs(proposed);
 });
+
+it('separates oppositely facing label blocks when half positions are reversed', () => {
+  const project = createSplitKeys({ left: { xU: 10, yU: 0 }, right: { xU: -10, yU: 0 } });
+  const proposed = getResultValue(auto(project));
+  expect(hasOverlappingBoxes(getOutputBoxes(proposed))).toBe(false);
+  expect(deriveWiring(proposed, board).ok).toBe(true);
+});
+
+function getOutputBoxes(project: Project) {
+  return project.wires
+    .flatMap((wire) => [wire.start, wire.end])
+    .flatMap((end) => {
+      if (end.kind !== 'free' || end.terminalId === undefined) {
+        return [];
+      }
+      const right =
+        project.wiring?.terminals.find((terminal) => terminal.id === end.terminalId)?.half ===
+        'right';
+      return [
+        {
+          minX: end.at.xU - (right ? 0 : 4),
+          maxX: end.at.xU + (right ? 4 : 0),
+          minY: end.at.yU - 0.25,
+          maxY: end.at.yU + 0.25,
+        },
+      ];
+    });
+}
 
 function createSplitKeys(input: {
   readonly left: { readonly xU: number; readonly yU: number };
@@ -146,4 +175,18 @@ function columnOutput(project: Project, half: 'left' | 'right') {
       .filter((entry) => entry.kind === 'free')
       .find((entry) => entry.terminalId === id),
   ).at;
+}
+
+function hasOverlappingBoxes(boxes: readonly ReturnType<typeof getOutputBoxes>[number][]) {
+  return boxes.some((first, index) =>
+    boxes
+      .slice(index + 1)
+      .some(
+        (second) =>
+          first.maxX > second.minX &&
+          second.maxX > first.minX &&
+          first.maxY > second.minY &&
+          second.maxY > first.minY,
+      ),
+  );
 }
