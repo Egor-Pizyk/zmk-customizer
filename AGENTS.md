@@ -2,6 +2,10 @@
 
 Static browser application for custom keyboard design and ready-to-build ZMK v0.3 shields. No backend.
 
+## GitHub account
+
+Use the `Egor-Pizyk` GitHub account for this project, including `gh` commands and authenticated Git pushes. Before remote operations, run `gh auth switch --hostname github.com --user Egor-Pizyk` and verify the active account with `gh auth status`.
+
 ## Required startup context
 
 Read these imports once per session unless already supplied in full by the client. Follow-up messages do not restart startup reading. Reuse unchanged rules still available in context; reopen changed documents or recover missing applicable sections after compaction. Claude Code expands `@path`; other agents open the same files manually. Linked documents follow the routing below.
