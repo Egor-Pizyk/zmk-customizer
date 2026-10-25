@@ -13,16 +13,14 @@ type OutputPosition = {
   readonly terminalId: string;
   readonly at: WirePoint;
   readonly right: boolean;
+  readonly up?: boolean;
 };
 
 export function getGroupedOutputPositions(
   project: Project,
 ): Result<readonly OutputPosition[], string> {
   const outputs: OutputPosition[] = [];
-  const bounds = project.keys.map((key) => ({
-    half: key.half ?? 'left',
-    points: getKeyCorners(key),
-  }));
+  const bounds = getKeyBounds(project);
   for (const half of ['left', 'right'] as const) {
     const own = bounds.filter(
       (entry) => project.wiring?.topology !== 'split' || entry.half === half,
@@ -36,11 +34,47 @@ export function getGroupedOutputPositions(
     const edge = right ? outer.maxX : outer.minX;
     const top = outer.minY;
     const terminals = project.wiring?.terminals.filter((terminal) => terminal.half === half) ?? [];
-    const block = createBlock(terminals, { right, edge, top });
-    const placed = placeBlock(block, {
-      bounds: bounds.map((entry) => getBounds(entry.points)),
-      occupied: [...getManualOutputs(project), ...outputs],
+    const placed = placeHalf(project, terminals, {
       right,
+      edge,
+      top,
+      left: outer.minX,
+      bounds: bounds.map((entry) => getBounds(entry.points)),
+      previous: outputs,
+    });
+    if (!placed.ok) {
+      return placed;
+    }
+    outputs.push(...placed.value);
+  }
+  return { ok: true, value: outputs };
+}
+
+function placeHalf(
+  project: Project,
+  terminals: readonly WiringTerminal[],
+  input: {
+    readonly right: boolean;
+    readonly edge: number;
+    readonly top: number;
+    readonly left: number;
+    readonly bounds: readonly Bounds[];
+    readonly previous: readonly OutputPosition[];
+  },
+): Result<readonly OutputPosition[], string> {
+  const outputs: OutputPosition[] = [];
+  for (const kind of ['row', 'col'] as const) {
+    const block = createBlock(
+      terminals.filter((terminal) => terminal.kind === kind),
+      {
+        ...input,
+        up: kind === 'row',
+      },
+    );
+    const placed = placeBlock(block, {
+      bounds: input.bounds,
+      occupied: [...getManualOutputs(project), ...input.previous, ...outputs],
+      right: input.right,
     });
     if (!placed.ok) {
       return placed;
@@ -61,9 +95,12 @@ function placeBlock(
   for (let step = 0; step < 4096; step += 1) {
     const candidate = block.map((output) => ({
       ...output,
-      at: { ...output.at, xU: output.at.xU + step * (input.right ? 0.5 : -0.5) },
+      at: {
+        xU: output.at.xU + (output.up === true ? 0 : step * (input.right ? 0.5 : -0.5)),
+        yU: output.at.yU - (output.up === true ? step * 0.5 : 0),
+      },
     }));
-    if (candidate.every(({ at }) => isClear(at, input))) {
+    if (candidate.every((output) => isClear(output, input))) {
       return { ok: true, value: candidate };
     }
   }
@@ -74,48 +111,55 @@ function placeBlock(
 }
 
 function isClear(
-  at: WirePoint,
-  input: {
-    readonly bounds: readonly Bounds[];
-    readonly occupied: readonly OutputPosition[];
-    readonly right: boolean;
-  },
+  output: OutputPosition,
+  input: { readonly bounds: readonly Bounds[]; readonly occupied: readonly OutputPosition[] },
 ) {
-  const hitsKey = input.bounds.some(
-    (bounds) =>
-      at.xU + (input.right ? 4 : 0) > bounds.minX - 1 &&
-      at.xU - (input.right ? 0 : 4) < bounds.maxX + 1 &&
-      at.yU + 0.25 > bounds.minY - 1 &&
-      at.yU - 0.25 < bounds.maxY + 1,
-  );
-  const minX = at.xU - (input.right ? 0 : 4);
-  const maxX = at.xU + (input.right ? 4 : 0);
+  const box = getOutputBounds(output);
   return (
-    !hitsKey &&
-    !input.occupied.some(
-      (output) =>
-        maxX > output.at.xU - (output.right ? 0 : 4) - 0.5 &&
-        minX < output.at.xU + (output.right ? 4 : 0) + 0.5 &&
-        Math.abs(output.at.yU - at.yU) < 0.5,
-    )
+    !input.bounds.some((bounds) => overlaps(box, bounds, 1)) &&
+    !input.occupied.some((other) => overlaps(box, getOutputBounds(other), 0.5))
   );
+}
+
+function overlaps(first: Bounds, second: Bounds, gap: number) {
+  return (
+    first.maxX > second.minX - gap &&
+    first.minX < second.maxX + gap &&
+    first.maxY > second.minY - gap &&
+    first.minY < second.maxY + gap
+  );
+}
+
+function getOutputBounds(output: OutputPosition): Bounds {
+  const { at, right, up } = output;
+  if (up === true) {
+    return { minX: at.xU - 0.25, maxX: at.xU + 0.25, minY: at.yU - 4, maxY: at.yU };
+  }
+  return {
+    minX: at.xU - (right ? 0 : 4),
+    maxX: at.xU + (right ? 4 : 0),
+    minY: at.yU - 0.25,
+    maxY: at.yU + 0.25,
+  };
 }
 
 function createBlock(
   terminals: readonly WiringTerminal[],
-  { right, edge, top }: { readonly right: boolean; readonly edge: number; readonly top: number },
+  input: {
+    readonly right: boolean;
+    readonly edge: number;
+    readonly top: number;
+    readonly left: number;
+    readonly up: boolean;
+  },
 ) {
-  const outward = right ? 5 : -5;
-  return terminals.map((terminal) => ({
+  return terminals.map((terminal, index) => ({
     terminalId: terminal.id,
-    right,
+    right: input.right,
+    up: input.up,
     at: {
-      xU: edge + (right ? 1 : -1) + (terminal.kind === 'col' ? outward : 0),
-      yU:
-        top +
-        terminals
-          .filter((other) => other.kind === terminal.kind)
-          .findIndex((other) => other.id === terminal.id),
+      xU: input.up ? input.left + index : input.edge + (input.right ? 1 : -1),
+      yU: input.up ? input.top - 1 : input.top + index,
     },
   }));
 }
@@ -140,4 +184,8 @@ function getBounds(points: readonly WirePoint[]): Bounds {
     maxY = Math.max(maxY, point.yU);
   }
   return { minX, minY, maxX, maxY };
+}
+
+function getKeyBounds(project: Project) {
+  return project.keys.map((key) => ({ half: key.half ?? 'left', points: getKeyCorners(key) }));
 }

@@ -12,6 +12,7 @@ type TreeNode = { readonly id: string; readonly at: WirePoint; readonly end: Wir
 type TreeContext = {
   readonly terminalId: string;
   readonly output: WirePoint;
+  readonly up: boolean;
   readonly wires: Wire[];
   readonly pins: readonly RoutePin[];
   readonly areas: readonly RouteArea[];
@@ -77,6 +78,7 @@ function findBranch(
       areas: context.areas,
       segments: context.segments,
       net: context.terminalId,
+      up: context.up && node.id === context.terminalId,
       allowedPins: [`${contact.keyId}:${contact.pin}`, node.id],
     });
     if (path !== undefined) {

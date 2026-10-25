@@ -13,6 +13,7 @@ export type RouteArea = {
   readonly maxY: number;
 };
 export type RouteContext = {
+  readonly up?: boolean;
   readonly pins: readonly RoutePin[];
   readonly areas: readonly RouteArea[];
   readonly segments: readonly RouteSegment[];

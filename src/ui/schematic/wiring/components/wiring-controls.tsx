@@ -62,8 +62,9 @@ function WiringContent(props: WiringControlsProps & { readonly project: Project 
         Assignments change the actual schematic connections. Inspect rerouted wires and diode
         changes before applying. Rebuild wiring uses visible centers and the current grid; adjust
         irregular clusters in the table. Matrix rebuilding connects nearby contacts and collects row
-        and column outputs into two blocks per half. Rebuilding proposes free GPIOs; review these
-        against your physical hardware before applying. These pins are not detected hardware wiring.
+        outputs above the keys and column outputs beside the outer edge of each half. Rebuilding
+        proposes free GPIOs; review these against your physical hardware before applying. These pins
+        are not detected hardware wiring.
       </p>
       <WiringProposalSummary {...props} />
       <WiringOptionsControls project={project} onEdit={props.handleEdit} />

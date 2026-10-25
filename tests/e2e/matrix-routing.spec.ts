@@ -1,4 +1,5 @@
 import { expect, test } from './test';
+import type { Locator } from '@playwright/test';
 import { downloadJson, history, openProject, saved } from './helpers';
 import { UNIBODY_PRESET } from '../helpers/unibody-preset';
 import type { Project } from '@domain';
@@ -31,7 +32,11 @@ for (const width of [1024, 1440]) {
             .map((terminal) => terminal.id),
         );
         expect(
-          new Set(outputs.filter((end) => ids.has(end.terminalId)).map((end) => end.at.xU)).size,
+          new Set(
+            outputs
+              .filter((end) => ids.has(end.terminalId))
+              .map((end) => getFixedCoordinate(end.at, kind)),
+          ).size,
         ).toBe(1);
         await expect(
           page.locator('svg text').filter({ hasText: new RegExp(`^left ${kind} `, 'u') }),
@@ -45,7 +50,7 @@ for (const width of [1024, 1440]) {
         .locator('svg text')
         .filter({ hasText: /^left (row|col) /u })
         .all()) {
-        await expect(label).toBeInViewport();
+        await expectLabelInCanvas(label);
       }
       await page.screenshot({ path: test.info().outputPath('grouped-matrix.png') });
       await history(page, 'Undo').click();
@@ -67,4 +72,21 @@ function getOutputs(project: Project) {
         ? [{ terminalId: end.terminalId, at: end.at }]
         : [],
     );
+}
+
+function getFixedCoordinate(at: { readonly xU: number; readonly yU: number }, kind: string) {
+  return kind === 'row' ? at.yU : at.xU;
+}
+
+async function expectLabelInCanvas(label: Locator) {
+  await expect(label).toBeVisible();
+  const box = await label.boundingBox();
+  const canvas = await label.locator('xpath=ancestor::*[local-name()="svg"]').boundingBox();
+  if (box === null || canvas === null) {
+    throw new Error('Missing rendered output label or canvas bounds');
+  }
+  expect(box.x).toBeGreaterThanOrEqual(canvas.x);
+  expect(box.y).toBeGreaterThanOrEqual(canvas.y);
+  expect(box.x + box.width).toBeLessThanOrEqual(canvas.x + canvas.width);
+  expect(box.y + box.height).toBeLessThanOrEqual(canvas.y + canvas.height);
 }

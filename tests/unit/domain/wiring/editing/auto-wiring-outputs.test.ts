@@ -33,24 +33,44 @@ for (const presetId of ['macropad-9', 'corne-42', 'lily58-58']) {
 
 function expectClearOutputs(project: Project) {
   const corners = project.keys.map((key) => getKeyCorners(key));
-  const endpoints = project.wires.flatMap((wire) =>
-    [wire.start, wire.end].flatMap((end) =>
-      end.kind === 'free' && end.terminalId !== undefined ? [end] : [],
-    ),
-  );
-  for (const end of endpoints) {
+  for (const box of getOutputBoxes(project)) {
     for (const points of corners) {
       const xs = points.map((point) => point.xU);
       const ys = points.map((point) => point.yU);
       const overlaps =
-        end.at.xU + (end.at.xU < Math.min(...xs) ? 0 : 2) > Math.min(...xs) &&
-        end.at.xU < Math.max(...xs) &&
-        end.at.yU + 0.25 > Math.min(...ys) &&
-        end.at.yU - 0.25 < Math.max(...ys);
+        box.maxX > Math.min(...xs) &&
+        box.minX < Math.max(...xs) &&
+        box.maxY > Math.min(...ys) &&
+        box.minY < Math.max(...ys);
       expect(overlaps).toBe(false);
     }
   }
+  expect(hasOverlappingBoxes(getOutputBoxes(project))).toBe(false);
+  expectTopRows(project);
 }
+function expectTopRows(project: Project) {
+  for (const terminal of project.wiring?.terminals ?? []) {
+    if (terminal.kind !== 'row') {
+      continue;
+    }
+    const minY = Math.min(
+      ...project.keys
+        .filter(
+          (key) => project.wiring?.topology !== 'split' || (key.half ?? 'left') === terminal.half,
+        )
+        .flatMap((key) => getKeyCorners(key).map((point) => point.yU)),
+    );
+    const ends = project.wires
+      .flatMap((wire) => [wire.start, wire.end])
+      .filter((end) => end.kind === 'free')
+      .filter((end) => end.terminalId === terminal.id);
+    expect(ends).toHaveLength(1);
+    for (const end of ends) {
+      expect(end.at.yU).toBeLessThanOrEqual(minY - 1);
+    }
+  }
+}
+
 function expectIndependentPins(project: Project) {
   for (const half of new Set(project.keys.map((key) => key.half ?? 'left'))) {
     const pins = project.wiring?.terminals
@@ -61,7 +81,7 @@ function expectIndependentPins(project: Project) {
   }
 }
 
-it('puts right row endpoints beyond the right half', () => {
+it('puts right column endpoints beyond the right half', () => {
   const preset = getDefinedValue(KEYBOARD_PRESETS.find((entry) => entry.id === 'corne-42'));
   const project = getResultValue(
     auto(createLayoutPresetProject({ preset, bindingMode: 'qwerty', controllerId: board.id })),
@@ -74,7 +94,7 @@ it('puts right row endpoints beyond the right half', () => {
   const ids = new Set(
     getDefinedValue(project.wiring)
       .terminals.filter((terminal) => terminal.half === 'right')
-      .filter((terminal) => terminal.kind === 'row')
+      .filter((terminal) => terminal.kind === 'col')
       .map((terminal) => terminal.id),
   );
   const ends = project.wires
@@ -88,8 +108,8 @@ it('puts right row endpoints beyond the right half', () => {
 it('keeps two outward blocks clear for vertically stacked halves', () => {
   const project = createSplitKeys({ left: { xU: 0, yU: 5 }, right: { xU: 0, yU: 0 } });
   const proposed = getResultValue(auto(project));
-  expect(columnOutput(proposed, 'left')).toEqual({ xU: -6, yU: 5 });
-  expect(columnOutput(proposed, 'right')).toEqual({ xU: 7, yU: 0 });
+  expect(columnOutput(proposed, 'left')).toEqual({ xU: -1, yU: 5 });
+  expect(columnOutput(proposed, 'right')).toEqual({ xU: 2, yU: 0 });
   expectClearOutputs(proposed);
   expect(getResultValue(auto(project))).toEqual(proposed);
 });
@@ -101,7 +121,7 @@ it('extends an obstructed left output outward in fixed half-unit steps', () => {
   const id = getDefinedValue(
     proposed.wiring?.terminals
       .filter((terminal) => terminal.half === 'left')
-      .find((terminal) => terminal.kind === 'row'),
+      .find((terminal) => terminal.kind === 'col'),
   ).id;
   const end = getDefinedValue(
     proposed.wires
@@ -127,9 +147,13 @@ function getOutputBoxes(project: Project) {
       if (end.kind !== 'free' || end.terminalId === undefined) {
         return [];
       }
-      const right =
-        project.wiring?.terminals.find((terminal) => terminal.id === end.terminalId)?.half ===
-        'right';
+      const terminal = project.wiring?.terminals.find((entry) => entry.id === end.terminalId);
+      const right = terminal?.half === 'right';
+      if (terminal?.kind === 'row') {
+        return [
+          { minX: end.at.xU - 0.25, maxX: end.at.xU + 0.25, minY: end.at.yU - 4, maxY: end.at.yU },
+        ];
+      }
       return [
         {
           minX: end.at.xU - (right ? 0 : 4),

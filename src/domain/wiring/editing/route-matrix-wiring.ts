@@ -39,6 +39,7 @@ export function routeMatrixWiring(
       wires,
       terminalId: output.terminalId,
       output: output.at,
+      up: output.up === true,
     });
     if (error !== undefined) {
       return { ok: false, error };
@@ -122,6 +123,14 @@ function getOutputAreas(
   return outputs.map((output) => {
     const terminal = project.wiring?.terminals.find((entry) => entry.id === output.terminalId);
     const right = terminal?.half === 'right' && project.wiring?.topology === 'split';
+    if (terminal?.kind === 'row') {
+      return {
+        minX: output.at.xU - 0.25,
+        maxX: output.at.xU + 0.25,
+        minY: output.at.yU - 4.2,
+        maxY: output.at.yU - 0.1,
+      };
+    }
     return {
       minX: output.at.xU + (right ? 0.1 : -4.2),
       maxX: output.at.xU + (right ? 4.2 : -0.1),

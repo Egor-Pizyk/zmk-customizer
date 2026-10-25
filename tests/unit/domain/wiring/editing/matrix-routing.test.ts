@@ -85,10 +85,7 @@ for (const size of [3, 6]) {
       const points = outputs(project)
         .filter((end) => ids.has(end.terminalId))
         .map((end) => end.at);
-      expect(new Set(points.map((point) => point.xU)).size).toBe(1);
-      expect(points.map((point) => point.yU)).toEqual(
-        Array.from({ length: size }, (_entry, index) => index),
-      );
+      expectOutputBlock(points, kind, size);
     }
   });
 }
@@ -159,3 +156,40 @@ it('uses the same matrix router after an applied split topology round trip', () 
   );
   expect(unified.keys).toEqual(original.keys);
 });
+
+function expectOutputBlock(
+  points: readonly { readonly xU: number; readonly yU: number }[],
+  kind: string,
+  size: number,
+) {
+  const fixed = kind === 'row' ? points.map((point) => point.yU) : points.map((point) => point.xU);
+  const ordered =
+    kind === 'row' ? points.map((point) => point.xU) : points.map((point) => point.yU);
+  expect(new Set(fixed)).toEqual(new Set([-1]));
+  expect(ordered).toEqual(Array.from({ length: size }, (_entry, index) => index));
+}
+
+it('takes row output leads upward immediately and enters the top block vertically', () => {
+  const project = rebuild(grid(3));
+  const ids = new Set(
+    project.wiring?.terminals
+      .filter((terminal) => terminal.kind === 'row')
+      .map((terminal) => terminal.id),
+  );
+  for (const wire of project.wires.filter((entry) => isRowOutput(entry, ids))) {
+    const path = getWirePath(project, wire);
+    const start = getDefinedValue(path[0]);
+    const next = getDefinedValue(path[1]);
+    const end = getDefinedValue(path.at(-1));
+    const before = getDefinedValue(path.at(-2));
+    expect(next.xU).toBe(start.xU);
+    expect(next.yU).toBeLessThan(start.yU);
+    expect(before.xU).toBe(end.xU);
+    expect(before.yU).toBeGreaterThan(end.yU);
+  }
+});
+function isRowOutput(wire: Project['wires'][number], ids: ReadonlySet<string>) {
+  return (
+    wire.end.kind === 'free' && wire.end.terminalId !== undefined && ids.has(wire.end.terminalId)
+  );
+}

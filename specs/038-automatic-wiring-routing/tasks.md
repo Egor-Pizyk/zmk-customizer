@@ -23,3 +23,11 @@
 ## Dependencies / strategy
 
 T001 → T002 → T003; T004 precedes T005, then T006 → T007 → T008. T002/T004 tests can be authored together; run mutation/verification sequentially with no concurrent browser output directories. Start with macropad, then irregular/split and failure cases. Requirement → task → check above; verification.md holds one evidence journal, avoiding duplicate receipts.
+
+## Output placement refinement
+
+- [x] T009 Tests first: equal 1u row/top and column/side gaps, exterior split columns, upward row lead geometry and obstacle clearance (FR-002/003).
+- [x] T010 Implement independent top/side placement, upward label layout and safe vertical row output leads (FR-002/003/006).
+- [ ] T011 Review rendered themes/viewports and preview/history; run changed checks and update PR/evidence (FR-005/006).
+
+Analysis: this supersedes only 038 output placement, leaves cells/GPIO/schema/history unchanged, and preserves atomic refusal when geometry is infeasible. T009 → T010 → T011.

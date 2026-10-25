@@ -23,8 +23,8 @@ Rebuild wiring produces an electrically valid, readable connected matrix for reg
 
 ### US2 — Find all outputs in two blocks (P1)
 
-1. Every used matrix terminal has exactly one visible output. Rows are vertically aligned in one block and columns vertically aligned in another, ordered by electrical index, outside key geometry; adjacent labels remain separated.
-2. On split keyboards each half has its own two blocks, row blocks face outward, and obstructing other-half geometry moves the whole block together. Unequal, rotated and vertically arranged halves remain supported.
+1. Every used matrix terminal has exactly one visible output. Rows form a horizontal block above the keys; columns form a vertical block beside the keys, ordered by electrical index. Both use a 1u gap from the nearest key bounds. Row output leads leave their key upward immediately, without a sideways escape. Adjacent labels remain separated.
+2. On split keyboards each half has its own two blocks, column blocks face outward (left for unibody/left half, right for right half), and obstructing other-half geometry moves the whole block together. Unequal, rotated and vertically arranged halves remain supported.
 
 ### US3 — Review and apply safely (P1)
 
@@ -35,7 +35,7 @@ Rebuild wiring produces an electrically valid, readable connected matrix for reg
 
 - **FR-001** (US1): Every key contact belongs to exactly its intended matrix net; separate row/column/half nets never short. Preserve diode direction and unrelated retained circuits.
 - **FR-002** (US1): Connect nearest compatible existing key contacts with orthogonal, deterministic paths; reject unintended pin contacts/collinear different-net overlaps, insulate different-net crossings. Bounded detours handle rotated/staggered contacts. Global minimum routing is not promised.
-- **FR-003** (US2): Exactly one output per used terminal; each half has one aligned row block and one aligned column block, sorted by terminal index. All labels clear key bounds by existing 1u clearance and each other by at least 0.5u.
+- **FR-003** (US2): Exactly one output per used terminal; each half has one aligned row block and one aligned column block, sorted by terminal index. Rows are above their half; columns are beside its exterior edge, both initially 1u from key bounds. All labels clear key bounds by existing 1u clearance and each other by at least 0.5u.
 - **FR-004** (US1, US2): Regular 3×3 and 6×6 layouts have less total wire length than the former independent-to-output layout. Key geometry/bindings remain unchanged; matrix cells follow the existing selected grouping rules.
 - **FR-005** (US3): Retain existing preview/commit/cancel, history, persistence, GPIO reuse and resource failure behavior; older files remain loadable without migration.
 - **FR-006** (US3): Explain connected lines/two output blocks in Wiring and onboarding; maintain accessible controls and existing themes/responsiveness/reduced motion.
@@ -59,6 +59,6 @@ Matrix net: intended terminal plus its key contacts. Route tree: orthogonal loca
 
 Matrix mode is the requested rows/columns scenario; direct scan retains its existing algorithm. Existing user-selected cell grouping is authoritative: geometric layout cannot identify actual hardware wiring. No external dependencies; two groups per half for split. No unresolved material questions.
 
-Rendered refinement: terminal labels face outward (left-aligned blocks place text to the left, right blocks to the right). Automatic routes avoid the reserved label areas. Output pitch is 1u so groups remain readable at ordinary zoom; user pan/zoom remains available.
+Rendered refinement: column labels face outward; row labels extend vertically upward. Automatic routes avoid the reserved label areas. Output pitch is 1u so groups remain readable at ordinary zoom; user pan/zoom remains available.
 
 Topology compatibility: automatic matrix reconstruction after mode/topology changes uses the same tree router as Rebuild, so applying split and returning to unibody restores the same deterministic route geometry. Direct and individual cell/dimension edits retain their existing routing contracts.
