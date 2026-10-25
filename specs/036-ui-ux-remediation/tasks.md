@@ -109,5 +109,5 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 
 ## Right-docked Editors follow-up
 
-- [ ] RD001 [FR-014–017] Right desktop dock, left-edge pointer/keyboard resize and matching content/footer clearance; retain narrow layout and saved width.
-- [ ] RD002 [FR-014–017] Update real-browser geometry/resize coverage, inspect light/dark desktop/narrow renders, run staged changed checks and record verification/manual limits.
+- [x] RD001 [FR-014–017] Right desktop dock, left-edge pointer/keyboard resize and matching content/footer clearance; retain narrow layout and saved width.
+- [x] RD002 [FR-014–017] Update real-browser geometry/resize coverage, inspect light/dark desktop/narrow renders, run staged changed checks and record verification/manual limits.
