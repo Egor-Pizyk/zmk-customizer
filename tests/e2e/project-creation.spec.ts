@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './test';
 import { history, openProject, saved } from './helpers';
 
 test('New has three equal actions, red Cancel and safe keyboard empty creation @cross-browser', async ({

@@ -4,6 +4,9 @@ The top-level source folders define architectural layers. Nested folders group r
 
 | Folder | Responsibility |
 |---|---|
+| `src/domain/onboarding/` | Pure tutorial completion conditions and stable step contracts |
+| `src/storage/onboarding/` | Validated shown marker and isolated learning-session persistence |
+| `src/ui/onboarding/{logic,components}/` | Shared target/focus synchronization and tutorial presentation; no workspace imports |
 | `src/domain/advanced-keymap/` | Combo, macro/step and conditional-layer operations, budgets and references |
 | `src/domain/behaviors/` | Named behavior definitions, arguments and semantic validation |
 | `src/ui/bindings/advanced/{components,logic}/` | Combo, macro and conditional-layer editors |

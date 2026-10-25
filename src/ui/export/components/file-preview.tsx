@@ -1,3 +1,4 @@
+import { useProject } from '@ui/project/logic';
 import type { GeneratedFile } from '@generators';
 import { Button } from '@ui/components/components';
 import type { useExportActions } from '@ui/export/logic';
@@ -56,6 +57,7 @@ function FileActions({
 }) {
   return (
     <div className="flex flex-wrap gap-2 border-t border-border px-3 pt-3">
+      <InspectFile file={file} />
       <Button
         size="sm"
         variant="secondary"
@@ -77,5 +79,22 @@ function FileActions({
         Download file
       </Button>
     </div>
+  );
+}
+
+function InspectFile({ file }: { readonly file: GeneratedFile }) {
+  const { tutorial, project, inspectTutorialFile } = useProject();
+  if (tutorial?.record.stepId !== 'files') {
+    return null;
+  }
+  return (
+    <Button
+      onClick={() => {
+        inspectTutorialFile(project, file.path);
+      }}
+      aria-label={`Inspect ${file.path}`}
+    >
+      Inspect file
+    </Button>
   );
 }

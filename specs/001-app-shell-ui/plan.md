@@ -183,3 +183,7 @@ Establish main as the containing block for absolutely positioned screen-reader d
 ## Favicon repair
 
 FR-041: declare public/favicon.svg in index.html. Reproduce the missing declaration in production Playwright before implementation; check same-origin SVG delivery and rendered icon. Work on user-requested fix/pre-major-sweep. No dependencies or ZMK changes. Evidence: firmware-overflow-verification.md.
+
+## Keyboard shortcuts overflow repair
+
+Use existing wide Dialog size for shortcut help; allow shortcut key cells to wrap inside bounded table width. Add tests-first real-browser overflow/reachability/focus checks at 640/1024/1440px in both themes. Existing shell 001 owns FR-040/FR-032; resolver 036 is not this repair owner. Follow already loaded React/accessibility/admin UI/Tailwind/testing rules. Journal: firmware-overflow-verification.md.

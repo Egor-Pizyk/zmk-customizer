@@ -6,13 +6,14 @@ import { initializeWiring } from '@domain/wiring/editing';
 import type { Half, Project } from '@domain';
 import { WiringTable } from './wiring-table';
 import type { useWiringPreview } from '@ui/schematic/wiring/logic';
-import { getProjectAnalysis } from '@ui/project/logic';
+import { useProject, getProjectAnalysis } from '@ui/project/logic';
 import { useState } from 'react';
 
 type WiringControlsProps = ReturnType<typeof useWiringPreview> & {
   readonly children?: ReactNode;
 };
 export function WiringControls(props: WiringControlsProps) {
+  const { tutorial } = useProject();
   const [isOpen, setIsOpen] = useState(false);
   const board = getControllerBoard(props.previewProject.controllerId);
   const project = initializeWiring(props.previewProject, board);
@@ -21,7 +22,12 @@ export function WiringControls(props: WiringControlsProps) {
       <details
         name="schematic-editor"
         data-wiring-controls
-        open={isOpen || props.hasPreview}
+        open={
+          isOpen ||
+          props.hasPreview ||
+          tutorial?.record.stepId === 'wiring' ||
+          tutorial?.record.stepId === 'pins'
+        }
         onToggle={(event) => {
           setIsOpen(event.currentTarget.open);
           if (!event.currentTarget.open && props.hasPreview) {

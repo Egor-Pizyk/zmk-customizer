@@ -544,3 +544,9 @@ Deviations from the task text, each smaller or forced by lint/type rules; code c
 - [x] FAV-1 Reproduce missing favicon declaration (FR-041).
 - [x] FAV-2 Bundle local SVG icon, verify delivery and rendering.
 - [x] FAV-3 Run changed checks; record evidence in [sweep journal](firmware-overflow-verification.md).
+
+## Keyboard shortcuts overflow repair
+
+- [x] KSH-1 Reproduce horizontal overflow at supported and zoomed viewport sizes.
+- [x] KSH-2 Repair dialog width/wrapping; review all groups and keyboard dismissal/focus.
+- [ ] KSH-3 Merge latest main preserving existing fixes; run changed checks and record evidence.

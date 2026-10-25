@@ -50,6 +50,9 @@ function useNumberDraft(
         commitDraft();
       }
       if (event.key === 'Escape') {
+        if (draft !== undefined && draft !== String(value)) {
+          event.preventDefault();
+        }
         setDraft(undefined);
       }
     },

@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './test';
 import { fixture, openProject, saved, history, drag } from './helpers';
 import type { Page } from '@playwright/test';
 import type { Project, WirePoint } from '@domain';

@@ -9,7 +9,10 @@ export function KleImport() {
   const { review, error, isReading, isStale } = imported;
   return (
     <details className="max-w-full min-w-0">
-      <summary className="flex h-7 cursor-pointer items-center rounded-md border border-border-strong px-2 text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">
+      <summary
+        data-onboarding-target="kle"
+        className="flex h-7 cursor-pointer items-center rounded-md border border-border-strong px-2 text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+      >
         Import KLE layout
       </summary>
       <section

@@ -2,6 +2,8 @@ import { createContext, use } from 'react';
 import type { Project } from '@domain';
 import type { ProjectFileError } from '@storage/project';
 import type { WorkspaceIssue } from '@ui/issues';
+import type { createTutorialActions } from './tutorial-actions';
+import type { getTutorialConditions } from './tutorial-session';
 import type { createImportSession } from './import-session';
 import type { createFileActions } from './project-file-actions';
 import type {
@@ -14,7 +16,11 @@ import type {
 } from './project-state';
 
 export type ProjectContextValue = ReturnType<typeof createHistoryActions> &
-  ReturnType<typeof createFileActions> & {
+  ReturnType<typeof createFileActions> &
+  ReturnType<typeof createTutorialActions> & {
+    readonly tutorial: ProjectState['tutorial'];
+    readonly sessionId: number;
+    readonly tutorialConditions: ReturnType<typeof getTutorialConditions> | undefined;
     readonly importSession: ReturnType<typeof createImportSession>;
     readonly project: Project;
     readonly analysis: ReturnType<typeof getProjectAnalysis>;

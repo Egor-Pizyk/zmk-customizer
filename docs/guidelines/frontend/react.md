@@ -72,6 +72,10 @@ Effects sync with systems outside React. A change that adds, moves or removes an
 
 | Effect | Where |
 |---|---|
+| Persist the visible first learning offer; idempotent marker only, never Project writes | `onboarding/logic/use-onboarding-welcome.ts` |
+| Synchronize active tutorial workspace/panel visibility with navigation preferences | `onboarding/logic/use-onboarding-controller.ts` |
+| Measure/reveal tutorial target; clean ResizeObserver, MutationObserver, resize/scroll listeners | `onboarding/logic/use-onboarding-target.ts` |
+| Limit unrelated background focus and coordinate step focus/Escape; restore inert state/listener on cleanup | `onboarding/logic/use-onboarding-focus.ts` |
 | Generic reveal-issue document listener clears Firmware search before deferred problem focus; cleanup removes listener | `firmware/components/firmware-workspace.tsx` |
 | Reveal the selected tab inside its horizontal strip after selection, rename, reorder or project history changes; preserves focus and only scrolls the strip | `components/logic/use-tab-visibility.ts` |
 | `document.documentElement.dataset.theme` sync with the theme preference | `preferences/preferences-context.tsx` |

@@ -12,7 +12,12 @@ type SchematicEditorPanelProps = {
 export function SchematicEditorPanel({ children, preview }: SchematicEditorPanelProps) {
   const resize = useEditorWidth();
   return (
-    <section aria-label="Schematic editors" style={resize.style} className="schematic-editor-pane">
+    <section
+      data-onboarding-target="schematic-editors"
+      aria-label="Schematic editors"
+      style={resize.style}
+      className="schematic-editor-pane"
+    >
       <EditorResizeHandle {...resize.handlers} />
       <div className="border-b border-border p-2 xl:mr-6">
         <h2 className="font-semibold">Editors</h2>

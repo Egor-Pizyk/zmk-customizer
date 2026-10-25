@@ -69,6 +69,9 @@ function useTextDraft(value: string, onCommit: (text: string) => void) {
         commit();
       }
       if (event.key === 'Escape') {
+        if (draft !== undefined && draft !== value) {
+          event.preventDefault();
+        }
         setDraft(undefined);
       }
     },

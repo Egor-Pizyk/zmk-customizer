@@ -35,5 +35,7 @@ Read this index when locating feature ownership. Read only the spec, plan, tasks
 - [034-agent-assisted-configuration](034-agent-assisted-configuration/) — downloadable agent creation package; [verification](034-agent-assisted-configuration/verification.md)
 - [035-ui-ux-audit-specification](035-ui-ux-audit-specification/) — historical research and remediation handoff; findings reconciled with delivered 036, broader audit limits retained
 - [036-ui-ux-remediation](036-ui-ux-remediation/) — items 1–23 implemented or regression-verified; user-reported manual acceptance; PR #24 merged and v0.5.0 published on 2026-10-25
+- [037-interactive-onboarding](037-interactive-onboarding/) — final scheduled product feature after delivered 036; implementation/acceptance evidence in its verification journal.
 
-Next planned feature: **037 interactive onboarding**, directly after delivered 036. The user cancelled the proposed 038 stage on 2026-10-25; no 037 feature directory exists yet.
+037 follows delivered 036 directly. The proposed 038 stage was cancelled by the user on 2026-10-25; deferred 020–022 remain deferred.
+

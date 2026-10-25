@@ -27,7 +27,7 @@ export function ShortcutHelpDialog({ isOpen, onClose }: ShortcutHelpDialogProps)
   }
 
   return (
-    <Dialog isOpen={isOpen} onClose={handleClose} title="Keyboard shortcuts">
+    <Dialog isOpen={isOpen} onClose={handleClose} size="wide" title="Keyboard shortcuts">
       <div className="flex max-h-96 flex-col gap-4 overflow-auto">
         <HelpTable caption="Anywhere" rows={rows.global} />
         <HelpTable caption="Project" rows={rows.project} />
@@ -95,15 +95,15 @@ type HelpTableProps = {
 
 function HelpTable({ caption, rows }: HelpTableProps) {
   return (
-    <table className="w-full text-left">
+    <table className="w-full table-fixed text-left">
       <caption className="mb-1 text-left font-medium">{caption}</caption>
       <tbody>
         {rows.map((row) => (
           <tr className="border-t border-border" key={`${row.keys}:${row.action}`}>
-            <td className="py-1 pr-3 whitespace-nowrap">
+            <td className="w-1/2 py-1 pr-3 align-top">
               <Kbd>{row.keys}</Kbd>
             </td>
-            <td className="py-1">{row.action}</td>
+            <td className="py-1 align-top">{row.action}</td>
           </tr>
         ))}
       </tbody>

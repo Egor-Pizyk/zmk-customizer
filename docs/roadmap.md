@@ -6,7 +6,7 @@ The first-major milestone follows the remaining scheduled work through **037 —
 
 The following major has a separate [discovery roadmap](roadmap-2.0.0.md), targeting **2.0.0**, as explicitly selected by the user. It explores an independent mechanical design and enclosure-generation module alongside the existing module. It does not extend this roadmap's feature numbering or authorize implementation.
 
-Features in implementation order. User-approved exception (2026-10-25): execute **036 → 038 → 037**, preserving these numbers; 037 remains the last product feature. One feature = one Spec Kit branch `NNN-short-name` = one `specs/NNN-short-name/` directory (AGENTS.md §6). Numbers of specified features (a `specs/NNN-*` directory exists) are immutable. A feature added out of order takes the next number and every planned, not yet specified feature after it moves up; the added feature's section records the shift, because older specs keep the old numbers. Spec Kit numbers specs by counting existing `specs/` directories, so run `/speckit-specify` in this order to keep numbers aligned with this file.
+Features in implementation order. User decision (2026-10-25): execute **036 → 037**; proposed stage 038 is cancelled; 037 remains the last product feature. One feature = one Spec Kit branch `NNN-short-name` = one `specs/NNN-short-name/` directory (AGENTS.md §6). Numbers of specified features (a `specs/NNN-*` directory exists) are immutable. A feature added out of order takes the next number and every planned, not yet specified feature after it moves up; the added feature's section records the shift, because older specs keep the old numbers. Spec Kit numbers specs by counting existing `specs/` directories, so run `/speckit-specify` in this order to keep numbers aligned with this file.
 
 Ordering rule: every feature ends with something a user can load, see and download. Generators come before editors: feature 009 generates real files from preset keyboards, so each later editor changes a project whose output is already visible in the export preview and covered by golden tests. Exceptions, added on user request: 003 schematic, the 004/005 bindings editors, the 006 Action panel rework, 007 layers and 008 diodes come before 009; they store project data only, and 009 generates files from it.
 
@@ -69,11 +69,10 @@ Each `/speckit-specify` prompt below describes what and why only. Technology cho
 | 012 follow-up | standard keycap sizes in Bindings (extension with 004) | 004, 012; complete before 035 |
 | 035 | ui-ux-audit-specification | 031–034 and the 012 standard-keycap-size follow-up |
 | 036 | ui-ux-remediation — large first-major bugfix and usability sweep | 035; regressions across 001–019 and 031–034 |
-| 038 | residual-ui-ux-fixes | accepted/delivered 036; reconcile the remaining 035 audit coverage before fixing reproduced residual defects |
-| 037 | interactive-onboarding | all preceding scheduled product features, including 038; implement last |
+| 037 | interactive-onboarding | delivered 036 and all preceding scheduled product features; implement last |
 | Closeout | refresh root README and repository description | completed first-major roadmap and verification, including 037; final documentation task |
 
-Numbers 024–030 are reserved by existing feature directories in [`specs/README.md`](../specs/README.md). Feature 032 is project creation and automatic wiring, selected by the user on 2026-10-20 after 031. Planned interactive onboarding moves to 037 so it remains last; existing specified feature numbers are unchanged. Scheduled work continues with 033 wiring/settings usability, 034 agent-assisted configuration, 035 UI/UX audit/specification and 036 large bugfix/UI/UX remediation before 037 onboarding. The first-major follow-up to existing 012/004 adds standard keycap sizing in Bindings before 035 so the audit and final onboarding cover it; no feature numbers change. Deferred 020–022 remain postponed. Only not-yet-specified roadmap entries may be renumbered unless the user explicitly preserves their numbers. On 2026-10-25 the user retained 037 for onboarding and assigned residual audit work 038 before it.
+Numbers 024–030 are reserved by existing feature directories in [`specs/README.md`](../specs/README.md). Feature 032 is project creation and automatic wiring, selected by the user on 2026-10-20 after 031. Planned interactive onboarding moves to 037 so it remains last; existing specified feature numbers are unchanged. Scheduled work continues with 033 wiring/settings usability, 034 agent-assisted configuration, 035 UI/UX audit/specification and 036 large bugfix/UI/UX remediation before 037 onboarding. The first-major follow-up to existing 012/004 adds standard keycap sizing in Bindings before 035 so the audit and final onboarding cover it; no feature numbers change. Deferred 020–022 remain postponed. Only not-yet-specified roadmap entries may be renumbered unless the user explicitly preserves their numbers. On 2026-10-25 the user retained 037 for onboarding and cancelled the proposed residual audit stage 038.
 
 Workspaces (from 001): **Schematic** holds the schematic of keys and wires (003), switch diodes (008), the layout editor (012) and matrix/wiring editor (013) and owns the project JSON config (002); **Bindings** holds bindings keycaps (004), key behaviors (005), the Action panel (006), layers (007), the keymap editor (014), custom behaviors (016) and combos/macros/conditional layers (017); **Firmware** holds kconfig-settings (015); **Export** holds the file preview (009) and download (010). Every feature reports its validation issues in the 001 problems panel, counted in the tab badge of the workspace that fixes them.
 
@@ -685,7 +684,8 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 **Goal.** Guide a first-time user through the product with short explanations and real actions, ending with their first simple custom keyboard built from scratch: a 3×3 macropad and its downloadable ZMK configuration.
 
-**Ordering.** Next after delivered 036; the user removed the proposed 038 stage on 2026-10-25. Retain number 037. Added on user request after keyboard-presets. Implement after every other planned product feature so the tour describes the complete product. Keep it last when adding future roadmap items.
+**Ordering.** Next after delivered 036; proposed 038 was cancelled by the user on 2026-10-25. Retain number 037. Added on user request after keyboard-presets. Implement after every other planned product feature so the tour describes the complete product. Keep it last when adding future roadmap items.
+
 
 **In scope**
 - Start the guide automatically once on the first visit in a browser profile. Persist that it has been offered separately from project data, so reloading, completing or dismissing it does not trigger another automatic start. No account or telemetry is needed.
@@ -723,7 +723,8 @@ Parsing existing ZMK shield files back into a project (Devicetree parsing), cust
 ## TODO
 
 - [x] Finish **036 delivery**: user-reported manual acceptance, protected CI and PR #24 merge completed; v0.5.0 published on 2026-10-25.
-- [ ] Specify and deliver **037 — interactive-onboarding** next.
+- [ ] Deliver **037 — interactive-onboarding** next; [specification and tasks](../specs/037-interactive-onboarding/spec.md) define the current scope.
+
 
 - [ ] Revisit deferred **020 — zmk-studio-support** and agree when to resume it. Skipped for now on user request (2026-10-19); keep interactive onboarding (037) last when rescheduling.
 - [ ] Revisit deferred **021 — lighting-displays** and **022 — zmk-version-selection**. Skipped for now on user request (2026-10-19); keep the ZMK v0.3.0 target until version selection is explicitly resumed.

@@ -1,7 +1,7 @@
 import { UNIBODY_PRESET } from '../helpers/unibody-preset';
 import { getNets } from '@domain/wires/nets';
 import { getWiringCells } from '@domain/wiring/matrix';
-import { expect, test } from '@playwright/test';
+import { expect, test } from './test';
 
 import {
   downloadJson,

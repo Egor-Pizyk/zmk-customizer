@@ -22,3 +22,13 @@ export type {
   ProjectStateChange,
 } from './project-state';
 export { useProjectState } from './use-project-state';
+
+export {
+  beginTutorial,
+  returnFromTutorial,
+  adoptTutorial,
+  getTutorialConditions,
+  advanceTutorial,
+  setTutorialStep,
+} from './tutorial-session';
+export { createTutorialActions } from './tutorial-actions';

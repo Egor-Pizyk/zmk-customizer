@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './test';
 import { readFile } from 'node:fs/promises';
 import { UNIBODY_PRESET } from '../helpers/unibody-preset';
 import {

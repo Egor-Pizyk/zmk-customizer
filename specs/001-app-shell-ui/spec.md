@@ -341,3 +341,7 @@ FR-001/FR-006 clarification: long Firmware content scrolls within main. Wheel sc
 ## Favicon repair (2026-10-25)
 
 FR-041: The browser tab shows a bundled green keyboard favicon with a transparent outer background on first load and reload, legible on light/dark tab surfaces, without external requests. No controls, focus, data or motion changes.
+
+## Keyboard shortcuts overflow repair
+
+FR-040/FR-032: Keyboard shortcuts dialog must fit its viewport without horizontal scrolling at 1024/1440px and 200% effective zoom (640 CSS px). Long shortcut combinations and section captions wrap without losing content; all shortcut groups remain reachable with vertical scrolling. Preserve keyboard opening, native Escape/focus return, both themes and reduced motion.

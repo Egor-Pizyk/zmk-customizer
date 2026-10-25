@@ -112,7 +112,11 @@
       "@domain/encoders": ["./src/domain/encoders/index.ts"],
       "@catalog/encoders": ["./src/catalog/encoders/index.ts"],
       "@ui/schematic/encoders/components": ["./src/ui/schematic/encoders/components/index.ts"],
-      "@ui/bindings/encoders/components": ["./src/ui/bindings/encoders/components/index.ts"]
+      "@ui/bindings/encoders/components": ["./src/ui/bindings/encoders/components/index.ts"],
+      "@domain/onboarding": ["./src/domain/onboarding/index.ts"],
+      "@storage/onboarding": ["./src/storage/onboarding/index.ts"],
+      "@ui/onboarding/logic": ["./src/ui/onboarding/logic/index.ts"],
+      "@ui/onboarding/components": ["./src/ui/onboarding/components/index.ts"]
     }
   },
   "include": [

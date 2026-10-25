@@ -1,6 +1,6 @@
 import type { WorkspaceId } from '@storage/preferences';
 import { IconButton, Badge } from '@ui/components/components';
-import { HelpIcon, SettingsIcon } from '@ui/components/icons';
+import { HelpIcon, SettingsIcon, ReplayIcon } from '@ui/components/icons';
 import { usePreferences } from '@ui/preferences';
 import { WORKSPACES } from '@ui/navigation';
 import { useProject } from '@ui/project/logic';
@@ -9,23 +9,20 @@ import { WorkspaceTab } from './workspace-tab';
 
 type TabBarProps = {
   readonly onSettingsClick: () => void;
+  readonly onTourClick: () => void;
   readonly onHelpClick: () => void;
 };
 
-export function TabBar({ onSettingsClick, onHelpClick }: TabBarProps) {
+export function TabBar({
+  onSettingsClick: handleSettingsClick,
+  onHelpClick: handleHelpClick,
+  onTourClick: handleTourClick,
+}: TabBarProps) {
   const { preferences, changePreferences } = usePreferences();
   const { issues } = useProject();
 
   function handleTabSelect(activeWorkspaceId: WorkspaceId) {
     changePreferences({ activeWorkspaceId });
-  }
-
-  function handleSettingsClick() {
-    onSettingsClick();
-  }
-
-  function handleHelpClick() {
-    onHelpClick();
   }
 
   return (
@@ -47,10 +44,11 @@ export function TabBar({ onSettingsClick, onHelpClick }: TabBarProps) {
           </WorkspaceTab>
         );
       })}
-      <div className="mt-auto flex flex-col gap-1 border-t border-border pt-2 lg:flex-row">
-        <IconButton icon={<SettingsIcon />} label="Settings" onClick={handleSettingsClick} />
-        <IconButton icon={<HelpIcon />} label="Keyboard shortcuts" onClick={handleHelpClick} />
-      </div>
+      <NavigationFooter
+        onSettingsClick={handleSettingsClick}
+        onHelpClick={handleHelpClick}
+        onTourClick={handleTourClick}
+      />
     </nav>
   );
 }
@@ -58,4 +56,23 @@ export function TabBar({ onSettingsClick, onHelpClick }: TabBarProps) {
 // The badge is aria-hidden, so its count is part of the tab name ("Schematic, 2 problems").
 function tabAccessibleName(label: string, issueCount: number): string {
   return issueCount === 0 ? label : `${label}, ${formatIssueCount(issueCount)}`;
+}
+
+function NavigationFooter({
+  onSettingsClick: handleSettingsClick,
+  onHelpClick: handleHelpClick,
+  onTourClick: handleTourClick,
+}: TabBarProps) {
+  return (
+    <div className="mt-auto flex flex-col gap-1 border-t border-border pt-2 lg:flex-row">
+      <IconButton
+        data-onboarding-target="settings"
+        icon={<SettingsIcon />}
+        label="Settings"
+        onClick={handleSettingsClick}
+      />
+      <IconButton icon={<ReplayIcon />} label="Take the tour again" onClick={handleTourClick} />
+      <IconButton icon={<HelpIcon />} label="Keyboard shortcuts" onClick={handleHelpClick} />
+    </div>
+  );
 }
