@@ -555,4 +555,4 @@ Deviations from the task text, each smaller or forced by lint/type rules; code c
 
 - [x] NAVH-1 Reproduce absent hints for three lower buttons (FR-042).
 - [x] NAVH-2 Add bounded hover/focus hints and review rendering.
-- [ ] NAVH-3 Run changed checks; record evidence in sweep journal.
+- [x] NAVH-3 Run changed checks; record evidence in sweep journal.
