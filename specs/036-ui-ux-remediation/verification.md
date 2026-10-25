@@ -1,5 +1,7 @@
 # Item 1 journal
 
+Current acceptance/order update: see [2026-10-25 user-reported acceptance and 038 scope](#manual-acceptance-and-next-scope--2026-10-25); earlier pending-manual entries below retain their historical dates.
+
 2026-10-22. Base origin/main `4436ad1`; clean start. User explicitly authorized one original item per commit and manual approval between items, then approved the optional button model. A second active branch is necessary to keep the research-only 035 PR separate; explicitly within the user's new implementation request. Branch 036 starts from main, no PR stack. No merge authorization.
 
 Spec/plan/tasks reviewed: all six requirements map to E002–E006; no constitutional conflict. Shared types/wire geometry owned by root; storage/presentation use fixed contracts. No extension hooks. UI/UX skill invoked before coding; queries and applicable/inapplicable guidance are in plan. Manual gates remain open. Check evidence follows actual execution.
@@ -288,3 +290,13 @@ Actual checks:
 Rendered review UX-J22/UX-J23 resolved: inspected actual light 390px Tools/control and light/dark wiring/layout preview captures at 390×844, 390×1000 and 1440px. Preserved screenshots: `.check-logs/items22-23-review/`. Tools sits below the toolbar; hints/focus remain painted. Unsaved status and both actions remain visible when editor headings/fields scroll away, within the existing panel/canvas budgets. Existing semantic tokens, lower-panel/desktop docking and reduced-motion behavior remain.
 
 Combined manual acceptance: move/expand Tools at a narrow width and use Snap, Zoom and Center without collapsing Tools. Rebuild wiring, scroll fields/table and Editors to either end: unsaved status plus Apply/Cancel stay visible. Cancel, then repeat and Apply/Undo/Redo. Select a key and edit Precise properties; scroll and exercise the persistent layout actions, including unchanged values with disabled Apply. Repeat light/dark. Native keyboard-only/VoiceOver/OS 200% zoom and prior E008/manual gates remain open; automation does not establish them. Draft PR #24 remains unmerged; no CI success is claimed.
+
+## Manual acceptance and next scope — 2026-10-25
+
+The user reported **all requested manual testing passed** for the delivered 036 PR at `464f098d64c446a810376b5499a13a2a0a6f2ee0`. This closes the current 036 manual acceptance/E008 gate as user-reported acceptance, superseding earlier pending-manual status paragraphs. No environment details were supplied; this is not an agent-observed native speech/zoom run, firmware compilation or physical-device certification. E007's stale delivery checkbox is reconciled against the existing item-1 delivery evidence.
+
+The user clarified that 038 means **residual findings from audit 035** and explicitly selected **036 delivery → 038 → 037 onboarding**, retaining those numbers. Cross-checked the 035 finding and coverage registers from `origin/feature/035-ui-ux-audit-specification` against current 036 spec/tasks/evidence. All R01–R23 are resolved or regression-verified by 036 and are excluded from a duplicate 038 backlog. The [residual register](../../docs/research/038-residual-ui-ux-scope.md) preserves every ID and identifies only remaining audit coverage gaps; no new confirmed defect or new rendered audit is claimed. Roadmap, spec index and current 036 status/tasks now agree. No new feature directory or product code was created.
+
+PR #24 remains unmerged. Its observed CI at the accepted revision includes failures in static/unit, Firefox/WebKit, mutations/browser-mutations and aggregate checks; Chromium/image passed. These are separate delivery blockers to resolve in 036, not work silently deferred into 038. This documentation task does not investigate/fix those failures or authorize merge. Current user acceptance does not establish CI success.
+
+Documentation-only checks and exact checked tree: `.check-logs/036-acceptance-038-scope.log` and its printed receipt path. Link/ID/order consistency and final diff were reviewed; no product tests or manual audit were newly run for prose changes. Delivery updates existing PR #24; it stays draft while CI delivery gates remain unresolved.

@@ -6,8 +6,8 @@
 - [x] E004 [P] [FR-001, FR-005] Tests first, encoder tool/rendering/editor and pointer/keyboard alternatives in src/ui/schematic and tests/unit/ui.
 - [x] E005 [FR-006] Wire-derived generator golden/no-encoder compatibility and actual exported build validation in tests/unit/generators and existing build fixtures.
 - [x] E006 [FR-001–006] Real browser lifecycle/download/geometry/connection cases, sensitive behavioral regression and rendered pre/post skill review; record verification.md.
-- [ ] E007 Verify changed checks, review diff, make one item-1 commit, deliver manual checklist and stop. No subsequent item until user approval.
-- [ ] E008 User manual keyboard/speech/native zoom and physical wiring review; record supplied results only.
+- [x] E007 Changed checks, item-1 delivery and subsequent authorized itemwise work are recorded in verification.md; stale checkbox reconciled 2026-10-25.
+- [x] E008 User reported all requested manual testing passed on 2026-10-25. Environment details were not supplied; this records user acceptance, not agent-observed speech/zoom or firmware/hardware certification.
 - [x] E009 [FR-008] Show and drag handles for every saved or derived right-angle wire corner; verify the rendered and persisted result, commit separately, and stop for manual acceptance.
 
 Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentation groups may run as parallel agent work under the implementation skill; shared types and nets have one owner. E008 is manual, not inferred from automated tests. Traceability is this task mapping with exact checks in verification.md.
@@ -101,4 +101,4 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 ## Items 22–23 (jointly authorized)
 
 - [x] J022 [FR-037] Reproduce Tools overlap in real browser; reserve toolbar space, verify moved/expanded Tools, painted pointer/keyboard controls, hints/themes/reflow and unchanged project; separate commit.
-- [x] J023 [FR-038] Reproduce hidden preview actions while nested editor scrolls; compose persistent status/actions, preserve refusal/Cancel/Apply/history, browser rendered review and staged changed checks; separate commit, journal and existing draft PR update. Native acceptance remains open.
+- [x] J023 [FR-038] Reproduce hidden preview actions while nested editor scrolls; compose persistent status/actions, preserve refusal/Cancel/Apply/history, browser rendered review and staged changed checks; separate commit, journal and existing draft PR update. User-reported manual acceptance recorded 2026-10-25; see verification.md.
