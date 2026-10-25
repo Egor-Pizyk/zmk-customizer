@@ -2,6 +2,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import type { ProjectLoadResult } from '@storage/project';
 import { createImportSession } from './import-session';
 import { createInitialState } from './project-state';
+import { synchronizeTutorial } from './tutorial-session';
 import type { ProjectState } from './project-state';
 
 // Changes apply to the latest state, not the render snapshot, like preferences-context.
@@ -14,8 +15,12 @@ export function useProjectState(initialLoad: ProjectLoadResult) {
   const change = useCallback(
     (apply: (latest: ProjectState) => ProjectState) => {
       const before = latestRef.current.history.present;
-      latestRef.current = apply(latestRef.current);
-      if (latestRef.current.history.present !== before) {
+      const beforeSession = latestRef.current.sessionId;
+      latestRef.current = synchronizeTutorial(latestRef.current, apply(latestRef.current));
+      if (
+        latestRef.current.history.present !== before ||
+        latestRef.current.sessionId !== beforeSession
+      ) {
         importSession.invalidate();
       }
       setState(latestRef.current);

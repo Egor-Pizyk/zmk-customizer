@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './test';
 import { buildConnectedMatrix } from '../helpers/connected-matrix';
 import { center, history, key, openProject, saved } from './helpers';
 

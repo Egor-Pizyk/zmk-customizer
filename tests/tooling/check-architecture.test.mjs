@@ -44,3 +44,23 @@ test('UI folder grouping ignores indexes and keeps TS logic separate from JSX', 
     'ui-folder-layout',
   );
 });
+
+test('onboarding shared contract keeps workspace and app implementations private', () => {
+  assert.deepEqual(
+    checkSource(
+      'src/ui/export/components/probe.tsx',
+      "import { getOnboardingContent } from '@ui/onboarding/logic';",
+    ),
+    [],
+  );
+  for (const code of [
+    "import { SchematicWorkspace } from '@ui/schematic/components';",
+    "import { App } from '@ui/app/components';",
+  ]) {
+    assert.ok(
+      checkSource('src/ui/onboarding/logic/probe.ts', code).some(
+        (issue) => issue.rule === 'layer-import',
+      ),
+    );
+  }
+});

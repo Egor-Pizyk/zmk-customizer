@@ -17,6 +17,7 @@ export function renderApp(
   preferences: Partial<Preferences> = {},
 ) {
   installPlatformShims();
+  localStorage.setItem('zmk-customizer:onboarding-shown', '{"version":1,"hasBeenShown":true}');
   saveProject(project);
   savePreferences({
     ...DEFAULT_PREFERENCES,
@@ -41,6 +42,12 @@ function mount() {
 }
 
 function installPlatformShims() {
+  Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', {
+    configurable: true,
+    value() {
+      // jsdom has no layout/scroll engine; real geometry is checked in Playwright.
+    },
+  });
   // jsdom has no layout engine or native modal implementation. These shims only
   // allow React to mount; tests make no claims about painting or native focus traps.
   vi.stubGlobal(

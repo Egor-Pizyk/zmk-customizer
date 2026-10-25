@@ -16,3 +16,4 @@ export { SelectIcon } from './select-icon';
 export { SettingsIcon } from './settings-icon';
 export { WarningIcon } from './warning-icon';
 export { WireIcon } from './wire-icon';
+export { ReplayIcon } from './replay-icon';

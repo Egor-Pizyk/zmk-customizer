@@ -1,5 +1,5 @@
 import type { Project } from '@domain';
-import { expect, test } from '@playwright/test';
+import { expect, test } from './test';
 import { fixture, openProject, saved, history, expectGeometry, center, distance } from './helpers';
 
 const project = {

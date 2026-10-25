@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './test';
 import { expectGeometry, history, key, openProject, saved } from './helpers';
 
 test('keyboard-only table selection, native stepping, properties, duplication and deletion @cross-browser', async ({

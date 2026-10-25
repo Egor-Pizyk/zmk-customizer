@@ -7,7 +7,7 @@ import { FilePreview } from './file-preview';
 import { getExportPreview, useExportActions } from '@ui/export/logic';
 
 export function ExportWorkspace() {
-  const { project, analysis, announce } = useProject();
+  const { project, analysis, announce, tutorialDownloadStarted } = useProject();
   const [includeWorkflow, setIncludeWorkflow] = useState(true);
   const { files, problems, shieldName } = getExportPreview(analysis, { includeWorkflow });
   function handleWorkflowChange(value: boolean) {
@@ -18,6 +18,9 @@ export function ExportWorkspace() {
     shieldName,
     isBlocked: problems.length > 0,
     announce,
+    onZipStarted: () => {
+      tutorialDownloadStarted(project);
+    },
   });
   return (
     <>

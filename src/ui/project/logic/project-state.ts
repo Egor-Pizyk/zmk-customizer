@@ -2,6 +2,7 @@ import { FIRMWARE_OPTIONS } from '@catalog/firmware';
 import { getProjectResourceError } from '@domain/project';
 import { BINDINGS_CATALOG } from '@catalog/bindings';
 import type { Project, ValidationIssue } from '@domain';
+import { saveOnboarding } from '@storage/onboarding';
 import { getControllerBoard } from '@catalog/controllers';
 import { analyzeProject } from '@domain/analysis';
 import { backupDamagedProject, discardBackup, saveProject } from '@storage/project';
@@ -22,6 +23,12 @@ export type SaveStatus = 'saved' | StorageError | 'backup-blocked' | 'invalid-pr
 export type Announcement = { readonly text: string; readonly id: number };
 
 export type ProjectState = {
+  readonly tutorial?: {
+    readonly original: ProjectState;
+    readonly record: Parameters<typeof saveOnboarding>[0];
+    readonly viewedFiles?: readonly string[];
+  };
+  readonly sessionId?: number;
   readonly history: ProjectHistory;
   readonly saveError: SaveError | undefined;
   /** The damaged stored value is not copied aside yet, so the main key must not be written (R7). */
@@ -133,6 +140,15 @@ export function applyHistoryAction(
     input.action.kind === 'commit' ? getProjectResourceError(history.present) : undefined;
   if (resourceError !== undefined && input.action.kind === 'commit') {
     return withAnnouncement(state, resourceError);
+  }
+  if (state.tutorial !== undefined) {
+    const record = { ...state.tutorial.record, project: history.present };
+    const saved = saveOnboarding(record);
+    if (!saved.ok) {
+      return withAnnouncement(state, saved.error);
+    }
+    const next = { ...state, history, tutorial: { original: state.tutorial.original, record } };
+    return withAnnouncement(next, input.announcementText ?? 'Learning project saved.');
   }
   const next: ProjectState = { ...state, history, saveError: autosave(state, history.present) };
   const text = describeChange({

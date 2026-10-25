@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './test';
 import { fixture, history, openProject, saved } from './helpers';
 import type { Locator } from '@playwright/test';
 import type { Project } from '@domain';

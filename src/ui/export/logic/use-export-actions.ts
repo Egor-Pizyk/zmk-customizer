@@ -7,6 +7,7 @@ type ExportActionsInput = {
   readonly files: readonly GeneratedFile[];
   readonly shieldName: string;
   readonly isBlocked: boolean;
+  readonly onZipStarted?: () => void;
   readonly announce: (text: string) => void;
 };
 type ZipControl = {
@@ -51,6 +52,9 @@ async function downloadZip(input: ExportActionsInput, control: ZipControl) {
   try {
     const bytes = await buildExportZip(input.files);
     const result = downloadBlob({ fileName, blob: new Blob([bytes], { type: 'application/zip' }) });
+    if (result.ok) {
+      input.onZipStarted?.();
+    }
     control.report(
       result.ok
         ? `Download started: ${fileName}.`

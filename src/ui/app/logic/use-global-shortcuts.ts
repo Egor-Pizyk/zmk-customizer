@@ -72,6 +72,9 @@ export function useGlobalShortcuts(dialogs: ShortcutDialogs) {
   const { preferences, changePreferences } = usePreferences();
   const project = useProject();
   const handleKeyDown = useEffectEvent((event: KeyboardEvent) => {
+    if (project.tutorial !== undefined && blockTutorialShortcut(event)) {
+      return;
+    }
     const canvas = findCanvas(event.target);
     const focusedCanvas = canvasIdOf(canvas);
     const matchedId = matchShortcut(shortcutInputFrom(event, focusedCanvas));
@@ -103,4 +106,15 @@ export function useGlobalShortcuts(dialogs: ShortcutDialogs) {
       globalThis.removeEventListener('keydown', handleNativeKeyDown);
     };
   }, []);
+}
+
+function blockTutorialShortcut(event: KeyboardEvent): boolean {
+  if (
+    ((event.ctrlKey || event.metaKey) && event.code === 'KeyO') ||
+    (event.altKey && event.shiftKey)
+  ) {
+    event.preventDefault();
+    return true;
+  }
+  return false;
 }

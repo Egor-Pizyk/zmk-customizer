@@ -160,3 +160,34 @@ function getDownloadedBlob(): Blob {
   }
   return input.blob;
 }
+
+it('reports a tutorial ZIP receipt only after successful browser handoff and permits retry', async () => {
+  const receipt = vi.fn<() => void>();
+  vi.mocked(buildExportZip)
+    .mockRejectedValueOnce(new Error('zip failure'))
+    .mockResolvedValue(new Uint8Array([1]));
+  vi.mocked(downloadBlob)
+    .mockReturnValueOnce({ ok: false, error: 'blocked' })
+    .mockReturnValueOnce({ ok: true, value: undefined });
+  const hook = renderHook(() =>
+    useExportActions({
+      files,
+      shieldName: 'pad',
+      isBlocked: false,
+      announce: state.announce,
+      onZipStarted: receipt,
+    }),
+  );
+  await act(async () => {
+    await hook.result.current.handleZipDownload();
+  });
+  expect(receipt).not.toHaveBeenCalled();
+  await act(async () => {
+    await hook.result.current.handleZipDownload();
+  });
+  expect(receipt).not.toHaveBeenCalled();
+  await act(async () => {
+    await hook.result.current.handleZipDownload();
+  });
+  expect(receipt).toHaveBeenCalledOnce();
+});

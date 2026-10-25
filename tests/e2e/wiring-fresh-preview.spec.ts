@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './test';
 import { UNIBODY_PRESET } from '../helpers/unibody-preset';
 import { buildProject } from '../helpers/build-project';
 import { center, history, key, openProject, saved } from './helpers';

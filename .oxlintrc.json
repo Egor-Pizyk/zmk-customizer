@@ -287,6 +287,12 @@
     "vitest/no-import-node-test": "error"
   },
   "overrides": [
+    {
+      "files": ["src/ui/onboarding/components/onboarding-panel.tsx"],
+      "rules": {
+        "jsx-a11y/no-noninteractive-tabindex": ["error", { "tags": ["section"], "roles": [] }]
+      }
+    },
     { "files": ["src/**/index.ts"], "rules": { "react/only-export-components": "off" } },
     {
       "files": ["tests/e2e/**"],

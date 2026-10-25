@@ -31,6 +31,7 @@
   --color-danger: light-dark(#c62828, #ff7b7b);
   --color-warning: light-dark(#a15c00, #f0b35a);
   --color-success: light-dark(#1f7a3d, #6fd08f);
+  --color-scrim: light-dark(#00000099, #000000b3);
   --color-focus: light-dark(#2f5fd0, #7aa2ff);
 
   --radius-*: initial;

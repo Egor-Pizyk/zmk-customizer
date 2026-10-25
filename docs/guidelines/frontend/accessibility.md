@@ -76,6 +76,8 @@ Baseline: WCAG 2.2 AA (docs/principles.md, ADR 0008). A feature is not done unti
 - Focus ring is at least 2px with offset and is never covered by the sticky header or table header (2.4.11): scroll containers set `scroll-pt-*` to the header height.
 - Motion: only `motion-safe:` transitions, no animation carries meaning, no auto-scrolling animation (`prefers-reduced-motion`).
 
+The onboarding Step instructions section is a named, keyboard-focusable scroll region so long instructions can scroll independently while Back/Skip/Exit remain visible. Its scoped tabindex lint exception applies only to that section; it does not change widget roles or general tab-order rules.
+
 ## Reflow and zoom
 
 - At 200% zoom and at widths under 1024px the tab bar stays as a narrow icon column (labels in tooltips); `lg:` widens it and shows labels; `<main>` scrolls (`min-w-0 overflow-auto`) (`tailwind.md` → "Layout"). Forms, dialogs and issue lists reflow with no horizontal page scroll (1.4.10). Canvas, matrix grid and wide tables are two-dimensional content and scroll inside their own container.

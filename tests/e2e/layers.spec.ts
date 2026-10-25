@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './test';
 import { fixture, history, openProject, saved, workspace } from './helpers';
 
 for (const width of [1024, 1280, 1440]) {

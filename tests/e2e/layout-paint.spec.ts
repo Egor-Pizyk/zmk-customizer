@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from './test';
 import { expectGeometry, expectPainted, openProject, saved, selectKey } from './helpers';
 
 test('precise properties keep selected key and unsaved preview visibly inside canvas @cross-browser', async ({
