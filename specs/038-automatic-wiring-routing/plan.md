@@ -28,4 +28,4 @@ Tests first: domain 3×3/6×6 length vs independently defined former star baseli
 
 US1 safe local trees → US2 output grouping → US3 copy/browser review → changed checks/delivery. Support files split by responsibility and max 40-line functions, no new public module aliases unless a distinct responsibility warrants them. Existing editing barrel remains public API.
 
-Rendered review refinement: reserve output-label rectangles in path scoring and include their clearance rails in detour candidates. Shared get-board-pin-labels.ts carries optional text anchor for exterior labels; schematic-screen-layer.ts renders outward text. No persistent data or unrelated label style changes.
+Rendered review refinement: reserve output-label rectangles in path scoring and include their clearance rails in detour candidates. Shared get-board-pin-labels.ts carries optional text anchor for exterior labels; schematic-screen-layer.ts renders outward/upward text in local coordinates inside translated/rotated SVG groups, preserving correct cross-engine text bounds. No persistent data or unrelated label style changes.
