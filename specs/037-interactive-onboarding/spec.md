@@ -2,7 +2,7 @@
 
 **Feature Branch**: `feature/037-interactive-onboarding`
 **Created**: 2026-10-25
-**Status**: Implemented — automated verification in progress; manual acceptance pending
+**Status**: Implemented — automated verification passed; manual acceptance pending
 **Input**: Создать 037 по актуальному roadmap: последнее продуктовое обучение после завершённого 036, без отменённого 038; первый автоматический запуск, реальные действия до экспорта макропада 3×3, безопасный повтор, доступность и правило сопровождения. На этом этапе — только спецификация и checklist.
 
 ## Goal and scope

@@ -14,9 +14,9 @@ Direct focused commands are diagnostic red/green runs required by tests-first an
 - `session-red.log`: initial session test run failed; diagnostic revealed missing jsdom environment declarations. Corrected platform environment before evaluating behavior; this failure alone is not semantic regression evidence.
 - `onboarding-green.log`: typecheck and 11 focused domain/storage/session tests passed after implementation (3 domain, 5 storage, 3 session). Includes original byte/history preservation, tutorial undo save routing, transactional failed edit and failed entry/adoption.
 
-## Remaining execution
+## Execution scope
 
-Implementation and verification are in progress. Browser/rendered review, final changed-check receipt and delivery will be recorded here. Manual keyboard and screen-reader speech acceptance has not been performed. No firmware compilation is claimed; generators/catalog syntax are unchanged.
+Implementation and automated verification are complete. Browser/rendered review and final receipts are recorded below. Manual keyboard and screen-reader speech acceptance has not been performed. No firmware compilation is claimed; generators/catalog syntax are unchanged.
 
 ## Implemented checks and rendered review
 
@@ -51,3 +51,13 @@ The first full staged check (`489240df4f545f6b10eee95c86d88c31822f269f`) passed 
 The full `npm run check` aggregate is additionally run because the invoked implementation skill requires it and the new persistence/UI modules need instrumentation against existing coverage floors; this is a documented justified full diagnostic beyond changed checks. No thresholds or test assertions were weakened.
 
 The final action review added a regression (`controller-action-red.log`) proving that changing a controller must advance after an accepted edit, while inspecting an unchanged default still needs acknowledgement. Controller/pin edits now join the existing automatic practical-step transitions. `exercise-final.log` passed both full routes with Undo/repair, adoption cancel/success and replay after completion.
+
+## Final automated results and rebase
+
+- Exact staged implementation tree `da287a716c07f5d99197515e2407ae24e7524e5c`, base `ad8725dd83ed50a6d7d91fca4e65862f20fc9471`: `npm run check:changed` passed, including static/tooling/type/lint/format gates, unit checks and **127 Chromium scenarios**. Logs: `.check-logs/changed-delivery.log` and `.check-logs/da287a716c07-ad8725dd83ed/`.
+- `npm run check` passed with **247 test files / 1412 tests**, no unhandled errors. Coverage: statements 90.86%, branches 84.20%, functions 92.38%, lines 90.76%; existing floors unchanged. Log: `.check-logs/full-check-delivery.log`.
+- An intermediate browser run at tree `733…` failed with trace-artifact ENOENT from concurrent diagnostic browser jobs sharing `test-results`. The final gate ran without competing browser jobs and passed; no product assertion was weakened.
+- Implementation commit `108e58a510289db92718efe3ba9410bdea4b6b29` was rebased onto delivered main `53ca1c0`, producing `87f9285`. Only roadmap/index conflicts required resolution. `git diff 108e58a HEAD -- src tests scripts .oxlintrc.json tsconfig.json package.json package-lock.json` was empty: executable code, tests and configuration retain the checked bytes. Upstream differences are documentation only. Reporting/documentation receives a fresh changed-check before delivery.
+- T001–T027, T029–T039 and T042–T043 have executed implementation/check evidence above. T028/T040 retain manual zoom acceptance; T041 retains actual manual keyboard and screen-reader acceptance. Requirement-table links point here for automated evidence and to the explicit manual limits above; they do not certify unperformed acceptance.
+
+No CI, merge, release, firmware build or actual screen-reader speech result is claimed. Delivery is a draft PR under the git-flow rule for outstanding manual acceptance.
