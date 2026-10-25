@@ -114,4 +114,4 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 
 ## Editors hierarchy
 
-- [ ] H039 [FR-039] Normalize peer section sizing and nested Layout properties; review rendered themes/narrow layout, run staged checks and record evidence in verification.md.
+- [x] H039 [FR-039] Normalize peer section sizing and nested Layout properties; review rendered themes/narrow layout, run staged checks and record evidence in verification.md.
