@@ -2,7 +2,7 @@
 
 **Feature Branch**: `fix/pre-major-sweep` (user requested continued work here)
 **Created**: 2026-10-25
-**Status**: Specified
+**Status**: Implemented; manual acceptance pending
 **Input**: Universal efficient automatic wiring connecting all keys, with all outputs collected into two groups: rows and columns.
 
 ## Goal and scope
@@ -36,7 +36,7 @@ Rebuild wiring produces an electrically valid, readable connected matrix for reg
 - **FR-001** (US1): Every key contact belongs to exactly its intended matrix net; separate row/column/half nets never short. Preserve diode direction and unrelated retained circuits.
 - **FR-002** (US1): Connect nearest compatible existing key contacts with orthogonal, deterministic paths; reject unintended pin contacts/collinear different-net overlaps, insulate different-net crossings. Bounded detours handle rotated/staggered contacts. Global minimum routing is not promised.
 - **FR-003** (US2): Exactly one output per used terminal; each half has one aligned row block and one aligned column block, sorted by terminal index. All labels clear key bounds by existing 1u clearance and each other by at least 0.5u.
-- **FR-004** (US1, US2): Regular 3×3 and 6×6 layouts have less total wire length than the former independent-to-output layout. Key geometry/bindings and matrix assignments are preserved.
+- **FR-004** (US1, US2): Regular 3×3 and 6×6 layouts have less total wire length than the former independent-to-output layout. Key geometry/bindings remain unchanged; matrix cells follow the existing selected grouping rules.
 - **FR-005** (US3): Retain existing preview/commit/cancel, history, persistence, GPIO reuse and resource failure behavior; older files remain loadable without migration.
 - **FR-006** (US3): Explain connected lines/two output blocks in Wiring and onboarding; maintain accessible controls and existing themes/responsiveness/reduced motion.
 

@@ -17,8 +17,8 @@
 ## US3 — Preview and delivery
 
 - [x] T006 [US3] Update Wiring/onboarding explanation in src/ui/schematic/wiring/components/wiring-controls.tsx and src/ui/onboarding/logic/onboarding-steps.ts; render outward labels in src/ui/canvas/logic/get-board-pin-labels.ts and src/ui/schematic/rendering/components/schematic-screen-layer.tsx; E2E tests/e2e/matrix-routing.spec.ts covers actual preview/Cancel/Apply/history/persistence/download (FR-005/006).
-- [ ] T007 Review real rendered output groups and keyboard behavior; record findings and exact changed/full-check receipts in specs/038-automatic-wiring-routing/verification.md (FR-001–006).
-- [ ] T008 Update docs/roadmap.md, specs/README.md, inspect final selected diff and update existing PR for user-requested branch (FR-001–006).
+- [x] T007 Review real rendered output groups and keyboard behavior; record findings and exact changed/full-check receipts in specs/038-automatic-wiring-routing/verification.md (FR-001–006).
+- [x] T008 Update docs/roadmap.md, specs/README.md, inspect final selected diff and update existing PR for user-requested branch (FR-001–006).
 
 ## Dependencies / strategy
 

@@ -9,6 +9,7 @@ for (const width of [1024, 1440]) {
     test(`matrix local routes and grouped outputs survive preview/history ${width}px ${colorScheme} @cross-browser`, async ({
       page,
     }) => {
+      await page.setViewportSize({ width, height: 1000 });
       await page.emulateMedia({ colorScheme });
       const original = { ...UNIBODY_PRESET, wires: [], insulatedCrossings: [] };
       await openProject(page, original);
@@ -38,6 +39,13 @@ for (const width of [1024, 1440]) {
       }
       for (let step = 0; step < 3; step += 1) {
         await page.getByRole('button', { name: 'Zoom out', exact: true }).click();
+      }
+      await page.getByRole('button', { name: 'Collapse Tools', exact: true }).press('Enter');
+      for (const label of await page
+        .locator('svg text')
+        .filter({ hasText: /^left (row|col) /u })
+        .all()) {
+        await expect(label).toBeInViewport();
       }
       await page.screenshot({ path: test.info().outputPath('grouped-matrix.png') });
       await history(page, 'Undo').click();
