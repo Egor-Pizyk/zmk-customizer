@@ -27,7 +27,7 @@ export function App() {
           onOpenClick={dialogs.handleOpenDialogOpen}
         />
         <ProjectMessages onDiscardClick={dialogs.handleDiscardDialogOpen} />
-        <main className="flex min-h-0 min-w-0 flex-1 flex-col overflow-auto" id="main">
+        <main className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-auto" id="main">
           <WorkspaceView workspaceId={activeWorkspaceId} />
         </main>
         {isIssuesPanelOpen ? <IssuesPanel /> : undefined}
