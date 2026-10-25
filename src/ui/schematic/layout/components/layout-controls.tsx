@@ -38,11 +38,14 @@ export function LayoutControls(props: LayoutControlsProps) {
   return (
     <section
       aria-label="Selected layout"
-      className="flex max-h-64 shrink-0 flex-col gap-2 overflow-auto border-t border-border bg-surface-raised p-2"
+      className="shrink-0 border-b border-border bg-surface-raised"
       data-layout-controls
     >
-      <LayoutActions {...props} />
-      <PreciseProperties {...props} first={first} edit={edit} onEditChange={handleEditChange} />
+      <h2 className="px-4 py-2 text-base font-semibold">Layout</h2>
+      <div className="flex max-h-96 flex-col gap-4 overflow-auto px-4 pb-4">
+        <LayoutActions {...props} />
+        <PreciseProperties {...props} first={first} edit={edit} onEditChange={handleEditChange} />
+      </div>
     </section>
   );
 }
@@ -52,6 +55,7 @@ function PreciseProperties(props: Parameters<typeof LayoutEditorBody>[0]) {
   return (
     <details
       name="schematic-editor"
+      className="border-l border-border pl-4"
       data-precise-properties
       open={isOpen}
       onToggle={(event) => {
@@ -61,7 +65,7 @@ function PreciseProperties(props: Parameters<typeof LayoutEditorBody>[0]) {
         }
       }}
     >
-      <summary className="cursor-pointer text-xs focus-visible:outline-2 focus-visible:outline-focus">
+      <summary className="cursor-pointer py-2 font-medium focus-visible:outline-2 focus-visible:outline-focus">
         Precise properties
       </summary>
       {isOpen ? <LayoutEditorBody {...props} /> : null}

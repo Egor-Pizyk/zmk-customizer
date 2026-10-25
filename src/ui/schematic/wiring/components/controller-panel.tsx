@@ -16,22 +16,27 @@ export function ControllerPanel({ project, commit }: ControllerPanelProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { board, handleChange } = useControllerActions({ project, commit });
   return (
-    <section data-onboarding-target="controller" aria-labelledby="controller-title">
+    <section
+      data-onboarding-target="controller"
+      aria-labelledby="controller-title"
+      className="shrink-0 border-b border-border bg-surface-raised"
+    >
       <details
         name="schematic-editor"
         open={isOpen || tutorial?.record.stepId === 'controller'}
         onToggle={(event) => {
           setIsOpen(event.currentTarget.open);
         }}
-        className="shrink-0 border-b border-border px-4 py-2"
       >
-        <summary className="cursor-pointer font-medium focus-visible:outline-2 focus-visible:outline-focus">
+        <summary className="cursor-pointer px-4 py-2 focus-visible:outline-2 focus-visible:outline-focus">
           <h2 className="inline text-base font-semibold" id="controller-title">
             Controller
           </h2>
         </summary>
-        <ControllerField board={board} onChange={handleChange} />
-        <ControllerDetails controllerId={board.id} />
+        <div className="flex max-h-96 flex-col gap-4 overflow-auto px-4 pb-4">
+          <ControllerField board={board} onChange={handleChange} />
+          <ControllerDetails controllerId={board.id} />
+        </div>
       </details>
     </section>
   );

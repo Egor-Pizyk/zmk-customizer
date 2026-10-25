@@ -18,7 +18,7 @@ export function WiringControls(props: WiringControlsProps) {
   const board = getControllerBoard(props.previewProject.controllerId);
   const project = initializeWiring(props.previewProject, board);
   return (
-    <section className="shrink-0 border-t border-border bg-surface-raised">
+    <section className="shrink-0 border-b border-border bg-surface-raised">
       <details
         name="schematic-editor"
         data-wiring-controls

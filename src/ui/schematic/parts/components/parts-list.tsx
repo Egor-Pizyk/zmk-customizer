@@ -33,7 +33,7 @@ export function PartsList(props: PartsTableProps) {
   return (
     <section
       aria-labelledby={headingId}
-      className="shrink-0 border-t border-border bg-surface-raised"
+      className="shrink-0 border-b border-border bg-surface-raised"
     >
       <details name="schematic-editor" onToggle={handleToggle} open={preferences.isPartsListOpen}>
         <summary className="cursor-pointer px-4 py-2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus">
@@ -41,7 +41,7 @@ export function PartsList(props: PartsTableProps) {
             Parts
           </h2>
         </summary>
-        <div className="flex max-h-72 flex-col gap-6 overflow-auto px-4 pb-4">
+        <div className="flex max-h-96 flex-col gap-6 overflow-auto px-4 pb-4">
           <PartsKeysTable {...props} wiresOf={wiresOf} />
           <PartsWireSectionsTable {...props} />
           <PartsWiresTable {...props} />

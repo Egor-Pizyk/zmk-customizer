@@ -25,7 +25,10 @@ test('encoder hardware and layer actions persist, export and undo by keyboard @c
 }) => {
   await page.setViewportSize({ width: 1024, height: 900 });
   await openProject(page, UNIBODY_PRESET);
-  await page.getByText('Encoders', { exact: true }).press('Enter');
+  await page
+    .locator('summary')
+    .filter({ has: page.getByRole('heading', { name: 'Encoders', exact: true }) })
+    .press('Enter');
   await page.getByRole('button', { name: 'Add encoder', exact: true }).press('Enter');
   await useLegacyDirectPins(page, 0);
   await page.getByLabel('Encoder 0 A pin', { exact: true }).selectOption('20');
@@ -68,7 +71,10 @@ test('encoder hardware and layer actions persist, export and undo by keyboard @c
   await page.reload();
   expect(await saved(page)).toEqual(before);
   await workspace(page, 'Schematic');
-  await page.getByText('Encoders', { exact: true }).press('Enter');
+  await page
+    .locator('summary')
+    .filter({ has: page.getByRole('heading', { name: 'Encoders', exact: true }) })
+    .press('Enter');
   await expect(
     page.getByRole('spinbutton', { name: 'Encoder 0 Electrical steps per rotation', exact: true }),
   ).toHaveValue('40');
@@ -93,7 +99,10 @@ test('encoder problems block export and navigate to the owning control and layer
   page,
 }) => {
   await openProject(page, UNIBODY_PRESET);
-  await page.getByText('Encoders', { exact: true }).press('Enter');
+  await page
+    .locator('summary')
+    .filter({ has: page.getByRole('heading', { name: 'Encoders', exact: true }) })
+    .press('Enter');
   await page.getByRole('button', { name: 'Add encoder', exact: true }).press('Enter');
   await useLegacyDirectPins(page, 0);
   await workspace(page, 'Export');
@@ -187,7 +196,10 @@ test('split encoders retain independent half pins, layer actions and local expor
     .locator('summary')
     .filter({ hasText: /^Wiring$/u })
     .press('Enter');
-  await page.getByText('Encoders', { exact: true }).press('Enter');
+  await page
+    .locator('summary')
+    .filter({ has: page.getByRole('heading', { name: 'Encoders', exact: true }) })
+    .press('Enter');
   await page.getByRole('button', { name: 'Add encoder', exact: true }).press('Enter');
   await page.getByRole('button', { name: 'Add encoder', exact: true }).press('Enter');
   await useLegacyDirectPins(page, 0);

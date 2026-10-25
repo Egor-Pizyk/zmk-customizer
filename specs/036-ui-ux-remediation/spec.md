@@ -162,3 +162,9 @@ Acceptance: move expanded Tools toward the toolbar at narrow/desktop sizes and o
 ## Right-docked Editors follow-up — 2026-10-25
 
 User requests FR-014 right docking on `fix/pre-major-sweep`. At desktop widths the canvas precedes Editors visually and in keyboard order; the left resize edge grows the panel when moved left (ArrowLeft grows, ArrowRight shrinks). Preserve width defaults/limits/persistence, Home/End, Escape cancellation, individual sections, preview footer, empty/populated access, themes and reduced motion. Below 1280px retain the lower panel and hidden resize edge. No project/history/export changes.
+
+## Editors hierarchy — 2026-10-25
+
+- **FR-039**: Controller, Layout, Wiring, Encoders and Parts are peer editor sections with equal full width, 16px horizontal padding and 40px headings using the same type scale. Content height follows content with a shared 384px scroll cap; do not force empty space. Layout actions remain available; Precise properties is visibly subordinate within Layout. Other dependent field groups remain within their owning editor. Preserve native summaries, single-expanded-editor behavior, issue repair, preview cancellation/footer, keyboard focus, saved data and history. Existing narrow/desktop placement, themes and reduced motion remain. Empty/disabled/error controls retain existing behavior.
+
+Acceptance: compare peer heading geometry in light/dark desktop and 390px layouts; expand sections with keyboard; confirm nested precise fields and scrolling without page overflow.

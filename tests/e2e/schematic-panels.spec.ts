@@ -198,3 +198,49 @@ test('resizes editors with pointer and keyboard, cancels and retains preferred s
   await handle.dblclick();
   await expect.poll(width).toBe(448);
 });
+
+test('gives peer editor headings equal size and keeps precise properties inside Layout', async ({
+  page,
+}, info) => {
+  await openProject(page);
+  const original = await saved(page);
+  const editors = page.getByLabel('Schematic editors', { exact: true });
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 1000 });
+    for (const theme of ['Light', 'Dark']) {
+      await page.getByRole('button', { name: 'Settings', exact: true }).click();
+      await page
+        .getByRole('dialog', { name: 'Settings', exact: true })
+        .getByRole('radio', { name: theme, exact: true })
+        .press('Space');
+      await page.keyboard.press('Escape');
+      const sizes = [];
+      for (const name of ['Controller', 'Layout', 'Wiring', 'Encoders', 'Parts']) {
+        const heading = editors.getByRole('heading', { name, exact: true });
+        const row = name === 'Layout' ? heading : heading.locator('..');
+        sizes.push(await row.boundingBox());
+      }
+      const first = sizes[0];
+      if (!first) {
+        throw new Error('Missing editor heading');
+      }
+      for (const size of sizes) {
+        expect(size?.height).toBeCloseTo(40, 0);
+        expect(size?.width).toBeCloseTo(first.width, 0);
+      }
+      const precise = editors.getByText('Precise properties', { exact: true });
+      await precise.focus();
+      await precise.press('Enter');
+      await expect(
+        editors.getByText('Select a switch and drag outside a corner to rotate.', { exact: false }),
+      ).toBeVisible();
+      await precise.press('Enter');
+      await editors.getByRole('heading', { name: 'Layout', exact: true }).scrollIntoViewIfNeeded();
+      await page.screenshot({ path: info.outputPath(`editor-hierarchy-${width}-${theme}.png`) });
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+        true,
+      );
+    }
+  }
+  expect(await saved(page)).toEqual(original);
+});

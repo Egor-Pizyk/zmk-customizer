@@ -21,14 +21,11 @@ export function EncoderPanel() {
   }
   const addRef = useRef<HTMLButtonElement>(null);
   return (
-    <details
-      name="schematic-editor"
-      className="shrink-0 border-b border-border bg-surface-raised px-4 py-2"
-    >
-      <summary className="cursor-pointer font-medium focus-visible:outline-2 focus-visible:outline-focus">
-        Encoders
+    <details name="schematic-editor" className="shrink-0 border-b border-border bg-surface-raised">
+      <summary className="cursor-pointer px-4 py-2 focus-visible:outline-2 focus-visible:outline-focus">
+        <h2 className="inline text-base font-semibold">Encoders</h2>
       </summary>
-      <div className="flex max-h-80 flex-col gap-3 overflow-auto py-2">
+      <div className="flex max-h-96 flex-col gap-4 overflow-auto px-4 pb-4">
         <EncoderDescription />
         <Button ref={addRef} onClick={handleAdd}>
           Add encoder
