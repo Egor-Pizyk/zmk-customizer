@@ -61,3 +61,9 @@ The final action review added a regression (`controller-action-red.log`) proving
 - T001–T027, T029–T039 and T042–T043 have executed implementation/check evidence above. T028/T040 retain manual zoom acceptance; T041 retains actual manual keyboard and screen-reader acceptance. Requirement-table links point here for automated evidence and to the explicit manual limits above; they do not certify unperformed acceptance.
 
 No CI, merge, release, firmware build or actual screen-reader speech result is claimed. Delivery is a draft PR under the git-flow rule for outstanding manual acceptance.
+
+## Delivery
+
+Reporting tree `968183401dfdc2264329087d0515d95dff31603d` passed fresh documentation changed-checks (typecheck, E2E types, architecture and guidelines); `git diff --check` passed. Implementation/review receipts are preserved above.
+
+Committed and pushed branch `feature/037-interactive-onboarding`; opened [draft PR #26](https://github.com/Egor-Pizyk/zmk-customizer/pull/26) with the single `release:minor` label. The initial push using the active read-only account returned 403; the already-connected repository owner credential succeeded without changing the active account. No credentials were written to repository files. T044 delivery is complete; T028/T040/T041 manual acceptance remains open. No merge, auto-merge or CI polling was performed.
