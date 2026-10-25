@@ -337,3 +337,7 @@ Acceptance: no minimap or switch; smaller reversible zoom steps; center an asymm
 ## Firmware overflow regression (2026-10-25)
 
 FR-001/FR-006 clarification: long Firmware content scrolls within main. Wheel scrolling over the workspace navigation or beyond the content end must not scroll the document or move the sidebar/project bar out of the viewport. All settings remain reachable, including by keyboard, at 1024px and wider and in both themes. Search empty states retain the same bounded shell. No data, history, motion or validation changes.
+
+## Favicon repair (2026-10-25)
+
+FR-041: The browser tab shows a bundled keyboard favicon on first load and reload, legible on light/dark tab surfaces, without external requests. No controls, focus, data or motion changes.

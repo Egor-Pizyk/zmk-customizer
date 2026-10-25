@@ -179,3 +179,7 @@ Config and doc files changed by this feature (tasks T002–T004):
 ## Firmware overflow repair (2026-10-25)
 
 Establish main as the containing block for absolutely positioned screen-reader descriptions, preventing their overflow from escaping to the document. Repair shell sizing in `src/ui/app/components/app.tsx`, preserving main as the scroll owner and existing semantic tokens/landmarks. Reproduce first with real wheel input over navigation in `tests/e2e/firmware.spec.ts`; verify 1024/1440px, bottom settings and empty search. Context: workflow, architecture, folder structure, tooling, domain model, TypeScript/control flow/naming, React, accessibility, admin UI, Tailwind, testing/commands. Evidence: [overflow verification](firmware-overflow-verification.md).
+
+## Favicon repair
+
+FR-041: declare public/favicon.svg in index.html. Reproduce the missing declaration in production Playwright before implementation; check same-origin SVG delivery and rendered icon. Work on user-requested fix/pre-major-sweep. No dependencies or ZMK changes. Evidence: firmware-overflow-verification.md.

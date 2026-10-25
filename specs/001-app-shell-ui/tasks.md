@@ -538,3 +538,9 @@ Deviations from the task text, each smaller or forced by lint/type rules; code c
 - [x] FSO-1 Reproduce FR-001/FR-006 sidebar/document overflow with native wheel input at 1024/1440px.
 - [x] FSO-2 Repair shell scroll ownership; verify bottom settings, sidebar and search empty state in browser.
 - [x] FSO-3 Run changed checks and record rendered review and manual limits in [verification](firmware-overflow-verification.md).
+
+## Favicon repair
+
+- [x] FAV-1 Reproduce missing favicon declaration (FR-041).
+- [x] FAV-2 Bundle local SVG icon, verify delivery and rendering.
+- [x] FAV-3 Run changed checks; record evidence in [sweep journal](firmware-overflow-verification.md).
