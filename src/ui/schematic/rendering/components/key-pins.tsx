@@ -22,6 +22,7 @@ export function KeyPins({ schematicKey, pxPerU, isPinConnected }: KeyPinsProps) 
           cx={at.xU}
           cy={at.yU}
           pointerEvents="all"
+          strokeWidth={0}
           r={HIT_RADIUS_PX / pxPerU}
         />
         <PinDot at={at} isConnected={isPinConnected(pin)} radiusU={PIN_RADIUS_PX / pxPerU} />
@@ -41,7 +42,7 @@ type PinDotProps = {
 
 // Connected = filled dot; unconnected = hollow danger ring plus a warning mark (shape, not only
 // color).
-function PinDot({ at, isConnected, radiusU }: PinDotProps) {
+export function PinDot({ at, isConnected, radiusU }: PinDotProps) {
   const { xU, yU } = at;
   if (isConnected) {
     return <circle className="fill-text" cx={xU} cy={yU} r={radiusU} />;

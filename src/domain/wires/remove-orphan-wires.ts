@@ -6,6 +6,8 @@ function hasKeyPin(wire: Wire): boolean {
   return (
     wire.start.kind === 'key-pin' ||
     wire.end.kind === 'key-pin' ||
+    wire.start.kind === 'encoder-pin' ||
+    wire.end.kind === 'encoder-pin' ||
     wire.contacts !== undefined ||
     wire.contactIds !== undefined
   );

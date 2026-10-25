@@ -75,6 +75,7 @@ function RadioItem<Value extends string>({
       data-tooltip-dismissed={hint.isDismissed || undefined}
     >
       <input
+        aria-label={option.label}
         aria-describedby={option.hint === undefined ? undefined : hintId}
         aria-disabled={isDisabled || undefined}
         checked={isChecked}

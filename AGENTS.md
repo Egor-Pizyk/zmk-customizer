@@ -4,7 +4,7 @@ Static browser application for custom keyboard design and ready-to-build ZMK v0.
 
 ## Required startup context
 
-Read these imports before starting work. Claude Code expands `@path`; other agents must open the same files manually. Linked documents elsewhere are loaded only under the routing rules below.
+Read these imports once per session unless already supplied in full by the client. Follow-up messages do not restart startup reading. Reuse unchanged rules still available in context; reopen changed documents or recover missing applicable sections after compaction. Claude Code expands `@path`; other agents open the same files manually. Linked documents follow the routing below.
 
 @docs/product.md
 @docs/principles.md
@@ -28,13 +28,13 @@ Read all matching rows before working in that area. Conditional reading is manda
 
 | Task / area | Required context |
 |---|---|
-| Start/resume work, create a feature/branch; finish work, commit, push, open/merge PRs or release | `docs/guidelines/git-flow.md` (read before starting and re-read before delivery) |
+| Start/resume work, create a feature/branch; finish work, commit, push, open/merge PRs or release | `docs/guidelines/git-flow.md` (review at startup and delivery; reuse unchanged context) |
 | Find files or feature ownership | `docs/repository-map.md`, `specs/README.md`; relevant roadmap entry for scope |
 | Plan or change production code | `docs/architecture.md`, `docs/folder-structure.md`, `docs/tooling.md` |
 | Implement existing feature work | Relevant `spec.md`, `plan.md`, `tasks.md` and contracts; other artifacts only when cited or needed |
 | Domain / TypeScript code | `docs/domain-model.md`, `docs/guidelines/code-quality/typescript.md`, `control-flow.md`, and both `naming/*.md` in that directory |
 | Errors, validation, storage / migrations | Above code-quality rules, `docs/guidelines/code-quality/observability.md`, relevant storage and compatibility contracts |
-| Frontend / interface design, implementation or review | `.agents/skills/ui-ux-pro-max/SKILL.md`; mandatory before/after UI workflow in `docs/workflow.md` and review evidence in `docs/testing.md` |
+| Frontend / interface design, implementation or review | Before/after UI workflow in `docs/workflow.md` and review evidence in `docs/testing.md` |
 | React / UI behavior | Code-quality rules, `docs/guidelines/frontend/react.md`, `accessibility.md`, `admin-ui.md` |
 | Styles / design tokens | `docs/guidelines/frontend/tailwind.md`, `accessibility.md`, existing `src/styles.css` tokens |
 | ZMK output / catalog facts | `docs/zmk/README.md`, relevant reference pages, generator/catalog contracts and independent fixtures |

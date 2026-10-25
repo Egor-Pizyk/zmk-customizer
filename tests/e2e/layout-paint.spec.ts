@@ -13,7 +13,14 @@ test('precise properties keep selected key and unsaved preview visibly inside ca
   const width = page.getByRole('spinbutton', { name: 'Selected rotation (°)', exact: true });
   await width.fill('30');
   await width.press('Enter');
-  await expectGeometry(page, { id: 'k0', xU: 5, yU: 5, rotationDeg: 30 });
+  await expectGeometry(page, {
+    id: 'k0',
+    xU: 5,
+    yU: 5,
+    rotationDeg: 30,
+    rotationOriginXU: 5.5,
+    rotationOriginYU: 5.5,
+  });
   await expectPainted(page);
   expect(await saved(page)).toEqual(before);
 });
@@ -30,7 +37,14 @@ test('compact desktop keeps canvas usable when precise properties expand @cross-
   const width = page.getByRole('spinbutton', { name: 'Selected rotation (°)', exact: true });
   await width.fill('30');
   await width.press('Enter');
-  await expectGeometry(page, { id: 'k0', xU: 5, yU: 5, rotationDeg: 30 });
+  await expectGeometry(page, {
+    id: 'k0',
+    xU: 5,
+    yU: 5,
+    rotationDeg: 30,
+    rotationOriginXU: 5.5,
+    rotationOriginYU: 5.5,
+  });
   await expectPainted(page);
   expect(await saved(page)).toEqual(before);
 });

@@ -1,5 +1,10 @@
 # Tasks: UI/UX research audit
 
+## Delivery reconciliation — 2026-10-25
+
+The user requested merging the remaining PRs after accepting 036. This delivers the bounded historical research/handoff, not a claim that every broad audit check passed. All R01–R23 were implemented or regression-verified in [036](../036-ui-ux-remediation/verification.md), merged as PR #24 and released as v0.5.0. Material behavior decisions were resolved in that feature. Historical observations below retain their original revision and limits. Remaining review coverage belongs to [038](../../docs/research/038-residual-ui-ux-scope.md), before 037 onboarding; accepted 036 manual checks are not reopened. T005 remains an explicit unperformed broad-audit limitation; it does not represent an unresolved reproduced defect or block delivery of this research record.
+
+
 **Input**: [spec](spec.md), [plan](plan.md), [research](research.md). Research only: no production or test-code changes.
 
 ## US1 — Understand actual workflow failures
@@ -21,7 +26,7 @@
 ## Verification and completion
 
 - [x] T008 Validate documentation links/consistency and no code changes; run changed checks and update the existing draft PR with results in `verification.md`.
-- [ ] T009 Reconcile remaining manual acceptance and task status in `tasks.md` and `spec.md`; do not mark full audit complete with required checks outstanding.
+- [x] T009 Reconcile delivery scope and task status: historical handoff accepted for delivery by user request; broad audit limits remain explicit under T005 and the 038 scope. No full audit completion is claimed.
 
 ## Dependencies and parallel opportunities
 

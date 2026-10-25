@@ -1,23 +1,15 @@
-import { getSelectedKeyIds } from './get-selected-key-ids';
+import { startEncoderDrag, moveEncoderDrag, endEncoderDrag } from './pointer-encoder';
 import { isKeyPositionFree } from '@domain/geometry';
 import { moveKeys } from '@domain/keys';
-import { setWireBends, getWireBendsResourceError } from '@domain/wires/editing';
-import type { Key, WirePoint } from '@domain';
-import { isKeyCellInMarquee } from '@ui/canvas/logic';
-import type { PointerState } from './pointer-types';
-import type { CanvasHit } from './read-canvas-hit';
+import { getWireBendsResourceError, setWireBends } from '@domain/wires/editing';
+import type { WirePoint } from '@domain';
+import { endMarqueeDrag } from './end-marquee-drag';
+import { pressKeyOrSection } from './press-key-or-section';
+import type { PointerState, SelectionPress } from './pointer-types';
 import { snapPoint } from './snap-point';
+import { getBendDragBends, insertBendAt, startBendDrag } from './get-bend-drag-bends';
 
-import type { PointerEvent } from 'react';
-
-type Press = {
-  readonly hit: CanvasHit;
-  readonly world: WirePoint;
-  readonly event: PointerEvent<SVGSVGElement>;
-};
-
-// Below this the marquee is treated as a click on empty space, not a drag.
-const MARQUEE_MIN_SIZE_U = 0.05;
+type Press = SelectionPress;
 
 function focusBoardPinSelect(input: { readonly wireId: string; readonly side: string }) {
   // The board pin select in the Parts list is where a free end is edited (003 T059).
@@ -28,79 +20,15 @@ function focusBoardPinSelect(input: { readonly wireId: string; readonly side: st
   });
 }
 
-function isKeyInMarquee(key: Key, marquee: { start: WirePoint; end: WirePoint }): boolean {
-  return isKeyCellInMarquee(key, marquee);
-}
-
-function startMultiKeyDrag(
-  state: PointerState,
-  world: WirePoint,
-  event: PointerEvent<SVGSVGElement>,
-) {
-  if (state.selection?.kind !== 'multi') {
-    return;
-  }
-  event.currentTarget.setPointerCapture(event.pointerId);
-  const keyStarts = state.selection.keyIds.map((keyId) => {
-    const key = state.project.keys.find((candidate) => candidate.id === keyId);
-    return { keyId, start: key ? { xU: key.xU, yU: key.yU } : { xU: 0, yU: 0 } };
-  });
-  const first = keyStarts[0];
-  if (first === undefined) {
-    return;
-  }
-  state.onDragChange({
-    kind: 'multi-key',
-    keyIds: state.selection.keyIds,
-    origin: world,
-    keyStarts,
-    position: first.start,
-  });
-}
-
-function startSingleKeyDrag(
-  state: PointerState,
-  world: WirePoint,
-  event: PointerEvent<SVGSVGElement> & { keyId: string },
-) {
-  const key = state.project.keys.find((candidate) => candidate.id === event.keyId);
-  state.onSelectionChange({ kind: 'key', keyId: event.keyId });
-  if (key !== undefined) {
-    event.currentTarget.setPointerCapture(event.pointerId);
-    const keyStart = { xU: key.xU, yU: key.yU };
-    state.onDragChange({
-      kind: 'key',
-      keyId: key.id,
-      origin: world,
-      keyStart,
-      position: keyStart,
-    });
-  }
-}
-
 export function pressSelectTool(state: PointerState, { hit, world, event }: Press) {
-  if (hit.kind === 'key' || hit.kind === 'pin') {
-    if (event.ctrlKey || event.metaKey || event.shiftKey) {
-      const selected = getSelectedKeyIds(state.selection);
-      const keyIds = selected.includes(hit.keyId)
-        ? selected.filter((id) => id !== hit.keyId)
-        : [...selected, hit.keyId];
-      state.onSelectionChange({ kind: 'multi', keyIds, wireIds: [] });
-      return;
-    }
-    if (state.selection?.kind === 'multi' && state.selection.keyIds.includes(hit.keyId)) {
-      startMultiKeyDrag(state, world, event);
-      return;
-    }
-    startSingleKeyDrag(state, world, { ...event, keyId: hit.keyId });
+  if (startEncoderDrag(state, { hit, world, event })) {
+    return;
+  }
+  if (pressKeyOrSection(state, { hit, world, event })) {
     return;
   }
   if (hit.kind === 'bend') {
     startBendDrag(state, { hit, world, event });
-    return;
-  }
-  if (hit.kind === 'section') {
-    selectSection(state, { sectionId: hit.sectionId, shiftKey: event.shiftKey });
     return;
   }
   if (hit.kind === 'wire') {
@@ -114,11 +42,34 @@ export function pressSelectTool(state: PointerState, { hit, world, event }: Pres
   }
   // Empty space: start marquee selection
   event.currentTarget.setPointerCapture(event.pointerId);
-  state.onDragChange({ kind: 'marquee', start: world, end: world });
+  state.onDragChange({
+    kind: 'marquee',
+    start: world,
+    end: world,
+    base: state.project,
+    additive: event.shiftKey,
+  });
 }
 
-export function moveSelectDrag(state: PointerState, world: WirePoint) {
+export function doubleClickSelectTool(
+  state: PointerState,
+  input: { readonly hit: Press['hit']; readonly world: WirePoint },
+) {
+  if (input.hit.kind === 'section' || input.hit.kind === 'wire') {
+    insertBendAt(state, { wireId: input.hit.wireId, point: input.world });
+  }
+}
+
+export function moveSelectDrag(
+  state: PointerState,
+  world: WirePoint,
+  event?: Pick<Press['event'], 'timeStamp' | 'shiftKey'>,
+) {
   const { drag } = state;
+  if (drag?.kind === 'encoder') {
+    moveEncoderDrag(state, drag, { world, event });
+    return;
+  }
   if (drag?.kind === 'key') {
     const moved = {
       xU: drag.keyStart.xU + world.xU - drag.origin.xU,
@@ -142,26 +93,6 @@ export function moveSelectDrag(state: PointerState, world: WirePoint) {
   }
   if (drag?.kind === 'marquee') {
     state.onDragChange({ ...drag, end: world });
-  }
-}
-
-function endMarqueeDrag(state: PointerState, project: PointerState['project']) {
-  const { drag } = state;
-  if (drag?.kind !== 'marquee') {
-    return;
-  }
-  const width = Math.abs(drag.end.xU - drag.start.xU);
-  const height = Math.abs(drag.end.yU - drag.start.yU);
-  if (width < MARQUEE_MIN_SIZE_U && height < MARQUEE_MIN_SIZE_U) {
-    state.onSelectionChange();
-    return;
-  }
-  const keyIds = project.keys.filter((key) => isKeyInMarquee(key, drag)).map((key) => key.id);
-  const wireIds: readonly string[] = [];
-  if (keyIds.length === 0 && wireIds.length === 0) {
-    state.onSelectionChange();
-  } else {
-    state.onSelectionChange({ kind: 'multi', keyIds, wireIds });
   }
 }
 
@@ -217,10 +148,12 @@ function endSingleKeyDrag(state: PointerState, project: PointerState['project'])
 export function endSelectDrag(state: PointerState) {
   const { drag, project } = state;
   state.onDragChange();
+  if (drag?.kind === 'encoder') {
+    endEncoderDrag(state, drag);
+    return;
+  }
   if (drag?.kind === 'bend') {
-    const bends = project.wires.find((wire) => wire.id === drag.wireId)?.bends ?? [];
-    const next = bends.with(drag.bendIndex, drag.point);
-    const input = { wireId: drag.wireId, bends: next };
+    const input = { wireId: drag.wireId, bends: getBendDragBends(project, drag) };
     const resourceError = getWireBendsResourceError(project, input);
     if (resourceError !== undefined) {
       state.onHint(resourceError);
@@ -238,28 +171,6 @@ export function endSelectDrag(state: PointerState) {
     return;
   }
   endSingleKeyDrag(state, project);
-}
-
-function selectSection(
-  state: PointerState,
-  input: { readonly sectionId: string; readonly shiftKey: boolean },
-) {
-  const previous =
-    input.shiftKey && state.selection?.kind === 'sections' && state.selection.base === state.project
-      ? state.selection.sectionIds
-      : [];
-  const sectionIds = previous.includes(input.sectionId)
-    ? previous.filter((id) => id !== input.sectionId)
-    : [...previous, input.sectionId];
-  state.onSelectionChange({ kind: 'sections', base: state.project, sectionIds });
-}
-
-function startBendDrag(state: PointerState, { hit, world, event }: Press) {
-  if (hit.kind !== 'bend') {
-    return;
-  }
-  event.currentTarget.setPointerCapture(event.pointerId);
-  state.onDragChange({ kind: 'bend', wireId: hit.wireId, bendIndex: hit.bendIndex, point: world });
 }
 
 function commitKeyMove(state: PointerState, moves: Parameters<typeof moveKeys>[1]['moves']) {

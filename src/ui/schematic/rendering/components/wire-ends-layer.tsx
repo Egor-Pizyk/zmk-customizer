@@ -13,7 +13,7 @@ export function WireEndsLayer({ project, view, paths, marks }: SchematicLayerPro
       const end = wire[side];
       const path = paths.get(wire.id) ?? [];
       const at = side === 'start' ? path[0] : path.at(-1);
-      if (end.kind === 'key-pin' || at === undefined) {
+      if (end.kind === 'key-pin' || end.kind === 'encoder-pin' || at === undefined) {
         return [];
       }
       const key = `${wire.id}:${side}`;
@@ -34,7 +34,9 @@ export function WireEndsLayer({ project, view, paths, marks }: SchematicLayerPro
       return [
         <WireEndMarker
           at={at}
-          hasBoardPin={end.boardPin !== undefined || end.terminalId !== undefined}
+          hasBoardPin={
+            end.boardPin !== undefined || end.terminalId !== undefined || end.ground === true
+          }
           hasProblem={marks.problemEnds.has(toEndMark({ wireIndex, side }))}
           key={key}
           pxPerU={view.pxPerU}

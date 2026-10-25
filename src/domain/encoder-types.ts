@@ -2,6 +2,9 @@ import type { Binding, Half } from './types';
 
 export type Encoder = {
   readonly id: string;
+  readonly rotationDeg?: number;
+  readonly wiringMode?: 'schematic';
+  readonly pushKeyId?: string;
   readonly xU: number;
   readonly yU: number;
   readonly half: Half;

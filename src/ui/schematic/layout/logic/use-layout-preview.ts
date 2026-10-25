@@ -8,7 +8,7 @@ import { useState } from 'react';
 type Preview = { readonly base: Project; readonly selectionKey: string; readonly edit: LayoutEdit };
 
 export function useLayoutPreview(project: Project, selection: SchematicSelection, commit: Commit) {
-  const selectionKey = getSelectedKeyIds(selection).join(',');
+  const selectionKey = getSelectedKeyIds(selection, { project }).join(',');
   const [preview, setPreview] = useState<Preview | undefined>();
   const current =
     preview?.base === project && preview.selectionKey === selectionKey ? preview : undefined;

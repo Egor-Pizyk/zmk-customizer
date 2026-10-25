@@ -1,5 +1,5 @@
 import { getKeyGeometry } from '@domain/geometry';
-import { moveKey, setKeyGeometries } from '@domain/keys';
+import { editLayout, moveKey, setKeyGeometries } from '@domain/keys';
 import type { Key, KeyGeometry } from '@domain';
 import { usePreferences } from '@ui/preferences';
 import { NumberInput } from '@ui/components/components';
@@ -28,18 +28,6 @@ export function KeyPositionCells({
 }: KeyPositionCellsProps) {
   const { gridSizeU } = usePreferences().preferences;
   const geometry = getKeyGeometry(schematicKey);
-  function handleCommit(field: keyof KeyGeometry, value: number) {
-    commit((current) =>
-      field === 'xU' || field === 'yU'
-        ? moveKey(current, {
-            keyId: schematicKey.id,
-            position: { xU: schematicKey.xU, yU: schematicKey.yU, [field]: value },
-          })
-        : setKeyGeometries(current, {
-            changes: [{ keyId: schematicKey.id, geometry: { [field]: value } }],
-          }),
-    );
-  }
   return FIELDS.map(({ field, label }) => (
     <td className="pr-2" key={field}>
       <NumberInput
@@ -47,11 +35,36 @@ export function KeyPositionCells({
         issuePath={`keys.${keyIndex}`}
         label={`Key ${keyIndex} ${label}`}
         onCommit={(value) => {
-          handleCommit(field, value);
+          commitPosition(commit, { schematicKey, field, value });
         }}
         step={field === 'rotationDeg' ? 1 : gridSizeU}
         value={geometry[field]}
       />
     </td>
   ));
+}
+
+function commitPosition(
+  commit: Commit,
+  input: { readonly schematicKey: Key; readonly field: keyof KeyGeometry; readonly value: number },
+) {
+  const { schematicKey, field, value } = input;
+  commit((current) => {
+    if (field === 'xU' || field === 'yU') {
+      return moveKey(current, {
+        keyId: schematicKey.id,
+        position: { xU: schematicKey.xU, yU: schematicKey.yU, [field]: value },
+      });
+    }
+    if (field === 'rotationDeg') {
+      return editLayout(current, {
+        keyIds: [schematicKey.id],
+        offset: { xU: 0, yU: 0 },
+        geometry: { rotationDeg: value },
+      });
+    }
+    return setKeyGeometries(current, {
+      changes: [{ keyId: schematicKey.id, geometry: { [field]: value } }],
+    });
+  });
 }

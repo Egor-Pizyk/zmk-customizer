@@ -1,5 +1,10 @@
 # Audit coverage and limits
 
+## Delivery reconciliation — 2026-10-25
+
+The user requested merging the remaining PRs after accepting 036. This delivers the bounded historical research/handoff, not a claim that every broad audit check passed. All R01–R23 were implemented or regression-verified in [036](../036-ui-ux-remediation/verification.md), merged as PR #24 and released as v0.5.0. Material behavior decisions were resolved in that feature. Historical observations below retain their original revision and limits. Remaining review coverage belongs to [038](../../docs/research/038-residual-ui-ux-scope.md), before 037 onboarding; accepted 036 manual checks are not reopened. T005 remains an explicit unperformed broad-audit limitation; it does not represent an unresolved reproduced defect or block delivery of this research record.
+
+
 Reviewed revision `a965e93` / runtime baseline `4436ad1`; 2026-10-21. No production/test changes. One isolated Linux Chromium **156.0.8078.4**, Node 24.22.0 in the existing E2E container. Custom probes use actual imported four-key Project JSON with keys (5,5),(7,5),(5,7),(7,7), initially unwired; Rebuild generates matrix wiring. Browser mouse/keyboard and read-only storage/geometry observations only. Exact fixture output: `.check-logs/035-research/wired-2x2.json`. Source research adds capability/ownership evidence, not runtime verification.
 
 ## Area and journey register

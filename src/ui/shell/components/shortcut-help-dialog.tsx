@@ -37,6 +37,10 @@ export function ShortcutHelpDialog({ isOpen, onClose }: ShortcutHelpDialogProps)
           caption="While the Bindings canvas or Keys table has focus"
           rows={rows.bindings}
         />
+        <HelpTable
+          caption="While the Schematic canvas or Keys table has focus"
+          rows={rows.schematic}
+        />
         <HelpTable caption="Pointer" rows={gestureRows} />
       </div>
     </Dialog>
@@ -51,6 +55,7 @@ function formatShortcutKeys(shortcut: Shortcut, { altLabel, primaryLabel }: Modi
     case 'project': {
       return `${primaryLabel}+${shortcut.shift ? 'Shift+' : ''}${shortcut.keyLabel}`;
     }
+    case 'schematic':
     case 'bindings': {
       return `${primaryLabel}+${shortcut.keyLabel}`;
     }
@@ -72,6 +77,7 @@ function getHelpRows(modifiers: ModifierLabels) {
     canvas: [],
     key: [],
     bindings: [],
+    schematic: [],
   };
   for (const shortcut of SHORTCUTS) {
     rows[shortcut.scope].push({

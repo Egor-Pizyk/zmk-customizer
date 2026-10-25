@@ -62,7 +62,7 @@ describe('matchShortcut: canvas single keys', () => {
     ['=', false, 'zoom-in'],
     ['+', true, 'zoom-in'],
     ['-', false, 'zoom-out'],
-    ['0', false, 'reset-view'],
+    ['0', false, undefined],
     ['?', true, 'open-help'],
     ['ArrowLeft', false, 'pan-left'],
     ['ArrowLeft', true, 'pan-left-1u'],
@@ -176,6 +176,8 @@ describe('matchShortcut: Schematic tools and editing (spec 003)', () => {
   it.each([
     ['v', 'select-tool'],
     ['k', 'add-key-tool'],
+    ['e', 'add-encoder-tool'],
+    ['E', 'add-encoder-tool'],
     ['W', 'wire-tool'],
     ['Enter', 'place-key'],
     ['Delete', 'delete-selection'],

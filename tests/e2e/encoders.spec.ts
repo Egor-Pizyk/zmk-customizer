@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import type { Page } from '@playwright/test';
 import { UNIBODY_PRESET } from '../helpers/unibody-preset';
 import { parseProjectFile } from '@storage/project';
 import { getResultValue } from '../helpers/result';
@@ -12,6 +13,13 @@ import {
   workspace,
 } from './helpers';
 
+async function useLegacyDirectPins(page: Page, index: number) {
+  await page.getByRole('checkbox', { name: `Encoder ${index} push switch`, exact: true }).uncheck();
+  await page
+    .getByRole('checkbox', { name: `Encoder ${index} schematic wiring`, exact: true })
+    .uncheck();
+}
+
 test('encoder hardware and layer actions persist, export and undo by keyboard @cross-browser', async ({
   page,
 }) => {
@@ -19,9 +27,11 @@ test('encoder hardware and layer actions persist, export and undo by keyboard @c
   await openProject(page, UNIBODY_PRESET);
   await page.getByText('Encoders', { exact: true }).press('Enter');
   await page.getByRole('button', { name: 'Add encoder', exact: true }).press('Enter');
+  await useLegacyDirectPins(page, 0);
   await page.getByLabel('Encoder 0 A pin', { exact: true }).selectOption('20');
   await page.getByLabel('Encoder 0 B pin', { exact: true }).selectOption('21');
   await editNumber(page, 'Encoder 0 X (u)', '7');
+  await editNumber(page, 'Encoder 0 Y (u)', '0');
   await editNumber(page, 'Encoder 0 Electrical steps per rotation', '40');
   await editNumber(page, 'Encoder 0 Triggers per rotation', '10');
   const x = page.getByRole('spinbutton', { name: 'Encoder 0 X (u)', exact: true });
@@ -30,7 +40,7 @@ test('encoder hardware and layer actions persist, export and undo by keyboard @c
   await expect(x).toHaveValue('7');
   const marker = page.locator('[role="graphics-symbol"][aria-label^="Encoder 0,"]');
   await expect(marker).toHaveAttribute('aria-label', /at 7, 0/u);
-  await expect(marker.locator('circle')).toHaveAttribute('cx', '7.5');
+  await expect(marker.locator('circle.cursor-move')).toHaveAttribute('cx', '7.5');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await test.info().attach('encoder-editor-1024', {
     body: await page.screenshot({ path: test.info().outputPath('encoder-editor-1024.png') }),
@@ -85,6 +95,7 @@ test('encoder problems block export and navigate to the owning control and layer
   await openProject(page, UNIBODY_PRESET);
   await page.getByText('Encoders', { exact: true }).press('Enter');
   await page.getByRole('button', { name: 'Add encoder', exact: true }).press('Enter');
+  await useLegacyDirectPins(page, 0);
   await workspace(page, 'Export');
   await expect(page.getByRole('button', { name: 'Download .zip', exact: true })).toHaveAttribute(
     'aria-disabled',
@@ -179,6 +190,8 @@ test('split encoders retain independent half pins, layer actions and local expor
   await page.getByText('Encoders', { exact: true }).press('Enter');
   await page.getByRole('button', { name: 'Add encoder', exact: true }).press('Enter');
   await page.getByRole('button', { name: 'Add encoder', exact: true }).press('Enter');
+  await useLegacyDirectPins(page, 0);
+  await useLegacyDirectPins(page, 1);
   await page.getByLabel('Encoder 1 half', { exact: true }).selectOption('right');
   for (const index of [0, 1]) {
     await page.getByLabel(`Encoder ${index} A pin`, { exact: true }).selectOption('20');

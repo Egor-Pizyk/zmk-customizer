@@ -31,7 +31,7 @@ Section boundaries: key pins, contact anchors, connected junctions/crossings and
 
 Completion/rebuild produce Result<Project, readable failure>; no-op retains the original Project reference. A pure comparison query supplies retained/added/rerouted/removed section counts and affected key/terminal names. Preview holds immutable base/candidate; Apply requires base identity; Cancel/refusal writes nothing.
 
-Selection is a discriminated UI union: existing key/key-multi/endpoint modes plus section-only multi-selection. Key and section selections are mutually exclusive. One editor ID plus collapsed/open flags belong to workspace state, not Project/preferences schema. Settings continues using existing preferences; no new contexts are introduced.
+Selection is a discriminated UI union: existing key/key-multi/endpoint modes plus section-only multi-selection. Under 036 FR-024–026, section selection may additionally carry key IDs for mixed marquee/Shift/list selection; its base Project scopes the complete selection. One editor ID plus collapsed/open flags belong to workspace state, not Project/preferences schema. Settings continues using existing preferences; no new contexts are introduced.
 
 ## State transitions
 

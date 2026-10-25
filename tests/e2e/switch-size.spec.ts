@@ -26,7 +26,7 @@ for (const theme of ['light', 'dark'] as const) {
     await page.getByText('Precise properties', { exact: true }).click();
     await expect(page.getByRole('button', { name: /^Resize key/u })).toHaveCount(0);
     await expect(page.getByRole('spinbutton', { name: /width|height/iu })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: /^Rotate key 0/u })).toHaveCount(4);
+    await expect(page.getByRole('button', { name: /^Rotate key 0/u })).toHaveCount(1);
     await expect(
       page.getByRole('spinbutton', { name: 'Selected rotation (°)', exact: true }),
     ).toBeVisible();

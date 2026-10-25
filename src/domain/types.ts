@@ -3,7 +3,7 @@ import type { Combo, Macro, ConditionalLayer } from './advanced-keymap-types';
 import type { CustomBehavior, BehaviorParameter } from './behavior-types';
 
 export type Project = {
-  readonly schemaVersion: 12;
+  readonly schemaVersion: 13;
   readonly wireContacts?: readonly (WireContact | false)[];
   readonly encoders: readonly Encoder[];
   readonly combos: readonly Combo[];
@@ -148,10 +148,12 @@ export type WirePoint = {
 };
 
 export type WireEnd =
+  | { readonly kind: 'encoder-pin'; readonly encoderId: string; readonly pin: 'A' | 'COM' | 'B' }
   | { readonly kind: 'key-pin'; readonly keyId: string; readonly pin: KeyPin }
   | { readonly kind: 'junction'; readonly wireId: string; readonly at: WirePoint }
   | {
       readonly kind: 'free';
+      readonly ground?: true;
       readonly at: WirePoint;
       readonly terminalId?: string;
       readonly boardPin?: number;

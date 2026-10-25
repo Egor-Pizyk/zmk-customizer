@@ -66,7 +66,7 @@ function validateNets(
   const issues: ValidationIssue[] = [];
   for (const net of nets) {
     const firstPin = net.pins[0];
-    if (firstPin === undefined) {
+    if (firstPin === undefined && (net.encoderPins?.length ?? 0) === 0) {
       const wireIndex = project.wires.findIndex((wire) => wire.id === net.wireIds[0]);
       issues.push({
         code: 'shield-net-unused',

@@ -80,7 +80,7 @@ it('previews a multi-key geometry edit without saving, cancels and applies with 
   await edit(user, 'Selected rotation (°)', '-15');
   expect(loadProject().project).toEqual(before);
   expect(screen.getByRole('graphics-symbol', { name: /^Key 0\b/u }).getAttribute('transform')).toBe(
-    'rotate(-15 0 0)',
+    'rotate(-15 0.5 0.5)',
   );
   await user.click(screen.getByRole('button', { name: 'Cancel preview' }));
   expect(loadProject().project).toEqual(before);

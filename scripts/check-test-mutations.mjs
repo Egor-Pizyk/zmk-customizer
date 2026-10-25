@@ -164,7 +164,7 @@ export const MUTATIONS = [
   ],
   [
     'duplicate loses layer bindings',
-    'src/domain/keys/duplicate-keys.ts',
+    'src/domain/keys/paste-keys.ts',
     'bindings[copy.id] = binding;',
     '',
     ['tests/unit/domain/keys/duplicate-keys.test.ts'],

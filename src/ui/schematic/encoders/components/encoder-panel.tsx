@@ -1,5 +1,6 @@
 import { useRef } from 'react';
-import { addEncoder } from '@domain/encoders';
+import { placeEncoder } from '@domain/encoders';
+import { findFreeKeyPosition } from '@domain/geometry';
 import { ENCODER_DEFAULTS, ENCODER_OPTIONS } from '@catalog/encoders';
 import { useProject } from '@ui/project/logic';
 import { Button, DocsLink } from '@ui/components/components';
@@ -7,6 +8,17 @@ import { EncoderHardware } from './encoder-hardware';
 
 export function EncoderPanel() {
   const { project, commit } = useProject();
+  function handleAdd() {
+    commit(
+      (current) =>
+        placeEncoder(current, {
+          position: findFreeKeyPosition(current),
+          defaults: ENCODER_DEFAULTS,
+          hasPushSwitch: true,
+        }),
+      'Added encoder with push switch. Wire A and B to GPIOs and COM to ground.',
+    );
+  }
   const addRef = useRef<HTMLButtonElement>(null);
   return (
     <details
@@ -18,15 +30,7 @@ export function EncoderPanel() {
       </summary>
       <div className="flex max-h-80 flex-col gap-3 overflow-auto py-2">
         <EncoderDescription />
-        <Button
-          ref={addRef}
-          onClick={() => {
-            commit(
-              (current) => addEncoder(current, ENCODER_DEFAULTS),
-              'Added encoder. Assign its A and B pins.',
-            );
-          }}
-        >
+        <Button ref={addRef} onClick={handleAdd}>
           Add encoder
         </Button>
         {project.encoders.map((encoder, index) => (
@@ -34,9 +38,7 @@ export function EncoderPanel() {
             key={encoder.id}
             encoder={encoder}
             index={index}
-            onDelete={() => {
-              addRef.current?.focus();
-            }}
+            onDelete={() => addRef.current?.focus()}
           />
         ))}
       </div>
@@ -47,6 +49,8 @@ export function EncoderPanel() {
 function EncoderDescription() {
   return (
     <p className="text-text-muted">
+      A, COM and B are symbolic rotary contacts, not a physical footprint. Wire A and B to distinct
+      GPIOs and COM to ground. The push switch is an ordinary key.{' '}
       {ENCODER_OPTIONS.rotation.description}{' '}
       <DocsLink href={ENCODER_OPTIONS.pins.docsUrl} topic="Encoder hardware" />
     </p>

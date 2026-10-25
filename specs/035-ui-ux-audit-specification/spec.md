@@ -1,8 +1,13 @@
 # Feature Specification: UI/UX audit and remediation specification
 
+## Delivery reconciliation — 2026-10-25
+
+The user requested merging the remaining PRs after accepting 036. This delivers the bounded historical research/handoff, not a claim that every broad audit check passed. All R01–R23 were implemented or regression-verified in [036](../036-ui-ux-remediation/verification.md), merged as PR #24 and released as v0.5.0. Material behavior decisions were resolved in that feature. Historical observations below retain their original revision and limits. Remaining review coverage belongs to [038](../../docs/research/038-residual-ui-ux-scope.md), before 037 onboarding; accepted 036 manual checks are not reopened. T005 remains an explicit unperformed broad-audit limitation; it does not represent an unresolved reproduced defect or block delivery of this research record.
+
+
 **Feature Branch**: `feature/035-ui-ux-audit-specification`
 **Created**: 2026-10-21
-**Status**: Draft — research pass and 036 handoff recorded; manual acceptance and exact reported reproductions remain open
+**Status**: Historical research handoff delivered; 036 remediation accepted and released; broader audit limits retained for 038
 **Input**: Start documentation for roadmap 035 after 031–034 and the 012/004 standard-keycap-size follow-up. Audit the delivered application and specify actionable work for 036 before final onboarding 037.
 
 ## Goal and scope

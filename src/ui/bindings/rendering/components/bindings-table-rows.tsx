@@ -1,7 +1,7 @@
 import type { Project } from '@domain';
 import { Button } from '@ui/components/components';
 import { WarningIcon } from '@ui/components/icons';
-import { formatBindingName } from '@ui/bindings/formatting';
+import { formatBindingName, formatSelectionName } from '@ui/bindings/formatting';
 import type { ChangeEvent, KeyboardEvent } from 'react';
 
 export type BindingsTableRowsProps = {
@@ -111,7 +111,7 @@ function SelectCell(
 // The same data-issue-path exists on the keycap, which comes first in the DOM, so IssueButton
 // focuses the canvas keycap; this header is the fallback when the canvas is unavailable.
 function RowHeader(props: RowProps) {
-  const { layerIndex, keyId, keyIndex, onSelectionChange, onActiveKeyChange } = props;
+  const { layerIndex, keyId, onSelectionChange, onActiveKeyChange } = props;
   function handleFocus() {
     onActiveKeyChange(keyId);
     onSelectionChange([keyId]);
@@ -125,19 +125,23 @@ function RowHeader(props: RowProps) {
       scope="row"
       tabIndex={-1}
     >
-      {`Key ${keyIndex}`}
+      {formatSelectionName(props.project, [keyId])}
     </th>
   );
 }
 
-function ChooseButton({ keyId, keyIndex, onChooseAction }: RowProps) {
+function ChooseButton(props: RowProps) {
+  const { keyId, keyIndex, onChooseAction } = props;
+  const name = formatSelectionName(props.project, [keyId]);
   function handleClick() {
     onChooseAction(keyId);
   }
 
   return (
     <Button
-      aria-label={`Choose action for key ${keyIndex}`}
+      aria-label={
+        name.startsWith('Key ') ? `Choose action for key ${keyIndex}` : `Choose action for ${name}`
+      }
       onClick={handleClick}
       size="sm"
       variant="secondary"
@@ -151,7 +155,10 @@ function formatRowBinding({ project, layerIndex }: BindingsTableRowsProps, keyId
   return formatBindingName(project.layers[layerIndex]?.bindings[keyId], project.layers, project);
 }
 
-function SizeButton({ keyId, keyIndex, onKeycapSize }: RowProps) {
+function SizeButton({ project, keyId, keyIndex, onKeycapSize }: RowProps) {
+  if (project.encoders.some((encoder) => encoder.pushKeyId === keyId)) {
+    return null;
+  }
   function handleClick() {
     onKeycapSize(keyId);
   }

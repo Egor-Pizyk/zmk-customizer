@@ -6,5 +6,8 @@ export function formatSelectionName(project: Project, keyIds: readonly string[])
   if (keyIds.length !== 1 || keyId === undefined) {
     return `${keyIds.length} keys`;
   }
-  return `Key ${project.keys.findIndex((key) => key.id === keyId)}`;
+  const encoderIndex = project.encoders.findIndex((encoder) => encoder.pushKeyId === keyId);
+  return encoderIndex === -1
+    ? `Key ${project.keys.findIndex((key) => key.id === keyId)}`
+    : `Encoder ${encoderIndex} push`;
 }

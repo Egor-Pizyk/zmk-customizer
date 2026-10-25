@@ -22,6 +22,7 @@ const VALID_V1 = {
   isBindingsTableOpen: true,
   isAutoAdvanceEnabled: false,
   actionPanelWidthPx: 400,
+  schematicEditorWidthPx: 448,
   bindingsLayerIndex: 2,
   viewByWorkspace: {
     schematic: { zoom: 2, panXPx: 10, panYPx: -5 },
@@ -168,4 +169,23 @@ describe('loadPreferences / savePreferences', () => {
     vi.stubGlobal('localStorage', storageStub({}));
     expect(savePreferences(DEFAULT_PREFERENCES)).toBe(true);
   });
+});
+
+it('defaults missing editor width while preserving older preferences', () => {
+  const result = parsePreferences('{"version":1,"theme":"dark"}');
+  expect(result.preferences.schematicEditorWidthPx).toBe(448);
+  expect(result.preferences.theme).toBe('dark');
+});
+
+it.each([null, '400', 319, 641])('defaults invalid editor width %j independently', (width) => {
+  const result = parsePreferences(
+    JSON.stringify({ version: 1, theme: 'dark', schematicEditorWidthPx: width }),
+  );
+  expect(result.preferences.schematicEditorWidthPx).toBe(448);
+  expect(result.preferences.theme).toBe('dark');
+});
+
+it.each([320, 512, 640])('round trips editor width %s', (width) => {
+  const preferences = { ...DEFAULT_PREFERENCES, schematicEditorWidthPx: width };
+  expect(parsePreferences(JSON.stringify(preferences)).preferences).toEqual(preferences);
 });

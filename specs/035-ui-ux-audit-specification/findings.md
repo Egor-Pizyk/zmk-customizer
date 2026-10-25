@@ -1,5 +1,10 @@
 # Findings and 036 research handoff
 
+## Delivery reconciliation — 2026-10-25
+
+The user requested merging the remaining PRs after accepting 036. This delivers the bounded historical research/handoff, not a claim that every broad audit check passed. All R01–R23 were implemented or regression-verified in [036](../036-ui-ux-remediation/verification.md), merged as PR #24 and released as v0.5.0. Material behavior decisions were resolved in that feature. Historical observations below retain their original revision and limits. Remaining review coverage belongs to [038](../../docs/research/038-residual-ui-ux-scope.md), before 037 onboarding; accepted 036 manual checks are not reopened. T005 remains an explicit unperformed broad-audit limitation; it does not represent an unresolved reproduced defect or block delivery of this research record.
+
+
 **Reviewed application**: `a965e93` (same runtime code as `4436ad1`). **Date**: 2026-10-21. Research only; no fixes implemented. Evidence environments and limits are in [coverage](coverage.md); commands/raw paths are in [journal](verification.md).
 
 All priorities below describe user impact and investigation order, not permission to defer first-major requirements. Original roadmap report N maps permanently to **035-RNN**. New findings start at R22; none replaces the original 21. Source references are repository paths/line locations at the reviewed revision. Runtime artifact names refer to the journal’s local ignored evidence directory.

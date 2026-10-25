@@ -1,4 +1,8 @@
-import { getSelectedKeyIds } from '@ui/schematic/interaction';
+import {
+  getSelectedKeyIds,
+  getSelectedSectionIds,
+  getKeySectionSelection,
+} from '@ui/schematic/interaction';
 import type { PartsTableProps } from './parts-list';
 import type { KeyboardEvent, ChangeEvent } from 'react';
 
@@ -9,14 +13,20 @@ type KeySelectCellProps = PartsTableProps & {
   readonly onActiveKeyChange: (keyId: string) => void;
 };
 
-export function KeySelectCell(props: KeySelectCellProps) {
+function createKeySelectHandlers(props: KeySelectCellProps) {
   const { keyId, keyIndex, project } = props;
-  const selectedKeyIds = getSelectedKeyIds(props.selection);
+  const sectionIds = getSelectedSectionIds(project, props.selection);
+  const selectedKeyIds = getSelectedKeyIds(props.selection, { project });
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const keyIds = event.target.checked
       ? [...selectedKeyIds, keyId]
       : selectedKeyIds.filter((id) => id !== keyId);
-    props.onSelectionChange({ kind: 'multi', keyIds, wireIds: [] });
+    props.onSelectionChange(
+      getKeySectionSelection(project, {
+        keyIds,
+        sectionIds,
+      }),
+    );
   }
   function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     const step = { ArrowDown: 1, ArrowUp: -1 }[event.key];
@@ -27,18 +37,24 @@ export function KeySelectCell(props: KeySelectCellProps) {
     event.preventDefault();
     props.onActiveKeyChange(next.id);
     if (event.shiftKey) {
-      props.onSelectionChange({
-        kind: 'multi',
-        keyIds: [...new Set([...selectedKeyIds, keyId, next.id])],
-        wireIds: [],
-      });
+      props.onSelectionChange(
+        getKeySectionSelection(project, {
+          keyIds: [...selectedKeyIds, keyId, next.id],
+          sectionIds,
+        }),
+      );
     }
     document.querySelector<HTMLInputElement>(`[data-schematic-select-key="${next.id}"]`)?.focus();
   }
+  return { selectedKeyIds, handleChange, handleKeyDown };
+}
+
+export function KeySelectCell(props: KeySelectCellProps) {
+  const { selectedKeyIds, handleChange, handleKeyDown } = createKeySelectHandlers(props);
   return (
     <SelectionInput
       {...props}
-      isSelected={selectedKeyIds.includes(keyId)}
+      isSelected={selectedKeyIds.includes(props.keyId)}
       onChange={handleChange}
       onKeyDown={handleKeyDown}
     />

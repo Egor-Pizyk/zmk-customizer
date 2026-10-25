@@ -14,8 +14,14 @@ export type HoverPreview = {
   readonly draftPath: readonly WirePoint[] | undefined;
   /** Pin or wire point the Wire tool would attach to under the cursor. */
   readonly snapTarget: WirePoint | undefined;
-  /** Where the Key tool would place a key, and whether the cell is free. */
-  readonly ghostKey: { readonly position: WirePoint; readonly isFree: boolean } | undefined;
+  /** Where a placement tool would add a part, and whether the cell is free. */
+  readonly ghostKey:
+    | {
+        readonly position: WirePoint;
+        readonly isFree: boolean;
+        readonly kind: 'key' | 'encoder';
+      }
+    | undefined;
 };
 
 const NO_PREVIEW: HoverPreview = {
@@ -39,18 +45,21 @@ export function getHoverPreview(
   if (hover === undefined || hover.hit.kind === 'control') {
     return NO_PREVIEW;
   }
-  const snapped = snapPoint(hover.world, snapGridU);
-  if (activeToolId === 'add-key') {
-    const position = snapPoint({ xU: hover.world.xU - 0.5, yU: hover.world.yU - 0.5 }, snapGridU);
-    return {
-      ...NO_PREVIEW,
-      ghostKey: { position, isFree: isKeyPositionFree(project, { position }) },
-    };
+  if (activeToolId === 'add-key' || activeToolId === 'add-encoder') {
+    return getPlacementPreview(project, {
+      world: hover.world,
+      snapGridU,
+      tool: activeToolId,
+    });
   }
   if (activeToolId !== 'wire') {
     return NO_PREVIEW;
   }
-  const target = toDraftTarget(project, { hit: hover.hit, world: hover.world, snapped });
+  const target = toDraftTarget(project, {
+    hit: hover.hit,
+    world: hover.world,
+    snapped: snapPoint(hover.world, snapGridU),
+  });
   const snapTarget = target.kind === 'empty' ? undefined : target.point;
   const draftPath =
     draft === undefined
@@ -62,4 +71,24 @@ export function getHoverPreview(
           bends: draft.bends,
         });
   return { draftPath, snapTarget, ghostKey: undefined };
+}
+
+function getPlacementPreview(
+  project: Project,
+  input: {
+    readonly world: WirePoint;
+    readonly snapGridU: number | undefined;
+    readonly tool: 'add-key' | 'add-encoder';
+  },
+): HoverPreview {
+  const { world, snapGridU, tool } = input;
+  const position = snapPoint({ xU: world.xU - 0.5, yU: world.yU - 0.5 }, snapGridU);
+  return {
+    ...NO_PREVIEW,
+    ghostKey: {
+      position,
+      isFree: isKeyPositionFree(project, { position }),
+      kind: tool === 'add-encoder' ? 'encoder' : 'key',
+    },
+  };
 }

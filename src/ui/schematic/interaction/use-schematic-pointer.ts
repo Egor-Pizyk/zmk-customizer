@@ -1,12 +1,17 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { PointerEvent } from 'react';
 import type { WirePoint } from '@domain';
 import { getHoverPreview } from './get-hover-preview';
 import type { Hover } from './get-hover-preview';
 import { getPreviewProject } from './pointer-preview';
 import { clickWireTool } from './pointer-create';
-import { placeKeyAt } from './place-key-at';
-import { endSelectDrag, moveSelectDrag, pressSelectTool } from './pointer-select';
+import { placeKeyAt, placeEncoderAt } from './place-key-at';
+import {
+  doubleClickSelectTool,
+  endSelectDrag,
+  moveSelectDrag,
+  pressSelectTool,
+} from './pointer-select';
 import type { Drag, PointerState, SchematicPointerOptions } from './pointer-types';
 import { readCanvasHit } from './read-canvas-hit';
 import type { WireDraft } from './reduce-wire-draft';
@@ -17,6 +22,9 @@ function handlePress(state: PointerState, world: WirePoint, event: PointerEvent<
     return;
   }
   state.onHintClear();
+  if (state.activeToolId === 'add-encoder') {
+    placeEncoderAt(state, world);
+  }
   if (state.activeToolId === 'add-key') {
     placeKeyAt(state, world);
   }
@@ -34,6 +42,7 @@ export function useSchematicPointer(options: SchematicPointerOptions) {
   const [drag, setDrag] = useState<Drag | undefined>();
   const [draft, setDraft] = useState<WireDraft | undefined>();
   const [hover, setHover] = useState<Hover | undefined>();
+  const wirePressHistory = useWirePressHistory();
   const state: PointerState = {
     ...options,
     drag,
@@ -42,7 +51,7 @@ export function useSchematicPointer(options: SchematicPointerOptions) {
     onDraftChange: setDraft,
   };
   const { activeToolId, snapGridU } = options;
-  const handlers = createHandlers(state, setHover);
+  const handlers = createHandlers(state, setHover, wirePressHistory);
   return {
     ...handlers,
     drag,
@@ -64,14 +73,34 @@ export function useSchematicPointer(options: SchematicPointerOptions) {
   };
 }
 
-function createHandlers(state: PointerState, setHover: (hover?: Hover) => void) {
+type LastWirePress = {
+  readonly wireId: string;
+  readonly timeMs: number;
+  readonly point: WirePoint;
+};
+
+// Event history must be synchronous even when React batches two native presses.
+function useWirePressHistory() {
+  const lastWirePress = useRef<LastWirePress | null>(null);
+  return {
+    getLastWirePress: () => lastWirePress.current ?? undefined,
+    setLastWirePress: (press: LastWirePress | undefined) => {
+      lastWirePress.current = press ?? null;
+    },
+  };
+}
+
+function createHandlers(
+  state: PointerState,
+  setHover: (hover?: Hover) => void,
+  doublePress: ReturnType<typeof useWirePressHistory>,
+) {
   return {
     handlePointerDown: (world: WirePoint, event: PointerEvent<SVGSVGElement>) => {
-      handlePress(state, world, event);
+      handlePointerDown(state, doublePress, [world, event]);
     },
     handlePointerMove: (world: WirePoint, event: PointerEvent<SVGSVGElement>) => {
-      moveSelectDrag(state, world);
-      // Hover only matters for tools that preview; Select would re-render on every move for nothing.
+      moveSelectDrag(state, world, event);
       if (state.activeToolId !== 'select') {
         setHover({ world, hit: readCanvasHit(event.target) });
       }
@@ -86,4 +115,58 @@ function createHandlers(state: PointerState, setHover: (hover?: Hover) => void) 
       setHover();
     },
   };
+}
+
+function handlePointerDown(
+  state: PointerState,
+  doublePress: Parameters<typeof createHandlers>[2],
+  [world, event]: readonly [WirePoint, PointerEvent<SVGSVGElement>],
+) {
+  const hit = readCanvasHit(event.target);
+  const handled = handleDoubleWirePress(state, {
+    lastWirePress: doublePress.getLastWirePress(),
+    setLastWirePress: doublePress.setLastWirePress,
+    hit,
+    world,
+    timeMs: event.timeStamp,
+    shiftKey: event.shiftKey,
+  });
+  if (!handled) {
+    handlePress(state, world, event);
+  }
+}
+
+function handleDoubleWirePress(
+  state: PointerState,
+  input: {
+    readonly hit: ReturnType<typeof readCanvasHit>;
+    readonly world: WirePoint;
+    readonly timeMs: number;
+    readonly shiftKey: boolean;
+    readonly lastWirePress: LastWirePress | undefined;
+    readonly setLastWirePress: (press: LastWirePress | undefined) => void;
+  },
+): boolean {
+  const wireId =
+    input.hit.kind === 'section' || input.hit.kind === 'wire' ? input.hit.wireId : undefined;
+  const isDouble =
+    state.activeToolId === 'select' &&
+    wireId !== undefined &&
+    !input.shiftKey &&
+    input.lastWirePress?.wireId === wireId &&
+    Math.hypot(
+      input.world.xU - input.lastWirePress.point.xU,
+      input.world.yU - input.lastWirePress.point.yU,
+    ) <= 0.1 &&
+    input.timeMs - input.lastWirePress.timeMs <= 500;
+  input.setLastWirePress(
+    isDouble || state.activeToolId !== 'select' || wireId === undefined
+      ? undefined
+      : { wireId, timeMs: input.timeMs, point: input.world },
+  );
+  if (isDouble) {
+    state.onHintClear();
+    doubleClickSelectTool(state, { hit: input.hit, world: input.world });
+  }
+  return isDouble;
 }

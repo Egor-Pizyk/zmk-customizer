@@ -4,11 +4,36 @@ import type { Project, Result } from '@domain';
 import type { Commit } from '@ui/schematic/interaction';
 import { useState } from 'react';
 
-type Draft = { readonly base: Project; readonly preview: Project };
-function getDraftResult(project: Project, result: Result<Project, string>): Draft | undefined {
-  return result.ok && result.value !== project
-    ? { base: project, preview: result.value }
-    : undefined;
+type Draft = {
+  readonly base: Project;
+  readonly preview: Project;
+  readonly topologySource?: Project;
+};
+
+function getDraftResult(
+  project: Project,
+  {
+    result,
+    source,
+    input,
+  }: {
+    readonly result: Result<Project, string>;
+    readonly source: Project;
+    readonly input: WiringEdit;
+  },
+): Draft | undefined {
+  if (!result.ok || result.value === project) {
+    return undefined;
+  }
+  return {
+    base: project,
+    preview: result.value,
+    ...(input.kind === 'topology' ? { topologySource: source } : {}),
+  };
+}
+
+function getEditSource(preview: Project, input: WiringEdit, draft: Draft | undefined): Project {
+  return input.kind === 'topology' ? (draft?.topologySource ?? preview) : preview;
 }
 
 export function useWiringPreview(project: Project, commit: Commit, onStart: () => void) {
@@ -21,9 +46,10 @@ export function useWiringPreview(project: Project, commit: Commit, onStart: () =
   const previewProject = hasPreview ? draft.preview : project;
   function handleEdit(input: WiringEdit) {
     onStart();
-    const result = editWiring(previewProject, input);
+    const source = getEditSource(previewProject, input, hasPreview ? draft : undefined);
+    const result = editWiring(source, input);
     feedback.report(result, { project, kind: input.kind });
-    setDraft(getDraftResult(project, result));
+    setDraft(getDraftResult(project, { result, source, input }));
   }
   function handleCancel() {
     setDraft(undefined);

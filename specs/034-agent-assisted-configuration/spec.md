@@ -29,7 +29,7 @@ Let a user describe a keyboard to their own AI agent and obtain a complete proje
 
 ## Requirements
 
-- **FR-001**: Offer a labeled Create with agent action and a dialog explaining download → agent → Project JSON → Open → review Problems → Export. Do not replace New or add creation choices inside its dialog. (US1)
+- **FR-001**: Offer a labeled Create with agent action at the far right after Undo/Redo, with a restrained outline and visible AI badge (036 FR-032), and a dialog explaining download → agent → Project JSON → Open → review Problems → Export. Do not replace New or add creation choices inside its dialog. (US1)
 - **FR-002**: Download a self-contained, deterministic package with instructions/prompt, format metadata, current Project JSON schema, supported controller/pin, binding/keycode, firmware, behavior/advanced-action and encoder facts, semantic rules and at least one complete unibody and one split example. Identify package format, project schema and pinned ZMK versions. No current project or browser data is included. (US1)
 - **FR-003**: Derive machine-readable schema/catalogs from application sources and test for drift. Explain semantic constraints that a structural schema cannot establish, and treat app validation as authoritative. Remain usable offline after load. (US1, US2)
 - **FR-004**: The prompt requests complete creation with only supported capabilities; asks for missing hardware facts or approval of proposals; uses catalog identifiers, not invented ones; separates optional advanced features from defaults. Output is an importable Project JSON, with assumptions and review instructions outside that file. (US2)

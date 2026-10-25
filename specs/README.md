@@ -33,4 +33,7 @@ Read this index when locating feature ownership. Read only the spec, plan, tasks
 - [032-project-creation-and-auto-wiring](032-project-creation-and-auto-wiring/)
 - [033-wiring-and-settings-usability](033-wiring-and-settings-usability/) — implementation verification; [acceptance evidence](033-wiring-and-settings-usability/verification.md)
 - [034-agent-assisted-configuration](034-agent-assisted-configuration/) — downloadable agent creation package; [verification](034-agent-assisted-configuration/verification.md)
-- [035-ui-ux-audit-specification](035-ui-ux-audit-specification/) — research findings and remediation handoff; manual acceptance pending
+- [035-ui-ux-audit-specification](035-ui-ux-audit-specification/) — historical research and remediation handoff; findings reconciled with delivered 036, broader audit limits retained
+- [036-ui-ux-remediation](036-ui-ux-remediation/) — items 1–23 implemented or regression-verified; user-reported manual acceptance; PR #24 merged and v0.5.0 published on 2026-10-25
+
+Next planned order: **038 residual audit fixes → 037 onboarding** (numbers retained by user request). Neither has a feature directory yet; see the [reconciled 038 scope](../docs/research/038-residual-ui-ux-scope.md).

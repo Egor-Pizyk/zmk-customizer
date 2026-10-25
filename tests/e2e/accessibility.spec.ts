@@ -20,7 +20,13 @@ test('keyboard-only table selection, native stepping, properties, duplication an
   }
   const first = page.getByRole('checkbox', { name: 'Select key 0', exact: true });
   await expect(first).toBeFocused();
+  // The toolbar precedes the canvas; traversing its active key can already select key 0.
+  const wasChecked = await first.isChecked();
   await page.keyboard.press('Space');
+  await expect(first).toBeChecked({ checked: !wasChecked });
+  if (wasChecked) {
+    await page.keyboard.press('Space');
+  }
   await expect(first).toBeChecked();
   await page.keyboard.press('Shift+ArrowDown');
   await expect(page.getByRole('checkbox', { name: 'Select key 1', exact: true })).toBeFocused();

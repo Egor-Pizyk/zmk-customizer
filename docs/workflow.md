@@ -2,7 +2,7 @@
 
 New capabilities and changes to user-visible contracts require a specification before feature code. Read only the artifacts needed for the current stage; reuse completed, current stages rather than restarting the workflow.
 
-Before creating a feature or branch, read [Git flow](guidelines/git-flow.md). Re-read it after verification and before committing or delivering work; its single-PR, release and PR-delivery rules apply to every route below.
+[Git flow](guidelines/git-flow.md) owns branch and delivery rules for every route below. Review it at startup and delivery using the context-reuse rule in `AGENTS.md`.
 
 ## Choose the change route
 
@@ -34,35 +34,27 @@ Resolve the feature using the installed Spec Kit scripts when invoking its comma
 
 ## Frontend UI/UX workflow (Codex)
 
-For every task that creates or changes an interface, interaction or visual styling, Codex must load and invoke the project-local [$ui-ux-pro-max](../.agents/skills/ui-ux-pro-max/SKILL.md) before implementation and again after implementation for review. This applies to new screens, existing components, UI bugs and visual refactors; it is not limited to roadmap audit 035/remediation 036. The skill remains local to this project's Codex context.
+Every interface, interaction or styling change requires a specified outcome before code and rendered review afterward.
 
-1. **Before creating or changing UI:** invoke the skill to describe how the interface should work and look. Run its relevant local UX searches and React/Tailwind guidance; use design-system generation when required by the skill for a new page. Check recommendations against existing components, semantic tokens, accessibility rules and the user's scope. Describe the flow, information hierarchy, controls, layout, relevant empty/error/disabled states, feedback, keyboard/focus behavior, supported themes, responsive behavior and reduced motion where applicable.
-2. **Write the result before code:** add the accepted user-facing UI/UX requirements and testable acceptance scenarios to the owning `spec.md` before planning or amending the implementation plan. Put implementation choices (component reuse, token mapping and technical layout approach) in `plan.md`, and link implementation/review tasks in `tasks.md`. For existing work, amend affected artifacts rather than restarting completed stages. For a bug or behavior-preserving refactor, record the expected UI outcome against the existing requirement and amend the spec only where it is missing or changes. Record rejected or inapplicable recommendations briefly in the plan; generated suggestions do not become requirements automatically.
-3. **After creating or changing UI:** invoke the skill again against the implemented result, compare it with the specification and run the applicable UI/UX review in [testing.md](testing.md). Fix findings within scope, repeat the affected checks after fixes, and record findings and actual evidence in the feature's verification artifacts. Specify a changed contract before expanding implementation. Unresolved acceptance failures block completion; record unperformed manual checks and remaining limits explicitly.
+1. **Specify:** describe flow, hierarchy, controls/layout, relevant empty/error/disabled states, feedback, keyboard/focus, themes, responsiveness and reduced motion. Follow existing components, semantic tokens, accessibility and user scope. Put accepted requirements/acceptance scenarios in the owning `spec.md` before planning; put implementation choices in `plan.md` and implementation/review tasks in `tasks.md`. Amend existing artifacts rather than restarting completed stages. For bugs/refactors, cite the existing requirement and amend only missing or changed behavior. Record rejected/inapplicable recommendations briefly; suggestions are not automatically requirements.
+2. **Review:** compare the rendered result against the spec using [testing.md](testing.md). Fix in-scope findings, rerun affected checks, and record actual evidence. Specify contract changes before expanding implementation. Unresolved acceptance failures block completion; report unperformed manual checks and remaining limits.
 
-Use the existing feature artifacts for these results; do not create a competing design-system source of truth or blindly persist generated recommendations. Preserve project compatibility, Undo/Redo, deterministic exports and repository dependency/offline rules. A skill search supplies guidance, not proof that the rendered interface passes review.
+Preserve compatibility, Undo/Redo, deterministic exports and dependency/offline rules. Existing feature artifacts remain the record; do not create another design-system authority. Design guidance alone does not prove rendered acceptance.
 
 ## Stage gates
 
-- Before planning: scope, non-goals and acceptance scenarios are clear; material open questions are resolved.
-- Before implementation: frontend work has completed the UI/UX skill guidance and specification step above; requirements are testable, plan respects architecture, tasks cover requirements and appropriate tests, and blocking analysis findings are resolved.
-- Before completion: frontend work has completed the post-implementation UI/UX skill review with recorded findings and evidence; affected requirements have evidence, required checks passed, task status is accurate, and unverified/manual checks and remaining limits are explicit.
-- If implementation reveals a missing requirement or changes a contract, amend the relevant artifacts before expanding implementation. Do not check off work based only on code existing.
+- Before planning: scope, non-goals and acceptance are clear; material questions are resolved.
+- Before implementation: complete frontend specification above; ensure testable requirements, an architecture-compliant plan, requirement/test coverage in tasks and resolved blocking analysis findings.
+- Before completion: record rendered UI review and requirement evidence, pass required checks, update task status and disclose unperformed/manual checks and remaining limits.
+- Amend missing requirements or changed contracts before expanding implementation. Code existing alone does not complete a task.
 
 ## Task brief and continuity
 
-Capture these in the user request or existing feature artifacts; do not create another document when those already suffice:
+Use the request or existing feature artifacts for the observable goal, feature/FR/acceptance identifiers, scope/non-goals, preserved compatibility/Undo/export/accessibility contracts, verification assertions/commands/manual checks and material uncertainties. Do not add another brief when these suffice.
 
-- Goal: the observable result and why it matters.
-- Basis: feature directory and relevant FR / acceptance scenario identifiers.
-- Scope and non-goals: what this change includes and excludes.
-- Preserved contracts: data compatibility, undo/redo, export, accessibility as applicable.
-- Verification: observable assertions, commands and manual checks.
-- Uncertainty: material questions versus implementation choices the agent can decide.
+Keep exact relevant docs, contracts and owning modules in `plan.md`. Maintain one requirement → task → test/check → evidence mapping in tasks or verification. Add research, data-model, contracts or quickstart artifacts only for distinct useful content.
 
-In `plan.md`, keep a short Relevant context section with exact docs, contracts and owning modules. Link requirement → task → test/check → evidence in tasks or verification; maintain one mapping, not duplicate tables across artifacts. Research, data-model, contracts and quickstart files are needed only when they carry distinct useful content.
-
-For a resumed session, read the relevant spec, plan and pending tasks, inspect the actual diff, and use recorded evidence with its date/scope. Historical success is not a check of the current tree.
+On resumption, inspect current status/diff and resolve the intended feature. Reuse available unchanged spec/plan/task context; read changed or missing applicable sections. Recorded evidence retains its date/revision/scope; historical success is not a check of the current tree. A handoff should point to existing artifacts and briefly state branch/feature, revision, accepted scope, pending work, decisions and check limits.
 
 ## Local checks and delivery
 

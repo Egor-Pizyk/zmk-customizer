@@ -32,3 +32,21 @@ export function isKeyCellInMarquee(key: Position, marquee: Marquee): boolean {
     ],
   });
 }
+
+/** Orthogonal conductor centerlines intersect inclusively, even when both ends are outside. */
+export function isPathInMarquee(path: readonly WirePoint[], marquee: Marquee): boolean {
+  const minX = Math.min(marquee.start.xU, marquee.end.xU);
+  const maxX = Math.max(marquee.start.xU, marquee.end.xU);
+  const minY = Math.min(marquee.start.yU, marquee.end.yU);
+  const maxY = Math.max(marquee.start.yU, marquee.end.yU);
+  return path.slice(1).some((to, index) => {
+    const from = path[index];
+    return (
+      from !== undefined &&
+      Math.max(from.xU, to.xU) >= minX &&
+      Math.min(from.xU, to.xU) <= maxX &&
+      Math.max(from.yU, to.yU) >= minY &&
+      Math.min(from.yU, to.yU) <= maxY
+    );
+  });
+}

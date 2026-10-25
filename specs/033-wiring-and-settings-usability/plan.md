@@ -14,7 +14,7 @@ Replace geometry-only intermediate-pin membership with explicit durable contacts
 - Implementation: `docs/guidelines/code-quality/{typescript,control-flow,observability}.md`, `docs/guidelines/code-quality/naming/{functions,variables}.md`; `docs/guidelines/frontend/{react,accessibility,admin-ui,tailwind}.md`; `src/styles.css`.
 - Contracts: `specs/002-project-foundation/contracts/project-file.md`, `specs/003-schematic-switches-wires/{spec.md,contracts/project-schema.md,contracts/ui.md}`, `specs/013-matrix-wiring-editor/contracts/wiring.md`, `specs/001-app-shell-ui/contracts/ui-regions.md`.
 - Dependency 032: its spec/verification and `assign-auto-pins.ts`, `get-retained-wires.ts`, `get-output-position.ts` on `origin/feature/032-project-creation-and-auto-wiring`. These are absent from this main-based checkout until 032 is integrated. Re-read final merged contracts before code.
-- UI guidance: project-local `.agents/skills/ui-ux-pro-max/SKILL.md` in the original workspace; accepted search results/limitations are recorded in spec.md. Reuse installed skill without adding its untracked files to 033. Invoke again before UI implementation and after rendered review.
+- UI guidance: project-local `docs/workflow.md` in the original workspace; accepted search results/limitations are recorded in spec.md. Reuse installed skill without adding its untracked files to 033. For future changes, follow the current UI/UX workflow in docs/workflow.md.
 - No ZMK syntax/catalog changes are planned. If generator syntax changes become necessary, first load `docs/zmk/README.md` and the relevant pinned reference pages; amend tasks and independent output fixtures.
 
 ## Technical context
@@ -92,7 +92,7 @@ Unit permutations cover matrix/direct, both diode directions, unibody/split, par
 
 Browser journeys in `tests/e2e/wiring-usability.spec.ts` use real drawing/moves, section pointer and list keyboard deletion, preview/Apply/Cancel/history/reload/import, validation and actual JSON/ZIP downloads. Add `tests/e2e/schematic-panels.spec.ts` for viewport budgets, both themes, collapse/close/scroll/preview reachability and 200% effective layout. Target Firefox/WebKit for SVG hit selection, transform and native dialog focus. Full Chromium is required; changed cases run three sequential times without retries. Isolated controlled sensitivity seeds must fail saved-net/section deletion/canvas-budget assertions, then restore exact bytes.
 
-Completion: `make check`, Docker production build, `make test-e2e`, changed scenarios three times; `make zmk-build` because exported geometry/connectivity paths are affected. Manual keyboard/VoiceOver Safari, OS theme/reduced-motion and actual zoom evidence remain mandatory and distinct from automation. Reinvoke ui-ux-pro-max against rendered results. Record actual commands/results/limits in verification.md; only tasks.md owns requirement coverage.
+Completion: `make check`, Docker production build, `make test-e2e`, changed scenarios three times; `make zmk-build` because exported geometry/connectivity paths are affected. Manual keyboard/VoiceOver Safari, OS theme/reduced-motion and actual zoom evidence remain mandatory and distinct from automation. Review rendered results against the specification and current project UI/accessibility guidelines. Record actual commands/results/limits in verification.md; only tasks.md owns requirement coverage.
 
 ## Supporting artifacts
 

@@ -9,7 +9,8 @@ export {
   matchShortcut,
   matchKeyShortcut,
   formatModifier,
-  POINTER_GESTURES,
   isRepeatableShortcut,
 } from './shortcuts';
 export type { Shortcut, ShortcutId, ShortcutInput, ModifierLabels } from './shortcuts';
+
+export { POINTER_GESTURES } from './pointer-gestures';

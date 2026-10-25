@@ -26,6 +26,9 @@ export function getWireHalf(project: Project, wire: Wire): Half {
 
 function getDirectHalf(project: Project, wire: Wire): Half | undefined {
   for (const end of [wire.start, wire.end]) {
+    if (end.kind === 'encoder-pin') {
+      return project.encoders.find((entry) => entry.id === end.encoderId)?.half ?? 'left';
+    }
     if (end.kind === 'key-pin') {
       return project.keys.find((key) => key.id === end.keyId)?.half ?? 'left';
     }

@@ -2,7 +2,7 @@ import type { Project } from '@domain';
 
 export function createProject(input: { readonly controllerId: string }): Project {
   return {
-    schemaVersion: 12,
+    schemaVersion: 13,
     encoders: [],
     combos: [],
     macros: [],
