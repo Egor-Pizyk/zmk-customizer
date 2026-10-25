@@ -340,4 +340,4 @@ FR-001/FR-006 clarification: long Firmware content scrolls within main. Wheel sc
 
 ## Favicon repair (2026-10-25)
 
-FR-041: The browser tab shows a bundled keyboard favicon on first load and reload, legible on light/dark tab surfaces, without external requests. No controls, focus, data or motion changes.
+FR-041: The browser tab shows a bundled green keyboard favicon with a transparent outer background on first load and reload, legible on light/dark tab surfaces, without external requests. No controls, focus, data or motion changes.
