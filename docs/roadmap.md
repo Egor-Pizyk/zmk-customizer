@@ -637,6 +637,12 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 **Proposed safety and compatibility boundaries.** Use the supported import/validation and deterministic export flows where applicable; never apply untrusted agent output silently or overwrite current work. Preserve project compatibility and Undo/Redo. Do not assume unsupported ZMK features, automatic electrical correctness or successful firmware compilation.
 
+### 035 — ui-ux-audit-specification
+
+**Status (2026-10-25).** Historical [research and handoff](../specs/035-ui-ux-audit-specification/findings.md) delivered as a bounded record. All R01–R23 are reconciled with accepted, merged 036 (v0.5.0); remaining broader review coverage is scoped in 038. No complete manual audit claim; [journal](../specs/035-ui-ux-audit-specification/verification.md).
+
+**Goal and scope.** Review the delivered four-workspace product, shared controls and end-to-end creation/editing/export flows. Produce evidence-backed findings, coverage and verification gaps, and testable remediation requirements for 036. Preserve all 21 explicit 036 reports and their identities. Apply local UI/UX guidance, accessibility, themes, responsive and keyboard review; distinguish observed results from user reports and historical checks. No application fixes or new design system are included in this stage. Complete before 036 and final onboarding 037.
+
 ### 036 — ui-ux-remediation — large first-major bugfix sweep
 
 **Status (2026-10-25).** All 23 reports are implemented or regression-verified (10 and 15 needed no production repair). The user reported all requested manual testing passed on 2026-10-25; see [acceptance evidence](../specs/036-ui-ux-remediation/verification.md#manual-acceptance-and-next-scope--2026-10-25). This is user-reported acceptance, not an agent-observed OS/speech/hardware run. The failed CI causes have been repaired and verified locally in 036; see the CI delivery repair journal. Protected final checks, PR #24 merge and minor release publication remain separate delivery states; none of this work is deferred into 038.
@@ -728,14 +734,14 @@ Parsing existing ZMK shield files back into a project (Devicetree parsing), cust
 
 ## TODO
 
-- [ ] Finish **036 delivery**: implementation, user-reported manual acceptance and local CI repairs are complete; protected final CI/auto-merge and minor release must complete before 038.
+- [x] Finish **036 delivery**: user-reported manual acceptance, protected CI and PR #24 merge completed; v0.5.0 published on 2026-10-25.
 - [ ] Specify and deliver **038 — residual-ui-ux-fixes** from the reconciled audit register, then implement **037 onboarding**.
 
 - [ ] Revisit deferred **020 — zmk-studio-support** and agree when to resume it. Skipped for now on user request (2026-10-19); keep interactive onboarding (037) last when rescheduling.
 - [ ] Revisit deferred **021 — lighting-displays** and **022 — zmk-version-selection**. Skipped for now on user request (2026-10-19); keep the ZMK v0.3.0 target until version selection is explicitly resumed.
 - [x] Discuss and specify initial **034 — agent-assisted-configuration**: user approved downloadable knowledge package + Project JSON; see its specification. Existing-project editing and any MCP evaluation remain future work.
 
-- [ ] Specify and deliver the first-major **012/004 standard-keycap-size follow-up**: selected keycap → context menu → standard size, replacing arbitrary resizing in Bindings; preserve legacy custom geometry. Complete before 035 audit and 037 onboarding.
+- [x] Specify and deliver the first-major **012/004 standard-keycap-size follow-up**: selected keycap → context menu → standard size, replacing arbitrary resizing in Bindings; preserve legacy custom geometry. Completed before 035; manual acceptance confirmed by the user on 2026-10-21 (see 012 verification journals).
 
 ## Final first-major closeout — README and repository description
 

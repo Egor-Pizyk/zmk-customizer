@@ -34,3 +34,7 @@ Rendered post-skill review: inspected all four actual Playwright screenshots (10
 Source/schema/generator/dependency compatibility review: no project schema or migration changes, no generator syntax change, no new dependency; existing general Schematic sizing remains available and custom files are never coerced. Exported ZIP physical-layout cells were checked, but firmware compilation and hardware operation were not performed. Final diff inspected with `git diff --cached --check`; no generated artifacts included.
 
 Delivery: dedicated branch, one draft PR to main with `release:minor`; no merge or CI polling. Documentation-only closeout follows the checked implementation in a separate commit; it changes evidence/task/roadmap status only. K005 covers automated implementation/review and prepared PR delivery; K006 remains open until actual manual evidence is supplied.
+
+## User-reported manual acceptance — 2026-10-21
+
+After PR #21 merged, the user confirmed in the 035 readiness conversation that the outstanding 012 manual checks (OS keyboard, screen reader and native 200% zoom) passed. This closes the manual acceptance task by user report; no new agent-observed manual run is claimed. Browser/OS versions and detailed speech observations were not supplied. Earlier open/manual statements above describe the historical delivery state.
