@@ -13,14 +13,17 @@ it('edits encoder hardware/actions, preserves layers and restores deletion in on
   const { user } = renderApp();
   await user.click(screen.getByText('Encoders', { exact: true }));
   await user.click(screen.getByRole('button', { name: 'Add encoder' }));
+  await user.click(screen.getByRole('checkbox', { name: 'Encoder 0 schematic wiring' }));
+  await user.click(screen.getByRole('checkbox', { name: 'Encoder 0 push switch' }));
   await user.selectOptions(screen.getByLabelText('Encoder 0 A pin'), '20');
   await user.selectOptions(screen.getByLabelText('Encoder 0 B pin'), '21');
+  const previousX = loadProject().project.encoders[0]?.xU;
   const x = screen.getByRole('spinbutton', { name: 'Encoder 0 X (u)' });
   await user.clear(x);
   await user.type(x, '7{Enter}');
   expect(loadProject().project.encoders[0]).toMatchObject({ xU: 7, aPin: 20, bPin: 21 });
   await user.click(history('Undo'));
-  expect(loadProject().project.encoders[0]?.xU).toBe(6);
+  expect(loadProject().project.encoders[0]?.xU).toBe(previousX);
   await user.click(history('Redo'));
   await user.click(screen.getByRole('button', { name: /^Bindings(?:,|$)/u }));
   await user.click(screen.getByText('Encoder actions', { exact: true }));
@@ -50,6 +53,8 @@ it('routes pin problems from Export to a revealed repair select and clears them'
   const { user } = renderApp();
   await user.click(screen.getByText('Encoders', { exact: true }));
   await user.click(screen.getByRole('button', { name: 'Add encoder' }));
+  await user.click(screen.getByRole('checkbox', { name: 'Encoder 0 schematic wiring' }));
+  await user.click(screen.getByRole('checkbox', { name: 'Encoder 0 push switch' }));
   await user.click(screen.getByRole('button', { name: /^Export(?:,|$)/u }));
   await user.click(screen.getByRole('button', { name: /Schematic: Encoder 0: assign A/u }));
   await waitFor(() => {
@@ -61,4 +66,44 @@ it('routes pin problems from Export to a revealed repair select and clears them'
   expect(
     screen.getByRole('button', { name: 'Download .zip' }).getAttribute('aria-disabled'),
   ).not.toBe('true');
+});
+
+it('places a push-enabled encoder and edits its shared geometry through labeled controls', async () => {
+  const { user } = renderApp();
+  await user.click(screen.getByText('Encoders', { exact: true }));
+  await user.click(screen.getByRole('button', { name: 'Add encoder' }));
+  const encoder = loadProject().project.encoders[0];
+  expect(encoder).toMatchObject({ wiringMode: 'schematic' });
+  expect(encoder?.pushKeyId).toBeDefined();
+  expect(screen.getByRole('checkbox', { name: 'Encoder 0 push switch' })).toHaveProperty(
+    'checked',
+    true,
+  );
+  const rotation = screen.getByRole('spinbutton', { name: 'Encoder 0 Rotation (°)' });
+  await user.clear(rotation);
+  await user.type(rotation, '90{Enter}');
+  const project = loadProject().project;
+  expect(project.keys.find((key) => key.id === encoder?.pushKeyId)?.rotationDeg).toBe(90);
+  await user.click(screen.getByRole('checkbox', { name: 'Encoder 0 push switch' }));
+  expect(loadProject().project.keys.some((key) => key.id === encoder?.pushKeyId)).toBe(false);
+  await user.click(history('Undo'));
+  expect(loadProject().project.keys.some((key) => key.id === encoder?.pushKeyId)).toBe(true);
+});
+it('reveals schematic contact issues at the labeled wiring control', async () => {
+  const { user } = renderApp();
+  await user.click(screen.getByText('Encoders', { exact: true }));
+  await user.click(screen.getByRole('button', { name: 'Add encoder' }));
+  await user.click(screen.getByRole('button', { name: /^Export(?:,|$)/u }));
+  await user.click(
+    screen.getByRole('button', { name: /Schematic: Encoder 0: connect A through a wire/u }),
+  );
+  await waitFor(() => {
+    expect(document.activeElement).toBe(
+      screen.getByRole('checkbox', { name: 'Encoder 0 schematic wiring' }),
+    );
+  });
+  const wiring = screen.getByRole('checkbox', { name: 'Encoder 0 schematic wiring' });
+  expect(wiring.getAttribute('aria-invalid')).toBe('true');
+  expect(wiring.getAttribute('aria-describedby')).toBeTruthy();
+  expect(screen.getByText(/Encoder 0: connect COM to GND on the same half\./u)).toBeDefined();
 });

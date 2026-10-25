@@ -3,7 +3,6 @@ import type { Key, Project } from '@domain';
 import { getSelectedKeyIds } from '@ui/schematic/interaction';
 import { LayoutActions } from './layout-actions';
 import { LayoutFields } from './layout-fields';
-import { LayoutPreviewButtons } from './layout-preview-buttons';
 import type { PartsTableProps } from '@ui/schematic/parts/components';
 import { useState } from 'react';
 
@@ -18,7 +17,7 @@ type Draft = { readonly base: Project; readonly selectionKey: string; readonly e
 
 export function LayoutControls(props: LayoutControlsProps) {
   const { project, selection } = props;
-  const keyIds = getSelectedKeyIds(selection).filter((id) =>
+  const keyIds = getSelectedKeyIds(selection, { project }).filter((id) =>
     project.keys.some((key) => key.id === id),
   );
   const selectionKey = keyIds.join(',');
@@ -43,13 +42,6 @@ export function LayoutControls(props: LayoutControlsProps) {
       data-layout-controls
     >
       <LayoutActions {...props} />
-      {props.hasPreview ? <LayoutPreviewButtons {...props} /> : null}
-      {props.hasPreview && !props.canApply ? (
-        <output>
-          No layout changes: existing electrical connections and processing limits are preserved.
-          Adjust the geometry or repair the affected wires.
-        </output>
-      ) : null}
       <PreciseProperties {...props} first={first} edit={edit} onEditChange={handleEditChange} />
     </section>
   );
@@ -96,7 +88,8 @@ function LayoutEditorBody(
     <>
       <p className="text-xs text-text-muted">
         {edit.keyIds.length} selected. Fields start with the first selected key’s values. Entered
-        properties apply to every selected key. Preview is unsaved until Apply.
+        properties apply to every selected key. Angle alone keeps each key’s center fixed; entering
+        an origin uses that absolute point. Preview is unsaved until Apply.
       </p>
       <LayoutFields edit={edit} onEditChange={handleEditChange} schematicKey={first} />
     </>

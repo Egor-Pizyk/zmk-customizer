@@ -6,7 +6,7 @@ The first-major milestone follows the remaining scheduled work through **037 —
 
 The following major has a separate [discovery roadmap](roadmap-2.0.0.md), targeting **2.0.0**, as explicitly selected by the user. It explores an independent mechanical design and enclosure-generation module alongside the existing module. It does not extend this roadmap's feature numbering or authorize implementation.
 
-Features in implementation order. One feature = one Spec Kit branch `NNN-short-name` = one `specs/NNN-short-name/` directory (AGENTS.md §6). Numbers of specified features (a `specs/NNN-*` directory exists) are immutable. A feature added out of order takes the next number and every planned, not yet specified feature after it moves up; the added feature's section records the shift, because older specs keep the old numbers. Spec Kit numbers specs by counting existing `specs/` directories, so run `/speckit-specify` in this order to keep numbers aligned with this file.
+Features in implementation order. User-approved exception (2026-10-25): execute **036 → 038 → 037**, preserving these numbers; 037 remains the last product feature. One feature = one Spec Kit branch `NNN-short-name` = one `specs/NNN-short-name/` directory (AGENTS.md §6). Numbers of specified features (a `specs/NNN-*` directory exists) are immutable. A feature added out of order takes the next number and every planned, not yet specified feature after it moves up; the added feature's section records the shift, because older specs keep the old numbers. Spec Kit numbers specs by counting existing `specs/` directories, so run `/speckit-specify` in this order to keep numbers aligned with this file.
 
 Ordering rule: every feature ends with something a user can load, see and download. Generators come before editors: feature 009 generates real files from preset keyboards, so each later editor changes a project whose output is already visible in the export preview and covered by golden tests. Exceptions, added on user request: 003 schematic, the 004/005 bindings editors, the 006 Action panel rework, 007 layers and 008 diodes come before 009; they store project data only, and 009 generates files from it.
 
@@ -69,10 +69,11 @@ Each `/speckit-specify` prompt below describes what and why only. Technology cho
 | 012 follow-up | standard keycap sizes in Bindings (extension with 004) | 004, 012; complete before 035 |
 | 035 | ui-ux-audit-specification | 031–034 and the 012 standard-keycap-size follow-up |
 | 036 | ui-ux-remediation — large first-major bugfix and usability sweep | 035; regressions across 001–019 and 031–034 |
-| 037 | interactive-onboarding | all preceding scheduled product features, including 031–036; implement last |
+| 038 | residual-ui-ux-fixes | accepted/delivered 036; reconcile the remaining 035 audit coverage before fixing reproduced residual defects |
+| 037 | interactive-onboarding | all preceding scheduled product features, including 038; implement last |
 | Closeout | refresh root README and repository description | completed first-major roadmap and verification, including 037; final documentation task |
 
-Numbers 024–030 are reserved by existing feature directories in [`specs/README.md`](../specs/README.md). Feature 032 is project creation and automatic wiring, selected by the user on 2026-10-20 after 031. Planned interactive onboarding moves to 037 so it remains last; existing specified feature numbers are unchanged. Scheduled work continues with 033 wiring/settings usability, 034 agent-assisted configuration, 035 UI/UX audit/specification and 036 large bugfix/UI/UX remediation before 037 onboarding. The first-major follow-up to existing 012/004 adds standard keycap sizing in Bindings before 035 so the audit and final onboarding cover it; no feature numbers change. Deferred 020–022 remain postponed. Only not-yet-specified roadmap entries may be renumbered.
+Numbers 024–030 are reserved by existing feature directories in [`specs/README.md`](../specs/README.md). Feature 032 is project creation and automatic wiring, selected by the user on 2026-10-20 after 031. Planned interactive onboarding moves to 037 so it remains last; existing specified feature numbers are unchanged. Scheduled work continues with 033 wiring/settings usability, 034 agent-assisted configuration, 035 UI/UX audit/specification and 036 large bugfix/UI/UX remediation before 037 onboarding. The first-major follow-up to existing 012/004 adds standard keycap sizing in Bindings before 035 so the audit and final onboarding cover it; no feature numbers change. Deferred 020–022 remain postponed. Only not-yet-specified roadmap entries may be renumbered unless the user explicitly preserves their numbers. On 2026-10-25 the user retained 037 for onboarding and assigned residual audit work 038 before it.
 
 Workspaces (from 001): **Schematic** holds the schematic of keys and wires (003), switch diodes (008), the layout editor (012) and matrix/wiring editor (013) and owns the project JSON config (002); **Bindings** holds bindings keycaps (004), key behaviors (005), the Action panel (006), layers (007), the keymap editor (014), custom behaviors (016) and combos/macros/conditional layers (017); **Firmware** holds kconfig-settings (015); **Export** holds the file preview (009) and download (010). Every feature reports its validation issues in the 001 problems panel, counted in the tab badge of the workspace that fixes them.
 
@@ -638,14 +639,15 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 ### 036 — ui-ux-remediation — large first-major bugfix sweep
 
-**Status (2026-10-21).** Planned on explicit user request for the first major release. Expand the already scheduled 036 remediation stage with the concrete reports below; retain its number and existing feature ownership. These are reported symptoms and requested outcomes, not verified causes or completed fixes. This roadmap update does not authorize implementing the sweep yet.
+**Status (2026-10-25).** All 23 reports are implemented or regression-verified (10 and 15 needed no production repair). The user reported all requested manual testing passed on 2026-10-25; see [acceptance evidence](../specs/036-ui-ux-remediation/verification.md#manual-acceptance-and-next-scope--2026-10-25). This is user-reported acceptance, not an agent-observed OS/speech/hardware run. The failed CI causes have been repaired and verified locally in 036; see the CI delivery repair journal. Protected final checks, PR #24 merge and minor release publication remain separate delivery states; none of this work is deferred into 038.
 
 **Goal.** Resolve the reported editing, wiring, selection, rotation and interface problems before the first major release. Complete after 035 audit/specification and before 037 onboarding, so the tour and final README describe the corrected product. Include the applicable audit findings without losing or replacing this explicit user backlog.
 
 **Required scope — preserve each report during specification**
 
 1. **Encoders as placeable parts.** Add a separate Encoder entry/tool alongside key placement. Place encoders on the canvas, expose visible electrical pins with real wire connections, and rotate each encoder about its own axis. Preserve encoder actions and distinguish the encoder's rotary contacts from its optional push switch; define their relationship during specification rather than assuming a hardware pinout. Owners: 019, 003, 012/013.
-2. **Slow-rotation magnetic snap.** For both keys and encoders, approach 0°, 90°, **120°** or 180° slowly with the pointer and snap to that angle. Preserve rotation about the part's own center. Define speed, angular tolerance, release/hysteresis and wraparound during clarification; do not silently substitute a conventional 90°-only set. Owner: 012/019.
+   **Implemented, manual acceptance pending:** new encoders use symbolic A/COM/B contacts plus an optional linked ordinary-key push switch; legacy direct-pin encoders remain compatible. See [036 specification and evidence](../specs/036-ui-ux-remediation/verification.md).
+2. **Slow-rotation magnetic snap.** For both keys and encoders, approach 0°, 90°, **120°** or 180° slowly with the pointer and snap to that angle. Preserve rotation about the part's own center. Approved 2026-10-23: capture within 4° at ≤45°/s, hold to 7°, use shortest angular distance across wrap; magnetic capture follows Snap and Shift takes 15° priority. See 036 US2/FR-012; do not substitute a conventional 90°-only set. Owner: 012/019.
 3. **Topology round trip.** With automatic wiring, switching Keyboard topology from unibody to split separates the wiring; switching back must restore the appropriate unibody arrangement immediately. It must not require hiding the Wiring block to redraw correctly. Owners: 032/033, 013.
 4. **Larger resizable left panel.** Increase the left editing block's usable width and let the user resize it horizontally. Its controls, labels and layout must adapt to the available width while retaining usable canvas space. Identify the intended panel, default/minimum/maximum width and persistence rules during specification. Owners: 001/033.
 5. **Remove editor-wide buttons.** Remove `Collapse editors` and `Close editors`. Reconcile panel access and keyboard behavior with the remaining controls. Owners: 001/033.
@@ -666,15 +668,30 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 20. **No snap toggle in Bindings.** Remove the grid-snapping on/off button from the Bindings page. Keep the relevant Schematic controls and specify whether this changes only the Bindings entry point or any workspace-specific preference behavior. Owners: 001/004.
 21. **Problems emphasis.** Make `Problems` visibly red using the existing semantic danger styling, retaining its text/count and accessible name so color is not the only signal. Define the zero-problem presentation during specification. Owner: 001/issues.
 
+22. **Canvas control overlap.** Reserve canvas control space so expanded or moved Tools cannot cover Snap/Zoom/Center on narrow layouts; preserve pointer/keyboard access and hints. Owner: 001/canvas, 036 FR-037.
+23. **Preview visibility.** Keep active layout/wiring preview status and Apply/Cancel visible while nested editor content scrolls, preserving cancellation, refusals and one-step history. Owner: 033/036 FR-038.
+
 **Specification and verification gates.** Reproduce each reported bug before choosing a fix; clarify the exact panel/buttons, rotation-snap thresholds, encoder pin model and clipboard scope. Distinguish bug regressions from new capabilities (encoder placement/wiring, magnetic snap and resizing the panel) and use the appropriate SDD route. Amend the owning requirements/contracts and preserve a report → requirement → task → regression → evidence mapping; do not mark this stage done merely because a related earlier feature shipped. Use the mandatory pre/post UI/UX workflow when implementing the interface. Check real canvas gestures, keyboard behavior, preview/Apply/Cancel, one-step Undo/Redo, save/reload and JSON/export agreement where affected. Preserve existing projects, manual wiring, electrical connections, fixed-size switch editing policy and the pinned ZMK v0.3.0 target. Any schema changes require migrations and old-file tests; any changed ZMK output requires verified reference notes and independent golden/build evidence. Record actual manual accessibility limits.
 
-**Done when.** All 21 items have agreed acceptance criteria and verified outcomes, including a 2×2 wired movement regression, topology round trips, initially empty wiring, both sides of L-shaped wire crossings, wire marquee selection, macOS clipboard use and center-preserving pointer/numeric rotation. Report unresolved items explicitly; do not silently treat them as completed or defer them beyond the first-major milestone.
+**Done when.** All 21 original items and audit follow-ups 22–23 have agreed acceptance criteria and verified outcomes, including a 2×2 wired movement regression, topology round trips, initially empty wiring, both sides of L-shaped wire crossings, wire marquee selection, macOS clipboard use and center-preserving pointer/numeric rotation. Report unresolved items explicitly; do not silently treat them as completed or defer them beyond the first-major milestone.
+
+### 038 — residual-ui-ux-fixes (before 037)
+
+**Status / ordering (2026-10-25).** User-approved next scope: complete 036 delivery, then 038, then onboarding **037**. Keep the assigned numbers. 038 has no feature spec or implementation yet; this roadmap and the [residual audit register](research/038-residual-ui-ux-scope.md) define the input to its specification.
+
+**Goal.** Finish the remaining audit coverage from 035 on the accepted 036 product and fix only newly reproduced residual problems before the tour teaches those flows.
+
+**Updated scope.** All findings **035-R01–R23** already map to completed 036 work; do not schedule them again. Review the remaining coverage gaps: detailed state combinations in advanced Bindings editors; long labels/names and text-spacing overrides; measured contrast/focus across existing surfaces; the broader workspace/state/theme matrix not covered by the bounded 035 overviews. Reuse existing 036 evidence and accepted manual checks. These are investigation gaps, not confirmed bugs. For each newly reproduced defect, record steps, impact, owning requirement, acceptance and failing regression before its fix. Preserve stable original IDs and link any actual regression to its closed source finding.
+
+**Not in scope.** Reimplementing accepted 036 changes, rerunning accepted manual checks as unfinished work, repairing current PR #24 CI in a later feature, a visual redesign, broad phone support outside Schematic/Settings, deferred 020–022, mechanical features or onboarding itself.
+
+**Done when.** The residual register distinguishes reviewed/pass, confirmed/fixed and explicitly limited cases with current evidence; every confirmed in-scope defect has acceptance/regression and rendered verification, with compatibility/history/export preserved. An empty confirmed-defect list is valid: do not invent fixes merely to fill feature 038. Complete its delivery/acceptance before implementing 037.
 
 ### 037 — interactive-onboarding (implement last)
 
 **Goal.** Guide a first-time user through the product with short explanations and real actions, ending with their first simple custom keyboard built from scratch: a 3×3 macropad and its downloadable ZMK configuration.
 
-**Ordering.** Added on user request after keyboard-presets. Implement after every other planned product feature so the tour describes the complete product. Keep it last when adding future roadmap items.
+**Ordering.** Explicitly follows 038 residual audit fixes (user decision 2026-10-25); retain number 037. Added on user request after keyboard-presets. Implement after every other planned product feature so the tour describes the complete product. Keep it last when adding future roadmap items.
 
 **In scope**
 - Start the guide automatically once on the first visit in a browser profile. Persist that it has been offered separately from project data, so reloading, completing or dismissing it does not trigger another automatic start. No account or telemetry is needed.
@@ -711,7 +728,8 @@ Parsing existing ZMK shield files back into a project (Devicetree parsing), cust
 
 ## TODO
 
-- [ ] Specify and deliver **036 — large first-major bugfix/UI/UX sweep**, covering all 21 user reports in its section, before 037 onboarding and the final documentation closeout.
+- [ ] Finish **036 delivery**: implementation, user-reported manual acceptance and local CI repairs are complete; protected final CI/auto-merge and minor release must complete before 038.
+- [ ] Specify and deliver **038 — residual-ui-ux-fixes** from the reconciled audit register, then implement **037 onboarding**.
 
 - [ ] Revisit deferred **020 — zmk-studio-support** and agree when to resume it. Skipped for now on user request (2026-10-19); keep interactive onboarding (037) last when rescheduling.
 - [ ] Revisit deferred **021 — lighting-displays** and **022 — zmk-version-selection**. Skipped for now on user request (2026-10-19); keep the ZMK v0.3.0 target until version selection is explicitly resumed.

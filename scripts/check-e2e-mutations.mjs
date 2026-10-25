@@ -65,8 +65,8 @@ export const SEEDS = [
   [
     'saved-wiring-preview',
     'src/ui/schematic/wiring/logic/use-wiring-preview.ts',
-    'setDraft(getDraftResult(project, result));',
-    'const nextDraft = getDraftResult(project, result); if (nextDraft) { commit(() => nextDraft.preview); } setDraft(nextDraft && { ...nextDraft, base: nextDraft.preview });',
+    'setDraft(getDraftResult(project, { result, source, input }));',
+    'const nextDraft = getDraftResult(project, { result, source, input }); if (nextDraft) { commit(() => nextDraft.preview); } setDraft(nextDraft && { ...nextDraft, base: nextDraft.preview });',
     'matrix preview, conflict repair',
     'toEqual',
   ],

@@ -11,6 +11,7 @@ import {
   downloadZip,
 } from './helpers';
 import { getNets } from '@domain/wires/nets';
+import { getWirePath } from '@domain/wires/geometry';
 import { getKeyPinWires } from '@domain/wires';
 import { getWiringCells } from '@domain/wiring/matrix';
 import type { Locator } from '@playwright/test';
@@ -27,6 +28,111 @@ const source: Project = {
   insulatedCrossings: [],
   layers: [{ id: 'l0', name: 'Base', bindings: {} }],
 };
+
+test('a wire stays selected while and after dragging a bend @cross-browser', async ({ page }) => {
+  const bent: Project = {
+    ...source,
+    wires: [
+      {
+        id: 'w1',
+        start: { kind: 'key-pin', keyId: 'k0', pin: 1 },
+        end: { kind: 'free', at: { xU: 9, yU: 7 }, boardPin: 4 },
+        bends: [{ xU: 7, yU: 7 }],
+      },
+    ],
+  };
+  await openProject(page, bent);
+  const section = page.locator('[data-section-id] path[pointer-events="stroke"]').first();
+  const sectionCenter = await sectionPoint(section);
+  await page.mouse.click(sectionCenter.x, sectionCenter.y);
+  const handle = page.locator('[data-bend-index="0"]');
+  await expect(handle).toBeVisible();
+  const start = await center(handle);
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down();
+  await page.mouse.move(start.x + 48, start.y - 48, { steps: 4 });
+  await expect(page.locator('[data-bend-index]')).toHaveCount(1);
+  await expect(page.locator('[data-section-id] path[data-selected]')).toHaveCount(2);
+  await page.mouse.up();
+  await expect(page.locator('[data-bend-index]')).toHaveCount(1);
+  expect((await saved(page)).wires[0]?.bends[0]).not.toEqual(bent.wires[0]?.bends[0]);
+  await expect(page.locator('[data-section-id] path[data-selected]')).toHaveCount(2);
+  await expect(page.locator('[data-section-id] path[data-selected]').first()).toHaveAttribute(
+    'stroke-width',
+    '3',
+  );
+  await page.screenshot({ path: test.info().outputPath('wire-selected-after-drag.png') });
+
+  const straightPoint = await sectionPoint(
+    page.locator('[data-section-id] path[pointer-events="stroke"]').first(),
+  );
+  const movedHandle = await center(page.locator('[data-bend-index="0"]'));
+  await page.mouse.move(movedHandle.x, movedHandle.y);
+  await page.mouse.down();
+  await page.mouse.move(straightPoint.x, straightPoint.y, { steps: 4 });
+  await expect(page.locator('[data-bend-index]')).toHaveCount(0);
+  await page.mouse.up();
+  await expect(page.locator('[data-bend-index]')).toHaveCount(0);
+  await expect(page.locator('[data-wire-bend]')).toHaveCount(1);
+  expect((await saved(page)).wires[0]?.bends).toEqual([]);
+
+  const bendPoint = await sectionPoint(
+    page.locator('[data-section-id] path[pointer-events="stroke"]').first(),
+  );
+  const beforeInsert = await saved(page);
+  const sectionBounds = await section.boundingBox();
+  await page.mouse.dblclick(bendPoint.x, bendPoint.y);
+  await expect.poll(async () => (await saved(page)).wires[0]?.bends.length).toBe(1);
+  const inserted = await saved(page);
+  expect(inserted.wires[0]?.contacts).toEqual(beforeInsert.wires[0]?.contacts);
+  expect(await section.boundingBox()).toEqual(sectionBounds);
+  // Collinear saved points do not add redundant handles between actual turns (FR-008).
+  await expect(page.locator('[data-wire-bend]')).toHaveCount(1);
+  await history(page, 'Undo').click();
+  expect(await saved(page)).toEqual(beforeInsert);
+  await history(page, 'Redo').click();
+  expect(await saved(page)).toEqual(inserted);
+  await page.locator('[data-canvas-workspace="schematic"]').focus();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('[data-section-id] path[data-selected]')).toHaveCount(0);
+});
+
+test('every right-angle wire corner stays visible and can be dragged', async ({ page }) => {
+  const project: Project = {
+    ...source,
+    wires: [
+      {
+        id: 'w1',
+        start: { kind: 'free', at: { xU: 5, yU: 5 } },
+        end: { kind: 'free', at: { xU: 9, yU: 7 } },
+        bends: [],
+      },
+    ],
+  };
+  await openProject(page, project);
+  const handle = page.locator('[data-wire-bend]:not([data-bend-index])');
+  await expect(handle).toBeVisible();
+  const start = await center(handle);
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down();
+  await page.mouse.move(start.x - 48, start.y + 48, { steps: 4 });
+  await page.mouse.up();
+
+  await expect(page.locator('[data-wire-bend]')).not.toHaveCount(0);
+  await expect(page.locator('[data-section-id] path[data-selected]')).toHaveCount(1);
+  const moved = await saved(page);
+  const wire = moved.wires[0];
+  if (wire === undefined) {
+    throw new Error('Missing dragged wire');
+  }
+  expect(getWirePath(moved, wire)).toEqual([
+    { xU: 5, yU: 5 },
+    { xU: 5, yU: 6 },
+    { xU: 8, yU: 6 },
+    { xU: 8, yU: 7 },
+    { xU: 9, yU: 7 },
+  ]);
+});
 
 test('drawn intermediate connections survive a real endpoint move and section deletion @cross-browser', async ({
   page,
@@ -46,6 +152,8 @@ test('drawn intermediate connections survive a real endpoint move and section de
   const moved = await saved(page);
   expect(getKeyPinWires(moved)({ keyId: 'k1', pin: 1 })).toEqual([0]);
   await expect(page.locator('[data-section-id]')).toHaveCount(3);
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('checkbox', { name: 'Select key 0', exact: true })).not.toBeChecked();
   const section = page.getByRole('checkbox', { name: /^Section 1,/u });
   await section.check();
   await page.getByRole('button', { name: 'Delete selected sections', exact: true }).click();
@@ -75,7 +183,7 @@ test('drawn intermediate connections survive a real endpoint move and section de
   expect(getKeyPinWires(await saved(page))({ keyId: 'k1', pin: 1 })).toEqual([0]);
 });
 
-test('completion previews safely, preserves existing conductors and reports a no-op @cross-browser', async ({
+test('rebuild previews safely, allocates GPIOs and exports the applied circuit @cross-browser', async ({
   page,
 }) => {
   const partial: Project = {
@@ -91,12 +199,12 @@ test('completion previews safely, preserves existing conductors and reports a no
   };
   await openProject(page, partial);
   await page.getByText('Wiring', { exact: true }).click();
-  await page.getByRole('button', { name: 'Complete wiring', exact: true }).click();
+  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
   await expect(page.getByText('Wiring preview', { exact: true })).toBeVisible();
   expect(await saved(page)).toEqual(partial);
   await page.getByRole('button', { name: 'Cancel wiring', exact: true }).click();
   expect(await saved(page)).toEqual(partial);
-  await page.getByRole('button', { name: 'Complete wiring', exact: true }).click();
+  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
   await page.getByRole('button', { name: 'Apply wiring', exact: true }).click();
   const complete = await saved(page);
   expect(getWiringCells(complete).map((cell) => [cell.row, cell.col])).toEqual([
@@ -104,17 +212,10 @@ test('completion previews safely, preserves existing conductors and reports a no
     [0, 1],
     [0, 2],
   ]);
-  await page.getByRole('button', { name: 'Complete wiring', exact: true }).click();
-  await expect(page.getByText('No wiring changes needed.', { exact: true })).toBeVisible();
-  expect(await saved(page)).toEqual(complete);
-  expect(complete.wires[0]).toMatchObject({
-    id: 'w1',
-    bends: [],
-    end: { at: { xU: 3, yU: 5.3667 } },
-  });
+  expect(complete.wires.length).toBeGreaterThan(0);
   const files = await downloadZip(page);
   expect(files['boards/shields/browser_shield/browser_shield.overlay']).toContain(
-    '<&pro_micro 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>',
+    '<&pro_micro 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>',
   );
   expect(files['boards/shields/browser_shield/browser_shield.overlay']).toContain('RC(0,2)');
   await history(page, 'Undo').click();
@@ -139,3 +240,46 @@ function pinsOnMiddle(project: Project) {
   return getNets(project).find((net) => net.pins.some((pin) => pin.keyId === 'k1' && pin.pin === 1))
     ?.pins;
 }
+
+test('dragging an upward-to-right corner expands adjacent sections without a loop', async ({
+  page,
+}) => {
+  await openProject(page, {
+    ...source,
+    wires: [
+      {
+        id: 'w1',
+        start: { kind: 'free', at: { xU: 5, yU: 9 } },
+        end: { kind: 'free', at: { xU: 11, yU: 5 } },
+        bends: [
+          { xU: 7, yU: 9 },
+          { xU: 7, yU: 7 },
+          { xU: 11, yU: 7 },
+        ],
+      },
+    ],
+  });
+  const start = await center(
+    page.locator('[data-wire-bend][data-bend-x-u="7"][data-bend-y-u="7"]'),
+  );
+  await drag(page, start, { x: start.x - 48, y: start.y - 48 });
+  const moved = await saved(page);
+  const wire = moved.wires[0];
+  expect(wire).toBeDefined();
+  if (wire === undefined) {
+    throw new Error('Missing dragged wire');
+  }
+  expect(getWirePath(moved, wire)).toEqual([
+    { xU: 5, yU: 9 },
+    { xU: 6, yU: 9 },
+    { xU: 6, yU: 6 },
+    { xU: 11, yU: 6 },
+    { xU: 11, yU: 5 },
+  ]);
+  await history(page, 'Undo').click();
+  expect((await saved(page)).wires[0]?.bends).toEqual([
+    { xU: 7, yU: 9 },
+    { xU: 7, yU: 7 },
+    { xU: 11, yU: 7 },
+  ]);
+});

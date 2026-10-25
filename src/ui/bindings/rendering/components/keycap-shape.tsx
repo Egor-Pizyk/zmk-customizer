@@ -1,14 +1,16 @@
 import { getKeyGeometry } from '@domain/geometry';
 import { formatKeyTransform } from '@ui/canvas/logic';
-import type { Key } from '@domain';
+import type { Encoder, Key } from '@domain';
 import { cornerLegendFontSize, tapLegendFontSize } from '@ui/bindings/formatting';
 import type { BindingLegend } from '@ui/bindings/formatting';
+import { EncoderKeycapArt } from './encoder-keycap-art';
 
 import type { KeyboardEvent, MouseEvent } from 'react';
 
 type KeycapShapeProps = {
   readonly keyIndex: number;
   readonly bindingKey: Key;
+  readonly encoder?: Encoder;
   readonly label: string;
   /** `layers.L.bindings.keyId` of the open layer; the problems panel focuses it (FR-022). */
   readonly issuePath: string;
@@ -33,7 +35,7 @@ export function KeycapShape(props: KeycapShapeProps) {
   const { bindingKey, label, issuePath, title, isActive, isSelected, hasConflict } = props;
 
   function handleKeyDown(event: KeyboardEvent<SVGGElement>) {
-    if (event.key === 'ContextMenu' || (event.shiftKey && event.key === 'F10')) {
+    if (props.encoder === undefined && isSizeShortcut(event)) {
       event.preventDefault();
       event.stopPropagation();
       props.onKeycapSize(bindingKey.id);
@@ -43,13 +45,7 @@ export function KeycapShape(props: KeycapShapeProps) {
   }
 
   function handleContextMenu(event: MouseEvent<SVGGElement>) {
-    event.preventDefault();
-    event.currentTarget.focus();
-    props.onKeycapSize(bindingKey.id);
-  }
-
-  function handleFocus() {
-    props.onFocus(bindingKey.id);
+    openKeycapSize(event, props, bindingKey.id);
   }
 
   return (
@@ -57,20 +53,35 @@ export function KeycapShape(props: KeycapShapeProps) {
       aria-label={label}
       className="group"
       data-conflict={hasConflict || undefined}
+      data-encoder-keycap={props.encoder?.id}
       data-issue-path={issuePath}
       data-keycap-id={bindingKey.id}
       data-selected={isSelected || undefined}
       onContextMenu={handleContextMenu}
-      onFocus={handleFocus}
+      onFocus={() => {
+        props.onFocus(bindingKey.id);
+      }}
       onKeyDown={handleKeyDown}
       role="graphics-symbol"
       tabIndex={isActive ? 0 : -1}
       transform={formatKeyTransform(bindingKey)}
     >
       <title>{title}</title>
-      <KeycapArt {...props} />
+      <KeycapVisual {...props} />
     </g>
   );
+}
+
+function isSizeShortcut(event: KeyboardEvent<SVGGElement>): boolean {
+  return event.key === 'ContextMenu' || (event.shiftKey && event.key === 'F10');
+}
+
+function openKeycapSize(event: MouseEvent<SVGGElement>, props: KeycapShapeProps, keyId: string) {
+  event.preventDefault();
+  event.currentTarget.focus();
+  if (props.encoder === undefined) {
+    props.onKeycapSize(keyId);
+  }
 }
 
 const HOLD_FONT_U = 0.15;
@@ -79,6 +90,26 @@ const TAG_FONT_U = 0.09;
 const SHIFTED_FONT_RATIO = 0.7;
 
 // Seen from above: outer skirt, inner top surface, key number, tap and hold legends (FR-006).
+function KeycapVisual(props: KeycapShapeProps) {
+  const { keyIndex, bindingKey, legend, corner, tag, hasConflict, encoder } = props;
+  const legendArt = (
+    <CenteredLegend
+      keyIndex={keyIndex}
+      bindingKey={bindingKey}
+      legend={legend}
+      corner={corner}
+      tag={tag}
+    />
+  );
+  return encoder === undefined ? (
+    <KeycapArt {...props} />
+  ) : (
+    <EncoderKeycapArt bindingKey={bindingKey} hasConflict={hasConflict}>
+      {legendArt}
+    </EncoderKeycapArt>
+  );
+}
+
 function KeycapArt({ keyIndex, bindingKey, legend, corner, tag, hasConflict }: KeycapShapeProps) {
   const { xU, yU, widthU, heightU } = getKeyGeometry(bindingKey);
   return (

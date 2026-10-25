@@ -38,6 +38,7 @@ const LEGEND_MIN_ZOOM = 0.4;
 function Keycaps(props: BindingsCanvasProps & { readonly view: ContentView }) {
   const { project, layerIndex, selectedKeyIds, activeKeyId, problemsByKeyId, view } = props;
   return project.keys.map((key, keyIndex) => {
+    const encoder = project.encoders.find((entry) => entry.pushKeyId === key.id);
     const binding = project.layers[layerIndex]?.bindings[key.id];
     const isSelected = selectedKeyIds.includes(key.id);
     const problems = problemsByKeyId.get(key.id) ?? [];
@@ -48,6 +49,7 @@ function Keycaps(props: BindingsCanvasProps & { readonly view: ContentView }) {
     return (
       <KeycapShape
         bindingKey={key}
+        {...(encoder === undefined ? {} : { encoder })}
         corner={formatKeycapCorner(binding, legend?.tap)}
         hasConflict={problems.length > 0}
         isActive={key.id === activeKeyId}
@@ -55,16 +57,7 @@ function Keycaps(props: BindingsCanvasProps & { readonly view: ContentView }) {
         key={key.id}
         keyIndex={keyIndex}
         issuePath={`layers.${layerIndex}.bindings.${key.id}`}
-        label={formatKeycapLabel({
-          keyIndex,
-          layerName: project.layers[layerIndex]?.name ?? '',
-          binding,
-          layers: project.layers,
-          behaviors: project.behaviors,
-          macros: project.macros,
-          isSelected,
-          problems,
-        })}
+        label={getKeycapLabel(project, { keyIndex, layerIndex, binding, isSelected, problems })}
         legend={legend}
         tag={legend === undefined ? undefined : formatKeycapTag(binding)}
         onKeycapSize={props.onKeycapSize}
@@ -73,6 +66,25 @@ function Keycaps(props: BindingsCanvasProps & { readonly view: ContentView }) {
         title={formatKeycapTitle(binding, project.layers, project)}
       />
     );
+  });
+}
+
+function getKeycapLabel(
+  project: Project,
+  input: {
+    readonly keyIndex: number;
+    readonly layerIndex: number;
+    readonly binding: Project['layers'][number]['bindings'][string] | undefined;
+    readonly isSelected: boolean;
+    readonly problems: readonly string[];
+  },
+) {
+  return formatKeycapLabel({
+    ...input,
+    layerName: project.layers[input.layerIndex]?.name ?? '',
+    layers: project.layers,
+    behaviors: project.behaviors,
+    macros: project.macros,
   });
 }
 

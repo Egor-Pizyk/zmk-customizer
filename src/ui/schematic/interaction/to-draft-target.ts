@@ -1,8 +1,8 @@
+import { getEncoderPinPosition, getNearestPointOnPath } from '@domain/geometry';
 import { getWireSections } from '@domain/wires';
 import { getSchematicGeometry } from './get-schematic-geometry';
 import type { DiodePlacement } from './get-schematic-geometry';
 import { getKeyPinPosition, getWirePath } from '@domain/wires/geometry';
-import { getNearestPointOnPath } from '@domain/geometry';
 import type { Key, Project, WirePoint } from '@domain';
 import type { CanvasHit } from './read-canvas-hit';
 import type { DraftTarget } from './reduce-wire-draft';
@@ -36,6 +36,12 @@ export function toDraftTarget(
   const section = getWireSections(project).find((entry) => entry.id === sectionId);
   const hit = section === undefined ? input.hit : { kind: 'wire' as const, wireId: section.wireId };
   const geometry = getSchematicGeometry(project);
+  if (hit.kind === 'encoder-pin') {
+    const encoder = project.encoders.find((entry) => entry.id === hit.encoderId);
+    if (encoder !== undefined) {
+      return { ...hit, point: getEncoderPinPosition(project, encoder, hit.pin) };
+    }
+  }
   if (hit.kind === 'pin') {
     const key = project.keys.find((candidate) => candidate.id === hit.keyId);
     if (key !== undefined) {

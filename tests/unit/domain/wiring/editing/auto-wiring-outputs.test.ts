@@ -117,7 +117,7 @@ function createSplitKeys(input: {
   readonly right: { readonly xU: number; readonly yU: number };
 }): Project {
   return {
-    schemaVersion: 12,
+    schemaVersion: 13,
     controllerId: board.id,
     name: 'Output spacing',
     keys: [

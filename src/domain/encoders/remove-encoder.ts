@@ -1,13 +1,26 @@
+import { removeKey } from '@domain/keys';
+import { removeOrphanWires } from '@domain/wires';
 import type { Project, Layer } from '@domain';
 
 export function removeEncoder(project: Project, encoderId: string): Project {
-  if (!project.encoders.some((encoder) => encoder.id === encoderId)) {
+  if (!project.encoders.some((entry) => entry.id === encoderId)) {
     return project;
   }
+  const encoder = project.encoders.find((entry) => entry.id === encoderId);
+  const withoutButton =
+    encoder?.pushKeyId === undefined ? project : removeKey(project, { keyId: encoder.pushKeyId });
+  const removedWireIds = project.wires
+    .filter((wire) =>
+      [wire.start, wire.end].some(
+        (end) => end.kind === 'encoder-pin' && end.encoderId === encoderId,
+      ),
+    )
+    .map((wire) => wire.id);
+  const cleaned = removeOrphanWires(withoutButton, { removedWireIds });
   return {
-    ...project,
-    encoders: project.encoders.filter((encoder) => encoder.id !== encoderId),
-    layers: project.layers.map((layer) => removeLayerEncoder(layer, encoderId)),
+    ...cleaned,
+    encoders: project.encoders.filter((entry) => entry.id !== encoderId),
+    layers: cleaned.layers.map((layer) => removeLayerEncoder(layer, encoderId)),
   };
 }
 

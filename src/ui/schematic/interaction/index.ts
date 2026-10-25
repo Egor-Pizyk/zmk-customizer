@@ -1,6 +1,7 @@
 export { FREE_END_VALUE, listPinOptions, toStartPin, toTargetEnd } from './add-wire-ends';
 export { focusAfterDelete } from './focus-after-delete';
 export { getHoverPreview } from './get-hover-preview';
+export { getBendDragBends } from './get-bend-drag-bends';
 export type { Hover, HoverPreview } from './get-hover-preview';
 export { getSchematicGeometry } from './get-schematic-geometry';
 export type { DiodePlacement } from './get-schematic-geometry';
@@ -26,3 +27,8 @@ export { useKeyTransformPointer } from './use-key-transform-pointer';
 export { useSchematicKeyboard } from './use-schematic-keyboard';
 export { useSchematicPointer } from './use-schematic-pointer';
 export { useSchematicShortcuts } from './use-schematic-shortcuts';
+export { getWiringPreviewSelection } from './get-wiring-preview-selection';
+
+export { getMarqueeSelection } from './get-marquee-selection';
+export { getSelectedSectionIds } from './get-selected-section-ids';
+export { getKeySectionSelection } from './get-key-section-selection';

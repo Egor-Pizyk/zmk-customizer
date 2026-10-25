@@ -54,9 +54,7 @@ describe('getShortcutAction', () => {
   });
 
   it('ignores canvas actions without a focused canvas', () => {
-    expect(
-      getShortcutAction('reset-view', { ...CONTEXT, focusedCanvas: undefined }),
-    ).toBeUndefined();
+    expect(getShortcutAction('zoom-in', { ...CONTEXT, focusedCanvas: undefined })).toBeUndefined();
   });
 
   it('opens dialogs', () => {

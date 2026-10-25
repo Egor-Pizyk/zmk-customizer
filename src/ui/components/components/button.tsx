@@ -30,6 +30,7 @@ export type ButtonProps = NativeButtonProps & {
   /** Rendered as aria-disabled so the button stays focusable and its hint readable (R11). */
   readonly isDisabled?: boolean;
   readonly hint?: string | undefined;
+  readonly hintAlignment?: 'center' | 'end' | undefined;
   /** Visibility of the hint only, e.g. `lg:hidden` when a visible label replaces it. */
   readonly hintClassName?: string | undefined;
   /** The hint repeats the accessible name, so it is hidden from assistive tech. */
@@ -44,6 +45,7 @@ export function Button({
   isDisabled = false,
   hint,
   hintClassName,
+  hintAlignment,
   isHintDecorative = false,
   className = '',
   children,
@@ -67,14 +69,13 @@ export function Button({
       type="button"
     >
       {children}
-      {hint === undefined ? undefined : (
-        <Tooltip
-          className={hintClassName}
-          id={hintId}
-          isDecorative={isHintDecorative}
-          text={hint}
-        />
-      )}
+      <Tooltip
+        alignment={hintAlignment}
+        className={hintClassName}
+        id={hintId}
+        isDecorative={isHintDecorative}
+        text={hint}
+      />
     </button>
   );
 }

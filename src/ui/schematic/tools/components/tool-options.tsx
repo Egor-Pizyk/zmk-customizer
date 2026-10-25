@@ -1,4 +1,4 @@
-import { AddKeyIcon, SelectIcon, WireIcon } from '@ui/components/icons';
+import { AddKeyIcon, EncoderIcon, SelectIcon, WireIcon } from '@ui/components/icons';
 import type { RadioOption } from '@ui/components/components';
 import { SHORTCUTS } from '@ui/shortcuts';
 import type { ShortcutId } from '@ui/shortcuts';
@@ -9,12 +9,14 @@ import type { ReactNode } from 'react';
 const ICON_BY_TOOL: Record<ToolId, ReactNode> = {
   select: <SelectIcon />,
   'add-key': <AddKeyIcon />,
+  'add-encoder': <EncoderIcon />,
   wire: <WireIcon />,
 };
 
-const SHORTCUT_BY_TOOL: Record<ToolId, ShortcutId> = {
+const SHORTCUT_BY_TOOL: Partial<Record<ToolId, ShortcutId>> = {
   select: 'select-tool',
   'add-key': 'add-key-tool',
+  'add-encoder': 'add-encoder-tool',
   wire: 'wire-tool',
 };
 

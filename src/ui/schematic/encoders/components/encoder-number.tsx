@@ -1,5 +1,6 @@
 import type { Encoder } from '@domain';
-import { replaceEncoder } from '@domain/encoders';
+import { getEncoderGeometry } from '@domain/geometry';
+import { replaceEncoder, rotateEncoder } from '@domain/encoders';
 import { ZMK_LIMITS } from '@catalog/firmware';
 import { ENCODER_OPTIONS } from '@catalog/encoders';
 import { useProject } from '@ui/project/logic';
@@ -9,7 +10,7 @@ import type { FieldControlProps } from '@ui/components/components';
 type EncoderNumberProps = {
   readonly encoder: Encoder;
   readonly index: number;
-  readonly property: 'xU' | 'yU' | 'steps' | 'triggersPerRotation';
+  readonly property: 'xU' | 'yU' | 'rotationDeg' | 'steps' | 'triggersPerRotation';
 };
 function findOption(property: EncoderNumberProps['property']) {
   return property === 'steps' || property === 'triggersPerRotation'
@@ -20,7 +21,9 @@ export function EncoderNumber(props: EncoderNumberProps) {
   const { index, property } = props;
   const { issues } = useProject();
   const option = findOption(property);
-  const name = option?.label ?? `${property === 'xU' ? 'X' : 'Y'} (u)`;
+  const name =
+    option?.label ??
+    (property === 'rotationDeg' ? 'Rotation (°)' : `${property === 'xU' ? 'X' : 'Y'} (u)`);
   const label = `Encoder ${index} ${name}`;
   const error = issues.find(
     (issue) => issue.path.join('.') === `encoders.${index}.${property}`,
@@ -50,21 +53,30 @@ function EncoderNumberControl({
   label,
   control,
 }: EncoderNumberProps & { readonly label: string; readonly control: FieldControlProps }) {
-  const { commit } = useProject();
+  const { project, commit } = useProject();
+  const geometry = getEncoderGeometry(project, encoder);
+  const currentValue =
+    property === 'xU' || property === 'yU' || property === 'rotationDeg'
+      ? geometry[property]
+      : encoder[property];
   const option = findOption(property);
   return (
     <NumberInput
       label={label}
       id={control.id}
       describedBy={control['aria-describedby']}
-      value={encoder[property]}
-      step={option === undefined ? 0.25 : 1}
-      min={option?.min ?? ZMK_LIMITS.minLayoutCell / 100}
-      max={option?.max ?? ZMK_LIMITS.maxLayoutCell / 100}
+      value={currentValue}
+      step={property === 'rotationDeg' || option !== undefined ? 1 : 0.25}
+      min={property === 'rotationDeg' ? -360 : (option?.min ?? ZMK_LIMITS.minLayoutCell / 100)}
+      max={property === 'rotationDeg' ? 360 : (option?.max ?? ZMK_LIMITS.maxLayoutCell / 100)}
       issuePath={`encoders.${index}.${property}`}
       isInvalid={control['aria-invalid'] === true}
       onCommit={(value) => {
-        commit((current) => replaceEncoder(current, { ...encoder, [property]: value }));
+        commit((current) =>
+          property === 'rotationDeg'
+            ? rotateEncoder(current, { encoderId: encoder.id, rotationDeg: value })
+            : replaceEncoder(current, { ...encoder, [property]: value }),
+        );
       }}
     />
   );

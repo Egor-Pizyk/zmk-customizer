@@ -14,6 +14,9 @@ export function getBoardPinLabels(project: Project): readonly BoardPinLabel[] {
     return (['start', 'end'] as const).flatMap((side): BoardPinLabel[] => {
       const end = wire[side];
       const at = side === 'start' ? path[0] : path.at(-1);
+      if (end.kind === 'free' && end.ground === true && at !== undefined) {
+        return [{ id: `${wire.id}:${side}`, at, label: 'GND' }];
+      }
       if (end.kind === 'free' && end.terminalId !== undefined && at !== undefined) {
         const terminal = project.wiring?.terminals.find((entry) => entry.id === end.terminalId);
         const pinLabel = terminal?.boardPin === undefined ? 'unassigned' : `D${terminal.boardPin}`;

@@ -1,3 +1,4 @@
+import { migrateV12ToV13 } from './migrate-v12-to-v13';
 import { migrateV11ToV12 } from './migrate-v11-to-v12';
 import { migrateV10ToV11 } from './migrate-v10-to-v11';
 import { migrateV9ToV10 } from './migrate-v9-to-v10';
@@ -12,4 +13,5 @@ export const MIGRATIONS: readonly (((data: unknown) => unknown) | undefined)[] =
   migrateV9ToV10,
   migrateV10ToV11,
   migrateV11ToV12,
+  migrateV12ToV13,
 ];

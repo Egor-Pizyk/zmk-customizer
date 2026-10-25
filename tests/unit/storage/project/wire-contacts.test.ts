@@ -62,7 +62,7 @@ it('migrates a legacy project at the wire limit without splitting its wires', ()
     parseProjectFile(JSON.stringify({ ...base, schemaVersion: 11, wires })),
   );
   expect(project.wires).toHaveLength(600);
-  expect(project.schemaVersion).toBe(12);
+  expect(project.schemaVersion).toBe(13);
 });
 
 it('keeps a formerly valid near-byte-budget legacy circuit importable after adding anchors', () => {

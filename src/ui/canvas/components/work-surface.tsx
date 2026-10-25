@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { PointerEvent, ReactNode, RefObject } from 'react';
 import type { CanvasWorkspaceId, Viewport } from '@storage/preferences';
 import { usePreferences } from '@ui/preferences';
+import { SurfaceControls } from './surface-controls';
 import { SurfaceOverlays } from './surface-overlays';
 import {
   snapToGrid,
@@ -64,9 +65,15 @@ export function WorkSurface({ workspaceId, children, content }: WorkSurfaceProps
   const { viewport } = surface;
   const snapGridU = isSnapEnabled ? gridSizeU : undefined;
   const forwarding = usePointerForwarding(content, surface);
+  const pointerInput = { snapGridU, subscribersRef: forwarding.subscribersRef, viewport };
 
   return (
     <div className="flex min-h-64 flex-1 flex-col">
+      <SurfaceControls
+        viewport={viewport}
+        svgRef={svgRef}
+        onViewportCommit={surface.handleViewportCommit}
+      />
       <div className="relative min-h-0 flex-1 overflow-hidden">
         <SurfaceSvg
           content={content}
@@ -77,21 +84,13 @@ export function WorkSurface({ workspaceId, children, content }: WorkSurfaceProps
           viewport={viewport}
           workspaceId={workspaceId}
         />
-        <PointerOverlays
-          snapGridU={snapGridU}
-          subscribersRef={forwarding.subscribersRef}
-          surface={surface}
-          svgRef={svgRef}
-          viewport={viewport}
-        />
+        <PointerOverlays {...pointerInput} surface={surface} svgRef={svgRef} />
         {children}
       </div>
       <PointerStatusBar
         gridSizeU={gridSizeU}
         isSnapEnabled={isSnapEnabled}
-        snapGridU={snapGridU}
-        subscribersRef={forwarding.subscribersRef}
-        viewport={viewport}
+        {...pointerInput}
         zoom={viewport.zoom}
       />
     </div>

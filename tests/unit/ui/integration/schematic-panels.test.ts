@@ -1,22 +1,21 @@
 // @vitest-environment jsdom
 import { expect, it } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { renderApp } from '../../../helpers/render-app';
 import { buildProject } from '../../../helpers/build-project';
 import { loadProject } from '@storage/project';
 
-it('collapses, expands and closes editors without changing project history', async () => {
+it('keeps editor sections accessible without global collapse or close and preserves history', async () => {
   const source = buildProject({ keys: [{ id: 'k1', xU: 0, yU: 0 }] });
   const { user } = renderApp(source);
-  await user.click(screen.getByRole('button', { name: 'Collapse editors' }));
-  await user.click(screen.getByRole('button', { name: 'Expand editors' }));
-  await user.click(screen.getByRole('button', { name: 'Close editors' }));
-  const opener = screen.getByRole('button', { name: 'Open editors' });
-  await waitFor(() => {
-    expect(document.activeElement).toBe(opener);
-  });
+  expect(screen.getByRole('region', { name: 'Schematic editors' })).toBeTruthy();
+  expect(
+    screen.queryByRole('button', { name: /^(?:Collapse|Close|Open|Expand) editors$/u }),
+  ).toBeNull();
+  await user.click(screen.getByText('Controller', { exact: true }));
+  expect(screen.getByText('Controller', { exact: true }).closest('details')?.open).toBe(true);
+  await user.click(screen.getByText('Parts', { exact: true }));
+  expect(screen.getByRole('region', { name: 'Wire sections' })).toBeTruthy();
   expect(loadProject().project).toEqual(source);
   expect(screen.getByRole('button', { name: /^Undo/u }).getAttribute('aria-disabled')).toBe('true');
-  await user.click(opener);
-  expect(screen.getByRole('region', { name: 'Wire sections' })).toBeTruthy();
 });

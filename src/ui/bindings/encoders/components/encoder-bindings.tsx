@@ -25,6 +25,11 @@ export function EncoderBindings({ layerIndex }: { readonly layerIndex: number })
             topic={ENCODER_OPTIONS.rotation.label}
           />
         </p>
+        <p className="text-sm text-text-muted">
+          ZMK invokes each rotation action as an immediate press and release. Existing actions are
+          allowed; a modifier such as Shift is tapped for one step, not held while the knob turns.
+          The action shown inside the encoder body belongs to its separate push switch.
+        </p>
         {project.encoders.map((encoder, index) => (
           <EncoderDirections
             key={encoder.id}

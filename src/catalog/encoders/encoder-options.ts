@@ -29,7 +29,7 @@ export const ENCODER_OPTIONS = {
   rotation: {
     label: 'Rotation actions',
     description:
-      'Each turn taps the chosen action. Unassigned directions do nothing. Add the push switch as an ordinary key.',
+      'Each turn taps the chosen action. Unassigned directions do nothing. Enable the push switch to assign its ordinary key independently.',
     docsUrl: 'https://v0-3-branch.zmk.dev/docs/keymaps/behaviors/sensor-rotate#sensor-rotation',
   },
 } as const;

@@ -1,3 +1,5 @@
+import { placeEncoder } from '@domain/encoders';
+import { ENCODER_DEFAULTS } from '@catalog/encoders';
 import { PROJECT_BUDGET } from '@storage/project';
 import { addKey } from '@domain/keys';
 import { createEntityId } from '@domain/project';
@@ -24,4 +26,20 @@ export function placeKeyAt(state: PointerState, world: WirePoint) {
     `Added key ${existingIds.length}`,
   );
   state.onSelectionChange({ kind: 'key', keyId });
+}
+
+export function placeEncoderAt(
+  state: Pick<PointerState, 'commit' | 'project' | 'onHint'> &
+    Partial<Pick<PointerState, 'snapGridU'>>,
+  world: WirePoint,
+) {
+  const position = snapPoint({ xU: world.xU - 0.5, yU: world.yU - 0.5 }, state.snapGridU);
+  if (!isKeyPositionFree(state.project, { position })) {
+    state.onHint('There is already a key here.');
+    return;
+  }
+  state.commit(
+    (project) => placeEncoder(project, { position, defaults: ENCODER_DEFAULTS }),
+    'Added encoder with push switch. Wire A, COM, B and switch contacts.',
+  );
 }

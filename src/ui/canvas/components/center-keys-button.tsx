@@ -28,6 +28,7 @@ export function CenterKeysButton({ viewport, svgRef, onViewportCommit }: CenterK
   return (
     <IconButton
       hint={center === undefined ? 'Add a key to center the keyboard' : 'Center keyboard'}
+      hintAlignment="end"
       icon={<CenterViewIcon />}
       isDisabled={center === undefined}
       isHintDecorative={center !== undefined}

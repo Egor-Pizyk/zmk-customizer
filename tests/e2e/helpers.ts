@@ -7,7 +7,7 @@ import { parseProjectFile } from '@storage/project';
 
 export type Point = { readonly x: number; readonly y: number };
 export const fixture: Project = {
-  schemaVersion: 12,
+  schemaVersion: 13,
   encoders: [],
   combos: [],
   macros: [],
@@ -99,7 +99,8 @@ export async function center(locator: Locator): Promise<Point> {
 }
 export async function selectKey(page: Page, keyIndex = 0) {
   const point = await center(key(page, keyIndex));
-  await page.mouse.click(point.x, point.y);
+  // Match native integer pointer coordinates before clicking near rotated controls.
+  await page.mouse.click(Math.round(point.x), Math.round(point.y));
   await expect(
     page.getByRole('checkbox', { name: `Select key ${keyIndex}`, exact: true }),
   ).toBeChecked();

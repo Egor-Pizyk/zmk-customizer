@@ -49,7 +49,7 @@ function goldenInput(name: string): { project: Project; scan: ShieldMatrix } {
   const kind = direct ? 'direct' : 'matrix';
   const diodeDirection = name.endsWith('row2col') ? 'row2col' : 'col2row';
   const project: Project = {
-    schemaVersion: 12,
+    schemaVersion: 13,
     encoders: [],
     combos: [],
     macros: [],

@@ -7,7 +7,6 @@ import {
   centerViewportAt,
   displayGridStep,
   panViewportByU,
-  resetViewport,
   screenToWorld,
   zoomAt,
 } from '@ui/canvas/logic';
@@ -81,11 +80,7 @@ describe('zoomAt', () => {
   });
 });
 
-describe('resetViewport / panViewportByU', () => {
-  it('resets to the default view', () => {
-    expect(resetViewport()).toEqual(DEFAULT_VIEWPORT);
-  });
-
+describe('panViewportByU', () => {
   it('pans by key units at the current zoom', () => {
     const viewport = panViewportByU({ zoom: 2, panXPx: 0, panYPx: 0 }, { dxU: 1, dyU: 0 });
     expect(viewport.panXPx).toBe(-96);

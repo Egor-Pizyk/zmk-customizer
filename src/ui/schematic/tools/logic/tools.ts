@@ -1,4 +1,4 @@
-export type ToolId = 'select' | 'add-key' | 'wire';
+export type ToolId = 'select' | 'add-key' | 'add-encoder' | 'wire';
 
 export type Tool = {
   readonly id: ToolId;
@@ -8,5 +8,6 @@ export type Tool = {
 export const TOOLS: readonly Tool[] = [
   { id: 'select', label: 'Select' },
   { id: 'add-key', label: 'Key' },
+  { id: 'add-encoder', label: 'Encoder' },
   { id: 'wire', label: 'Wire' },
 ];

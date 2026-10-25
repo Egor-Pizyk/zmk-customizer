@@ -4,7 +4,7 @@ import { projectSchema } from '@storage/project';
 const BASE_LAYER = { id: 'l0', name: 'Base', bindings: {} };
 
 const BASE = {
-  schemaVersion: 12,
+  schemaVersion: 13,
   encoders: [],
   combos: [],
   macros: [],

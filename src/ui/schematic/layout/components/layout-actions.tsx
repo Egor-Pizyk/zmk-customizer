@@ -10,7 +10,7 @@ const LIMIT_MESSAGE = `A project can contain at most ${PROJECT_BUDGET.keys} keys
 
 export function LayoutActions({ project, selection, onSelectionChange, commit }: PartsTableProps) {
   const { announce } = useProject();
-  const keyIds = getSelectedKeyIds(selection).filter((id) =>
+  const keyIds = getSelectedKeyIds(selection, { project }).filter((id) =>
     project.keys.some((key) => key.id === id),
   );
   function handleDuplicateClick() {

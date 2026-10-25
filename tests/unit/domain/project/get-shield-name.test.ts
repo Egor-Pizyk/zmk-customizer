@@ -4,7 +4,7 @@ import { expect, it } from 'vitest';
 it('returns the override as typed when present', () => {
   expect(
     getShieldName({
-      schemaVersion: 12,
+      schemaVersion: 13,
       encoders: [],
       combos: [],
       macros: [],
@@ -25,7 +25,7 @@ it('returns the override as typed when present', () => {
 it('derives the technical name from the name when there is no override', () => {
   expect(
     getShieldName({
-      schemaVersion: 12,
+      schemaVersion: 13,
       encoders: [],
       combos: [],
       macros: [],

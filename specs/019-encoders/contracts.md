@@ -1,5 +1,7 @@
 # Encoder boundaries
 
+Feature 036 item 1 extends these original passive-marker contracts with placeable/rotatable schematic contacts and an optional linked ordinary-key push switch. Legacy direct-pin encoders continue to follow the contracts below; the extension is specified in [036](../036-ui-ux-remediation/spec.md).
+
 ## Storage
 
 Project schema 11 requires `encoders` (max 16). Each encoder is strict, has a unique `e[0-9]+` ID (max 128 chars), finite numbers, left/right half and optional integer A/B connector indices 0–31. Counts and position limits are semantic validation, so bad values remain editable. Layer `encoderBindings` is optional, max 16 entries; keys reference existing encoders and values contain strict clockwise/counterclockwise Binding values. v10→v11 adds only `encoders: []`. All preceding migrations remain chained. Encoder IDs are stable; removal cleans maps.
