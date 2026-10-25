@@ -549,4 +549,4 @@ Deviations from the task text, each smaller or forced by lint/type rules; code c
 
 - [x] KSH-1 Reproduce horizontal overflow at supported and zoomed viewport sizes.
 - [x] KSH-2 Repair dialog width/wrapping; review all groups and keyboard dismissal/focus.
-- [ ] KSH-3 Merge latest main preserving existing fixes; run changed checks and record evidence.
+- [x] KSH-3 Merge latest main preserving existing fixes; run changed checks and record evidence.
