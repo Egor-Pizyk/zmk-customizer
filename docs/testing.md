@@ -192,3 +192,16 @@ Tooling contracts for restoration, concurrent edits, missing/duplicate anchors, 
 ## Historical evidence
 
 See [testing history](testing-history.md), [browser verification](../specs/025-playwright-e2e/verification.md) and [mutation migration verification](../specs/030-node-mutation-runners/verification.md).
+
+## Focused diagnostic loop
+
+Implement the behavior, then adapt semantic tests to the resulting requirements.
+Stage explicit paths and inspect `npm run check:focus -- --plan`; run
+`npm run check:focus` while fixing failures. Read `summary.json` first and open full
+logs only where needed. The bounded UI mapping includes cross-cutting accessibility,
+keyboard and onboarding journeys; unknown/shared/global changes retain broad selection.
+Update mapping and selection regressions together when introducing new UI areas.
+After diagnostics, stage the complete change and run the mandatory `check:changed`
+once; rerun after executable changes or unresolved failures. Focus and final receipts
+are separate. This reduces repeated output and diagnostic work without changing final
+coverage policy. Test assertions still require human/agent judgment; no script rewrites them.

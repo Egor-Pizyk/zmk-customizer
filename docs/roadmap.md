@@ -744,3 +744,9 @@ Parsing existing ZMK shield files back into a project (Devicetree parsing), cust
 - Check README links, commands and examples against the completed product, review the final README/description for consistency, and record the actual verification and metadata update.
 
 **Done when.** The root README and live repository description both accurately describe the completed first-major application. Adding this roadmap entry does not perform those future updates or claim that the first-major roadmap is complete.
+
+## Requested developer tooling
+
+- [ ] Deliver [039 — focused local checks](../specs/039-focused-local-checks/spec.md):
+  diagnostic selection and compact reports, preserving the mandatory final gate.
+  Requested independently of active UI work; does not reorder scheduled product features.
