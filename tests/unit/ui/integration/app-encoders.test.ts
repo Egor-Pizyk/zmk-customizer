@@ -110,7 +110,7 @@ it('reveals schematic contact issues at the labeled wiring control', async () =>
 });
 
 it('groups Keys and Encoders under Parts with independent folds and unchanged history', async () => {
-  const { user } = renderApp();
+  const { user } = renderApp(undefined, {}, []);
   const before = loadProject().project;
   const parts = screen.getByRole('heading', { name: 'Parts' }).closest('section');
   const group = within(getDefinedValue(parts));
@@ -120,6 +120,14 @@ it('groups Keys and Encoders under Parts with independent folds and unchanged hi
   const encoders = getDefinedValue(
     group.getByRole('heading', { name: 'Encoders', level: 3 }).closest('details'),
   );
+  for (const name of ['Keys', 'Encoders', 'Wire sections', 'Wires', 'Crossings']) {
+    expect(group.getByRole('heading', { name, level: 3 }).closest('details')).toHaveProperty(
+      'open',
+      false,
+    );
+  }
+  expect(keys).toHaveProperty('open', false);
+  await user.click(group.getByText('Keys', { exact: true }));
   expect(keys).toHaveProperty('open', true);
   expect(encoders).toHaveProperty('open', false);
   await user.click(group.getByText('Keys', { exact: true }));

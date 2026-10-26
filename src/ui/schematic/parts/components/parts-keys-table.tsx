@@ -1,3 +1,4 @@
+import { PartsGroup } from './parts-group';
 import type { WiresOfPin } from '@ui/schematic/formatting';
 import type { PartsTableProps } from './parts-list';
 import { PartsTableHead } from './parts-table-head';
@@ -25,32 +26,27 @@ export function PartsKeysTable(props: PartsTableProps & { readonly wiresOf: Wire
     setActiveKeyId(keyId);
   }
   return (
-    <details open>
-      <summary className="cursor-pointer py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">
-        <h3 className="inline font-semibold">Keys</h3>
-      </summary>
-      <div className="flex flex-col gap-2">
-        {project.keys.length === 0 ? (
-          <p className="text-text-muted">
-            No keys yet. Pick the Key tool and click the canvas, or add one here.
-          </p>
-        ) : (
-          <div className="overflow-auto">
-            <table data-parts-keys className="w-full min-w-240 text-left">
-              <PartsTableHead columns={COLUMNS} hasActions />
-              <tbody>
-                <PartsKeysTableRows
-                  {...props}
-                  activeKeyId={activeKeyId}
-                  onActiveKeyChange={handleActiveKeyChange}
-                  wiresOf={wiresOf}
-                />
-              </tbody>
-            </table>
-          </div>
-        )}
-        <AddKeyButton project={project} commit={commit} />
-      </div>
-    </details>
+    <PartsGroup title="Keys">
+      {project.keys.length === 0 ? (
+        <p className="text-text-muted">
+          No keys yet. Pick the Key tool and click the canvas, or add one here.
+        </p>
+      ) : (
+        <div className="overflow-auto">
+          <table data-parts-keys className="w-full min-w-240 text-left">
+            <PartsTableHead columns={COLUMNS} hasActions />
+            <tbody>
+              <PartsKeysTableRows
+                {...props}
+                activeKeyId={activeKeyId}
+                onActiveKeyChange={handleActiveKeyChange}
+                wiresOf={wiresOf}
+              />
+            </tbody>
+          </table>
+        </div>
+      )}
+      <AddKeyButton project={project} commit={commit} />
+    </PartsGroup>
   );
 }

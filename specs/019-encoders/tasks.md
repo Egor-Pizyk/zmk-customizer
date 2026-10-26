@@ -47,3 +47,6 @@ All steps are sequential; no parallel implementation planned. Automated checks d
 - [x] T016 Amend artifacts; move Encoders under Parts and make Keys/Encoders independently collapsible, preserving controls and updating onboarding (FR-009–011).
 - [x] T017 Add app/browser folding/add/edit/delete/history/nested-repair coverage and update existing editor journeys; inspect rendered themes/reflow (FR-009–011), evidence in parts-verification.md.
 - [x] T018 Run staged changed checks, inspect diff and update existing draft PR #29; disclose manual limits (FR-009–011).
+
+- [x] T019 Implement all production changes for five independent initially collapsed Parts blocks, visible deletion focus and onboarding before modifying tests (FR-012).
+- [ ] T020 Adapt tests to explicitly open their required blocks; assert defaults, independent keyboard toggles, issue reveal, data/history and rendered themes/reflow; run changed checks and update PR/evidence (FR-012).

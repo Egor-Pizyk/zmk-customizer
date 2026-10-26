@@ -1,11 +1,9 @@
-import { PartsWireSectionsTable } from './parts-wire-sections-table';
+import { PartsTables } from './parts-tables';
 import { getKeyPinWires } from '@domain/wires';
 import type { Project } from '@domain';
 import { usePreferences } from '@ui/preferences';
 import type { WorkspaceIssue } from '@ui/issues';
-import { PartsCrossingsTable } from './parts-crossings-table';
 import { PartsKeysTable } from './parts-keys-table';
-import { PartsWiresTable } from './parts-wires-table';
 import type { SchematicSelection, SelectionChange } from '@ui/schematic/interaction';
 import { useId } from 'react';
 import type { ReactNode, SyntheticEvent } from 'react';
@@ -47,9 +45,7 @@ export function PartsList({
         <div className="flex max-h-96 flex-col gap-6 overflow-auto px-4 pb-4">
           <PartsKeysTable {...props} wiresOf={wiresOf} />
           {children}
-          <PartsWireSectionsTable {...props} />
-          <PartsWiresTable {...props} />
-          <PartsCrossingsTable {...props} />
+          <PartsTables {...props} />
         </div>
       </details>
     </section>

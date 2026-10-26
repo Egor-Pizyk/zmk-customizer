@@ -12,7 +12,6 @@ export function PartsCrossingsTable(props: PartsTableProps) {
   const crossings = getProjectAnalysis(props.project).crossings;
   return (
     <div className="flex flex-col gap-2">
-      <h3 className="font-semibold">Crossings</h3>
       {crossings.length === 0 ? (
         <p className="text-text-muted">
           No wires cross. Crossings appear here when two wires cross.

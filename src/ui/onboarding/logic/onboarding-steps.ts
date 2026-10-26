@@ -32,7 +32,7 @@ export const ONBOARDING_CONTENT = {
     title: 'Place nine keys',
     why: 'Schematic defines the physical positions. 1u is one standard key pitch. We will make three rows of three keys.',
     action:
-      'Open Parts. Use Add key nine times, then set X/Y to (0,0), (1,0), (2,0), (0,1), (1,1), (2,1), (0,2), (1,2), (2,2). Commit fields with Enter. You can also place keys on the canvas. Keep rotation at 0°. Undo repairs mistakes.',
+      'Open Parts, then expand Keys. Use Add key nine times, then set X/Y to (0,0), (1,0), (2,0), (0,1), (1,1), (2,1), (0,2), (1,2), (2,2). Commit fields with Enter. You can also place keys on the canvas. Keep rotation at 0°. Undo repairs mistakes.',
     target: 'workspace',
     workspace: 'schematic',
     requiresAction: true,
@@ -49,7 +49,7 @@ export const ONBOARDING_CONTENT = {
     title: 'Add switch diodes',
     why: 'Diodes let a matrix distinguish simultaneous key presses. All nine switches need consistent polarity.',
     action:
-      'In Parts, use Add diode at key N pin 1 for all nine keys. Keep every cathode away from its switch. Wiring will use the matching diode direction.',
+      'In Parts, expand Keys and use Add diode at key N pin 1 for all nine keys. Keep every cathode away from its switch. Wiring will use the matching diode direction.',
     target: 'schematic-editors',
     workspace: 'schematic',
     requiresAction: true,
@@ -132,7 +132,7 @@ export const ONBOARDING_CONTENT = {
     title: 'Hardware and app settings',
     why: 'Schematic also supports encoders, controller choices, split topology and supported scan modes. Settings controls theme, grid, snapping and rulers separately from Project data.',
     action:
-      'Notice Controller, Wiring and Parts in Schematic; Parts contains Keys and Encoders, and the Settings gear in the lower navigation. No advanced hardware or settings change is needed. Firmware options are in their own workspace.',
+      'Notice Controller, Wiring and Parts in Schematic; Parts contains folded Keys, Encoders, Wire sections, Wires and Crossings, and the Settings gear in the lower navigation. No advanced hardware or settings change is needed. Firmware options are in their own workspace.',
     target: 'schematic-editors',
     workspace: 'schematic',
   },

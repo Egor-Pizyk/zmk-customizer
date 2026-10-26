@@ -15,7 +15,6 @@ export function PartsWiresTable(props: PartsTableProps) {
   const { project } = props;
   return (
     <div className="flex flex-col gap-2">
-      <h3 className="font-semibold">Wires</h3>
       {project.wires.length === 0 ? (
         <p className="text-text-muted">
           No wires yet. Pick the Wire tool and click a pin, or add one here.
