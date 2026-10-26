@@ -62,4 +62,4 @@ Record actual pass/fail observations here or in PR #13. Do not check T015 merely
 
 - [x] T016 Move KLE UI/hook to shared ownership, mount in New, close after Apply; remove entire Layout controls group and Tools opener, preserve existing shortcuts and update onboarding (018 FR-005 preserved).
 - [x] T017 Update app/E2E import journeys for modal cancellation, retry, apply/history and rendered absence of Layout; review themes/reflow and record checks in kle-entry-verification.md.
-- [ ] T018 Run staged changed checks, inspect diff and update existing PR #29; disclose manual acceptance limits.
+- [x] T018 Run staged changed checks, inspect diff and update existing PR #29; disclose manual acceptance limits.
