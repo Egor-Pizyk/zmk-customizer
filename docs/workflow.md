@@ -58,8 +58,13 @@ On resumption, inspect current status/diff and resolve the intended feature. Reu
 
 ## Local checks and delivery
 
-Use the changed-check script for local verification; full suites and coverage gates
-run in CI. Direct test commands are reserved for diagnosis or justified necessity.
+Use the [focused diagnostic loop](testing.md#focused-diagnostic-loop) during
+implementation: stage explicit paths, inspect `npm run check:focus -- --plan`, then
+run `npm run check:focus` and read its `summary.json` before full logs. Preserve
+tests-first for domain/storage/generators and bug regressions. After completing
+code and semantic test updates, stage the full change and run the mandatory final
+`npm run check:changed`; focus receipts cannot satisfy that gate. Full suites and
+coverage gates run in CI. Direct test commands are reserved for diagnosis or justified necessity.
 Record one task journal with the checked SHA/tree digest and actual outcomes, linking
 from other artifacts. Open one PR and stop; do not auto-merge or wait for CI. See
 [Git flow](guidelines/git-flow.md) and [commands](commands.md).

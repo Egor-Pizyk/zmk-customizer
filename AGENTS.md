@@ -20,6 +20,11 @@ Read these imports once per session unless already supplied in full by the clien
 
 These are reminders; the routed documents own the detailed rules.
 
+For testing, follow `docs/testing.md#focused-diagnostic-loop`: stage explicit task
+paths, inspect `check:focus -- --plan`, use focus reports during diagnosis, then run
+the mandatory final `check:changed`. Preserve tests-first requirements; focus success
+never substitutes for final verification.
+
 ## Load context for the task
 
 Before editing, identify the change type using `docs/workflow.md`, inspect the working tree, and resolve the intended feature from the user request and Spec Kit feature resolver. Check the resolved directory against the task; do not assume a remembered feature or branch is current.

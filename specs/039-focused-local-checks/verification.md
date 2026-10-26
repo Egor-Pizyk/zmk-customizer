@@ -11,3 +11,9 @@ Docker diagnostic: focus tree bf53ec7c4d4b passed in 9.511s (static checks, chan
 Final tree 392a864c56ff915ada2545fe0da33776db008db5 includes package.json. Static checks and 112 tooling tests passed; all 247 unit files / 1412 tests passed in 47.50s. All 138 Chromium journeys passed (3.6 minutes); total final execution 285.805s. Exact-tree pre-commit receipt reused successfully. Full logs `.check-logs/392a864c56ff-ee99a9a39b3a/`; no CI result claimed.
 
 Standalone eight orchestration tests also passed in 4.03s. Plan preview produced JSON without a Docker execution. Spec/plan/tasks and documentation reviewed against implementation; final planner behavior preserved. Reporting-only task/journal updates after the checked tree follow the documentation route.
+
+Follow-up agent context: AGENTS startup reminder, workflow delivery instructions and
+`.claude/agents/domain-test-writer.md` now route to the focused diagnostic loop,
+compact reports, explicit coordinated staging and mandatory final checks. Tests-first
+and expected red handoff remain intact; direct Docker diagnosis is justified when
+static errors prevent reaching a behavioral assertion. Documentation-only update.
