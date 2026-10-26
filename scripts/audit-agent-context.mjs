@@ -71,17 +71,22 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
     process.exitCode = 2;
   } else if (argumentsList.includes('--help')) {
     process.stdout.write(
-      'Audit startup, guidelines, project skills/references, agent adapters and Spec Kit templates. Reports words, local inline Markdown links and exact repeated prose (35+ words). No remote access or writes. --json emits the complete report.\n',
+      'Audit project-owned startup, architecture, workflow, testing, guidelines and agent instructions. Excludes third-party skills, plugins and Spec Kit files. Reports words, local inline Markdown links and exact repeated prose (35+ words). No remote access or writes. --json emits the complete report.\n',
     );
   } else {
-    const directories = [
-      'docs/guidelines',
-      '.claude/skills',
-      '.claude/agents',
-      '.specify/templates',
-      '.specify/references',
-    ];
-    const selected = new Set([...STARTUP, 'CLAUDE.md', '.specify/memory/constitution.md']);
+    const directories = ['docs/guidelines', '.claude/agents'];
+    const selected = new Set([
+      ...STARTUP,
+      'CLAUDE.md',
+      'docs/architecture.md',
+      'docs/folder-structure.md',
+      'docs/domain-model.md',
+      'docs/tooling.md',
+      'docs/testing.md',
+      'docs/commands.md',
+      'docs/repository-map.md',
+      'specs/README.md',
+    ]);
     for (const directory of directories) {
       for (const file of findMarkdown(path.join(ROOT, directory)))
         selected.add(path.relative(ROOT, file));

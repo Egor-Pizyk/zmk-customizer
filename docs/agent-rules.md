@@ -26,7 +26,8 @@ Implementation conventions live in guidelines; test policy in `docs/testing.md`;
   results/log links and remaining limits. Link it from other artifacts; omit command
   transcripts and repeated history. Maintenance uses the PR body. Evidence applies
   only to its revision; reporting-only edits follow the documentation route.
-- For a new chat or compaction, preserve only branch/feature, revision, accepted
+- On resumption, inspect current status/diff and resolve the intended feature.
+  For a new chat or compaction, preserve only branch/feature, revision, accepted
   scope, pending work, material decisions and check receipts/limits. Reuse existing
   artifacts; do not create a separate context cache. Keep user updates about findings
   or decisions, and final answers about result, checks, limits and delivery link.
