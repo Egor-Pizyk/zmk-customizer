@@ -6,4 +6,8 @@ FR-001/003/004: subprocess Git tests cover partial staging, tree-based existence
 
 FR-006: commands/testing/agent rules explain focus-before-final workflow, limits, reports and mapping ownership. No claim of measured token savings: the tool reduces repeated test/output work; semantic assertion updates remain manual. Final coverage policy is unchanged (ADR 0021).
 
-Actual Docker checks pending. For the real focus diagnostic, stage tooling/tests/docs first while leaving the npm entry unstaged, then stage the full package change for the required final gate. This exercises exact partial staging without running the broad package-triggered suites twice.
+Docker diagnostic: focus tree bf53ec7c4d4b passed in 9.511s (static checks, changed-file lint/format, all 112 tooling tests); logs `.check-logs/focus/bf53ec7c4d4b-ee99a9a39b3a/summary.json`. Tooling/tests/docs were staged while the npm entry remained unstaged, exercising exact partial staging without repeating broad package-triggered suites. An earlier focus run caught three lint issues; fixed the intentional ANSI matching annotation and string-prefix/suffix checks, then reran successfully.
+
+Final tree 392a864c56ff915ada2545fe0da33776db008db5 includes package.json. Static checks and 112 tooling tests passed; all 247 unit files / 1412 tests passed in 47.50s. All 138 Chromium journeys passed (3.6 minutes); total final execution 285.805s. Exact-tree pre-commit receipt reused successfully. Full logs `.check-logs/392a864c56ff-ee99a9a39b3a/`; no CI result claimed.
+
+Standalone eight orchestration tests also passed in 4.03s. Plan preview produced JSON without a Docker execution. Spec/plan/tasks and documentation reviewed against implementation; final planner behavior preserved. Reporting-only task/journal updates after the checked tree follow the documentation route.

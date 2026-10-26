@@ -747,6 +747,6 @@ Parsing existing ZMK shield files back into a project (Devicetree parsing), cust
 
 ## Requested developer tooling
 
-- [ ] Deliver [039 — focused local checks](../specs/039-focused-local-checks/spec.md):
+- [x] Implement [039 — focused local checks](../specs/039-focused-local-checks/spec.md):
   diagnostic selection and compact reports, preserving the mandatory final gate.
   Requested independently of active UI work; does not reorder scheduled product features.
