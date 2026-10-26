@@ -1,5 +1,5 @@
-import { SchematicEditorPanel } from './schematic-editor-panel';
 import { EncoderPanel } from '@ui/schematic/encoders/components';
+import { SchematicEditorPanel } from './schematic-editor-panel';
 import { WiringControls, ControllerPanel } from '@ui/schematic/wiring/components';
 import { PartsList, PartsWireSectionsTable } from '@ui/schematic/parts/components';
 import { SchematicCanvas } from './schematic-canvas';
@@ -24,14 +24,15 @@ export function SchematicWorkspace() {
       <SchematicEditorPanel preview={{ workspace }}>
         <ControllerPanel project={project} commit={commit} />
         <WorkspaceWiringControls workspace={workspace} />
-        <EncoderPanel />
         <PartsList
           commit={commit}
           issues={issues}
           onSelectionChange={workspace.handleSelectionChange}
           project={project}
           selection={selection}
-        />
+        >
+          <EncoderPanel />
+        </PartsList>
       </SchematicEditorPanel>
     </section>
   );

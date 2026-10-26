@@ -132,7 +132,7 @@ export const ONBOARDING_CONTENT = {
     title: 'Hardware and app settings',
     why: 'Schematic also supports encoders, controller choices, split topology and supported scan modes. Settings controls theme, grid, snapping and rulers separately from Project data.',
     action:
-      'Notice Controller, Wiring and Encoder in Schematic, and the Settings gear in the lower navigation. No advanced hardware or settings change is needed. Firmware options are in their own workspace.',
+      'Notice Controller, Wiring and Parts in Schematic; Parts contains Keys and Encoders, and the Settings gear in the lower navigation. No advanced hardware or settings change is needed. Firmware options are in their own workspace.',
     target: 'schematic-editors',
     workspace: 'schematic',
   },

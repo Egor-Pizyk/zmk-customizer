@@ -8,7 +8,7 @@ import { PartsKeysTable } from './parts-keys-table';
 import { PartsWiresTable } from './parts-wires-table';
 import type { SchematicSelection, SelectionChange } from '@ui/schematic/interaction';
 import { useId } from 'react';
-import type { SyntheticEvent } from 'react';
+import type { ReactNode, SyntheticEvent } from 'react';
 
 export type PartsTableProps = {
   readonly project: Project;
@@ -20,7 +20,10 @@ export type PartsTableProps = {
 
 // The complete non-canvas alternative (FR-029, ADR 0008): every key, wire, crossing and board
 // pin, with the same edits as the canvas. Open state is an interface preference.
-export function PartsList(props: PartsTableProps) {
+export function PartsList({
+  children,
+  ...props
+}: PartsTableProps & { readonly children: ReactNode }) {
   const { preferences, changePreferences } = usePreferences();
   const headingId = useId();
   // One lookup per render (perf: getKeyPinWires walks every wire for every pin).
@@ -43,6 +46,7 @@ export function PartsList(props: PartsTableProps) {
         </summary>
         <div className="flex max-h-96 flex-col gap-6 overflow-auto px-4 pb-4">
           <PartsKeysTable {...props} wiresOf={wiresOf} />
+          {children}
           <PartsWireSectionsTable {...props} />
           <PartsWiresTable {...props} />
           <PartsCrossingsTable {...props} />

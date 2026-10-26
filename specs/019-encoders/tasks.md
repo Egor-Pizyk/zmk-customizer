@@ -41,3 +41,9 @@
 | FR-008 | T006, T008, T011, T014 | labels/issues/keyboard/focus; manual limits; verification.md |
 
 All steps are sequential; no parallel implementation planned. Automated checks do not establish physical encoder direction, manual screen-reader speech or full hardware operation.
+
+## Parts organization follow-up (FR-009–011)
+
+- [x] T016 Amend artifacts; move Encoders under Parts and make Keys/Encoders independently collapsible, preserving controls and updating onboarding (FR-009–011).
+- [x] T017 Add app/browser folding/add/edit/delete/history/nested-repair coverage and update existing editor journeys; inspect rendered themes/reflow (FR-009–011), evidence in parts-verification.md.
+- [ ] T018 Run staged changed checks, inspect diff and update existing draft PR #29; disclose manual limits (FR-009–011).

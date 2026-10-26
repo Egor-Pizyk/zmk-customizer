@@ -1,3 +1,4 @@
+import { getDefinedValue } from '../../../helpers/defined-value';
 // @vitest-environment jsdom
 import { screen, within, waitFor } from '@testing-library/react';
 import { expect, it } from 'vitest';
@@ -106,4 +107,39 @@ it('reveals schematic contact issues at the labeled wiring control', async () =>
   expect(wiring.getAttribute('aria-invalid')).toBe('true');
   expect(wiring.getAttribute('aria-describedby')).toBeTruthy();
   expect(screen.getByText(/Encoder 0: connect COM to GND on the same half\./u)).toBeDefined();
+});
+
+it('groups Keys and Encoders under Parts with independent folds and unchanged history', async () => {
+  const { user } = renderApp();
+  const before = loadProject().project;
+  const parts = screen.getByRole('heading', { name: 'Parts' }).closest('section');
+  const group = within(getDefinedValue(parts));
+  const keys = getDefinedValue(
+    group.getByRole('heading', { name: 'Keys', level: 3 }).closest('details'),
+  );
+  const encoders = getDefinedValue(
+    group.getByRole('heading', { name: 'Encoders', level: 3 }).closest('details'),
+  );
+  expect(keys).toHaveProperty('open', true);
+  expect(encoders).toHaveProperty('open', false);
+  await user.click(group.getByText('Keys', { exact: true }));
+  expect(keys).toHaveProperty('open', false);
+  await user.click(group.getByText('Encoders', { exact: true }));
+  expect(group.getByRole('button', { name: 'Add encoder' })).toBeTruthy();
+  expect(keys).toHaveProperty('open', false);
+  expect(loadProject().project).toEqual(before);
+  await user.click(group.getByRole('button', { name: 'Add encoder' }));
+  const added = loadProject().project;
+  expect(added.encoders).toHaveLength(1);
+  expect(keys).toHaveProperty('open', false);
+  await user.click(group.getByText('Keys', { exact: true }));
+  expect(group.getByRole('button', { name: 'Add encoder' })).toBeTruthy();
+  await user.click(group.getByText('Encoders', { exact: true }));
+  expect(encoders).toHaveProperty('open', false);
+  expect(group.getByRole('button', { name: 'Add key' })).toBeTruthy();
+  expect(loadProject().project).toEqual(added);
+  await user.click(history('Undo'));
+  expect(loadProject().project).toEqual(before);
+  await user.click(history('Redo'));
+  expect(loadProject().project).toEqual(added);
 });

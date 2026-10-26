@@ -38,7 +38,9 @@ async function showEncoderEditor(page: Page) {
   return field;
 }
 async function connectRotary(page: Page) {
-  await page.getByText('Parts', { exact: true }).click();
+  if (!(await page.getByRole('button', { name: 'Add wire', exact: true }).isVisible())) {
+    await page.getByText('Parts', { exact: true }).click();
+  }
   for (const [pin, boardPin] of [
     ['A', '20'],
     ['B', '21'],

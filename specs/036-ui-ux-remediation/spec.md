@@ -170,3 +170,5 @@ User requests FR-014 right docking on `fix/pre-major-sweep`. At desktop widths t
 Acceptance: compare peer heading geometry in light/dark desktop and 390px layouts; expand sections with keyboard; confirm nested precise fields and scrolling without page overflow.
 
 2026-10-26 creation follow-up, 032 FR-010: remove the complete Layout group, including actions, Precise properties and its hint, plus its Tools opener. This supersedes 012 FR-016/036 FR-039's batch-editor presentation and numeric-preview-only acceptance. Parts per-key geometry, pointer rotation and existing shortcuts remain; no new shortcut is introduced for renumbering or the deleted batch editor.
+
+2026-10-26 Parts organization: 019 FR-009–011 supersedes FR-039's peer Encoders heading. Encoders moves below Parts as an h3 disclosure alongside Keys; both fold independently. Controller, Wiring and Parts retain peer heading geometry. Existing encoder controls, issue repair, history and data contracts remain.

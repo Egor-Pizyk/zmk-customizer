@@ -216,7 +216,7 @@ test('gives peer editor headings equal size without Layout and removes obsolete 
         .press('Space');
       await page.keyboard.press('Escape');
       const sizes = [];
-      for (const name of ['Controller', 'Wiring', 'Encoders', 'Parts']) {
+      for (const name of ['Controller', 'Wiring', 'Parts']) {
         const heading = editors.getByRole('heading', { name, exact: true });
         const row = heading.locator('..');
         sizes.push(await row.boundingBox());

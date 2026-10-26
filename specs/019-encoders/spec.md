@@ -62,3 +62,11 @@ Encoder: stable identity, layout position, half, two GPIO assignments and two ro
 ## Assumptions and open questions
 
 EC11 is the supported hardware family. Defaults are 80 electrical steps and 20 triggers per rotation, matching upstream Sofle; action defaults are do nothing. Electrical steps are 1–360 and triggers per rotation are positive divisors of 360, avoiding runtime arithmetic limitations in pinned v0.3, positions use existing physical-layout numeric bounds. Encoders use numeric position controls and a layout marker rather than introducing another drag tool. The push switch remains an ordinary key. No material open questions remain.
+
+## Parts organization follow-up (2026-10-26)
+
+- **FR-009**: Schematic Parts contains sibling Keys and Encoders disclosures. Remove the top-level Encoders editor. Each subsection toggles independently by pointer or Enter/Space and exposes its expanded/collapsed state through native details; opening either does not close Parts or its sibling. Keys starts expanded; Encoders starts collapsed. Collapse state is transient UI state, never Project data, and survives closing/reopening Parts while the workspace stays mounted.
+- **FR-010**: Keys retains its existing editable list/table and Add key after the list. Encoders lists numbered hardware settings with the existing controls, inline errors and Delete action; Add encoder follows the list. Empty sections explain that no items exist and offer their add action. Preserve existing geometry/push wiring/actions, add/delete focus, issue navigation through collapsed Parts and Encoders, one-step Undo/Redo, old saved data and exports. Onboarding names Parts → Encoders.
+- **FR-011**: Nested sections use h3 below Parts h2 and existing tokens/spacing; the Parts container owns its existing vertical scroll cap. Wide key tables scroll within their existing container; hardware fields wrap at narrow widths. Verify both themes, 390/1440px, keyboard toggles, error repair and reduced motion. No new animation or dependencies.
+
+Acceptance: open Parts; independently collapse Keys and open Encoders; add/edit/delete an encoder, Undo restores it; toggling either section preserves project/history and the other section. A linked encoder issue reveals both folded ancestors and focuses its labeled control.
