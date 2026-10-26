@@ -8,6 +8,7 @@ docs/
   zmk/                 verified ZMK reference notes with links
   roadmap.md           feature list in implementation order
   roadmap-2.0.0.md  discovery basis for 2.0.0; independent mechanical module
+  roadmap-3.0.0.md  candidate keycap generator and reference review for 3.0.0
   research/            supporting discovery evidence, not approved feature specifications
   decisions/           ADRs (index in docs/decisions/README.md)
   context-verification.md  context-routing review and validation limits
