@@ -115,3 +115,7 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 ## Editors hierarchy
 
 - [x] H039 [FR-039] Normalize peer section sizing and nested Layout properties; review rendered themes/narrow layout, run staged checks and record evidence in verification.md.
+
+## CI resize regression — 2026-10-26
+
+- [ ] CI-R01 [FR-014–016] Diagnose Firefox drag-limit failure from run 40218946787 and reproduce before repair. Keep native pointer trajectories inside the viewport while still exceeding both width limits; preserve all clamp/cancel/persistence/keyboard assertions. Run targeted cross-engine tests, required changed checks and record evidence in verification.md.

@@ -113,9 +113,10 @@ test('resizes editors with pointer and keyboard, cancels and retains preferred s
   await page.keyboard.press('Escape');
   await page.mouse.up();
   await expect.poll(width).toBe(448);
+  // Overshoot both width limits while keeping the captured pointer inside the window.
   for (const [delta, expected] of [
-    [-1000, 640],
-    [1000, 320],
+    [-400, 640],
+    [400, 320],
   ] as const) {
     const edge = await handle.boundingBox();
     if (edge === null) {
