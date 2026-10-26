@@ -1,18 +1,15 @@
 import { useId } from 'react';
 import { Button } from '@ui/components/components';
-import { useKleImport } from '@ui/schematic/layout/logic';
+import { useKleImport } from '@ui/project/logic';
 
-export function KleImport() {
+export function KleImport({ onImported: handleImported }: { readonly onImported: () => void }) {
   const inputId = useId();
   const hintId = useId();
   const imported = useKleImport(inputId);
   const { review, error, isReading, isStale } = imported;
   return (
     <details className="max-w-full min-w-0">
-      <summary
-        data-onboarding-target="kle"
-        className="flex h-7 cursor-pointer items-center rounded-md border border-border-strong px-2 text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
-      >
+      <summary className="flex h-7 cursor-pointer items-center rounded-md border border-border-strong px-2 text-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus">
         Import KLE layout
       </summary>
       <section
@@ -25,7 +22,9 @@ export function KleImport() {
         {isStale ? (
           <p role="alert">KLE review expired because the project changed. Choose the file again.</p>
         ) : null}
-        {review === undefined || isStale ? null : <KleReview imported={imported} />}
+        {review === undefined || isStale ? null : (
+          <KleReview imported={imported} onImported={handleImported} />
+        )}
         {review !== undefined || isReading || error !== undefined ? (
           <Button onClick={imported.handleCancel}>Cancel KLE import</Button>
         ) : null}
@@ -34,7 +33,13 @@ export function KleImport() {
   );
 }
 
-function KleReview({ imported }: { readonly imported: ReturnType<typeof useKleImport> }) {
+function KleReview({
+  imported,
+  onImported,
+}: {
+  readonly imported: ReturnType<typeof useKleImport>;
+  readonly onImported: () => void;
+}) {
   const { review, handleApply } = imported;
   if (review === undefined) {
     return null;
@@ -55,7 +60,15 @@ function KleReview({ imported }: { readonly imported: ReturnType<typeof useKleIm
           <li key={warning}>{warning}</li>
         ))}
       </ul>
-      <Button onClick={handleApply}>Replace project with KLE layout</Button>
+      <Button
+        onClick={() => {
+          if (handleApply()) {
+            onImported();
+          }
+        }}
+      >
+        Replace project with KLE layout
+      </Button>
     </>
   );
 }

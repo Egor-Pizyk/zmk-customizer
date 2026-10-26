@@ -104,7 +104,7 @@ function ProjectActions({
   return (
     <div className="ml-auto flex flex-wrap gap-1 self-center">
       <Button isDisabled={tutorial !== undefined} onClick={handleNewClick} size="sm">
-        New
+        <span data-onboarding-target="kle">New</span>
       </Button>
       <Button isDisabled={tutorial !== undefined} onClick={handleOpenClick} size="sm">
         Open

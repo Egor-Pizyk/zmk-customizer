@@ -66,24 +66,6 @@ it('rotates from an exterior corner about the center and cancels subsequent rota
   await user.click(history('Undo'));
   expect(loadProject().project).toEqual(before);
 });
-it('shows numeric changes immediately in the collapsed precise editor without a Preview button', async () => {
-  const { user } = renderApp(project());
-  await user.click(screen.getByRole('checkbox', { name: 'Select key 0' }));
-  expect(screen.queryByRole('spinbutton', { name: 'Selected rotation (°)' })).toBeNull();
-  await user.click(screen.getByText('Precise properties'));
-  const before = loadProject().project;
-  const rotation = screen.getByRole('spinbutton', { name: 'Selected rotation (°)' });
-  await user.clear(rotation);
-  await user.type(rotation, '2{Enter}');
-  expect(screen.getByRole('graphics-symbol', { name: /^Key 0\b/u }).getAttribute('transform')).toBe(
-    'rotate(2 0.5 0.5)',
-  );
-  expect(loadProject().project).toEqual(before);
-  expect(screen.queryByRole('button', { name: 'Preview layout' })).toBeNull();
-  await user.click(screen.getByRole('button', { name: 'Apply layout' }));
-  expect(loadProject().project.keys[0]?.rotationDeg).toBe(2);
-});
-
 it('exports the geometry produced by pointer gestures and preserves wiring, diode and bindings', async () => {
   const initial = buildProject({
     keys: [{ id: 'k0', xU: 0, yU: 0, widthU: 2, diode: { pin: 1, cathode: 'away-switch' } }],
@@ -115,31 +97,3 @@ it('exports the geometry produced by pointer gestures and preserves wiring, diod
     '<&key_physical_attrs 200 100 0 0 9000 100 50>',
   );
 });
-
-it.each(['Cancel preview', 'Escape'])(
-  'discards cancelled numeric values after %s before editing another property',
-  async (cancel) => {
-    const { user } = renderApp(project());
-    await user.click(screen.getByRole('checkbox', { name: 'Select key 0' }));
-    await user.click(screen.getByText('Precise properties'));
-    const rotation = screen.getByRole('spinbutton', { name: 'Selected rotation (°)' });
-    await user.clear(rotation);
-    await user.type(rotation, '2{Enter}');
-    await cancelNumericPreview(cancel, user);
-    expect(rotation.getAttribute('value')).toBe('0');
-    const origin = screen.getByRole('spinbutton', { name: 'Selected origin X (u)' });
-    await user.clear(origin);
-    await user.type(origin, '3{Enter}');
-    await user.click(screen.getByRole('button', { name: 'Apply layout' }));
-    expect(loadProject().project.keys[0]?.rotationDeg).toBeUndefined();
-    expect(loadProject().project.keys[0]?.rotationOriginXU).toBe(3);
-  },
-);
-
-async function cancelNumericPreview(cancel: string, user: ReturnType<typeof renderApp>['user']) {
-  if (cancel === 'Escape') {
-    fireEvent.keyDown(screen.getByRole('application'), { key: 'Escape', code: 'Escape' });
-  } else {
-    await user.click(screen.getByRole('button', { name: cancel }));
-  }
-}

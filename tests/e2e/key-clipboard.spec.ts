@@ -52,7 +52,7 @@ for (const modifier of ['Meta', 'Control']) {
   });
 }
 
-test('table multi-copy, preview guard, empty buffer and project replacement', async ({ page }) => {
+test('table multi-copy, empty buffer and project replacement', async ({ page }) => {
   await openProject(page);
   await key(page).focus();
   await page.keyboard.press('Meta+KeyV');
@@ -66,15 +66,6 @@ test('table multi-copy, preview guard, empty buffer and project replacement', as
   await page.keyboard.press('Meta+KeyC');
   await page.keyboard.press('Meta+Shift+KeyV');
   expect(await saved(page)).toEqual(fixture);
-  await page.getByText('Precise properties', { exact: true }).click();
-  const rotation = page.getByRole('spinbutton', { name: 'Selected rotation (°)', exact: true });
-  await rotation.fill('15');
-  await rotation.press('Enter');
-  await key(page).focus();
-  await page.keyboard.press('Meta+KeyV');
-  expect(await saved(page)).toEqual(fixture);
-  await expect(page.getByRole('status')).toContainText('Apply or cancel');
-  await page.getByRole('button', { name: 'Cancel preview', exact: true }).click();
   await key(page).focus();
   await page.keyboard.press('Meta+KeyV');
   await expect.poll(async () => (await saved(page)).keys.length).toBe(4);

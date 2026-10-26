@@ -200,7 +200,7 @@ test('resizes editors with pointer and keyboard, cancels and retains preferred s
   await expect.poll(width).toBe(448);
 });
 
-test('gives peer editor headings equal size and keeps precise properties inside Layout', async ({
+test('gives peer editor headings equal size without Layout and removes obsolete layout controls', async ({
   page,
 }, info) => {
   await openProject(page);
@@ -216,9 +216,9 @@ test('gives peer editor headings equal size and keeps precise properties inside 
         .press('Space');
       await page.keyboard.press('Escape');
       const sizes = [];
-      for (const name of ['Controller', 'Layout', 'Wiring', 'Encoders', 'Parts']) {
+      for (const name of ['Controller', 'Wiring', 'Encoders', 'Parts']) {
         const heading = editors.getByRole('heading', { name, exact: true });
-        const row = name === 'Layout' ? heading : heading.locator('..');
+        const row = heading.locator('..');
         sizes.push(await row.boundingBox());
       }
       const first = sizes[0];
@@ -229,14 +229,11 @@ test('gives peer editor headings equal size and keeps precise properties inside 
         expect(size?.height).toBeCloseTo(40, 0);
         expect(size?.width).toBeCloseTo(first.width, 0);
       }
-      const precise = editors.getByText('Precise properties', { exact: true });
-      await precise.focus();
-      await precise.press('Enter');
-      await expect(
-        editors.getByText('Select a switch and drag outside a corner to rotate.', { exact: false }),
-      ).toBeVisible();
-      await precise.press('Enter');
-      await editors.getByRole('heading', { name: 'Layout', exact: true }).scrollIntoViewIfNeeded();
+      await expect(editors.getByText('Precise properties', { exact: true })).toHaveCount(0);
+      await expect(editors.getByRole('heading', { name: 'Layout', exact: true })).toHaveCount(0);
+      await editors
+        .getByRole('heading', { name: 'Controller', exact: true })
+        .scrollIntoViewIfNeeded();
       await page.screenshot({ path: info.outputPath(`editor-hierarchy-${width}-${theme}.png`) });
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
         true,

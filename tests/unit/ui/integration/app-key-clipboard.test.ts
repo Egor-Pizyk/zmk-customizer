@@ -42,7 +42,7 @@ it('copies a key snapshot, survives source deletion, and pastes all layers in on
   expect(loadProject().project).toEqual(pasted);
 });
 
-it('announces empty copy/paste and preserves native fields and unsaved layout drafts', async () => {
+it('announces empty copy/paste and preserves native fields without layout controls', async () => {
   const before = project();
   const { user } = renderApp(before);
   const canvas = screen.getByRole('application');
@@ -57,15 +57,6 @@ it('announces empty copy/paste and preserves native fields and unsaved layout dr
   await user.click(screen.getByRole('textbox', { name: 'Name' }));
   await user.keyboard('{Control>}v{/Control}');
   expect(loadProject().project.keys).toEqual(before.keys);
-  await user.click(screen.getByText('Precise properties'));
-  const angle = screen.getByRole('spinbutton', { name: 'Selected rotation (°)' });
-  await user.clear(angle);
-  await user.type(angle, '30{Enter}');
-  canvas.focus();
-  await user.keyboard('{Meta>}v{/Meta}');
-  expect(screen.getByRole('status').textContent).toContain('Apply or cancel the preview');
-  expect(loadProject().project.keys).toEqual(before.keys);
-  await user.click(screen.getByRole('button', { name: 'Cancel preview' }));
   canvas.focus();
   await user.keyboard('{Meta>}v{/Meta}');
   expect(loadProject().project.keys).toHaveLength(3);

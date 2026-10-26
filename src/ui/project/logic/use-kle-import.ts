@@ -4,8 +4,8 @@ import { replaceProjectLayout } from '@domain/project';
 import type { Project } from '@domain';
 import { readKleFile } from '@storage/kle';
 import type { KleLayout } from '@storage/kle';
-import { useProject } from '@ui/project/logic';
-import type { createImportSession } from '@ui/project/logic';
+import { useProject } from './project-context';
+import type { createImportSession } from './import-session';
 
 type ImportToken = ReturnType<ReturnType<typeof createImportSession>['begin']>;
 type Review = {
@@ -36,7 +36,7 @@ export function useKleImport(inputId: string) {
   }
   function handleApply() {
     if (review === undefined || importSession.status(review.token) !== 'current') {
-      return;
+      return false;
     }
     commit(
       (latest) =>
@@ -45,6 +45,7 @@ export function useKleImport(inputId: string) {
     );
     setState({ kind: 'idle' });
     document.querySelector<HTMLElement>(`[id="${inputId}"]`)?.focus();
+    return true;
   }
   return { review, error, isReading, isStale, handleFileChange, handleCancel, handleApply };
 }

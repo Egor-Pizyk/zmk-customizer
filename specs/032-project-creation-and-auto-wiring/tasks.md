@@ -57,3 +57,9 @@ Use the production app with an existing saved project backed up. Follow the comp
 4. OS theme/reduced motion and 200% zoom: inspect both themes, visible/unobscured focus, readable actions and absence of horizontal page overflow. No new color-token pairs were introduced.
 
 Record actual pass/fail observations here or in PR #13. Do not check T015 merely because automated CI is green.
+
+## KLE entry follow-up (FR-009/010)
+
+- [x] T016 Move KLE UI/hook to shared ownership, mount in New, close after Apply; remove entire Layout controls group and Tools opener, preserve existing shortcuts and update onboarding (018 FR-005 preserved).
+- [x] T017 Update app/E2E import journeys for modal cancellation, retry, apply/history and rendered absence of Layout; review themes/reflow and record checks in kle-entry-verification.md.
+- [ ] T018 Run staged changed checks, inspect diff and update existing PR #29; disclose manual acceptance limits.

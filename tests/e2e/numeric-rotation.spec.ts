@@ -20,9 +20,7 @@ const project = {
   ],
 };
 
-test('numeric table and batch rotation keep independent visible centers @cross-browser', async ({
-  page,
-}) => {
+test('numeric table rotation keep independent visible centers @cross-browser', async ({ page }) => {
   await openProject(page, project);
   const before = await saved(page);
   await page.getByRole('spinbutton', { name: 'Key 0 Rotation (°)', exact: true }).fill('-30');
@@ -40,42 +38,6 @@ test('numeric table and batch rotation keep independent visible centers @cross-b
   expect((await saved(page)).keys[0]).toMatchObject(rotated);
   await history(page, 'Undo').click();
   expect(await saved(page)).toEqual(before);
-  await page.getByRole('checkbox', { name: 'Select key 0', exact: true }).check();
-  await page.getByRole('checkbox', { name: 'Select key 1', exact: true }).check();
-  await page.getByText('Precise properties', { exact: true }).click();
-  const angle = page.getByRole('spinbutton', { name: 'Selected rotation (°)', exact: true });
-  await angle.fill('45');
-  await angle.press('Enter');
-  const first = { ...rotated, rotationDeg: 45 };
-  const second = {
-    id: 'k1',
-    xU: 10,
-    yU: 5,
-    rotationDeg: 45,
-    rotationOriginXU: 10.5,
-    rotationOriginYU: 5.5,
-  };
-  await expectGeometry(page, first);
-  await expectGeometry(page, second, 1);
-  expect(await saved(page)).toEqual(before);
-  await page.getByRole('button', { name: 'Cancel preview', exact: true }).click();
-  await expectGeometry(page, project.keys[0] ?? rotated);
-  await angle.fill('45');
-  await angle.press('Enter');
-  await page.getByRole('button', { name: 'Apply layout', exact: true }).click();
-  const applied = await saved(page);
-  expect(applied.keys[0]).toMatchObject(first);
-  expect(applied.keys[1]).toMatchObject(second);
-  await history(page, 'Undo').click();
-  expect(await saved(page)).toEqual(before);
-  await history(page, 'Redo').click();
-  expect(await saved(page)).toEqual(applied);
-  await page.screenshot({ path: '.check-logs/item19-light.png' });
-  await page.emulateMedia({ colorScheme: 'dark' });
-  await page.screenshot({ path: '.check-logs/item19-dark.png' });
-  await page.reload();
-  expect(await saved(page)).toEqual(applied);
-  await expectGeometry(page, first);
 });
 
 for (const hasPush of [false, true]) {

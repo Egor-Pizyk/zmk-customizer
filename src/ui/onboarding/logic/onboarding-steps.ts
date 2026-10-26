@@ -108,7 +108,7 @@ export const ONBOARDING_CONTENT = {
     title: 'Other ways to start',
     why: 'New project offers ready presets. Open restores Project JSON; Save keeps a portable copy. KLE import brings in a physical layout. Create with agent downloads a creation package for an external assistant.',
     action:
-      'Find New, Open, Save and Create with agent in the project bar. KLE import is in Schematic. These alternatives replace or create projects with their normal safeguards; no import or preset is required here.',
+      'Find New, Open, Save and Create with agent in the project bar. KLE import is in New. These alternatives replace or create projects with their normal safeguards; no import or preset is required here.',
     target: 'project',
     workspace: 'schematic',
   },
@@ -116,7 +116,7 @@ export const ONBOARDING_CONTENT = {
     title: 'Import a KLE layout',
     why: 'KLE import converts a Keyboard Layout Editor JSON layout into editable physical keys. It replaces project content through the usual review and Apply flow.',
     action:
-      'Notice Import KLE layout in Schematic. No file import is required for this macropad; keep your current nine keys and continue.',
+      'Find Import KLE layout in New. No file import is required for this macropad; keep your current nine keys and continue.',
     target: 'kle',
     workspace: 'schematic',
   },
