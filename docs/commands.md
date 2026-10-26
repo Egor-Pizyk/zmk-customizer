@@ -52,3 +52,10 @@ Build command inside Docker: `docker compose -p zmk-customizer -f infra/compose.
 Container definitions and the pinned ZMK runner live in `infra/`; Makefile selects them with explicit paths and the stable `zmk-customizer` Compose project name. Build contexts and app mounts remain at the repository root. Docker ignore rules are Dockerfile-specific files beside the Dockerfiles, so no root `.dockerignore` is needed.
 
 Mutation orchestration uses host Node 24: Makefile delegates to npm run test:mutations / npm run test:e2e:mutations, which launch the test containers through Docker. The application checks and builds continue to run inside Docker.
+
+## Agent maintenance helpers
+
+- `bash scripts/agent-status.sh`: read-only local branch/revision, staged/unstaged summaries and Spec Kit selection. Does not fetch, change branches or persist feature selection; ownership still requires comparing the request.
+- `node scripts/audit-agent-context.mjs`: startup/routed instruction word counts, largest files, exact repeated prose and missing local inline Markdown targets. `--json` includes every file and repeat group. Resolves paths from the script, so it works outside the repository cwd. No writes, network or dependencies. Counts are source-size proxies, not model tokens; link checks exclude anchors, reference-style links and code examples.
+
+Use the audit after changing instructions, shared references or routing. New Bash/MJS helpers are maintenance; preserve existing Spec Kit resolvers rather than duplicating feature-selection logic.

@@ -50,3 +50,40 @@ This is a documentation review, not a measured token-saving benchmark. Current-t
 checks and revision are recorded in the existing PR body; no product behavior changed.
 The five startup documents decreased from 2,577 to 2,468 whitespace-delimited words;
 this measures document size, not tokens or savings from avoided rereads.
+
+## 2026-10-26 instruction maintenance
+
+Reviewed startup routing, all implementation guidelines, agent adapters, Spec Kit
+hook sections and the planning stage. This maintenance follows ADR 0018; it does
+not change product requirements, tests-first, pinned ZMK rules or delivery gates.
+
+- Replaced 20 hook-protocol copies across 10 skills with stage-specific calls to
+  `.specify/references/extension-hooks.md`, loaded only when extensions.yml exists.
+  Preserved hook keys, disabled/conditional filtering, YAML-error disclosure,
+  optional prompts and actual mandatory invocation/wait. Repository-relative
+  traversal works through both `.claude/skills` and `.agents/skills` adapters.
+- Aligned optional planning artifacts with workflow.md; research is driven by
+  unresolved questions rather than automatically dispatching research agents.
+- Removed repetitive examples from control-flow and naming guidelines, retaining
+  all normative rules (including explicit array callbacks). Kept technical examples
+  in TypeScript, accessibility and styling where they clarify specific contracts.
+  The 033 viewport exception now has one owner with a link from Tailwind guidance.
+- Added Bash `scripts/agent-status.sh` for a read-only resume snapshot, reusing
+  Spec Kit's no-persist resolver. Its selected feature is explicitly not ownership.
+- Added MJS `scripts/audit-agent-context.mjs` for reproducible source-size, local
+  inline-link and exact paragraph-duplication audits. Usage/limits: [commands](commands.md#agent-maintenance-helpers).
+
+Compared with base `ee99a9a`, the audited instruction corpus decreased from 34,710
+to 28,759 whitespace-separated words (17.1%), including the new shared protocol.
+The ten skill bodies decreased from 19,406 to 13,734 words (29.2%). Startup decreased
+from 2,507 to 2,463 words (1.8%). These counts exclude this historical evidence page,
+commands.md, helper source, platform instructions and provider overhead. They measure
+source size, not model tokens or observed session savings. A stage without extensions
+avoids loading the shared protocol; actual savings depend on task routing and reuse.
+
+Three audit-script tests cover relative/encoded links, skipped external/anchor/code
+links, malformed encoding, startup accounting and cross-file duplication. Static
+review does not prove independent-agent behavior or measure context quality in use.
+The maintenance PR owns current-tree check receipts and remaining limits; historical
+results elsewhere on this page are not evidence for this revision. No UI, onboarding,
+project schema, generators or firmware behavior changed.
