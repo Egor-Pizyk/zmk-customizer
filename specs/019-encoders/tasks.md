@@ -46,4 +46,4 @@ All steps are sequential; no parallel implementation planned. Automated checks d
 
 - [x] T016 Amend artifacts; move Encoders under Parts and make Keys/Encoders independently collapsible, preserving controls and updating onboarding (FR-009–011).
 - [x] T017 Add app/browser folding/add/edit/delete/history/nested-repair coverage and update existing editor journeys; inspect rendered themes/reflow (FR-009–011), evidence in parts-verification.md.
-- [ ] T018 Run staged changed checks, inspect diff and update existing draft PR #29; disclose manual limits (FR-009–011).
+- [x] T018 Run staged changed checks, inspect diff and update existing draft PR #29; disclose manual limits (FR-009–011).
