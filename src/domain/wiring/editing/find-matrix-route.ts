@@ -19,7 +19,10 @@ export function findMatrixRoute(
     if (cost < bestCost) {
       best = simplified;
       bestCost = cost;
-      if (cost <= Math.abs(start.xU - end.xU) + Math.abs(start.yU - end.yU) + 0.05) {
+      if (
+        simplified.length === 2 ||
+        cost <= Math.abs(start.xU - end.xU) + Math.abs(start.yU - end.yU) + 0.05
+      ) {
         return best;
       }
     }

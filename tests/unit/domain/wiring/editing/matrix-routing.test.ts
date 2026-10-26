@@ -193,3 +193,85 @@ function isRowOutput(wire: Project['wires'][number], ids: ReadonlySet<string>) {
     wire.end.kind === 'free' && wire.end.terminalId !== undefined && ids.has(wire.end.terminalId)
   );
 }
+
+for (const size of [3, 6]) {
+  it(`keeps all aligned ${size}x${size} local connections straight without shared wire sections`, () => {
+    const project = rebuild(grid(size));
+    const local = project.wires.filter(isLocalWire);
+    expect(local).toHaveLength(2 * size * (size - 1));
+    for (const wire of local) {
+      expect(wire.bends).toEqual([]);
+    }
+    const segments = project.wires.flatMap((wire) => getSegments(getWirePath(project, wire)));
+    expect(hasSharedSections(segments)).toBe(false);
+    expectCircuit(project);
+  });
+}
+function getSegments(points: readonly { readonly xU: number; readonly yU: number }[]) {
+  return points.slice(1).map((end, index) => ({ start: getDefinedValue(points[index]), end }));
+}
+function hasSharedSections(segments: readonly ReturnType<typeof getSegments>[number][]) {
+  return segments.some((first, index) =>
+    segments.slice(index + 1).some((second) => {
+      if (
+        first.start.yU === first.end.yU &&
+        second.start.yU === second.end.yU &&
+        first.start.yU === second.start.yU
+      ) {
+        return (
+          Math.min(
+            Math.max(first.start.xU, first.end.xU),
+            Math.max(second.start.xU, second.end.xU),
+          ) >
+          Math.max(
+            Math.min(first.start.xU, first.end.xU),
+            Math.min(second.start.xU, second.end.xU),
+          ) +
+            0.000001
+        );
+      }
+      if (
+        first.start.xU === first.end.xU &&
+        second.start.xU === second.end.xU &&
+        first.start.xU === second.start.xU
+      ) {
+        return (
+          Math.min(
+            Math.max(first.start.yU, first.end.yU),
+            Math.max(second.start.yU, second.end.yU),
+          ) >
+          Math.max(
+            Math.min(first.start.yU, first.end.yU),
+            Math.min(second.start.yU, second.end.yU),
+          ) +
+            0.000001
+        );
+      }
+      return false;
+    }),
+  );
+}
+
+it('keeps aligned key connections straight across separate perpendicular manual wires', () => {
+  const original = grid(3);
+  const keys = original.keys.slice(0, 3);
+  const at = getKeyPinPosition(getDefinedValue(keys[0]), 1);
+  const project = rebuild({
+    ...original,
+    keys,
+    wires: [0.1, 0.2, 0.3].map((offset, index) => ({
+      id: `manual${index}`,
+      start: { kind: 'free', at: { xU: at.xU + offset, yU: at.yU - 0.04 } },
+      end: { kind: 'free', at: { xU: at.xU + offset, yU: at.yU + 0.04 } },
+      bends: [],
+    })),
+  });
+  const local = project.wires.filter(isLocalWire);
+  expect(local).toHaveLength(2);
+  expect(local.map((wire) => wire.bends)).toEqual([[], []]);
+  expect(project.insulatedCrossings.length).toBeGreaterThanOrEqual(3);
+});
+
+function isLocalWire(wire: Project['wires'][number]) {
+  return wire.start.kind === 'key-pin' && wire.end.kind === 'key-pin';
+}

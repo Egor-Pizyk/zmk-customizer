@@ -23,6 +23,7 @@ for (const width of [1024, 1440]) {
       await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).press('Enter');
       await page.getByRole('button', { name: 'Apply wiring', exact: true }).press('Enter');
       const applied = await saved(page);
+      expectStraightLocalWires(applied);
       const outputs = getOutputs(applied);
       expect(outputs).toHaveLength(applied.wiring?.terminals.length ?? 0);
       for (const kind of ['row', 'col']) {
@@ -89,4 +90,12 @@ async function expectLabelInCanvas(label: Locator) {
   expect(box.y).toBeGreaterThanOrEqual(canvas.y);
   expect(box.x + box.width).toBeLessThanOrEqual(canvas.x + canvas.width);
   expect(box.y + box.height).toBeLessThanOrEqual(canvas.y + canvas.height);
+}
+
+function expectStraightLocalWires(project: Project) {
+  const local = project.wires.filter(
+    (wire) => wire.start.kind === 'key-pin' && wire.end.kind === 'key-pin',
+  );
+  expect(local).toHaveLength(7);
+  expect(local.map((wire) => wire.bends)).toEqual(Array.from({ length: 7 }, () => []));
 }

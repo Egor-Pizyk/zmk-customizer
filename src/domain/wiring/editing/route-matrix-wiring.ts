@@ -2,11 +2,11 @@ import { getProjectResourceError, PROJECT_BUDGET } from '@domain/project';
 import { findWireContacts } from '@domain/wires';
 import { getNets } from '@domain/wires/nets';
 import { getKeyPinPosition } from '@domain/wires/geometry';
-import type { Project, Result, WirePoint } from '@domain';
+import type { Project, Result, Wire, WirePoint } from '@domain';
 import { getRetainedWires } from './get-retained-wires';
 import { getGroupedOutputPositions } from './get-grouped-output-positions';
 import { getMatrixRouteContext } from './get-matrix-route-context';
-import { routeMatrixTree } from './route-matrix-tree';
+import { routeMatrixTree, routeMatrixOutput } from './route-matrix-tree';
 import type { WiringConnection } from './route-wiring';
 
 const WIRE_BUDGET_ERROR = 'Routing exceeds 600 wires. Simplify retained wiring before rebuilding.';
@@ -26,30 +26,57 @@ export function routeMatrixWiring(
   const context = getMatrixRouteContext({ ...project, wires });
   context.pins.push(...outputs.value.map((output) => ({ id: output.terminalId, at: output.at })));
   context.areas.push(...getOutputAreas(project, outputs.value));
-  for (const output of outputs.value) {
-    const contacts = getContacts(
-      project,
-      connections.filter((entry) => entry.terminalId === output.terminalId),
-    );
-    if (!contacts.ok) {
-      return contacts;
-    }
-    const error = routeMatrixTree(contacts.value, {
-      ...context,
-      wires,
-      terminalId: output.terminalId,
-      output: output.at,
-      up: output.up === true,
-    });
-    if (error !== undefined) {
-      return { ok: false, error };
-    }
+  const routingError = routeMatrixConnections(project, connections, {
+    ...context,
+    wires,
+    outputs: outputs.value,
+  });
+  if (routingError !== undefined) {
+    return { ok: false, error: routingError };
   }
-  const candidate = { ...project, wires };
-  const insulatedCrossings = getInsulation(candidate, context.labels);
-  const result = { ...candidate, insulatedCrossings };
+  const result = {
+    ...project,
+    wires,
+    insulatedCrossings: getInsulation({ ...project, wires }, context.labels),
+  };
   const error = getProjectResourceError(result) ?? getConnectionError(result, connections);
   return error === undefined ? { ok: true, value: result } : { ok: false, error };
+}
+
+function routeMatrixConnections(
+  project: Project,
+  connections: readonly WiringConnection[],
+  context: ReturnType<typeof getMatrixRouteContext> & {
+    readonly wires: Wire[];
+    readonly outputs: readonly {
+      readonly terminalId: string;
+      readonly at: WirePoint;
+      readonly up?: boolean;
+    }[];
+  },
+): string | undefined {
+  for (const route of [routeMatrixTree, routeMatrixOutput]) {
+    for (const output of context.outputs) {
+      const contacts = getContacts(
+        project,
+        connections.filter((entry) => entry.terminalId === output.terminalId),
+      );
+      if (!contacts.ok) {
+        return contacts.error;
+      }
+      const error = route(contacts.value, {
+        ...context,
+        wires: context.wires,
+        terminalId: output.terminalId,
+        output: output.at,
+        up: output.up === true,
+      });
+      if (error !== undefined) {
+        return error;
+      }
+    }
+  }
+  return undefined;
 }
 
 function getContacts(project: Project, connections: readonly WiringConnection[]) {

@@ -37,7 +37,7 @@ export function getRoutePathCost(path: readonly WirePoint[], context: RouteConte
       return Infinity;
     }
     cost += Math.abs(end.xU - start.xU) + Math.abs(end.yU - start.yU);
-    const penalty = getSegmentPenalty({ start, end, net: context.net }, context.segments);
+    const penalty = getSegmentPenalty({ start, end, net: context.net }, context);
     if (!Number.isFinite(penalty)) {
       return Infinity;
     }
@@ -58,10 +58,13 @@ function isPointOnSegment(point: WirePoint, start: WirePoint, end: WirePoint) {
   );
 }
 
-function getSegmentPenalty(segment: RouteSegment, obstacles: readonly RouteSegment[]) {
+function getSegmentPenalty(segment: RouteSegment, context: RouteContext) {
   let penalty = 0;
-  for (const other of obstacles) {
-    if (other.net === segment.net) {
+  for (const other of context.segments) {
+    if (hasCollinearOverlap(segment, other)) {
+      return Infinity;
+    }
+    if (other.net === segment.net && hasAllowedJoin(segment, other, context)) {
       continue;
     }
     if (
@@ -84,6 +87,9 @@ function getSegmentPenalty(segment: RouteSegment, obstacles: readonly RouteSegme
       isPointOnSegment(crossing, segment.start, segment.end) &&
       isPointOnSegment(crossing, other.start, other.end)
     ) {
+      if (other.net === segment.net) {
+        return Infinity;
+      }
       penalty += 0.1;
     }
   }
@@ -96,5 +102,42 @@ function doesSegmentCrossArea(start: WirePoint, end: WirePoint, area: RouteArea)
     Math.min(start.xU, end.xU) <= area.maxX &&
     Math.max(start.yU, end.yU) >= area.minY &&
     Math.min(start.yU, end.yU) <= area.maxY
+  );
+}
+
+function hasCollinearOverlap(first: RouteSegment, second: RouteSegment) {
+  if (
+    first.start.yU === first.end.yU &&
+    second.start.yU === second.end.yU &&
+    first.start.yU === second.start.yU
+  ) {
+    return (
+      Math.min(Math.max(first.start.xU, first.end.xU), Math.max(second.start.xU, second.end.xU)) >
+      Math.max(Math.min(first.start.xU, first.end.xU), Math.min(second.start.xU, second.end.xU)) +
+        0.000001
+    );
+  }
+  if (
+    first.start.xU === first.end.xU &&
+    second.start.xU === second.end.xU &&
+    first.start.xU === second.start.xU
+  ) {
+    return (
+      Math.min(Math.max(first.start.yU, first.end.yU), Math.max(second.start.yU, second.end.yU)) >
+      Math.max(Math.min(first.start.yU, first.end.yU), Math.min(second.start.yU, second.end.yU)) +
+        0.000001
+    );
+  }
+  return false;
+}
+
+function hasAllowedJoin(first: RouteSegment, second: RouteSegment, context: RouteContext) {
+  return [first.start, first.end].some(
+    (point) =>
+      [second.start, second.end].some((other) => point.xU === other.xU && point.yU === other.yU) &&
+      context.pins.some(
+        (pin) =>
+          context.allowedPins.includes(pin.id) && pin.at.xU === point.xU && pin.at.yU === point.yU,
+      ),
   );
 }

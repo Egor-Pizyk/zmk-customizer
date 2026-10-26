@@ -24,32 +24,74 @@ export function routeMatrixTree(
   contacts: readonly MatrixContact[],
   context: TreeContext,
 ): string | undefined {
-  const remaining = [...contacts];
-  const nodes: TreeNode[] = [
-    {
-      id: context.terminalId,
-      at: context.output,
-      end: { kind: 'free', at: context.output, terminalId: context.terminalId },
-    },
-  ];
+  const first = contacts[0];
+  if (first === undefined) {
+    return undefined;
+  }
+  const remaining = contacts.slice(1);
+  const nodes: TreeNode[] = [getContactNode(first)];
   while (remaining.length > 0) {
     const branch = findBranch(remaining, nodes, context);
     if (branch === undefined) {
-      return `Cannot connect ${remaining[0]?.keyId ?? 'key'} safely. Separate overlapping contacts or move the key, then rebuild.`;
+      return getRoutingError(remaining);
     }
-    const id = createEntityId({ prefix: 'w', existingIds: context.wires.map((wire) => wire.id) });
-    const { contact, node, path } = branch;
-    const end: WireEnd = { kind: 'key-pin', keyId: contact.keyId, pin: contact.pin };
-    context.wires.push({ id, start: end, end: node.end, bends: path.slice(1, -1) });
-    context.labels.set(id, context.terminalId);
-    appendSegments(path, context);
-    if (nodes[0]?.id === context.terminalId) {
-      nodes.splice(0, 1);
-    }
-    nodes.push({ id: `${contact.keyId}:${contact.pin}`, at: contact.at, end });
-    remaining.splice(remaining.indexOf(contact), 1);
+    addBranch(branch, context);
+    nodes.push(getContactNode(branch.contact));
+    remaining.splice(remaining.indexOf(branch.contact), 1);
   }
   return undefined;
+}
+
+export function routeMatrixOutput(
+  contacts: readonly MatrixContact[],
+  context: TreeContext,
+): string | undefined {
+  if (contacts.length === 0) {
+    return undefined;
+  }
+  const output: TreeNode = {
+    id: context.terminalId,
+    at: context.output,
+    end: { kind: 'free', at: context.output, terminalId: context.terminalId },
+  };
+  const branch = findBranch(contacts, [output], context);
+  if (branch === undefined) {
+    return getRoutingError(contacts);
+  }
+  addBranch(branch, context);
+  return undefined;
+}
+
+function getContactNode(contact: MatrixContact): TreeNode {
+  return {
+    id: `${contact.keyId}:${contact.pin}`,
+    at: contact.at,
+    end: { kind: 'key-pin', keyId: contact.keyId, pin: contact.pin },
+  };
+}
+
+function getRoutingError(contacts: readonly MatrixContact[]) {
+  return `Cannot connect ${contacts[0]?.keyId ?? 'key'} safely. Separate overlapping contacts or move the key, then rebuild.`;
+}
+
+function addBranch(
+  branch: {
+    readonly contact: MatrixContact;
+    readonly node: TreeNode;
+    readonly path: readonly WirePoint[];
+  },
+  context: TreeContext,
+) {
+  const id = createEntityId({ prefix: 'w', existingIds: context.wires.map((wire) => wire.id) });
+  const { contact, node, path } = branch;
+  context.wires.push({
+    id,
+    start: getContactNode(contact).end,
+    end: node.end,
+    bends: path.slice(1, -1),
+  });
+  context.labels.set(id, context.terminalId);
+  appendSegments(path, context);
 }
 
 function findBranch(

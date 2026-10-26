@@ -31,3 +31,9 @@ T001 → T002 → T003; T004 precedes T005, then T006 → T007 → T008. T002/T0
 - [x] T011 Review rendered themes/viewports and preview/history; run changed checks and update PR/evidence (FR-005/006).
 
 Analysis: this supersedes only 038 output placement, leaves cells/GPIO/schema/history unchanged, and preserves atomic refusal when geometry is infeasible. T009 → T010 → T011.
+
+## Straight and separate routes
+
+- [x] T012 Tests first: direct local lines on aligned grids and no positive-length wire overlap, including same-net/output-lead overlaps (FR-001/002/004).
+- [x] T013 Build key trees before outputs, prefer valid direct aligned paths, and forbid shared wire sections while allowing intended key-contact joins (FR-001/002/004).
+- [ ] T014 Review rendered layouts/themes and preview/history, run changed checks and update journal/PR (FR-005/006).
