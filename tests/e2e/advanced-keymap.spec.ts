@@ -127,12 +127,12 @@ test('create macro/combo/conditional rule, assign and download real advanced key
   expect((await downloadZip(page))['config/unibody_six.keymap']).toBe(output);
 });
 
-test('combo positions and conditional references follow renumber, deletion and Undo @cross-browser', async ({
+test('combo positions and conditional references follow source order, deletion and Undo @cross-browser', async ({
   page,
 }) => {
   const project = {
     ...layered,
-    keys: layered.keys.toReversed(),
+    keys: layered.keys,
     combos: [
       {
         id: 'c1',
@@ -146,7 +146,6 @@ test('combo positions and conditional references follow renumber, deletion and U
     conditionalLayers: [{ id: 'q1', ifLayerIds: ['l0', 'l1'], thenLayerId: 'l2' }],
   };
   await openProject(page, project);
-  await page.getByRole('button', { name: 'Renumber by position', exact: true }).click();
   expect((await saved(page)).combos[0]?.keyIds).toEqual(['k0', 'k1']);
   expect((await downloadZip(page))['config/unibody_six.keymap']).toContain(
     'key-positions = <0 1>;',

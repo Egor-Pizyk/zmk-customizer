@@ -682,6 +682,10 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 **Done when.** All 21 original items and audit follow-ups 22–23 have agreed acceptance criteria and verified outcomes, including a 2×2 wired movement regression, topology round trips, initially empty wiring, both sides of L-shaped wire crossings, wire marquee selection, macOS clipboard use and center-preserving pointer/numeric rotation. Report unresolved items explicitly; do not silently treat them as completed or defer them beyond the first-major milestone.
 
+### 038 — automatic-wiring-routing
+
+**Status.** User-requested matrix routing improvement, 2026-10-25; [specification](../specs/038-automatic-wiring-routing/spec.md). This is a new scope, distinct from the cancelled residual-audit proposal that had no feature directory. Preserve existing cell grouping/GPIO rules, use local connected net trees, and collect outputs into two aligned exterior blocks per half. Direct scan unchanged. Onboarding wiring explanation follows the new result.
+
 ### 037 — interactive-onboarding (implement last)
 
 **Goal.** Guide a first-time user through the product with short explanations and real actions, ending with their first simple custom keyboard built from scratch: a 3×3 macropad and its downloadable ZMK configuration.

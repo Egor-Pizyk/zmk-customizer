@@ -48,10 +48,10 @@ export const SEEDS = [
   ],
   [
     'cancelled-value',
-    'src/ui/schematic/layout/components/layout-controls.tsx',
-    'props.hasPreview && draft?.base === project',
-    'draft?.base === project',
-    'precise numeric Enter shows',
+    'src/ui/components/components/number-input.tsx',
+    '        setDraft(undefined);',
+    '',
+    'numeric table Escape discards',
     'toHaveValue',
   ],
   [

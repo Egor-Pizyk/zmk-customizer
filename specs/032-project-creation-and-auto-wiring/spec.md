@@ -66,3 +66,14 @@ User confirmed 2026-10-20: retain correct pins, refuse conflicts/invalid pins, o
 ## Feature 033 interaction extension
 
 Complete wiring is additive: retain each existing known axis, half, GPIO and deliberate conductor, filling only missing compatible connections with preview. Rebuild wiring is a separate explicit action with the former Auto assign replacement behavior and 032 output/allocation rules. Refused/cancelled proposals do not write saved state. Actual schematic connectivity remains authoritative.
+
+## 038 matrix Rebuild refinement
+
+038 FR-002/FR-003 supersede dispersed output placement for matrix Rebuild: local net trees, one output per terminal and a top row block and exterior side column block per half, both initially 1u from key bounds. Row leads start upward; groups move away independently around obstructions; geometry/GPIO allocation and selected cells remain. Automatic matrix mode/topology reconstruction uses the same router to preserve deterministic topology round trips. Direct scan and individual cell/dimension routing retain the previous placement contract. See [038 specification](../038-automatic-wiring-routing/spec.md).
+
+## Follow-up: KLE entry in New (2026-10-26)
+
+- **FR-009**: New offers Import KLE layout alongside the existing preset/empty choices. Opening it shows the existing labeled file selection, review, warnings, errors and Cancel controls inside the native creation dialog. Apply closes New and returns focus to its opener; KLE replacement remains one undoable edit under 018 FR-005 (unlike preset/empty creation). Closing New discards transient KLE state and preserves the project. The warning distinguishes these history policies.
+- **FR-010**: Remove the entire Layout controls group from Schematic: Duplicate selected keys, Delete selected keys, Renumber by position, Precise properties and its selection/rotation hint. Remove the Tools button that opened this deleted editor. Preserve existing Delete/Backspace, Copy/Paste, nudge, tool and Undo/Redo shortcuts; no new shortcuts are required for actions that had none. Keep Parts per-key geometry fields as the numeric keyboard alternative and pointer rotation. No project/schema/output changes. Onboarding points to New for KLE without requiring an import. Existing themes/reflow and reduced motion remain.
+
+Acceptance: New → Import KLE → bad file/retry → review → Apply shows imported keys and closes the dialog; Undo restores the previous project. Escape/cancel before Apply preserves data. No Layout heading or KLE entry remains in Schematic.

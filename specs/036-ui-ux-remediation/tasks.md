@@ -106,3 +106,16 @@ Dependencies: E001→E002/E003/E004→E005→E006→E007. Storage and presentati
 ## CI delivery repair (explicitly authorized)
 
 - [x] CI036 Diagnose run 40180032666; restore current mutation anchors and actual detection, cover missing 036 UI branches without lowering thresholds, reproduce/repair native Firefox/WebKit bend/rotated-key failures with meaningful assertions. Run focused/full CI-equivalent checks where needed and final staged checks; record evidence. Update existing PR, retain exactly release:minor, mark ready and enable protected squash auto-merge. Local repair/check evidence is in verification.md; external ready/auto-merge state is recorded in PR #24 on delivery. Do not bypass checks or claim a release before publication.
+
+## Right-docked Editors follow-up
+
+- [x] RD001 [FR-014–017] Right desktop dock, left-edge pointer/keyboard resize and matching content/footer clearance; retain narrow layout and saved width.
+- [x] RD002 [FR-014–017] Update real-browser geometry/resize coverage, inspect light/dark desktop/narrow renders, run staged changed checks and record verification/manual limits.
+
+## Editors hierarchy
+
+- [x] H039 [FR-039] Normalize peer section sizing and nested Layout properties; review rendered themes/narrow layout, run staged checks and record evidence in verification.md.
+
+## CI resize regression — 2026-10-26
+
+- [x] CI-R01 [FR-014–016] Diagnose Firefox drag-limit failure from run 40218946787 and reproduce before repair. Keep native pointer trajectories inside the viewport while still exceeding both width limits; preserve all clamp/cancel/persistence/keyboard assertions. Run targeted cross-engine tests, required changed checks and record evidence in verification.md.

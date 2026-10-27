@@ -32,7 +32,7 @@ export const ONBOARDING_CONTENT = {
     title: 'Place nine keys',
     why: 'Schematic defines the physical positions. 1u is one standard key pitch. We will make three rows of three keys.',
     action:
-      'Open Parts. Use Add key nine times, then set X/Y to (0,0), (1,0), (2,0), (0,1), (1,1), (2,1), (0,2), (1,2), (2,2). Commit fields with Enter. You can also place keys on the canvas. Keep rotation at 0°. Undo repairs mistakes.',
+      'Open Parts, then expand Keys. Use Add key nine times, then set X/Y to (0,0), (1,0), (2,0), (0,1), (1,1), (2,1), (0,2), (1,2), (2,2). Commit fields with Enter. You can also place keys on the canvas. Keep rotation at 0°. Undo repairs mistakes.',
     target: 'workspace',
     workspace: 'schematic',
     requiresAction: true,
@@ -49,7 +49,7 @@ export const ONBOARDING_CONTENT = {
     title: 'Add switch diodes',
     why: 'Diodes let a matrix distinguish simultaneous key presses. All nine switches need consistent polarity.',
     action:
-      'In Parts, use Add diode at key N pin 1 for all nine keys. Keep every cathode away from its switch. Wiring will use the matching diode direction.',
+      'In Parts, expand Keys and use Add diode at key N pin 1 for all nine keys. Keep every cathode away from its switch. Wiring will use the matching diode direction.',
     target: 'schematic-editors',
     workspace: 'schematic',
     requiresAction: true,
@@ -58,7 +58,7 @@ export const ONBOARDING_CONTENT = {
     title: 'Connect the matrix',
     why: 'A 3×3 matrix reads nine keys with six lines: three rows and three columns. Wire crossings and diode polarity determine the real electrical connections.',
     action:
-      'Open Wiring, keep Unibody and Matrix, choose the matching diode direction, then Rebuild wiring. Inspect the preview and press Apply. Manual wiring is also supported. Preview alone is not saved.',
+      'Open Wiring, keep Unibody and Matrix, choose the matching diode direction, then Rebuild wiring. Inspect the local connections and the output blocks (rows above, columns at the outer side), then press Apply. Manual wiring is also supported. Preview alone is not saved.',
     target: 'schematic-editors',
     workspace: 'schematic',
     requiresAction: true,
@@ -108,7 +108,7 @@ export const ONBOARDING_CONTENT = {
     title: 'Other ways to start',
     why: 'New project offers ready presets. Open restores Project JSON; Save keeps a portable copy. KLE import brings in a physical layout. Create with agent downloads a creation package for an external assistant.',
     action:
-      'Find New, Open, Save and Create with agent in the project bar. KLE import is in Schematic. These alternatives replace or create projects with their normal safeguards; no import or preset is required here.',
+      'Find New, Open, Save and Create with agent in the project bar. KLE import is in New. These alternatives replace or create projects with their normal safeguards; no import or preset is required here.',
     target: 'project',
     workspace: 'schematic',
   },
@@ -116,7 +116,7 @@ export const ONBOARDING_CONTENT = {
     title: 'Import a KLE layout',
     why: 'KLE import converts a Keyboard Layout Editor JSON layout into editable physical keys. It replaces project content through the usual review and Apply flow.',
     action:
-      'Notice Import KLE layout in Schematic. No file import is required for this macropad; keep your current nine keys and continue.',
+      'Find Import KLE layout in New. No file import is required for this macropad; keep your current nine keys and continue.',
     target: 'kle',
     workspace: 'schematic',
   },
@@ -132,7 +132,7 @@ export const ONBOARDING_CONTENT = {
     title: 'Hardware and app settings',
     why: 'Schematic also supports encoders, controller choices, split topology and supported scan modes. Settings controls theme, grid, snapping and rulers separately from Project data.',
     action:
-      'Notice Controller, Wiring and Encoder in Schematic, and the Settings gear in the lower navigation. No advanced hardware or settings change is needed. Firmware options are in their own workspace.',
+      'Notice Controller, Wiring and Parts in Schematic; Parts contains folded Keys, Encoders, Wire sections, Wires and Crossings, and the Settings gear in the lower navigation. No advanced hardware or settings change is needed. Firmware options are in their own workspace.',
     target: 'schematic-editors',
     workspace: 'schematic',
   },

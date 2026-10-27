@@ -1,7 +1,6 @@
-import { SchematicEditorPanel } from './schematic-editor-panel';
 import { EncoderPanel } from '@ui/schematic/encoders/components';
+import { SchematicEditorPanel } from './schematic-editor-panel';
 import { WiringControls, ControllerPanel } from '@ui/schematic/wiring/components';
-import { LayoutControls } from '@ui/schematic/layout/components';
 import { PartsList, PartsWireSectionsTable } from '@ui/schematic/parts/components';
 import { SchematicCanvas } from './schematic-canvas';
 import { getSchematicMarks } from '@ui/schematic/rendering/logic';
@@ -24,16 +23,16 @@ export function SchematicWorkspace() {
       </div>
       <SchematicEditorPanel preview={{ workspace }}>
         <ControllerPanel project={project} commit={commit} />
-        <WorkspaceLayoutControls workspace={workspace} />
         <WorkspaceWiringControls workspace={workspace} />
-        <EncoderPanel />
         <PartsList
           commit={commit}
           issues={issues}
           onSelectionChange={workspace.handleSelectionChange}
           project={project}
           selection={selection}
-        />
+        >
+          <EncoderPanel />
+        </PartsList>
       </SchematicEditorPanel>
     </section>
   );
@@ -83,24 +82,6 @@ function WorkspaceCanvas({ workspace, marks }: WorkspaceCanvasProps) {
         onToolChange={workspace.handleToolChange}
       />
     </SchematicCanvas>
-  );
-}
-
-function WorkspaceLayoutControls({ workspace }: { readonly workspace: Workspace }) {
-  const { project, issues, commit, selection } = workspace;
-  return (
-    <LayoutControls
-      commit={commit}
-      hasPreview={workspace.layout.hasPreview}
-      canApply={workspace.layout.canApply}
-      issues={issues}
-      onApply={workspace.layout.handleApply}
-      onCancel={workspace.layout.handleCancel}
-      onPreview={workspace.layout.handlePreview}
-      onSelectionChange={workspace.handleSelectionChange}
-      project={project}
-      selection={selection}
-    />
   );
 }
 

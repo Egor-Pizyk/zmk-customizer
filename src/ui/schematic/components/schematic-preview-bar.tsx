@@ -12,7 +12,7 @@ export function SchematicPreviewBar({ workspace }: SchematicPreviewBarProps) {
     return null;
   }
   return (
-    <div className="flex shrink-0 flex-col gap-2 border-t border-border bg-surface-raised p-2 xl:mr-6">
+    <div className="flex shrink-0 flex-col gap-2 border-t border-border bg-surface-raised p-2 xl:ml-6">
       <p className="font-semibold text-warning">
         <span>{wiring.hasPreview ? 'Wiring preview' : 'Layout preview'}</span> — unsaved
       </p>

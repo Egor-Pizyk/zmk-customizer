@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import type { ChangeEvent, MouseEvent, ReactNode, RefObject } from 'react';
 import { Button, Dialog } from '@ui/components/components';
+import { KleImport } from './kle-import';
 import { PresetPicker } from './preset-picker';
 import { useProject } from '@ui/project/logic';
 
@@ -81,8 +82,10 @@ function NewProjectDialog({ isOpen, onClose }: ConfirmDialogProps) {
     <Dialog isOpen={isOpen} onClose={handleClose} title="Start a new project?" size="wide">
       <p>
         {REPLACE_WARNING} Use Save in the project bar before opening New. Starting a project also
-        clears Undo/Redo history.
+        clears Undo/Redo history when using a preset or starting empty. KLE import keeps one-step
+        Undo.
       </p>
+      <KleImport onImported={handleClose} />
       <PresetPicker onCreated={handleClose} onCancel={handleClose} />
     </Dialog>
   );

@@ -9,6 +9,7 @@ import {
   beginDrag,
   history,
   importText,
+  openPartsGroups,
   saved,
   downloadJson,
   downloadZip,
@@ -38,7 +39,7 @@ async function showEncoderEditor(page: Page) {
   return field;
 }
 async function connectRotary(page: Page) {
-  await page.getByText('Parts', { exact: true }).click();
+  await openPartsGroups(page, ['Wires']);
   for (const [pin, boardPin] of [
     ['A', '20'],
     ['B', '21'],
@@ -237,6 +238,7 @@ async function openEmpty(page: Page) {
   await page.goto('/');
   await importText(page, JSON.stringify(empty));
   await expect(page.getByRole('textbox', { name: 'Name', exact: true })).toHaveValue(empty.name);
+  await openPartsGroups(page);
 }
 
 test('Encoder shortcut and icon hint agree with keyboard placement', async ({ page }) => {

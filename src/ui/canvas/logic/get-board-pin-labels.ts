@@ -1,3 +1,4 @@
+import { getKeyCorners } from '@domain/geometry';
 import { getWirePath } from '@domain/wires/geometry';
 import type { Project, WirePoint } from '@domain';
 
@@ -6,6 +7,8 @@ export type BoardPinLabel = {
   readonly at: WirePoint;
   readonly boardPin?: number;
   readonly label?: string;
+  readonly anchor?: 'start' | 'end';
+  readonly up?: boolean;
 };
 
 export function getBoardPinLabels(project: Project): readonly BoardPinLabel[] {
@@ -24,6 +27,8 @@ export function getBoardPinLabels(project: Project): readonly BoardPinLabel[] {
           {
             id: `${wire.id}:${side}`,
             at,
+            up: terminal?.kind === 'row' && isAboveKeys(project, at, terminal.half),
+            anchor: getLabelAnchor(project, at, terminal?.half),
             label: `${terminal?.half ?? ''} ${terminal?.kind ?? ''} ${terminal?.id ?? ''} ${terminal?.kind === 'ground' ? 'GND' : pinLabel}`,
           },
         ];
@@ -43,4 +48,22 @@ export function getBoardPinLabels(project: Project): readonly BoardPinLabel[] {
           other.at.yU === label.at.yU,
       ) === index,
   );
+}
+
+function getLabelAnchor(
+  project: Project,
+  at: WirePoint,
+  half: string | undefined,
+): 'start' | 'end' {
+  const corners = project.keys
+    .filter((key) => project.wiring?.topology !== 'split' || (key.half ?? 'left') === half)
+    .flatMap((key) => getKeyCorners(key));
+  return corners.some((point) => point.xU <= at.xU) ? 'start' : 'end';
+}
+
+function isAboveKeys(project: Project, at: WirePoint, half: string) {
+  const points = project.keys
+    .filter((key) => project.wiring?.topology !== 'split' || (key.half ?? 'left') === half)
+    .flatMap((key) => getKeyCorners(key));
+  return points.length > 0 && points.every((point) => at.yU < point.yU);
 }

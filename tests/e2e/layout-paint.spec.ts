@@ -1,16 +1,14 @@
 import { expect, test } from './test';
 import { expectGeometry, expectPainted, openProject, saved, selectKey } from './helpers';
 
-test('precise properties keep selected key and unsaved preview visibly inside canvas @cross-browser', async ({
+test('table properties keep selected key and table edit visibly inside canvas @cross-browser', async ({
   page,
 }) => {
   await openProject(page);
   await selectKey(page);
-  const before = await saved(page);
   await expectPainted(page);
-  await page.getByText('Precise properties', { exact: true }).click();
   await expectPainted(page);
-  const width = page.getByRole('spinbutton', { name: 'Selected rotation (°)', exact: true });
+  const width = page.getByRole('spinbutton', { name: 'Key 0 Rotation (°)', exact: true });
   await width.fill('30');
   await width.press('Enter');
   await expectGeometry(page, {
@@ -22,19 +20,17 @@ test('precise properties keep selected key and unsaved preview visibly inside ca
     rotationOriginYU: 5.5,
   });
   await expectPainted(page);
-  expect(await saved(page)).toEqual(before);
+  expect((await saved(page)).keys[0]?.rotationDeg).toBe(30);
 });
 
-test('compact desktop keeps canvas usable when precise properties expand @cross-browser', async ({
+test('compact desktop keeps canvas usable when table properties expand @cross-browser', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await openProject(page);
   await selectKey(page);
-  const before = await saved(page);
-  await page.getByText('Precise properties', { exact: true }).click();
   await expectPainted(page);
-  const width = page.getByRole('spinbutton', { name: 'Selected rotation (°)', exact: true });
+  const width = page.getByRole('spinbutton', { name: 'Key 0 Rotation (°)', exact: true });
   await width.fill('30');
   await width.press('Enter');
   await expectGeometry(page, {
@@ -46,5 +42,5 @@ test('compact desktop keeps canvas usable when precise properties expand @cross-
     rotationOriginYU: 5.5,
   });
   await expectPainted(page);
-  expect(await saved(page)).toEqual(before);
+  expect((await saved(page)).keys[0]?.rotationDeg).toBe(30);
 });
