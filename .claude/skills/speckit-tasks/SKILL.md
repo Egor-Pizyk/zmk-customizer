@@ -1,19 +1,34 @@
 ---
-name: "speckit-tasks"
-description: "Generate an actionable, dependency-ordered tasks.md for the feature based on available design artifacts."
+name: speckit-tasks
+description: Generate an actionable, dependency-ordered tasks.md for the feature based
+  on available design artifacts.
 argument-hint: "Optional task generation constraints"
-compatibility: "Requires spec-kit project structure with .specify/ directory"
+compatibility: Requires spec-kit project structure with .specify/ directory
 metadata:
-  author: "github-spec-kit"
-  source: "templates/commands/tasks.md"
+  author: github-spec-kit
+  source: preset:zmk-customizer
 user-invocable: true
 disable-model-invocation: false
 ---
 
+# Speckit Tasks Skill
 
-## Project context
+## ZMK Customizer project context
 
-Before this stage, read docs/workflow.md and follow AGENTS.md task-based routing. Verify the resolved feature directory matches the requested task. Use project templates, preserve requirement identifiers, and load only relevant supporting artifacts. Project test requirements apply even if generic examples call tests optional. Keep plan.md Relevant context and a single requirement → task → check → evidence mapping current. Do not regenerate completed stages without a relevant change.
+Before this stage, read docs/workflow.md and follow AGENTS.md task-based routing.
+Verify that the resolved feature matches the request. Use project template overrides,
+preserve requirement identifiers and maintain one requirement → task → check → evidence
+mapping. Do not regenerate completed stages without a relevant change.
+
+Project rules take precedence over conflicting generic guidance below:
+- Tests-first and browser coverage follow docs/workflow.md and docs/testing.md;
+  required tests are not optional even when the prompt does not request them.
+- Supporting research/data-model/contracts/quickstart files are needed only for
+  distinct useful content, as defined in docs/workflow.md.
+- Select local checks and completion evidence using docs/commands.md and Git flow;
+  do not impose a generic full local suite instead of the project's changed checks.
+
+
 
 ## User Input
 
@@ -146,7 +161,7 @@ The tasks.md should be immediately executable - each task must be specific enoug
 
 **CRITICAL**: Tasks MUST be organized by user story to enable independent implementation and testing.
 
-**Project test policy**: Follow docs/workflow.md and docs/testing.md. Tests-first is mandatory for domain, storage and generators, and for bug regressions, even when the feature prompt does not repeat it. Include required browser coverage and requirement-to-evidence mapping.
+**Tests are OPTIONAL**: Only generate test tasks if explicitly requested in the feature specification or if user requests TDD approach.
 
 ### Checklist Format (REQUIRED)
 

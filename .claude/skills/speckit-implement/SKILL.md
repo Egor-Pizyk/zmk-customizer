@@ -1,19 +1,34 @@
 ---
-name: "speckit-implement"
-description: "Execute the implementation plan by processing and executing all tasks defined in tasks.md"
+name: speckit-implement
+description: Execute the implementation plan by processing and executing all tasks
+  defined in tasks.md
 argument-hint: "Optional implementation guidance or task filter"
-compatibility: "Requires spec-kit project structure with .specify/ directory"
+compatibility: Requires spec-kit project structure with .specify/ directory
 metadata:
-  author: "github-spec-kit"
-  source: "templates/commands/implement.md"
+  author: github-spec-kit
+  source: preset:zmk-customizer
 user-invocable: true
 disable-model-invocation: false
 ---
 
+# Speckit Implement Skill
 
-## Project context
+## ZMK Customizer project context
 
-Before this stage, read docs/workflow.md and follow AGENTS.md task-based routing. Verify the resolved feature directory matches the requested task. Use project templates, preserve requirement identifiers, and load only relevant supporting artifacts. Project test requirements apply even if generic examples call tests optional. Keep plan.md Relevant context and a single requirement → task → check → evidence mapping current. Do not regenerate completed stages without a relevant change.
+Before this stage, read docs/workflow.md and follow AGENTS.md task-based routing.
+Verify that the resolved feature matches the request. Use project template overrides,
+preserve requirement identifiers and maintain one requirement → task → check → evidence
+mapping. Do not regenerate completed stages without a relevant change.
+
+Project rules take precedence over conflicting generic guidance below:
+- Tests-first and browser coverage follow docs/workflow.md and docs/testing.md;
+  required tests are not optional even when the prompt does not request them.
+- Supporting research/data-model/contracts/quickstart files are needed only for
+  distinct useful content, as defined in docs/workflow.md.
+- Select local checks and completion evidence using docs/commands.md and Git flow;
+  do not impose a generic full local suite instead of the project's changed checks.
+
+
 
 ## User Input
 
@@ -183,7 +198,6 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Check that implemented features match the original specification
    - Validate that tests pass and coverage meets requirements
    - Confirm the implementation follows the technical plan
-   - **REQUIRED**: Run `npm run check` (typecheck + lint + format:check + test) and fix any failures before reporting completion
 
 Note: This command assumes a complete task breakdown exists in tasks.md. If tasks are incomplete or missing, suggest running `/speckit-tasks` first to regenerate the task list.
 
@@ -230,6 +244,5 @@ Report final status with summary of completed work.
 
 - [ ] All tasks in tasks.md completed and marked `[X]`
 - [ ] Implementation validated against specification, plan, and test coverage
-- [ ] `npm run check` passes (typecheck + lint + format:check + test)
 - [ ] Extension hooks dispatched or skipped according to the rules in Mandatory Post-Execution Hooks above
 - [ ] Completion reported to user with summary of completed work
