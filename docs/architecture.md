@@ -29,11 +29,14 @@ Production imports follow this matrix; catalog values enter domain operations as
 | ui/app | composition of UI/domain/catalog/storage; no generator calls |
 | main.tsx | UI/storage/catalog and styles.css |
 
-Enforced by scripts/check-architecture.mjs (resolved imports, re-exports, dynamic imports, separate test locations), oxlint no-restricted-imports overrides and import/no-cycle. Electrical engine modules (wiring/matrix, wires/nets, validation) have no runtime UI API. Mixed wire/crossing query modules grant only explicit UI-safe contracts; new engine exports are private to domain consumers by default. Only project-state calls domain analysis; UI consumers read its shared result. Shared UI modules cannot import workspaces or app composition. Exact root contracts and exceptions are documented below.
+Enforced by scripts/check-architecture.mjs (resolved imports/re-exports/dynamic
+imports and test locations), oxlint no-restricted-imports and import/no-cycle.
+See the exceptions below for electrical-engine and shared-UI boundaries.
 
-See [folder ownership](folder-structure.md) for the concrete groups and test locations.
-
-Group related files inside each layer by responsibility (project, geometry, keys, wiring, bindings, validation). UI workspaces group rendering, interaction, panels and editors. Keep layer roots for composition and shared contracts; avoid generic utils folders; expose each module through explicit named exports in `index.ts`. Unit and interaction tests live separately in `tests/unit/`, mirroring source groups. Browser tests, helpers and fixtures remain in `tests/e2e/`, `tests/helpers/` and `tests/fixtures/`. Cross-module imports use the exact TypeScript alias for the public `index.ts` (`@domain/keys`, `@generators/shield`, `@catalog/bindings`, `@storage/project`, `@ui/schematic/components`, etc.). No deep or relative cross-module imports. Within a module, implementation files use relative imports and never import their own public index. The `modules/public-api` Oxlint rule enforces this in source and tests; the resolved architecture gate follows named re-exports to their owners. Folders are created when the first file needs them, not ahead of time.
+[Folder ownership](folder-structure.md) owns responsibility groups, test locations,
+public module APIs and exact aliases. Keep layer roots for composition/shared
+contracts; create folders only when needed. The modules/public-api lint rule
+checks source and tests; the architecture gate follows exports to their owners.
 
 ## State
 

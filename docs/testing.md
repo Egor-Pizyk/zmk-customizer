@@ -35,20 +35,12 @@ normally. jsdom shims model missing native APIs, not business behavior.
 
 ## Commands and regression floors
 
-Local checks run through `npm run check:changed`: an exact staged snapshot is checked
-without changing the working tree or index. `-- --base origin/main` checks the committed
-HEAD against that base. Deleted/renamed files, global config, fixtures and helpers
-expand selection conservatively. Vitest follows import dependencies; zero related
-tests falls back to the full unit suite. Production changes run all Chromium journeys
-because runtime UI dependencies cannot be inferred safely from static imports.
-Typecheck and architecture invariants remain project-wide. Tooling changes run all
-Node tooling tests. Documentation still receives guideline/link checks.
-
-`make check` remains an explicit full diagnostic command. CI always runs all unit
-coverage, static/tooling, browser matrix, image, mutation and ZMK suites. Direct local
-test commands require a diagnostic or acute-need reason in the task journal. No
-mandatory repeated full local or three-run browser gate remains. Preserve tests-first,
-manual UI acceptance and meaningful behavioral assertions.
+Use the local snapshot selection, conservative test expansion and exact-tree receipts
+in [commands](commands.md). CI owns full unit coverage, static/tooling, browser,
+image and mutation suites; firmware compilation is local-only (see Git flow).
+Direct/full local commands require a diagnostic or justified-necessity reason in
+the task journal. No repeated full-local or three-run browser gate is required.
+Tests-first, manual acceptance and the final-index hook remain mandatory.
 
 Keep tests-first red/green diagnosis early. Finish planned production changes,
 regression scenarios and applicable lint/format fixes before the mandatory staged
@@ -61,8 +53,7 @@ receipts, conservative browser selection and CI/manual gates remain mandatory.
 CI publishes one bot coverage comment per PR with the checked SHA, metrics, threshold
 outcome and run link. New runs replace it; stale heads/attempts cannot overwrite current
 results. Missing/failed coverage is explicit. The publisher runs trusted main code with
-minimal write permissions; PR code only runs with read permissions. The workflow is
-available after its first merge to main. Full reports are CI artifacts.
+minimal write permissions; PR code only runs with read permissions. Full reports are CI artifacts.
 
 Coverage includes executable domain, generators, storage, UI and catalog lookup/
 key-header parsing. Static catalog tables, the composition root and type declarations
@@ -112,22 +103,15 @@ for 14 days even on failure. Traces and screenshots are retained for failed test
 `npx playwright show-trace <trace.zip>` opens a captured trace. Reports and build output
 are ignored in git and excluded from Docker build context.
 
-CI runs once per pull request targeting main, with four required statuses: `check`,
-`e2e`, `image` and `mutations`. Firmware compilation runs locally through
-`make zmk-build`, outside CI. Record its evidence for generator/export changes
-as required by [commands.md](commands.md). CI does not run on push
-or after merge; the separate release workflow still publishes merged PRs. New commits
-cancel obsolete runs for the same PR. Main protection requires up-to-date `check`,
-`e2e`, `image` and `mutations` results and includes administrators.
+[Git flow](guidelines/git-flow.md#merge-and-release) owns required statuses,
+protection and local firmware evidence. CI runs once per PR to main, cancels obsolete
+runs, and does not run on push or after merge; releases use a separate workflow.
 Keep complete viewport/theme matrices in Chromium; Firefox/WebKit need representative
 engine-sensitive cases rather than repeating every presentation combination.
 
-Tests use real mouse moves/down/intermediate moves/up, native keyboard input, accessible
-roles/names, displayed SVG coordinates, actual downloads and read-only storage observations.
-No force clicks, arbitrary sleeps, injected pointer events, mocked React/domain/storage/
-generators, or state-changing evaluate. Playwright's role union omits graphics-symbol;
-canvas keys use the actual Graphics role plus accessible-name CSS prefix as a documented
-compatibility fallback.
+Apply the mandatory browser rules below. Playwright's role union omits
+graphics-symbol; canvas keys use the actual Graphics role plus an accessible-name
+CSS prefix as a documented compatibility fallback.
 
 Screen polygons are checked corner-by-corner against independent trigonometry, not just
 rotated bounding boxes. Screen tolerance is 0.75 CSS px for subpixel layout/serialization;
@@ -155,10 +139,11 @@ all desktop sizes/themes, physical keyboard firmware behavior, or absence of all
 
 ## File organization
 
-Production modules live in responsibility groups under `src/<layer>/`. Vitest tests live in `tests/unit/<layer>/<group>/`, mirroring these groups; application integration tests live in `tests/unit/ui/integration/`. Shared UI tests mirror their module folders (project, app, shortcuts, downloads and issues). Shared test builders and setup stay in `tests/helpers/`, golden inputs and outputs in `tests/fixtures/`, Playwright journeys in `tests/e2e/`, and Node tooling tests in `tests/tooling/`. Tests import each module through its public index.ts alias. Internal implementation files use relative peer imports; the module lint rule also covers tests. Re-export indexes are excluded from coverage because implementation contracts and compiler checks cover them.
+Use [folder ownership](folder-structure.md#tests) for test locations and module APIs.
+Re-export indexes are excluded from coverage because implementation contracts and
+compiler checks cover them.
 
 ## Mandatory browser coverage rules
-
 
 For new or changed user journeys, add or update Playwright E2E tests and include them in the spec, plan and tasks. Keep domain permutations in unit tests; E2E verifies real interaction and agreement across the application. If a feature does not change user behavior and needs no new E2E coverage, record the reason in its artifacts.
 

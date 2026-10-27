@@ -54,17 +54,17 @@ Use the request or existing feature artifacts for the observable goal, feature/F
 
 Keep exact relevant docs, contracts and owning modules in `plan.md`. Maintain one requirement → task → test/check → evidence mapping in tasks or verification. Add research, data-model, contracts or quickstart artifacts only for distinct useful content.
 
-On resumption, inspect current status/diff and resolve the intended feature. Reuse available unchanged spec/plan/task context; read changed or missing applicable sections. Recorded evidence retains its date/revision/scope; historical success is not a check of the current tree. A handoff should point to existing artifacts and briefly state branch/feature, revision, accepted scope, pending work, decisions and check limits.
+For resumption, handoff and revision-specific evidence, follow
+[agent continuity rules](agent-rules.md#efficient-context-and-verification).
+Reuse current feature artifacts and read changed or missing applicable sections.
 
 ## Local checks and delivery
 
 Use the [focused diagnostic loop](testing.md#focused-diagnostic-loop) during
-implementation: stage explicit paths, inspect `npm run check:focus -- --plan`, then
-run `npm run check:focus` and read its `summary.json` before full logs. Preserve
-tests-first for domain/storage/generators and bug regressions. After completing
-code and semantic test updates, stage the full change and run the mandatory final
-`npm run check:changed`; focus receipts cannot satisfy that gate. Full suites and
-coverage gates run in CI. Direct test commands are reserved for diagnosis or justified necessity.
-Record one task journal with the checked SHA/tree digest and actual outcomes, linking
-from other artifacts. Open one PR and stop; do not auto-merge or wait for CI. See
-[Git flow](guidelines/git-flow.md) and [commands](commands.md).
+implementation: stage explicit paths, inspect `npm run check:focus -- --plan`, run
+`npm run check:focus` and read its `summary.json` before full logs. Preserve the
+tests-first requirements above. Focus receipts cannot satisfy the mandatory final
+`npm run check:changed` gate. Use [commands](commands.md) for snapshot checks and CI
+scope, and [agent rules](agent-rules.md#efficient-context-and-verification) for the
+single revision-specific journal. [Git flow](guidelines/git-flow.md#deliver) owns
+delivery: open/update one PR and stop unless separately authorized to merge.

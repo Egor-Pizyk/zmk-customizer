@@ -105,4 +105,4 @@ const VARIANT_CLASSES = {
 
 ### Feature 033 panel exception
 
-Schematic editing panels and app Settings additionally support the narrow viewports specified by 033, including 390px. Retain base/lg/xl conventions and existing tokens/control density. Use one expanded non-modal Schematic editor, base lower area and xl docking, with canvas/panel budgets in 033. This does not redesign other workspaces or change their desktop target.
+For Schematic editing panels and app Settings, apply the [033 narrow-viewport exception](admin-ui.md#feature-033-panel-exception), including 390px support and canvas/panel budgets.
