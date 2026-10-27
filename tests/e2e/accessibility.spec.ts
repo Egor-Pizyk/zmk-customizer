@@ -4,7 +4,8 @@ import { expectGeometry, history, key, openProject, saved } from './helpers';
 test('keyboard-only table selection, native stepping, properties, duplication and deletion @cross-browser', async ({
   page,
 }) => {
-  await openProject(page);
+  // Keep unrelated disclosures closed so Firefox's tab starting point stays in Keys.
+  await openProject(page, undefined, ['Keys']);
   // Start at the document, then enter controls through Tab rather than pointer/focus injection.
   await page.keyboard.press('Control+Home');
   for (let index = 0; index < 60; index++) {

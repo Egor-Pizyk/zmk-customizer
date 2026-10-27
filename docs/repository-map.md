@@ -8,12 +8,13 @@ docs/
   zmk/                 verified ZMK reference notes with links
   roadmap.md           feature list in implementation order
   roadmap-2.0.0.md  discovery basis for 2.0.0; independent mechanical module
+  roadmap-3.0.0.md  candidate keycap generator and reference review for 3.0.0
   research/            supporting discovery evidence, not approved feature specifications
   decisions/           ADRs (index in docs/decisions/README.md)
   context-verification.md  context-routing review and validation limits
   testing-history.md   archived testing measurements, not current verification
 specs/                 Spec Kit feature specs (created by /speckit-specify)
-.specify/              Spec Kit templates, scripts, constitution
+.specify/              Spec Kit 1.2.3 managed files; project templates/overrides/, presets/zmk-customizer/ and registry; constitution
 .claude/               Claude Code settings, hooks/format-lint.sh (PostToolUse on Edit|Write), agents/ (zmk-reviewer, domain-test-writer, spec-reviewer), skills/ (/speckit-* commands), rules/ (symlinks to docs/guidelines)
 src/                   application code (docs/architecture.md)
 tests/fixtures/        upstream/ (verbatim ZMK shields, SHA-pinned), project/ and schematic/ (project JSON); expected generator output lands here with the generators

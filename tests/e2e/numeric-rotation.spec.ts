@@ -94,3 +94,22 @@ for (const hasPush of [false, true]) {
     expect(await saved(page)).toEqual(applied);
   });
 }
+
+test('numeric table Escape discards draft before another property commits @cross-browser', async ({
+  page,
+}) => {
+  await openProject(page);
+  const before = await saved(page);
+  const rotation = page.getByRole('spinbutton', { name: 'Key 0 Rotation (°)', exact: true });
+  await rotation.fill('25');
+  expect(await saved(page)).toEqual(before);
+  await rotation.press('Escape');
+  await expect(rotation).toHaveValue('0');
+  const x = page.getByRole('spinbutton', { name: 'Key 0 X (u)', exact: true });
+  await x.fill('6');
+  await x.press('Enter');
+  expect((await saved(page)).keys[0]).toMatchObject({ xU: 6, yU: 5 });
+  expect((await saved(page)).keys[0]?.rotationDeg).toBeUndefined();
+  await history(page, 'Undo').click();
+  expect(await saved(page)).toEqual(before);
+});

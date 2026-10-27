@@ -1,0 +1,26 @@
+schema_version: "1.0"
+
+preset:
+  id: "zmk-customizer"
+  name: "ZMK Customizer Project Rules"
+  version: "1.0.0"
+  description: "Project context and test policy layered over upstream Spec Kit commands"
+  author: "Egor-Pizyk"
+
+requires:
+  speckit_version: ">=1.2.3,<2.0.0"
+
+provides:
+  templates:
+    - type: "command"
+      name: "speckit.plan"
+      file: "commands/project-context.md"
+      strategy: "prepend"
+    - type: "command"
+      name: "speckit.tasks"
+      file: "commands/project-context.md"
+      strategy: "prepend"
+    - type: "command"
+      name: "speckit.implement"
+      file: "commands/project-context.md"
+      strategy: "prepend"

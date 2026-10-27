@@ -58,7 +58,7 @@ const formatted = manifest.files.filter(
   (file) => existsSync(file) && /\.(?:[cm]?[jt]sx?|json|css|ya?ml)$/u.test(file),
 );
 if (!plan.fullLint && formatted.length)
-  run('npx', ['--no-install', 'oxfmt', '--check', ...formatted]);
+  run('npx', ['--no-install', 'oxfmt', '--check', '--no-error-on-unmatched-pattern', ...formatted]);
 if (plan.tooling)
   run('node', ['--test', ...JSON.parse(readFileSync('.tooling-tests.json', 'utf8'))]);
 if (plan.fullUnit) npm('test');
