@@ -69,3 +69,39 @@ Focus receipts/logs live under `.check-logs/focus/`, separate from final receipt
 Each execution writes `summary.json` with selection reasons, status, per-step timing,
 full-log paths and bounded failure excerpts. Read it first, then the relevant full log.
 A successful focus run never replaces `check:changed` or its pre-commit gate.
+
+## Spec Kit maintenance
+
+The CLI and managed project files are pinned to Spec Kit **1.2.3**. Install the CLI
+with uv-managed Python 3.12 (the application runtime/dependencies are unaffected):
+
+```sh
+uv tool install --force --python 3.12 --from git+https://github.com/github/spec-kit.git@v1.2.3 specify-cli
+specify version --json
+specify integration status
+```
+
+Project-owned sources are separate from upstream files:
+
+- `.specify/templates/overrides/{spec,plan,tasks}-template.md` preserve project
+  artifact formats. Base files in `.specify/templates/` remain upstream-managed.
+- `.specify/presets/zmk-customizer/` owns the common context/test-policy prepend
+  for plan/tasks/implement; `.specify/presets/.registry` enables it in fresh clones.
+  Edit this local preset, then run `specify integration upgrade claude` to regenerate
+  delivered skills. Do not hand-edit generated `.claude/skills/speckit-*` files.
+  The ignored `.composed/` files are disposable CLI caches.
+- Existing `.agents/skills` symlinks expose the same generated skills to Codex.
+  Claude is the registered integration; preserve these adapters when upgrading.
+
+Routine integration refresh uses `specify integration upgrade claude`; confirm
+`specify integration status` reports no modified/missing managed files. The CLI can
+warn that existing shared infrastructure was skipped even when it already matches
+the pinned release. For a version change, review upstream differences and protect
+project-owned sources before using `--force` to refresh shared scripts/templates.
+Do not use `preset update` against this local preset without a separate source copy:
+that operation removes the installed directory before reinstalling.
+
+Native Spec Kit events are disabled in stored integration options to preserve the
+existing formatter hook. Automatic skill invocation remains enabled. Enabling
+new events or explicit-only invocation is a separate workflow choice. Preserve
+`specs/`, constitution, feature selection and unrelated agent settings on upgrades.

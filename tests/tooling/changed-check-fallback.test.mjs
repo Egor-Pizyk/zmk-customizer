@@ -45,3 +45,49 @@ if(process.argv[2]==='run' && process.argv[3]==='test') require('node:fs').write
     rmSync(directory, { recursive: true, force: true });
   }
 });
+
+test('formatter skips excluded agent files but still rejects malformed formatting', () => {
+  const directory = mkdtempSync(path.join(tmpdir(), 'changed-format-'));
+  const formatter = fileURLToPath(new URL('../../node_modules/oxfmt/bin/oxfmt', import.meta.url));
+  const runner = fileURLToPath(new URL('../../scripts/run-changed-checks.mjs', import.meta.url));
+  try {
+    for (const name of ['.specify', 'bin', 'node_modules/vitest'])
+      mkdirSync(path.join(directory, name), { recursive: true });
+    writeFileSync(
+      path.join(directory, '.oxfmtrc.json'),
+      JSON.stringify({ ignorePatterns: ['.specify/**'] }),
+    );
+    writeFileSync(path.join(directory, '.specify/integration.json'), '{"version":"1.2.3"}');
+    writeFileSync(path.join(directory, 'bin/npm'), '#!/bin/sh\nexit 0\n', { mode: 0o755 });
+    writeFileSync(
+      path.join(directory, 'bin/npx'),
+      `#!/usr/bin/env node
+const {spawnSync}=require('node:child_process');
+const args=process.argv.slice(2);
+if(args[1]!=='oxfmt') process.exit(0);
+const result=spawnSync(process.execPath,[${JSON.stringify(formatter)},...args.slice(2)],{stdio:'inherit'});
+process.exit(result.status??1);
+`,
+      { mode: 0o755 },
+    );
+    const check = (files) => {
+      writeFileSync(
+        path.join(directory, '.changed-files.json'),
+        JSON.stringify({ files, revision: 'format-tree' }),
+      );
+      return spawnSync(process.execPath, [runner], {
+        cwd: directory,
+        env: { ...process.env, PATH: `${path.join(directory, 'bin')}:${process.env.PATH}` },
+        encoding: 'utf8',
+      });
+    };
+    const excluded = check(['.specify/integration.json']);
+    assert.equal(excluded.status, 0, excluded.stderr);
+    writeFileSync(path.join(directory, 'bad.json'), '{"items":[1,2,3]}');
+    const malformed = check(['.specify/integration.json', 'bad.json']);
+    assert.notEqual(malformed.status, 0, 'formatting errors must still block the snapshot');
+    assert.match(malformed.stderr, /bad\.json/u);
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
