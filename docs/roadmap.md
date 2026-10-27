@@ -724,6 +724,14 @@ Parsing existing ZMK shield files back into a project (Devicetree parsing), cust
 
 **Ordering.** The owner explicitly requested this additional feature while PRs #29/#30 are open. Keep a separate branch from current main and reconcile overlapping changes merged before implementation; do not absorb another active feature or create a stack. Planning must record version/license/core capability evidence, dependency/presentation ADR and measurable parity/performance gates before production adoption.
 
+### 040 — symmetric-wiring
+
+**Status.** [Clarified specification](../specs/040-symmetric-wiring/spec.md), 2026-10-27; пять ответов приняты, [план подготовлен](../specs/040-symmetric-wiring/plan.md); [задачи подготовлены](../specs/040-symmetric-wiring/tasks.md), следующий этап speckit-analyze; реализация не начата. 039 уже занят focused-local-checks в отдельной ветке; существующие номера не меняются.
+
+**Goal and scope.** Симметричная шинная матрица как стиль существующей топологии, direct с отдельными маршрутами, независимые переключатели пинов/диодов, генерация с заменой и Prettify без изменения электрического смысла, защищённые провода, области, диагностика и сохраняемые настройки. Все возможности обязательны; MVP и последующие этапы находятся внутри одной фичи.
+
+**Ordering.** После 038. Пользователь явно запросил ветку от текущей 038 с включением main при открытом PR #34; это записанная зависимость и исключение из старта от main, а не неявный стек. Сейчас только спецификация; реализация/слияние после принятия 038 и согласования основания с main. Не расширяет историческую первую major, механическую или keycap roadmap; релизная принадлежность открыта. [Журнал](../specs/040-symmetric-wiring/verification.md).
+
 ## Open decisions (AGENTS.md is silent)
 
 - ~~Schema versioning before first release~~ — resolved: v1 frozen at merge of 002; every later change adds a migration.
