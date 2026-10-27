@@ -18,7 +18,9 @@ export function focusKeyLater(keyId: string) {
 // With no keys left, focus returns to the canvas itself (accessibility.md "Focus is never lost").
 function focusCanvasLater() {
   requestAnimationFrame(() => {
-    document.querySelector<SVGSVGElement>('[data-canvas-workspace="schematic"]')?.focus();
+    document
+      .querySelector<SVGElement | HTMLElement>('[data-canvas-workspace="schematic"]')
+      ?.focus();
   });
 }
 

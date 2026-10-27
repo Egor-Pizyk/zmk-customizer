@@ -64,3 +64,32 @@ test('onboarding shared contract keeps workspace and app implementations private
     );
   }
 });
+
+const diagramLogic = 'src/ui/schematic/diagram/logic/create-diagram.ts';
+test('JointJS core is confined to the private Schematic adapter', () => {
+  assert.deepEqual(checkSource(diagramLogic, "import { dia } from '@joint/core';"), []);
+  for (const file of [
+    'src/domain/probe.ts',
+    'src/catalog/probe.ts',
+    'src/storage/probe.ts',
+    'src/generators/probe.ts',
+    'src/ui/bindings/probe.ts',
+    'src/ui/schematic/diagram/components/probe.tsx',
+    'src/ui/schematic/interaction/probe.ts',
+  ]) {
+    assert.ok(
+      checkSource(file, "import { dia } from '@joint/core';").some(
+        (issue) => issue.rule === 'external-import',
+      ),
+      file,
+    );
+  }
+  for (const target of ['@joint/core/src/dia/Graph', '@joint/core/dist/joint.js', '@joint/plus']) {
+    assert.ok(
+      checkSource(diagramLogic, `import * as core from '${target}';`).some(
+        (issue) => issue.rule === 'external-import',
+      ),
+      target,
+    );
+  }
+});

@@ -6,7 +6,7 @@ import type { ToolId } from '@ui/schematic/tools/logic';
 import { createKeyKeyboardHandler } from './use-key-keyboard';
 import { useKeyClipboard } from './use-key-clipboard';
 import { useSchematicShortcuts } from './use-schematic-shortcuts';
-import type { KeyboardEvent } from 'react';
+import type { KeyInput } from './key-input';
 
 type SchematicKeyboardOptions = {
   readonly wiring?: { readonly hasPreview: boolean; readonly handleCancel: () => void };
@@ -54,7 +54,7 @@ export function useSchematicKeyboard(options: SchematicKeyboardOptions) {
     onSelectionChange: options.onSelectionChange,
     onFocusKey: focusKeyLater,
   });
-  return (keyId: string, event: KeyboardEvent<SVGGElement>) => {
+  return (keyId: string, event: KeyInput) => {
     keyKeyboard(keyId, event);
   };
 }

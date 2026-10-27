@@ -23,7 +23,9 @@ function startMultiKeyDrag(state: PointerState, world: WirePoint, event: Press['
   if (selectedKeys.length === 0) {
     return;
   }
-  event.currentTarget.setPointerCapture(event.pointerId);
+  event.preventDefault();
+  event.focus();
+  event.capture();
   const keyStarts = selectedKeys.map((keyId) => {
     const key = state.project.keys.find((candidate) => candidate.id === keyId);
     return { keyId, start: key ? { xU: key.xU, yU: key.yU } : { xU: 0, yU: 0 } };
@@ -49,7 +51,9 @@ function startSingleKeyDrag(
   const key = state.project.keys.find((candidate) => candidate.id === event.keyId);
   state.onSelectionChange({ kind: 'key', keyId: event.keyId });
   if (key !== undefined) {
-    event.currentTarget.setPointerCapture(event.pointerId);
+    event.preventDefault();
+    event.focus();
+    event.capture();
     const keyStart = { xU: key.xU, yU: key.yU };
     state.onDragChange({
       kind: 'key',

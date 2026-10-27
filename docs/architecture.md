@@ -67,3 +67,7 @@ The dependency matrix in docs/architecture.md is checked by scripts/check-archit
 These static checks do not establish semantic purity or complete alias/data-flow analysis; tests and review remain required.
 
 Feature 033 UI-safe wire queries: getWireConductors and getWireSections expose visible geometry/selection descriptions only. Capture, partition analysis and routing remain domain-owned and unavailable to runtime UI consumers.
+
+## JointJS Schematic presentation boundary (038)
+
+Under [ADR0023](decisions/0023-jointjs-schematic-projection.md), `src/ui/schematic/diagram/logic/` alone may import exact `@joint/core@4.3.3`; no deep source imports or runtime library re-exports. The private Graph/Paper is a disposable projection, outside Project, domain APIs, storage, generators and project history. React owns its host, the adapter owns its descendants, and completed normalized gestures invoke existing domain operations through provider commit. Shared surface contracts expose no JointJS types; Bindings retains its SVG renderer. No graph-change-to-commit, automatic electrical routing, second camera or new context. scripts/check-architecture.mjs enforces the exact import boundary and rejects runtime library re-exports; tsconfig.json registers the adapter aliases. Immutable presentation descriptors are derived from the existing domain geometry and descriptions, with no second circuit model.

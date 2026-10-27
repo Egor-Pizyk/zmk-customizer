@@ -22,7 +22,7 @@ type BindingsCanvasProps = {
   readonly marquee: Marquee | undefined;
   readonly problemsByKeyId: ReadonlyMap<string, readonly string[]>;
   readonly pointerHandlers: Pick<
-    SurfaceContent,
+    Extract<SurfaceContent, { readonly kind?: 'svg' }>,
     'onPointerDown' | 'onPointerMove' | 'onPointerUp' | 'onPointerCancel'
   >;
   readonly onKeycapSize: (keyId: string) => void;

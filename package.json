@@ -28,6 +28,7 @@
     "check:static": "npm run check:architecture && npm run check:guidelines && npm run check:mutation-runners && npm run check:release && npm run typecheck && npm run test:e2e:types && npm run lint && npm run format:check"
   },
   "dependencies": {
+    "@joint/core": "4.3.3",
     "fflate": "0.8.3",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",

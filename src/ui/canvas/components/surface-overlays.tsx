@@ -5,7 +5,7 @@ import { useElementSize } from '@ui/canvas/logic';
 import type { useSurfaceViewport, WorldPoint } from '@ui/canvas/logic';
 
 type SurfaceOverlaysProps = {
-  readonly svgRef: RefObject<SVGSVGElement | null>;
+  readonly svgRef: RefObject<Element | null>;
   readonly surface: ReturnType<typeof useSurfaceViewport>;
   readonly pointer: WorldPoint | undefined;
 };

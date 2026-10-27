@@ -6,6 +6,10 @@ import { editNumber } from './helpers';
 
 export async function runOnboardingExercise(page: Page, info: TestInfo, isKeyboard: boolean) {
   await page.goto('/');
+  await continueOnboardingExercise(page, info, isKeyboard);
+}
+
+export async function continueOnboardingExercise(page: Page, info: TestInfo, isKeyboard: boolean) {
   await activate(
     page.getByRole('button', { name: 'Start empty learning project', exact: true }),
     isKeyboard,

@@ -90,7 +90,9 @@ export function startBendDrag(state: PointerState, { hit, world, event }: Select
   if (bendIndex === -1) {
     return;
   }
-  event.currentTarget.setPointerCapture(event.pointerId);
+  event.preventDefault();
+  event.focus();
+  event.capture();
   state.onSelectionChange({ kind: 'wire', wireId: hit.wireId });
   state.onDragChange({
     kind: 'bend',

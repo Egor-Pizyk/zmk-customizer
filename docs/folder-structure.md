@@ -101,3 +101,7 @@ To keep barrels acyclic, query/policy modules are below editing modules, net der
 ## Logic and component groups
 
 Every UI responsibility group that contains both .ts and .tsx implementations is split into logic/ and components/. Functions, hooks and shared types live in logic/; JSX lives in components/. Each child has its own explicit index.ts and exact alias, for example @ui/bindings/picker/logic and @ui/bindings/picker/components. Index files are the extension exception. Pure groups are retained; no empty folders or parent compatibility barrels are created. Tests mirror the source owner, including .test.ts contracts for .tsx components. The source architecture gate rejects mixed implementation extensions and misplaced files in logic/components.
+
+## Feature 038 adapter ownership
+
+`src/ui/schematic/diagram/logic/` owns the private JointJS lifecycle, immutable projection descriptors and normalized event bridge; `src/ui/schematic/diagram/components/` owns the React host. Tests mirror those owners. Their named aliases are registered in tsconfig.json. Shared canvas remains library-independent; no Graph/Paper type escapes this adapter into domain/storage/generators. See [038 plan](../specs/038-jointjs-schematic-editor/plan.md).

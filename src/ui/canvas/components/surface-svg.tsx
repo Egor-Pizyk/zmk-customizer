@@ -13,13 +13,13 @@ export type SurfaceSvgProps = {
   readonly drag: ReturnType<typeof useSurfaceViewport>['drag'];
   readonly onPointerMove: (event: PointerEvent<SVGSVGElement>) => void;
   readonly onPointerLeave: () => void;
-  readonly content: SurfaceContent | undefined;
+  readonly content: Extract<SurfaceContent, { readonly kind?: 'svg' }> | undefined;
 };
 
 const PRIMARY_BUTTON = 0;
 
 function createPrimaryHandlers(input: {
-  readonly content: SurfaceContent | undefined;
+  readonly content: Extract<SurfaceContent, { readonly kind?: 'svg' }> | undefined;
   readonly viewport: Viewport;
   readonly drag: SurfaceSvgProps['drag'];
 }) {
@@ -53,6 +53,7 @@ export function SurfaceSvg(props: SurfaceSvgProps) {
 
   function handlePointerMove(event: PointerEvent<SVGSVGElement>) {
     onPointerMove(event);
+    content?.onPointerMove?.(toWorldPoint(event, viewport), event);
   }
 
   function handlePointerLeave() {

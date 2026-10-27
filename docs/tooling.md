@@ -22,3 +22,5 @@ Approved runtime dependencies (add only when the first feature needs them):
 - `fflate` — building the download `.zip`
 
 Anything else needs a line in `docs/decisions/` explaining why a few lines of our own code are not enough. Prefer browser APIs: SVG for the canvas, `<dialog>`, `<details>`, `URL.createObjectURL` for downloads, CSS for layout.
+
+Feature 038 additionally approves exact `@joint/core` version `4.3.3` (MPL-2.0) only in `src/ui/schematic/diagram/logic/`, under [ADR0023](decisions/0023-jointjs-schematic-projection.md). The manifest and lockfile pin that exact version; upstream license and source notices live in public/licenses/. No other JointJS package, paid extension or pure-layer import is approved; retain upstream notices and verify offline assets.
