@@ -32,3 +32,21 @@ it('keeps an eight pixel square inside a fixed 24 pixel pointer target at low zo
   expect(handle.dataset['bendYU']).toBe('4');
   expect(handle.dataset['bendIndex']).toBeUndefined();
 });
+
+it('moves an existing corner target without detaching and recreating its DOM', () => {
+  const { container, rerender } = render(drawHandle(3));
+  const handle = getDefinedValue(container.querySelector<SVGElement>('[data-wire-bend]'));
+  rerender(drawHandle(4));
+  expect(container.querySelector('[data-wire-bend]')).toBe(handle);
+  expect(handle.dataset['bendXU']).toBe('4');
+});
+
+const drawHandle = (xU: number) =>
+  createElement(
+    'svg',
+    {},
+    createElement(BendHandles, {
+      pxPerU: 48,
+      handles: [{ wireId: 'w1', point: { xU, yU: 4 }, bendIndex: undefined }],
+    }),
+  );

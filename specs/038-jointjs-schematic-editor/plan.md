@@ -88,3 +88,6 @@ Tasks will hold the single FR → task → assertion → journal evidence mappin
 ## Decisions and uncertainty
 
 Exact package and projection architecture resolved. Scope is whole Schematic scene with custom interaction policies retained; this is not a claim that stock JointJS tools replace all custom code. No schema/generator changes and no performance optimization speculative abstractions. ADR0023 partially supersedes dependency/presentation decisions only. Strict API integration and measurable rendered parity remain execution gates, not permission to expand scope. Later merges from PR29/30 require rebase/reconciliation before implementation. No remaining product clarification or architecture gate violation; the stage ends with design, without production installation or edits.
+
+
+Post-review repair: retain the newly inserted waypoint in transient wire selection, expose its square handle alongside real corners, and preserve native handle DOM identity during movement. Section selection explicitly focuses the shared canvas so Escape works in WebKit. Diagnose remaining CI multi-key long tasks with isolated CPU profiles; preserve existing performance budgets. No Project/schema or electrical-engine change is intended.

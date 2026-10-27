@@ -1,3 +1,4 @@
+import { getNearestPointOnPath } from '@domain/geometry';
 import { getWirePath } from '@domain/wires/geometry';
 import {
   getWireBendsAfterCornerMove,
@@ -43,7 +44,16 @@ export function insertBendAt(
     state.onHint(resourceError);
     return;
   }
-  state.onSelectionChange({ kind: 'wire', wireId: input.wireId });
+  const wire = state.project.wires.find((candidate) => candidate.id === input.wireId);
+  const activeBend =
+    wire === undefined
+      ? undefined
+      : getNearestPointOnPath(getWirePath(state.project, wire), input.point);
+  state.onSelectionChange({
+    kind: 'wire',
+    wireId: input.wireId,
+    ...(activeBend === undefined ? {} : { activeBend }),
+  });
   state.commit((current) => setWireBends(current, { wireId: input.wireId, bends }));
 }
 
@@ -93,7 +103,7 @@ export function startBendDrag(state: PointerState, { hit, world, event }: Select
   event.preventDefault();
   event.focus();
   event.capture();
-  state.onSelectionChange({ kind: 'wire', wireId: hit.wireId });
+  state.onSelectionChange({ kind: 'wire', wireId: hit.wireId, activeBend: hit.point });
   state.onDragChange({
     kind: 'bend',
     wireId: hit.wireId,

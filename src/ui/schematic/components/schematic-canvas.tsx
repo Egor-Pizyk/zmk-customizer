@@ -42,6 +42,7 @@ function createSurfaceContent(
   const handlePointerCancel = handlers.onPointerCancel;
   const crossings = getProjectAnalysis(project).crossings;
   const { paths } = getSchematicGeometry(project);
+  const handles = getWireBendHandles(project, paths, input.selection);
   return {
     ...(availability.isUnavailable ? {} : createNativePointerHandlers(handlers, project)),
     kind: 'host',
@@ -57,7 +58,7 @@ function createSurfaceContent(
     ),
     renderScreen: (view) =>
       availability.isUnavailable ? null : (
-        <SchematicOverlay {...input} paths={paths} crossings={crossings} view={view} />
+        <SchematicOverlay {...input} handles={handles} crossings={crossings} view={view} />
       ),
   };
 }
@@ -82,14 +83,17 @@ function createNativePointerHandlers(handlers: PointerHandlers, project: Project
   return result;
 }
 
-function SchematicOverlay(
-  props: ContentInput &
-    Pick<SchematicLayerProps, 'paths' | 'crossings'> & { readonly view: ContentView },
-) {
+type OverlayInput = ContentInput &
+  Pick<SchematicLayerProps, 'crossings'> & {
+    readonly view: ContentView;
+    readonly handles: ReturnType<typeof getWireBendHandles>;
+  };
+
+function SchematicOverlay(props: OverlayInput) {
   const {
     project,
     view,
-    paths,
+    handles,
     crossings,
     marquee,
     hoverPreview,
@@ -104,9 +108,7 @@ function SchematicOverlay(
         className="pointer-events-auto"
         transform={`translate(${view.panXPx} ${view.panYPx}) scale(${view.pxPerU})`}
       >
-        {isReadOnly === true ? null : (
-          <BendHandles handles={getWireBendHandles(project, paths)} pxPerU={view.pxPerU} />
-        )}
+        {isReadOnly === true ? null : <BendHandles handles={handles} pxPerU={view.pxPerU} />}
         <MarqueeLayer marquee={marquee} />
         <HoverPreviewLayer preview={hoverPreview} view={view} />
       </g>

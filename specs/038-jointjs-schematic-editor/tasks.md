@@ -125,6 +125,11 @@ T047 follows automated parity T045; it may proceed while manual T046 is pending 
 
 First prove package/host viability, then switch inspection projection (US1), then gestures/wiring/selection/preview/recovery, and finally accessible/offline/onboarding parity. Keep current electrical/geometry helpers and controls where needed; minimize adapter-specific abstractions. No production adoption/completion declaration based on an isolated host spike. Run speckit-analyze on spec/plan/tasks before starting implementation, resolve blocking findings and maintain tests-first for any domain/regression change. Every accepted logical command goes through provider commit; Graph setters/events remain presentation operations.
 
+## Post-review repairs
+
+- [X] T053 [FR-008] Reproduce and repair Select double-click waypoint square/drag behavior with real pointer, history and endpoint/contact preservation; retain corner deduplication and obsolete-waypoint policy.
+- [ ] T054 [FR-012, FR-013, FR-016] Reproduce CI WebKit Escape and remaining Chromium multi-key long-task failures, repair owning code without relaxing checks, verify affected engines and exact staged snapshot, record evidence and update PR34.
+
 ## Requirement coverage
 
 This table is the only requirement → task → check → evidence map. Evidence column is pending until execution and points to the single journal; source research and baseline receipts alone do not satisfy migration acceptance.
@@ -138,14 +143,14 @@ This table is the only requirement → task → check → evidence map. Evidence
 | FR-005 / geometry/snap, US2 | T018, T020–T022 | pointer/numeric own-center/magnetic/Shift equivalence and refusal | Pass: automated receipts and final gate in [verification.md](verification.md) |
 | FR-006 / durable wires, US3 | T023–T029 | A–B–C/junction/free-end contacts, partitions/history/reload | Pass: automated receipts and final gate in [verification.md](verification.md) |
 | FR-007 / crossings, US3 | T013, T023, T025, T027–T029 | independent selective insulation/overlap/multiple-crossing geometry | Pass: automated receipts and final gate in [verification.md](verification.md) |
-| FR-008 / corners/parts, US3 | T013, T023–T024, T026–T029 | derived/coincident corners, fixed anchors, diode/encoder push identity | Pass: automated receipts and final gate in [verification.md](verification.md) |
+| FR-008 / corners/parts, US3 | T013, T023–T024, T026–T029, T053 | derived/coincident corners, fixed anchors, diode/encoder push identity | Pass: automated receipts and final gate in [verification.md](verification.md) |
 | FR-009 / section deletion, US4 | T030–T034 | both L-crossing sides, mixed marquee/list/text precedence, exact survivors | Pass: automated receipts and final gate in [verification.md](verification.md) |
 | FR-010 / previews, US5 | T035, T037, T039 | Rebuild/topology/read-only/stale proposal and Apply/Cancel | Pass: automated receipts and final gate in [verification.md](verification.md) |
 | FR-011 / files/output, US1/US5 | T011–T012, T015–T016, T034–T035, T037, T039 | legacy/import/no-write/JSON, actual ZIP/baseline byte equality, invalid export | Pass: automated receipts and final gate in [verification.md](verification.md) |
-| FR-012 / accessibility/layout, US6 | T006–T007, T014, T027, T031, T033, T040, T042–T043, T045–T046 | native keyboard/focus, viewport/theme/reflow matrix, manual screen-reader/OS checks | Automated receipts pass; T046 user-reported acceptance on 2026-10-27 recorded in [verification.md](verification.md) |
-| FR-013 / offline/recovery/performance, US5/US6 | T008–T009, T036, T038–T039, T041, T045 | classified recovery, 25 cycles, paired timings/traces, no remote calls | Pass: offline/recovery and final paired measurement in [verification.md](verification.md) |
+| FR-012 / accessibility/layout, US6 | T006–T007, T014, T027, T031, T033, T040, T042–T043, T045–T046, T054 | native keyboard/focus, viewport/theme/reflow matrix, manual screen-reader/OS checks | Automated receipts pass; T046 user-reported acceptance on 2026-10-27 recorded in [verification.md](verification.md) |
+| FR-013 / offline/recovery/performance, US5/US6 | T008–T009, T036, T038–T039, T041, T045, T054 | classified recovery, 25 cycles, paired timings/traces, no remote calls | Pass: offline/recovery and final paired measurement in [verification.md](verification.md) |
 | FR-014 / onboarding, US6 | T040, T044–T045 | protected actual 3×3-to-ZIP journey/exit/restore | Pass: automated receipts and final gate in [verification.md](verification.md) |
 | FR-015 / dependency/decision | T001–T005, T010, T047–T048 | exact manifest/notice/bundle and import/API/ADR/effect gate review | Pass: automated receipts and final gate in [verification.md](verification.md) |
-| FR-016 / evidence/completion | T001–T002, T010, T016, T022, T029, T034, T039, T041, T045–T046, T048–T052 | exact-tree changed check, rendered/manual/paired comparison receipts and final coverage audit | Final integrated gate passes; T046 user-reported acceptance on 2026-10-27 recorded in [verification.md](verification.md) |
+| FR-016 / evidence/completion | T001–T002, T010, T016, T022, T029, T034, T039, T041, T045–T046, T048–T054 | exact-tree changed check, rendered/manual/paired comparison receipts and final coverage audit | Final integrated gate passes; T046 user-reported acceptance on 2026-10-27 recorded in [verification.md](verification.md) |
 
 SC coverage: SC-001 via US1/US5; SC-002 via US2–US4; SC-003 via US3/US4; SC-004 via US6; SC-005 via US6 offline/onboarding; SC-006 via T002/T041/T045; SC-007 via T048–T052. Do not mark a scenario passed without its actual acceptance evidence.

@@ -12,6 +12,8 @@ export function pressKeyOrSection(state: PointerState, input: Press): boolean {
     return true;
   }
   if (input.hit.kind === 'section') {
+    input.event.preventDefault();
+    input.event.focus();
     selectSection(state, { sectionId: input.hit.sectionId, shiftKey: input.event.shiftKey });
     return true;
   }

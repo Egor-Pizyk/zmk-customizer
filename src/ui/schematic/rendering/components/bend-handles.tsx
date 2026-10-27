@@ -11,14 +11,14 @@ const TARGET_SIZE_PX = 24;
 export function BendHandles({ handles, pxPerU }: BendHandlesProps) {
   const markerSizeU = MARKER_SIZE_PX / pxPerU;
   const targetSizeU = TARGET_SIZE_PX / pxPerU;
-  return handles.map(({ wireId, point, bendIndex }) => (
+  return handles.map(({ wireId, point, bendIndex }, index) => (
     <g
       data-wire-bend=""
       data-bend-index={bendIndex}
       data-bend-x-u={point.xU}
       data-bend-y-u={point.yU}
       data-wire-id={wireId}
-      key={`${point.xU}:${point.yU}`}
+      key={`${wireId}:${bendIndex ?? `derived:${index}`}`}
     >
       <rect
         className="fill-none"
