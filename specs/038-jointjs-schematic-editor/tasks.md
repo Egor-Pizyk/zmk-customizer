@@ -128,7 +128,7 @@ First prove package/host viability, then switch inspection projection (US1), the
 ## Post-review repairs
 
 - [X] T053 [FR-008] Reproduce and repair Select double-click waypoint square/drag behavior with real pointer, history and endpoint/contact preservation; retain corner deduplication and obsolete-waypoint policy.
-- [ ] T054 [FR-012, FR-013, FR-016] Reproduce CI WebKit Escape and remaining Chromium multi-key long-task failures, repair owning code without relaxing checks, verify affected engines and exact staged snapshot, record evidence and update PR34.
+- [X] T054 [FR-012, FR-013, FR-016] Reproduce CI WebKit Escape and remaining Chromium multi-key long-task failures, repair owning code without relaxing checks, verify affected engines and exact staged snapshot, record evidence and update PR34.
 
 ## Requirement coverage
 
