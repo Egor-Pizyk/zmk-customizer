@@ -61,18 +61,6 @@ UI copy may say "keyboard" and "controller" for readability; code and types use 
 - No single-letter names except `i`/`j` in index loops. Lambdas name the element too: `keys.map((key) => key.xU)`.
 - Acronyms are cased as words: `GpioPin`, `dtLabel`, `KconfigOption`, `zmkVersion`. Allowed abbreviations: ZMK, GPIO, DT, kscan, RC, u, BLE, HID, RGB, USB, Kconfig, `id`. Nothing else (`cfg`, `btn`, `idx`, `tmp`, `val`).
 
-```ts
-// ✅
-const pinsByHalf = { left: leftPins, right: rightPins } as const;
-const isSplit = project.halves.length === 2;
-type Key = { readonly xU: number; readonly yU: number; readonly widthU: number; readonly rotationDeg: number; readonly cell?: MatrixCell };
-
-// ❌
-const map = new Map(keys.map((k) => [k.rc, k]));
-const split = project.halves.length === 2;
-type Key = { x: number; y: number; w: number; r: number; pos?: [number, number] };
-```
-
 ## Constants and types
 
 - `SCREAMING_SNAKE_CASE` only for module-level constants fixed at author time: primitives and `as const` catalog tables (`KEY_PITCH_MM = 19.05`, `PROJECT_STORAGE_KEY`, `BEHAVIORS`, `BOARDS`). Locals and derived values are camelCase even if `const`.

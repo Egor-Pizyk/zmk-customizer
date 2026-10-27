@@ -50,3 +50,38 @@ This is a documentation review, not a measured token-saving benchmark. Current-t
 checks and revision are recorded in the existing PR body; no product behavior changed.
 The five startup documents decreased from 2,577 to 2,468 whitespace-delimited words;
 this measures document size, not tokens or savings from avoided rereads.
+
+## 2026-10-26 project documentation maintenance
+
+Scope: project-owned documentation, guidelines and agent instructions. Open-source
+skills, plugins and Spec Kit files are excluded and unchanged relative to the base.
+This refines ADR 0018 without changing product requirements or completion gates.
+
+- Removed repetitive control-flow/naming examples, retaining all normative rules
+  and explicitly preserving the array-callback warning. Technical TypeScript,
+  accessibility and styling examples remain where they explain specific contracts.
+- Centralized module/API placement in folder-structure.md, verification selection
+  in commands.md, delivery gates in Git flow and continuity in agent-rules.md.
+  Testing keeps behavioral assertions, coverage floors, browser/manual acceptance,
+  mutation safety and geometry details; duplicate command/placement prose is linked.
+- Corrected testing.md's stale statement that ZMK suites run in CI to agree with
+  the existing local-only firmware gate. No CI policy was changed.
+- The 033 viewport exception has one owner in admin-ui.md and a Tailwind link.
+- Bash scripts/agent-status.sh produces a read-only local resume snapshot using
+  the unchanged Spec Kit no-persist resolver. Selection is explicitly not ownership.
+- MJS scripts/audit-agent-context.mjs audits project-owned instruction size, local
+  inline-link targets and exact repeated paragraphs; third-party files are excluded.
+  Usage and parser limits: [commands](commands.md#agent-maintenance-helpers).
+
+Against base ee99a9a, the same 27-file project instruction corpus decreased
+from 20,365 to 19,547 whitespace-separated words (4.0%). Startup decreased from
+2,507 to 2,413 words. Counts exclude this historical evidence page, skills/plugins,
+Spec Kit, ADR history, feature artifacts except their ownership index, ZMK reference
+notes, helper source and platform/provider overhead. These are source-size proxies,
+not token measurements or demonstrated live-session savings.
+
+Four helper tests cover link resolution/filtering, malformed encoding, startup and
+duplicate accounting, and CLI execution outside the repository with third-party
+files excluded. Static review does not prove independent-agent context quality.
+The maintenance PR owns current-tree check receipts and limits. No product/UI,
+onboarding, schema, generator or firmware behavior changed.
