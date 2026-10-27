@@ -37,4 +37,6 @@ Read this index when locating feature ownership. Read only the spec, plan, tasks
 - [036-ui-ux-remediation](036-ui-ux-remediation/) — items 1–23 implemented or regression-verified; user-reported manual acceptance; PR #24 merged and v0.5.0 published on 2026-10-25
 - [037-interactive-onboarding](037-interactive-onboarding/) — final scheduled product feature after delivered 036; implementation/acceptance evidence in its verification journal.
 
-037 follows delivered 036 directly. The proposed 038 stage was cancelled by the user on 2026-10-25; deferred 020–022 remain deferred.
+- [038-jointjs-schematic-editor](038-jointjs-schematic-editor/) — owner-requested Schematic presentation migration, specified and planned 2026-10-26; Project/domain authority and existing behavior remain. Release allocation is not yet selected.
+
+037 follows delivered 036 directly within the historical first-major schedule. The proposed residual audit stage was cancelled on 2026-10-25 before any 038 spec directory existed. The new 038 JointJS migration is a distinct owner request, not reinstatement of that stage; deferred 020–022 remain deferred.

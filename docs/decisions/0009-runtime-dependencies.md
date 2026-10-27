@@ -1,6 +1,6 @@
 # 0009. Runtime dependencies limited to react, zod, fflate
 
-Status: Accepted
+Status: Partially superseded by 0023 (@joint/core 4.3.3 in the Schematic adapter only)
 Date: 2026-09-27
 
 ## Context
