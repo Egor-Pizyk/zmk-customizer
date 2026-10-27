@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { getDefinedValue } from '../../../../../helpers/defined-value';
 import type { DiagramResult } from '@ui/schematic/diagram/logic';
-import { expect, it } from 'vitest';
+import { expect, it, vi } from 'vitest';
 import { installDiagramPlatform } from '../../../../../helpers/diagram-platform';
 import { createDiagram } from '@ui/schematic/diagram/logic';
 
@@ -119,4 +119,30 @@ it('keeps paint order and surviving keyboard focus after middle insertion and re
   expect(document.activeElement).toBe(focus);
   scene.dispose();
   host.remove();
+});
+
+it('updates geometry without detaching surviving artwork from its DOM parent', () => {
+  const host = document.createElement('div');
+  const scene = getReadyDiagram(createDiagram(host));
+  const view = { pxPerU: 48, panXPx: 0, panYPx: 0, zoom: 1 };
+  const cells = ['a', 'b'].map((id) => ({
+    id,
+    markup: [{ tagName: 'path', selector: 'wire' }],
+    attributes: { wire: { d: 'M 1 2 L 3 2' } },
+  }));
+  scene.sync({ view, cells });
+  const observer = new MutationObserver(vi.fn<MutationCallback>());
+  observer.observe(host, { childList: true, subtree: true });
+  scene.sync({
+    view,
+    cells: cells.map((cell) => ({
+      id: cell.id,
+      markup: cell.markup,
+      attributes: { wire: { d: 'M 1 2 L 4 2' } },
+    })),
+  });
+  expect(observer.takeRecords()).toEqual([]);
+  expect(host.querySelector('path')?.getAttribute('d')).toBe('M 1 2 L 4 2');
+  observer.disconnect();
+  scene.dispose();
 });

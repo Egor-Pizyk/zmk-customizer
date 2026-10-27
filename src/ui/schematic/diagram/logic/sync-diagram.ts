@@ -29,8 +29,9 @@ export function syncDiagram(
   if (!removeMissingCells(graph, retained)) {
     return false;
   }
-  let hasChanges = false;
+  let hasOrderingChanges = false;
   for (const [index, descriptor] of input.cells.entries()) {
+    const hasNewPosition = cellsById.get(descriptor.id)?.get('z') !== index;
     const result = syncCell({ ...renderer, existing: cellsById.get(descriptor.id) }, descriptor, {
       index,
       previous: previous.get(descriptor.id),
@@ -38,10 +39,10 @@ export function syncDiagram(
     if (result === 'unavailable') {
       return false;
     }
-    hasChanges ||= result === 'updated';
+    hasOrderingChanges ||= hasNewPosition;
   }
   return (
-    !hasChanges ||
+    !hasOrderingChanges ||
     runDiagramOperation(() => {
       sortCells(graph);
     }).ok

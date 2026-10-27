@@ -131,21 +131,21 @@ This table is the only requirement → task → check → evidence map. Evidence
 
 | Requirement / scenario | Tasks | Test or check | Evidence |
 | --- | --- | --- | --- |
-| FR-001 / core rendering, US1 | T003–T016, T047 | import gate, real host build/spike, inspection fixtures | Partial receipts in [verification.md](verification.md); remaining task gates open |
-| FR-002 / state authority, US1/US5 | T003, T006–T015, T047 | deny imports, no graph-change commit, no-write provider assertions | Partial receipts in [verification.md](verification.md); remaining task gates open |
-| FR-003 / gesture/history, US2 | T017–T022 | actual provider/gesture browser cancellation/no-op/one-transition assertions | Partial receipts in [verification.md](verification.md); remaining task gates open |
-| FR-004 / stale/lifecycle, US1/US2 | T008–T022 | project sync, generation/ABA, disposal and stale callback tests | Partial receipts in [verification.md](verification.md); remaining task gates open |
-| FR-005 / geometry/snap, US2 | T018, T020–T022 | pointer/numeric own-center/magnetic/Shift equivalence and refusal | Partial receipts in [verification.md](verification.md); remaining task gates open |
-| FR-006 / durable wires, US3 | T023–T029 | A–B–C/junction/free-end contacts, partitions/history/reload | Partial receipts in [verification.md](verification.md); remaining task gates open |
-| FR-007 / crossings, US3 | T013, T023, T025, T027–T029 | independent selective insulation/overlap/multiple-crossing geometry | Partial receipts in [verification.md](verification.md); remaining task gates open |
-| FR-008 / corners/parts, US3 | T013, T023–T024, T026–T029 | derived/coincident corners, fixed anchors, diode/encoder push identity | Partial receipts in [verification.md](verification.md); remaining task gates open |
-| FR-009 / section deletion, US4 | T030–T034 | both L-crossing sides, mixed marquee/list/text precedence, exact survivors | Partial receipts in [verification.md](verification.md); remaining task gates open |
-| FR-010 / previews, US5 | T035, T037, T039 | Rebuild/topology/read-only/stale proposal and Apply/Cancel | Partial receipts in [verification.md](verification.md); remaining task gates open |
-| FR-011 / files/output, US1/US5 | T011–T012, T015–T016, T034–T035, T037, T039 | legacy/import/no-write/JSON, actual ZIP/baseline byte equality, invalid export | Partial receipts in [verification.md](verification.md); remaining task gates open |
-| FR-012 / accessibility/layout, US6 | T006–T007, T014, T027, T031, T033, T040, T042–T043, T045–T046 | native keyboard/focus, viewport/theme/reflow matrix, manual screen-reader/OS checks | Partial receipts in [verification.md](verification.md); remaining task gates open |
-| FR-013 / offline/recovery/performance, US5/US6 | T008–T009, T036, T038–T039, T041, T045 | classified recovery, 25 cycles, paired timings/traces, no remote calls | Partial receipts in [verification.md](verification.md); remaining task gates open |
-| FR-014 / onboarding, US6 | T040, T044–T045 | protected actual 3×3-to-ZIP journey/exit/restore | Partial receipts in [verification.md](verification.md); remaining task gates open |
-| FR-015 / dependency/decision | T001–T005, T010, T047–T048 | exact manifest/notice/bundle and import/API/ADR/effect gate review | Partial receipts in [verification.md](verification.md); remaining task gates open |
-| FR-016 / evidence/completion | T001–T002, T010, T016, T022, T029, T034, T039, T041, T045–T046, T048–T052 | exact-tree changed check, rendered/manual/paired comparison receipts and final coverage audit | Partial receipts in [verification.md](verification.md); remaining task gates open |
+| FR-001 / core rendering, US1 | T003–T016, T047 | import gate, real host build/spike, inspection fixtures | Automated receipts pass; final gate pending in [verification.md](verification.md) |
+| FR-002 / state authority, US1/US5 | T003, T006–T015, T047 | deny imports, no graph-change commit, no-write provider assertions | Automated receipts pass; final gate pending in [verification.md](verification.md) |
+| FR-003 / gesture/history, US2 | T017–T022 | actual provider/gesture browser cancellation/no-op/one-transition assertions | Automated receipts pass; final gate pending in [verification.md](verification.md) |
+| FR-004 / stale/lifecycle, US1/US2 | T008–T022 | project sync, generation/ABA, disposal and stale callback tests | Automated receipts pass; final gate pending in [verification.md](verification.md) |
+| FR-005 / geometry/snap, US2 | T018, T020–T022 | pointer/numeric own-center/magnetic/Shift equivalence and refusal | Automated receipts pass; final gate pending in [verification.md](verification.md) |
+| FR-006 / durable wires, US3 | T023–T029 | A–B–C/junction/free-end contacts, partitions/history/reload | Automated receipts pass; final gate pending in [verification.md](verification.md) |
+| FR-007 / crossings, US3 | T013, T023, T025, T027–T029 | independent selective insulation/overlap/multiple-crossing geometry | Automated receipts pass; final gate pending in [verification.md](verification.md) |
+| FR-008 / corners/parts, US3 | T013, T023–T024, T026–T029 | derived/coincident corners, fixed anchors, diode/encoder push identity | Automated receipts pass; final gate pending in [verification.md](verification.md) |
+| FR-009 / section deletion, US4 | T030–T034 | both L-crossing sides, mixed marquee/list/text precedence, exact survivors | Automated receipts pass; final gate pending in [verification.md](verification.md) |
+| FR-010 / previews, US5 | T035, T037, T039 | Rebuild/topology/read-only/stale proposal and Apply/Cancel | Automated receipts pass; final gate pending in [verification.md](verification.md) |
+| FR-011 / files/output, US1/US5 | T011–T012, T015–T016, T034–T035, T037, T039 | legacy/import/no-write/JSON, actual ZIP/baseline byte equality, invalid export | Automated receipts pass; final gate pending in [verification.md](verification.md) |
+| FR-012 / accessibility/layout, US6 | T006–T007, T014, T027, T031, T033, T040, T042–T043, T045–T046 | native keyboard/focus, viewport/theme/reflow matrix, manual screen-reader/OS checks | Automated keyboard/layout receipts pass; manual T046 pending in [verification.md](verification.md) |
+| FR-013 / offline/recovery/performance, US5/US6 | T008–T009, T036, T038–T039, T041, T045 | classified recovery, 25 cycles, paired timings/traces, no remote calls | Offline/recovery receipts pass; final paired measurement pending in [verification.md](verification.md) |
+| FR-014 / onboarding, US6 | T040, T044–T045 | protected actual 3×3-to-ZIP journey/exit/restore | Automated receipts pass; final gate pending in [verification.md](verification.md) |
+| FR-015 / dependency/decision | T001–T005, T010, T047–T048 | exact manifest/notice/bundle and import/API/ADR/effect gate review | Automated receipts pass; final gate pending in [verification.md](verification.md) |
+| FR-016 / evidence/completion | T001–T002, T010, T016, T022, T029, T034, T039, T041, T045–T046, T048–T052 | exact-tree changed check, rendered/manual/paired comparison receipts and final coverage audit | Exact staged gate passes; final integration/delivery and manual T046 pending in [verification.md](verification.md) |
 
 SC coverage: SC-001 via US1/US5; SC-002 via US2–US4; SC-003 via US3/US4; SC-004 via US6; SC-005 via US6 offline/onboarding; SC-006 via T002/T041/T045; SC-007 via T048–T052. Do not mark a scenario passed without its actual acceptance evidence.
