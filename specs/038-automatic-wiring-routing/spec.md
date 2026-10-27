@@ -2,7 +2,7 @@
 
 **Feature Branch**: `fix/pre-major-sweep` (user requested continued work here)
 **Created**: 2026-10-25
-**Status**: Implemented; manual acceptance pending
+**Status**: Implemented; user-reported manual acceptance on 2026-10-27; current CI pending
 **Input**: Universal efficient automatic wiring connecting all keys, with all outputs collected into two groups: rows and columns.
 
 ## Goal and scope
