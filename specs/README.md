@@ -39,6 +39,8 @@ Read this index when locating feature ownership. Read only the spec, plan, tasks
 
 - [038-jointjs-schematic-editor](038-jointjs-schematic-editor/) — owner-requested Schematic presentation migration, specified and planned 2026-10-26; Project/domain authority and existing behavior remain. Release allocation is not yet selected.
 
+- [039-focused-local-checks](039-focused-local-checks/) — diagnostic test selection and compact timing/failure reports; final checks remain mandatory.
+
 037 follows delivered 036 directly within the historical first-major schedule. The proposed residual audit stage was cancelled on 2026-10-25 before any 038 spec directory existed. The new 038 JointJS migration is a distinct owner request, not reinstatement of that stage; deferred 020–022 remain deferred.
 
 - [040-symmetric-wiring](040-symmetric-wiring/) — отдельная фича после 038: симметричная генерация, Prettify и замки; clarify завершён, план подготовлен, задачи подготовлены, следующий этап analyze; реализация не начата. Номер 039 занят спецификацией focused-local-checks в отдельной активной ветке.

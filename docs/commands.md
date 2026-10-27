@@ -28,7 +28,9 @@ npm run check    # static checks + Vitest coverage; browser execution is a separ
 ```sh
 npm run hooks:install                 # once per clone; also installed by make install
 git add -- path/to/changed-file       # stage explicit paths
-npm run check:changed                 # exact staged snapshot, also pre-commit
+npm run check:focus -- --plan         # diagnostic selection as JSON; no Docker run
+npm run check:focus                   # targeted diagnostic run
+npm run check:changed                 # required final staged snapshot, also pre-commit
 npm run check:changed -- --base origin/main # committed branch vs base
 ```
 
@@ -52,6 +54,21 @@ Build command inside Docker: `docker compose -p zmk-customizer -f infra/compose.
 Container definitions and the pinned ZMK runner live in `infra/`; Makefile selects them with explicit paths and the stable `zmk-customizer` Compose project name. Build contexts and app mounts remain at the repository root. Docker ignore rules are Dockerfile-specific files beside the Dockerfiles, so no root `.dockerignore` is needed.
 
 Mutation orchestration uses host Node 24: Makefile delegates to npm run test:mutations / npm run test:e2e:mutations, which launch the test containers through Docker. The application checks and builds continue to run inside Docker.
+
+Focused checks are diagnostic: supported Parts/layout/encoder, project creation/import
+and onboarding changes select related Chromium journeys plus keyboard, accessibility
+and lifecycle guards. Unknown runtime areas, shared/global inputs and deletions fall
+back to all Chromium journeys. Changed browser specs are always included. Unit and
+static selection follow the normal runner. The mapping lives in
+`scripts/focused-check-plan.mjs`; extend it with affected user journeys when adding areas.
+
+`check:focus` accepts the same `--base REV` and `--force` options. `--plan` also works
+with `check:changed`; file existence comes from the selected Git tree. Planning uses
+the invoked runner version, while execution recomputes selection inside the snapshot.
+Focus receipts/logs live under `.check-logs/focus/`, separate from final receipts.
+Each execution writes `summary.json` with selection reasons, status, per-step timing,
+full-log paths and bounded failure excerpts. Read it first, then the relevant full log.
+A successful focus run never replaces `check:changed` or its pre-commit gate.
 
 ## Agent maintenance helpers
 
