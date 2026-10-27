@@ -14,3 +14,6 @@ test-results/
 
 .check-changes/
 .check-logs/
+
+# Spec Kit caches composed commands; committed skills are the delivered artifacts.
+.specify/presets/*/.composed/

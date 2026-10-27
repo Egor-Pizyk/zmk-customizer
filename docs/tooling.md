@@ -13,7 +13,7 @@
 | Tests | Vitest + Playwright | Unit + golden files; React/jsdom for interaction logic; real-browser E2E for user journeys (see docs/testing.md) |
 | Containers | Docker + docker compose | Dev server and production image |
 | Non-Node commands | `Makefile` | Docker, cleanup, release helpers |
-| Spec workflow | GitHub Spec Kit (`/speckit-*` commands in Claude Code) | See docs/workflow.md |
+| Spec workflow | GitHub Spec Kit 1.2.3 (`/speckit-*` in Claude Code; shared skill adapters for Codex) | Project preset/overrides and upgrade procedure: docs/commands.md |
 
 Approved runtime dependencies (add only when the first feature needs them):
 

@@ -14,7 +14,7 @@ docs/
   context-verification.md  context-routing review and validation limits
   testing-history.md   archived testing measurements, not current verification
 specs/                 Spec Kit feature specs (created by /speckit-specify)
-.specify/              Spec Kit templates, scripts, constitution
+.specify/              Spec Kit 1.2.3 managed files; project templates/overrides/, presets/zmk-customizer/ and registry; constitution
 .claude/               Claude Code settings, hooks/format-lint.sh (PostToolUse on Edit|Write), agents/ (zmk-reviewer, domain-test-writer, spec-reviewer), skills/ (/speckit-* commands), rules/ (symlinks to docs/guidelines)
 src/                   application code (docs/architecture.md)
 tests/fixtures/        upstream/ (verbatim ZMK shields, SHA-pinned), project/ and schematic/ (project JSON); expected generator output lands here with the generators
