@@ -54,12 +54,13 @@ Use the request or existing feature artifacts for the observable goal, feature/F
 
 Keep exact relevant docs, contracts and owning modules in `plan.md`. Maintain one requirement → task → test/check → evidence mapping in tasks or verification. Add research, data-model, contracts or quickstart artifacts only for distinct useful content.
 
-On resumption, inspect current status/diff and resolve the intended feature. Reuse available unchanged spec/plan/task context; read changed or missing applicable sections. Recorded evidence retains its date/revision/scope; historical success is not a check of the current tree. A handoff should point to existing artifacts and briefly state branch/feature, revision, accepted scope, pending work, decisions and check limits.
+For resumption, handoff and revision-specific evidence, follow
+[agent continuity rules](agent-rules.md#efficient-context-and-verification).
+Reuse current feature artifacts and read changed or missing applicable sections.
 
 ## Local checks and delivery
 
-Use the changed-check script for local verification; full suites and coverage gates
-run in CI. Direct test commands are reserved for diagnosis or justified necessity.
-Record one task journal with the checked SHA/tree digest and actual outcomes, linking
-from other artifacts. Open one PR and stop; do not auto-merge or wait for CI. See
-[Git flow](guidelines/git-flow.md) and [commands](commands.md).
+Use [commands](commands.md) for local snapshot checks and CI scope, and
+[agent rules](agent-rules.md#efficient-context-and-verification) for the single
+revision-specific journal. [Git flow](guidelines/git-flow.md#deliver) owns delivery:
+open/update one PR and stop; do not auto-merge or wait for CI.

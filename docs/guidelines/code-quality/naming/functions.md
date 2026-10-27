@@ -34,39 +34,12 @@ A `getX` that can come back empty is a bug in the name: rename to `findX`.
 - **hooks** — `useX`: `useProject`, `useUndoHistory`.
 - **event handlers** — `handleX` inside the component that owns the handler; `onX` for callback props. Name by event, not by effect: `handleKeyDrag` / `onKeyMove`.
 
-```ts
-// ✅
-type MatrixGridProps = { readonly project: Project; readonly onCellSelect: (cell: MatrixCell) => void };
-function MatrixGrid({ project, onCellSelect }: MatrixGridProps) {
-  function handleCellClick(cell: MatrixCell) { onCellSelect(cell); }
-  // …
-}
-
-// ❌
-function matrixGrid({ project, cellClicked }: { project: Project; cellClicked: Function }) {
-  const doClick = (c) => cellClicked(c);
-}
-```
-
 ## Banned
 
 - Vague verbs: `process`, `do`, `manage`, `perform`, `execute`, `run`, `handle` (outside UI handlers), `update` (say what changes: `moveKey`, `setBinding`).
 - Nouns as function names: `keymap(project)` → `generateKeymap(project)`.
 - Names that hide side effects: a `getX`/`findX`/`isX`/`validateX` never writes, mutates or throws for user-causable problems (`control-flow.md`).
 - Abbreviations, except the domain terms listed in `variables.md` (ZMK, GPIO, DT, kscan, RC, u, BLE, HID, RGB, USB, Kconfig) and `id`.
-
-```ts
-// ✅
-generateOverlay(project, { half: 'left' });
-findBehavior(project, behaviorId);
-assignMatrixCell(project, { keyIndex: 12, cell: { row: 2, col: 5 } });
-
-// ❌
-processOverlay(project);
-getBehavior(project, behaviorId); // may be undefined → findBehavior
-setRC(project, 12, 2, 5);         // abbreviation + positional numbers
-handleProject(project);
-```
 
 ## Length
 

@@ -38,3 +38,13 @@ During implementation stage explicit paths and run `npm run check:changed`; for 
 
 
 The executable protocol is tests/e2e/jointjs-performance.spec.ts and its fixtures/diagram-latency.ts and diagram-timings.ts helpers. Copy only this harness to the isolated base checkout; application code/dependencies stay at their own revisions. For a base run set SCHEMATIC_BASELINE_RUN=true; record SCHEMATIC_REVISION and SCHEMATIC_IMAGE_ID in both environments. Preserve each scenario latency.json under a stable directory as single-key.json, multi-key.json, corner.json and pan.json, plus timings.json. For the implementation run set SCHEMATIC_BASELINE_LATENCY to that directory and SCHEMATIC_BASELINE_TIMINGS to the paired timings.json. Browser/Node and screen/world references are checked before comparing the25% budgets. Without paired receipts, a run establishes only absolute/sample/data-isolation gates. SCHEMATIC_PROFILE=true collects a separate20-sample CPU diagnostic, never adoption evidence. Navigation/nudge samples use default zoom; gesture windows use the six-step zoom above. No concurrent test or profiling workload during a timed run.
+
+
+Benchmark isolation: use the base `@playwright/test` fixture; `preloadLarge`
+already sets the onboarding shown marker. Disable Playwright trace snapshots in
+this performance file: DOM serialization runs on the application thread and
+contaminates the timed long-task window. Use SCHEMATIC_PROFILE for separate CPU
+diagnosis; ordinary journey tests retain tracing. Preserve raw sample receipts
+and failure screenshots. Apply the same fixture/tracing setup to both paired
+revisions; all native input/sample, saved-data and absolute/relative thresholds
+remain mandatory.

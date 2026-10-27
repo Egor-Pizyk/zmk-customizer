@@ -1,5 +1,5 @@
 import { DIAGRAM_SCENARIOS, startDiagramGesture } from './fixtures/diagram-gesture-target';
-import { expect, test } from './test';
+import { expect, test } from '@playwright/test';
 import { readFile, writeFile } from 'node:fs/promises';
 import { measureDiagramTimings, median, readTimingSeries } from './fixtures/diagram-timings';
 import { recordDiagramLatency, moveDiagramPointer, percentile95 } from './fixtures/diagram-latency';
@@ -7,7 +7,12 @@ import { importText, saved, workspace } from './helpers';
 import type { Page } from '@playwright/test';
 
 type Scenario = (typeof DIAGRAM_SCENARIOS)[number];
+// preloadLarge owns onboarding setup; avoid unrelated editor fixture hooks.
 const fixturePath = 'tests/fixtures/schematic/large.json';
+
+// Playwright DOM snapshots execute on the app thread and distort the long-task gate.
+// Keep CPU profiling separate; raw latency receipts and failure screenshots remain.
+test.use({ trace: 'off' });
 
 for (const scenario of DIAGRAM_SCENARIOS) {
   test(`large schematic native ${scenario} scheduling and long tasks`, async ({

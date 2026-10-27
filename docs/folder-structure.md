@@ -1,6 +1,8 @@
 # Folder structure
 
-The top-level source folders define architectural layers. Nested folders group related responsibilities without changing which layers may import each other. Cross-module imports use exact aliases that resolve to public `index.ts` files. The index lists explicit named value and type exports; implementation files are private outside their module. Within a module, relative imports keep its public index out of the internal dependency graph.
+[Architecture](architecture.md) owns layer dependencies. This document owns
+responsibility groups, public module APIs and test placement. Nested folders do
+not relax layer boundaries.
 
 | Folder | Responsibility |
 |---|---|
@@ -69,7 +71,7 @@ Workspace folders group composition and shared contracts in their child modules.
 
 `tsconfig.json` is the source of truth for exact alias-to-index paths; wildcard aliases are not exposed. Vite and Vitest use the built-in tsconfig paths resolver. The lint rule and architecture checker read the same alias registry.
 
-The exact alias registry is `tsconfig.json`; do not copy it into documentation. Root APIs expose shared contracts, responsibility groups expose their own named indexes, and mixed UI groups expose separate logic/component APIs. Examples:
+Do not copy the alias registry into documentation. Root APIs expose shared contracts, responsibility groups expose their own named indexes, and mixed UI groups expose separate logic/component APIs. Examples:
 
 ```ts
 import { addKey } from '@domain/keys';
@@ -77,7 +79,7 @@ import type { Project } from '@domain';
 import { Button } from '@ui/components/components';
 ```
 
-A consumer uses the module alias, never `@domain/keys/add-key` or a relative path to another module’s implementation. Internal files import their peers directly with relative paths and never import their own index. Pinned raw assets, CSS and test fixtures retain their file paths. Module aliases do not relax the layer matrix: the architecture checker follows named re-exports to the defining file, including intermediate re-exports and locally imported symbols that are re-exported.
+Indexes list explicit named value/type exports; implementation files are private outside their module. A consumer uses the module alias, never `@domain/keys/add-key` or a relative path to another module’s implementation. Internal files import their peers directly with relative paths and never import their own index. Pinned raw assets, CSS and test fixtures retain their file paths. Module aliases do not relax the layer matrix: the architecture checker follows named re-exports to the defining file, including intermediate re-exports and locally imported symbols that are re-exported.
 
 ## Tests
 
