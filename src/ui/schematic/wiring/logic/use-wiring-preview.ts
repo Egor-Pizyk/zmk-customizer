@@ -61,7 +61,7 @@ function describePreview(
     protectedWireIds: result?.kind === 'refused' ? result.failure.wireIds : [],
     summary: result !== undefined && result.kind !== 'refused' ? result.summary : undefined,
     failure: getFailure(phase, result),
-    message: getMessage(phase, result),
+    message: getMessage(phase, result, draft),
   };
 }
 
@@ -71,9 +71,20 @@ function getFailure(phase: string, result: WiringProposalResult | undefined) {
   }
   return result?.kind === 'refused' ? result.failure.message : undefined;
 }
-function getMessage(phase: string, result: WiringProposalResult | undefined) {
+function getMessage(
+  phase: string,
+  result: WiringProposalResult | undefined,
+  draft: WiringPreviewDraft | undefined,
+) {
   if (phase === 'calculating') {
     return 'Calculating wiring…';
+  }
+  if (
+    result?.kind === 'no-change' &&
+    draft?.edit.kind === 'prettify' &&
+    draft.base.wires.length === 0
+  ) {
+    return 'No wires to prettify. Generate or draw wiring first.';
   }
   return result?.kind === 'no-change' ? 'No wiring changes needed.' : undefined;
 }
@@ -98,6 +109,9 @@ function useWorkerCleanup(session: ReturnType<typeof createWiringWorkerSession>)
 }
 
 function describeOperation(edit: WiringEdit | undefined): string | undefined {
+  if (edit?.kind === 'prettify') {
+    return 'Prettify existing wiring';
+  }
   if (edit?.kind !== 'regenerate') {
     return undefined;
   }

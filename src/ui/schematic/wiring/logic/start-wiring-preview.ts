@@ -74,7 +74,8 @@ export function createWiringPreviewDraft(
     request: state.session.begin(),
     revision: state.getRevision(),
     edit: input.edit,
-    edits: [...(input.draft?.edits ?? []), input.edit],
+    edits:
+      input.edit.kind === 'prettify' ? [input.edit] : [...(input.draft?.edits ?? []), input.edit],
     phase: 'calculating',
     ...(input.edit.kind === 'topology' ? { topologySource: source } : {}),
   };

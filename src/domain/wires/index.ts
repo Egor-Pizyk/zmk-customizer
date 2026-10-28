@@ -14,3 +14,5 @@ export type { WireSection } from './get-wire-sections';
 export { findWireContactError } from './find-wire-contact-error';
 
 export { shareWireContacts } from './share-wire-contacts';
+
+export { createBoardPinUserLookup } from './create-board-pin-user-lookup';

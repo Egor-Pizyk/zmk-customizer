@@ -96,3 +96,7 @@ PR34/038 остаётся OPEN (проверено 2026-10-27). После ан�
 ## Decisions and uncertainty
 
 Нет оставшихся product clarification. Базовые параметры приняты пятью ответами; новые schema defaults не переопределяют legacy wiring. Ограниченный детерминированный поиск выбран вместо библиотеки auto-router и полного глобального optimum. Worker выбран для responsiveness, не переносит business rules в UI. Ресурсное расширение и owning-rule updates — execution gates; финальная base reconciliation после038 — delivery gate при разрешённой пользователем параллельной реализации; их нельзя считать выполненными этим документом. Никаких production edits, миграций или benchmarks на этом этапе не выполнено.
+
+### US2 execution refinement (2026-10-28)
+
+The independent relation engine (T045/T046) and the existing bounded single-span router permit a safe first Prettify increment before the remaining coordinated regeneration work in T038. This increment freezes intentional attachment sites/free endpoints, routes only between them, remaps insulation and accepts only an electrically equivalent fixed point. T047/T048 may start with these contracts; their completion and MVP acceptance still require T038 and the full coordinated-junction/symmetry cases. No requested capability becomes optional and T038/T047/T048 remain open until their complete criteria pass.

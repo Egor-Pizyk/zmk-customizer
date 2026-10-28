@@ -19,7 +19,7 @@ type SettingsProps = {
   readonly onSettings: (patch: Partial<RoutingSettings>) => void;
 };
 
-export function WiringGenerationControls({ project, selection, onEdit: handleEdit }: Props) {
+export function WiringRoutingControls({ project, selection, onEdit: handleEdit }: Props) {
   const [draft, setDraft] = useState<RoutingSettings>();
   const settings = draft ?? getRoutingSettings(project);
   const handleSettings = (patch: Partial<RoutingSettings>) => {
@@ -27,51 +27,39 @@ export function WiringGenerationControls({ project, selection, onEdit: handleEdi
   };
   return (
     <fieldset className="flex flex-col gap-3 rounded-sm border border-border p-3">
-      <legend className="px-1 font-semibold">Generate wiring</legend>
+      <legend className="px-1 font-semibold">Routing</legend>
       <p className="text-xs text-text-muted">
-        Known matrix cells and GPIOs are preserved. Missing assignments are proposed. Options remain
-        unsaved until Generate and Apply.
+        Generate proposes connections; Prettify only reshapes saved wiring and replaces any
+        unapplied generation preview. Apply saves the reviewed result.
       </p>
-      <RoutingSelectors settings={settings} onSettings={handleSettings} />
+      <RoutingSelectors
+        settings={settings}
+        onSettings={handleSettings}
+        isMatrix={project.wiring?.kind !== 'direct'}
+      />
       <RoutingDistances settings={settings} onSettings={handleSettings} />
       <p className="text-xs text-text-muted">
         Selected wires mean their complete electrical nets. Shared and locked conductors remain
         fixed; incompatible boundaries refuse the entire operation.
       </p>
-      <Button
-        variant="secondary"
-        onClick={() => {
-          handleEdit({
-            kind: 'regenerate',
-            board: getControllerBoard(project.controllerId),
-            input: {
-              settings,
-              limits: ZMK_LIMITS,
-              scope: getGenerationScope(project, settings, selection),
-            },
-          });
-        }}
-      >
-        Generate wiring
-      </Button>
+      <RoutingActions
+        project={project}
+        selection={selection}
+        settings={settings}
+        onEdit={handleEdit}
+      />
     </fieldset>
   );
 }
 
-function RoutingSelectors({ settings, onSettings: handleSettings }: SettingsProps) {
+function RoutingSelectors({
+  settings,
+  onSettings: handleSettings,
+  isMatrix,
+}: SettingsProps & { readonly isMatrix: boolean }) {
   return (
     <div className="flex flex-wrap gap-3">
-      <RoutingSelect
-        label="Routing style"
-        value={settings.matrixStyle}
-        options={[
-          { id: 'existing', label: 'Existing matrix routes' },
-          { id: 'symmetric-bus', label: 'Symmetric matrix buses' },
-        ]}
-        onSelect={(value) => {
-          handleSettings({ matrixStyle: value === 'symmetric-bus' ? 'symmetric-bus' : 'existing' });
-        }}
-      />
+      {isMatrix ? <MatrixStyle settings={settings} onSettings={handleSettings} /> : undefined}
       <RoutingSelect
         label="Routing scope"
         value={
@@ -191,4 +179,59 @@ function distancePatch(field: string, value: number): Partial<RoutingSettings> {
     return { offsetU: value };
   }
   return field === 'clearanceU' ? { clearanceU: value } : { fallbackRowIntervalU: value };
+}
+
+function RoutingActions({
+  project,
+  selection,
+  settings,
+  onEdit: handleEdit,
+}: Props & Pick<SettingsProps, 'settings'>) {
+  function handleOperation(kind: 'regenerate' | 'prettify') {
+    const input = {
+      settings,
+      limits: ZMK_LIMITS,
+      scope: getGenerationScope(project, settings, selection),
+    };
+    const board = getControllerBoard(project.controllerId);
+    handleEdit({ kind, input, board });
+  }
+  return (
+    <div className="flex flex-wrap gap-2">
+      {project.wiring?.kind === 'direct' ? undefined : (
+        <Button
+          variant="secondary"
+          onClick={() => {
+            handleOperation('regenerate');
+          }}
+        >
+          Generate wiring
+        </Button>
+      )}
+      <Button
+        variant="secondary"
+        onClick={() => {
+          handleOperation('prettify');
+        }}
+      >
+        Prettify
+      </Button>
+    </div>
+  );
+}
+
+function MatrixStyle({ settings, onSettings: handleSettings }: SettingsProps) {
+  return (
+    <RoutingSelect
+      label="Routing style"
+      value={settings.matrixStyle}
+      options={[
+        { id: 'existing', label: 'Existing matrix routes' },
+        { id: 'symmetric-bus', label: 'Symmetric matrix buses' },
+      ]}
+      onSelect={(value) => {
+        handleSettings({ matrixStyle: value === 'symmetric-bus' ? 'symmetric-bus' : 'existing' });
+      }}
+    />
+  );
 }

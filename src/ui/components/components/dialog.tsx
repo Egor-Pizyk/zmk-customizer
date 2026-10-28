@@ -68,23 +68,32 @@ function useModalDialog(
         handleClose();
       }
     }
+    function handleNativeClose() {
+      // Native close events are queued; an earlier dismissal may arrive after reopening.
+      if (dialog?.open === false) {
+        handleClose();
+      }
+    }
     dialog?.addEventListener('pointerdown', handleBackdropPointerDown);
     dialog?.addEventListener('click', handleBackdropClick);
-    dialog?.addEventListener('close', handleClose);
+    dialog?.addEventListener('close', handleNativeClose);
     return () => {
       dialog?.removeEventListener('pointerdown', handleBackdropPointerDown);
       dialog?.removeEventListener('click', handleBackdropClick);
-      dialog?.removeEventListener('close', handleClose);
+      dialog?.removeEventListener('close', handleNativeClose);
     };
   }, [dialogRef]);
 
   useEffect(() => {
-    const dialog = dialogRef.current;
-    if (isOpen && dialog?.open === false) {
-      dialog.showModal();
-    }
-    if (!isOpen && dialog?.open === true) {
-      dialog.close();
-    }
+    synchronizeModal(dialogRef.current, isOpen);
   }, [dialogRef, isOpen]);
+}
+
+function synchronizeModal(dialog: HTMLDialogElement | null, isOpen: boolean) {
+  if (isOpen && dialog?.open === false) {
+    dialog.showModal();
+  }
+  if (!isOpen && dialog?.open === true) {
+    dialog.close();
+  }
 }

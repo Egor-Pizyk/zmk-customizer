@@ -23,3 +23,5 @@ export type {
 export { regenerateWiring } from './regenerate-wiring';
 export type { WiringRegenerationInput, WiringRegeneration } from './regeneration-types';
 export { createWiringProposal } from './create-wiring-proposal';
+export { prettifyWiring } from './prettify-wiring';
+export type { PrettifyInput } from './prettify-types';

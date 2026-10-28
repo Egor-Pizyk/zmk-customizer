@@ -39,7 +39,7 @@ export function getWiringEditSource(
   draft: WiringPreviewDraft | undefined,
   input: WiringEdit,
 ) {
-  if (draft === undefined) {
+  if (draft === undefined || input.kind === 'prettify') {
     return project;
   }
   if (input.kind === 'topology') {

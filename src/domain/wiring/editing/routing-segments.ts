@@ -4,15 +4,20 @@ import type { Project } from '@domain';
 import type { RoutingSegment } from './symmetric-route-types';
 import type { MatrixBusRoute } from './matrix-bus-types';
 
-export function getRoutingSegments(project: Project): readonly RoutingSegment[] {
+export function getRoutingSegments(
+  project: Project,
+): readonly (RoutingSegment & { readonly wireId: string })[] {
   const nets = getNets(project);
   return project.wires.flatMap((wire) => {
     const net = nets.find((entry) => entry.wireIds.includes(wire.id));
     const netId =
-      net?.terminalIds.length === 1 ? (net.terminalIds[0] ?? wire.id) : `wire:${wire.id}`;
+      net?.terminalIds.length === 1
+        ? (net.terminalIds[0] ?? wire.id)
+        : `net:${net?.wireIds.toSorted()[0] ?? wire.id}`;
     return getWireConductors(project, wire).flatMap((path, pathIndex) =>
       path.slice(1).map((to, index) => ({
         id: `${wire.id}:${pathIndex}:${index}`,
+        wireId: wire.id,
         half: getWireHalf(project, wire),
         netId,
         from: path[index] ?? to,

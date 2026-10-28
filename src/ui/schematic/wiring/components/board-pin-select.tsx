@@ -1,7 +1,7 @@
-import { useProject } from '@ui/project/logic';
+import { useProject, getProjectAnalysis } from '@ui/project/logic';
 import { refuseProtectedEdit } from '@ui/schematic/interaction';
 import { getControllerBoard } from '@catalog/controllers';
-import { formatBoardPin, findBoardPinUser } from '@domain/wires';
+import { formatBoardPin } from '@domain/wires';
 import { setWireEndBoardPin } from '@domain/wires/editing';
 import type { WireEndSide } from '@domain';
 import { Field } from '@ui/components/components';
@@ -87,8 +87,9 @@ function NativePinSelect(props: NativePinSelectProps) {
 }
 function getPinOptions({ project, wireIndex, side }: BoardPinSelectProps) {
   const board = getControllerBoard(project.controllerId);
+  const findUser = getProjectAnalysis(project).boardPinUsers;
   return board.pins.map((pin) => {
-    const userIndex = findBoardPinUser(project, {
+    const userIndex = findUser({
       boardPin: pin.index,
       except: { wireId: project.wires[wireIndex]?.id ?? '', side },
     });

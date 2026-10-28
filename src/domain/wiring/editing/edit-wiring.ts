@@ -1,5 +1,5 @@
 import { validateWireProtection } from '@domain/wires/protection';
-import { regenerateWiring } from './regenerate-wiring';
+import { editRoutingOperation } from './edit-routing-operation';
 import type { WiringEdit } from './wiring-edit';
 import { completeWiring } from './complete-wiring';
 import { createWiringTerminals, autoAssignCells, getWiringConnections } from '@domain/wiring';
@@ -11,11 +11,8 @@ import { routeWiring } from './route-wiring';
 import type { Project, Result, Wiring } from '@domain';
 
 function editWiringCandidate(original: Project, input: WiringEdit): Result<Project, string> {
-  if (input.kind === 'regenerate') {
-    const result = regenerateWiring(original, { ...input.input, board: input.board });
-    return result.ok
-      ? { ok: true, value: result.value.project }
-      : { ok: false, error: result.error.message };
+  if (input.kind === 'prettify' || input.kind === 'regenerate') {
+    return editRoutingOperation(original, input);
   }
   if (input.kind === 'complete') {
     return completeWiring(original, input);

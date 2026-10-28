@@ -8,6 +8,7 @@ import type {
 import { editWiring } from './edit-wiring';
 import type { WiringEdit } from './wiring-edit';
 import { prepareWiringProposal } from './prepare-wiring-proposal';
+import { prettifyWiring } from './prettify-wiring';
 import { regenerateWiring } from './regenerate-wiring';
 
 type Calculation = {
@@ -38,22 +39,18 @@ function replay(
   let topologySource: Project | undefined;
   const warnings: WiringProposalSummary['warnings'][number][] = [];
   for (const edit of edits) {
+    if (edit.kind === 'prettify') {
+      current = base;
+      warnings.length = 0;
+    }
     const source = edit.kind === 'topology' ? (topologySource ?? current) : current;
     topologySource = edit.kind === 'topology' ? source : undefined;
-    if (edit.kind === 'regenerate') {
-      const result = regenerateWiring(source, { ...edit.input, board: edit.board });
-      if (!result.ok) {
-        return result;
-      }
-      current = result.value.project;
-      warnings.push(...result.value.warnings);
-      continue;
-    }
-    const result = editWiring(source, edit);
+    const result = calculateEdit(source, edit);
     if (!result.ok) {
-      return { ok: false, error: { code: 'operation', message: result.error, wireIds: [] } };
+      return result;
     }
-    current = result.value;
+    current = result.value.project;
+    warnings.push(...result.value.warnings);
   }
   return { ok: true, value: { project: current, warnings } };
 }
@@ -63,4 +60,20 @@ function currentWarnings(calculation: Calculation): WiringProposalSummary['warni
   return calculation.warnings.filter(
     (warning) => warning.wireIds.length === 0 || warning.wireIds.some((id) => surviving.has(id)),
   );
+}
+
+function calculateEdit(
+  source: Project,
+  edit: WiringEdit,
+): Result<Calculation, WiringProposalFailure> {
+  if (edit.kind === 'regenerate') {
+    return regenerateWiring(source, { ...edit.input, board: edit.board });
+  }
+  if (edit.kind === 'prettify') {
+    return prettifyWiring(source, edit.input);
+  }
+  const result = editWiring(source, edit);
+  return result.ok
+    ? { ok: true, value: { project: result.value, warnings: [] } }
+    : { ok: false, error: { code: 'operation', message: result.error, wireIds: [] } };
 }

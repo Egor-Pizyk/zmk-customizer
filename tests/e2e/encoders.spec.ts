@@ -182,7 +182,9 @@ test('split encoders retain independent half pins, layer actions and local expor
     await page.getByRole('combobox', { name: `${half} col 0 pin`, exact: true }).selectOption('2');
   }
   await page.getByRole('combobox', { name: 'left col 1 pin', exact: true }).selectOption('3');
-  await page.getByRole('button', { name: 'Apply wiring', exact: true }).press('Enter');
+  const applyWiring = page.getByRole('button', { name: 'Apply wiring', exact: true });
+  await expect(applyWiring).toBeEnabled();
+  await applyWiring.press('Enter');
   await page
     .locator('summary')
     .filter({ hasText: /^Wiring$/u })

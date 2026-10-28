@@ -2,11 +2,11 @@ import { validateProjectConfiguration } from './validate-project-configuration';
 import { validateAdvancedKeymap } from '@domain/advanced-keymap';
 import { validateBehaviors } from '@domain/behaviors';
 import type { ProjectConfigurationInput } from './validate-project-configuration';
-import { deriveShieldMatrix, getWiringCells } from '@domain/wiring/matrix';
+import { deriveShieldMatrix } from '@domain/wiring/matrix';
 import type { ShieldTarget } from '@domain/wiring/matrix';
 import { findCrossings } from '@domain/crossings';
 import { findWireContacts } from '@domain/wires/contacts';
-import { getNets } from '@domain/wires/nets';
+import { analyzeProjectWiring } from './analyze-project-wiring';
 import type { Project } from '@domain';
 import { validateSchematic } from '@domain/validation';
 import { validateShieldProject } from '@domain/validation/shield';
@@ -16,7 +16,8 @@ export function analyzeProject(
   input: ProjectConfigurationInput & { readonly target: ShieldTarget },
 ) {
   const contacts = findWireContacts(project);
-  const nets = getNets(project, contacts);
+  const wiring = analyzeProjectWiring(project, contacts);
+  const { nets } = wiring;
   const schematicIssues = validateSchematic(project, nets);
   const matrix = deriveShieldMatrix(project, input.target, { nets, schematicIssues });
   const issues = [
@@ -27,7 +28,8 @@ export function analyzeProject(
   ];
   return {
     project,
-    wiringCells: getWiringCells(project, nets),
+    wiringCells: wiring.wiringCells,
+    boardPinUsers: wiring.boardPinUsers,
     contacts,
     crossings: findCrossings(project, contacts),
     nets,
