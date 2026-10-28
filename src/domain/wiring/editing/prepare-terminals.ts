@@ -1,5 +1,5 @@
 import { assignAutoPins } from './assign-auto-pins';
-import type { WiringEdit } from './edit-wiring';
+import type { WiringEdit } from './wiring-edit';
 import type { ControllerBoard, Project, Result, WiringTerminal } from '@domain';
 
 export function prepareTerminals(

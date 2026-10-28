@@ -27,11 +27,13 @@ const project = buildProject({
 it('resolves all and half scopes without moving a locked wire into the editable set', () => {
   expect(getResultValue(resolveWiringScope(project, { kind: 'all' }))).toEqual({
     keyIds: ['a', 'b', 'c'],
+    pinIds: ['a:1', 'a:2', 'b:1', 'b:2', 'c:1', 'c:2'],
     wireIds: ['own', 'shared'],
     fixedWireIds: ['right'],
   });
   expect(getResultValue(resolveWiringScope(project, { kind: 'half', half: 'left' }))).toEqual({
     keyIds: ['a', 'b'],
+    pinIds: ['a:1', 'a:2', 'b:1', 'b:2'],
     wireIds: ['own', 'shared'],
     fixedWireIds: ['right'],
   });
@@ -41,6 +43,7 @@ it('keeps a shared conductor fixed instead of silently expanding a selected key 
   expect(getResultValue(resolveWiringScope(project, { kind: 'selection', keyIds: ['a'] }))).toEqual(
     {
       keyIds: ['a'],
+      pinIds: ['a:1', 'a:2'],
       wireIds: ['own'],
       fixedWireIds: ['right', 'shared'],
     },
@@ -57,7 +60,12 @@ it('expands only explicitly selected electrical nets and normalizes duplicate se
         netWireIds: ['shared', 'shared'],
       }),
     ),
-  ).toEqual({ keyIds: ['a', 'b'], wireIds: ['own', 'shared'], fixedWireIds: ['right'] });
+  ).toEqual({
+    keyIds: ['a', 'b'],
+    pinIds: ['a:1', 'a:2', 'b:1'],
+    wireIds: ['own', 'shared'],
+    fixedWireIds: ['right'],
+  });
 });
 
 it('rejects missing selection references and empty selections atomically', () => {
@@ -76,6 +84,7 @@ it('treats pooled inline contacts outside the selected keys as a fixed boundary'
   };
   expect(getResultValue(resolveWiringScope(pooled, { kind: 'selection', keyIds: ['a'] }))).toEqual({
     keyIds: ['a'],
+    pinIds: ['a:1', 'a:2'],
     wireIds: [],
     fixedWireIds: ['own', 'right', 'shared'],
   });
@@ -225,6 +234,7 @@ it('keeps a conductor spanning halves fixed even when its explicit half matches 
   };
   expect(getResultValue(resolveWiringScope(crossHalf, { kind: 'half', half: 'left' }))).toEqual({
     keyIds: ['a', 'b'],
+    pinIds: ['a:1', 'a:2', 'b:1', 'b:2'],
     wireIds: [],
     fixedWireIds: ['cross'],
   });
@@ -238,5 +248,31 @@ it('selects only the named net when no keys are explicitly selected', () => {
         netWireIds: ['shared'],
       }),
     ),
-  ).toEqual({ keyIds: ['a', 'b'], wireIds: ['shared'], fixedWireIds: ['own', 'right'] });
+  ).toEqual({
+    keyIds: ['a', 'b'],
+    pinIds: ['a:1', 'b:1'],
+    wireIds: ['shared'],
+    fixedWireIds: ['own', 'right'],
+  });
+});
+
+it('refuses ambiguous actual assignments instead of choosing one terminal from an existing short', () => {
+  const shorted = {
+    ...matrix,
+    wires: [
+      {
+        id: 'w0',
+        start: keyPin('a', 1),
+        end: { kind: 'free' as const, at: { xU: -1, yU: 0 }, terminalId: 'r0' },
+        bends: [],
+      },
+      {
+        id: 'w1',
+        start: keyPin('a', 1),
+        end: { kind: 'free' as const, at: { xU: 0, yU: -1 }, terminalId: 'c0' },
+        bends: [],
+      },
+    ],
+  };
+  expect(createWiringTargets(shorted, { scope: { kind: 'all' } }).ok).toBe(false);
 });

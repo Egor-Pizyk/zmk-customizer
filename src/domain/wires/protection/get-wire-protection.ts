@@ -14,6 +14,7 @@ type Input = {
 
 export type WireProtection = {
   readonly wireId: string;
+  readonly attachedWireIds?: readonly string[];
   readonly keyIds: readonly string[];
   readonly terminalIds: readonly string[];
 };
@@ -23,7 +24,12 @@ export function getWireProtection(project: Project, input: Input = {}): readonly
   return project.wires
     .filter((wire) => wire.locked === true)
     .flatMap((wire) => {
-      const details = getDetails(project, wire);
+      const attachedWireIds =
+        contacts === undefined ? undefined : getAttachedWireIds(project, wire, contacts);
+      const details = {
+        ...getDetails(project, wire),
+        ...(attachedWireIds === undefined ? {} : { attachedWireIds }),
+      };
       const matches =
         (input.wireIds === undefined &&
           input.keyIds === undefined &&
@@ -34,9 +40,7 @@ export function getWireProtection(project: Project, input: Input = {}): readonly
         details.keyIds.some((id) => input.keyIds?.includes(id) ?? false) ||
         details.terminalIds.some((id) => input.terminalIds?.includes(id) ?? false) ||
         (contacts !== undefined &&
-          getAttachedWireIds(project, wire, contacts).some(
-            (id) => input.wireIds?.includes(id) ?? false,
-          ));
+          (attachedWireIds ?? []).some((id) => input.wireIds?.includes(id) ?? false));
       return matches ? [details] : [];
     });
 }

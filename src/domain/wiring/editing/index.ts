@@ -1,5 +1,5 @@
 export { editWiring } from './edit-wiring';
-export type { WiringEdit } from './edit-wiring';
+export type { WiringEdit } from './wiring-edit';
 export { initializeWiring } from './initialize-wiring';
 export { routeWiring } from './route-wiring';
 export type { WiringConnection } from './route-wiring';
@@ -20,3 +20,6 @@ export type {
   SymmetricRoute,
   RouteSearchFailure,
 } from './symmetric-route-types';
+export { regenerateWiring } from './regenerate-wiring';
+export type { WiringRegenerationInput, WiringRegeneration } from './regeneration-types';
+export { createWiringProposal } from './create-wiring-proposal';

@@ -8,7 +8,11 @@ import type { MatrixBusRoute, MatrixBusGroup as Group } from './matrix-bus-types
 import { createPreferredRowBus } from './matrix-row-bus';
 import { compareGroups, sortedMembers, getIdentity, getRange } from './matrix-bus-order';
 
-type Input = { readonly cells: readonly WiringCell[]; readonly settings: RoutingSettings };
+type Input = {
+  readonly cells: readonly WiringCell[];
+  readonly settings: RoutingSettings;
+  readonly pinIds?: readonly string[];
+};
 
 /** Preferred geometry only: conflict search and electrical validation must precede any Apply. */
 export function createMatrixBusRoutes(
@@ -24,7 +28,14 @@ export function createMatrixBusRoutes(
     rowPin: cell.rowPin ?? input.settings.rowPin ?? 1,
   }));
   const connections = getWiringConnections(project.wiring, cells);
-  if (connections.length !== cells.length * 2) {
+  const expected = input.pinIds?.length ?? cells.length * 2;
+  const scoped =
+    input.pinIds === undefined
+      ? connections
+      : connections.filter(
+          (connection) => input.pinIds?.includes(`${connection.keyId}:${connection.pin}`) === true,
+        );
+  if (scoped.length !== expected) {
     return { ok: false, error: 'A logical row or column has no corresponding matrix terminal.' };
   }
   const keys = new Map(project.keys.map((key) => [key.id, key]));

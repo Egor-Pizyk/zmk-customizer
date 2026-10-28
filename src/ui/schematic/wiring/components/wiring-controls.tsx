@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react';
+import type { ReactNode, ComponentProps } from 'react';
+import { WiringGenerationControls } from './wiring-generation-controls';
 import { WiringOptionsControls } from './wiring-options-controls';
 import { WiringHalfControls } from './wiring-half-controls';
 import { getControllerBoard } from '@catalog/controllers';
@@ -11,6 +12,7 @@ import { useState } from 'react';
 
 type WiringControlsProps = ReturnType<typeof useWiringPreview> & {
   readonly children?: ReactNode;
+  readonly selection?: ComponentProps<typeof WiringGenerationControls>['selection'];
 };
 export function WiringControls(props: WiringControlsProps) {
   const { tutorial } = useProject();
@@ -65,6 +67,7 @@ function WiringContent(props: WiringControlsProps & { readonly project: Project 
         physical hardware before applying. These pins are not detected hardware wiring.
       </p>
       <WiringOptionsControls project={project} onEdit={props.handleEdit} />
+      <MatrixGenerationControls {...props} />
       {(['left', ...(wiring.topology === 'split' ? (['right'] as const) : [])] as const).map(
         (half) => (
           <WiringHalfControls
@@ -116,5 +119,15 @@ function WiringPreviewInfo(props: WiringControlsProps) {
         {props.children}
       </details>
     </>
+  );
+}
+
+function MatrixGenerationControls(props: WiringControlsProps) {
+  return props.previewProject.wiring?.kind === 'direct' ? null : (
+    <WiringGenerationControls
+      project={props.previewProject}
+      selection={props.selection}
+      onEdit={props.handleEdit}
+    />
   );
 }

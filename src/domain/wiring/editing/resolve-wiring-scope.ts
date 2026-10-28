@@ -15,6 +15,7 @@ export type WiringScope =
 
 export type ResolvedWiringScope = {
   readonly keyIds: readonly string[];
+  readonly pinIds: readonly string[];
   readonly wireIds: readonly string[];
   /** Locked, out-of-scope and shared-boundary conductors must remain byte-identical. */
   readonly fixedWireIds: readonly string[];
@@ -49,6 +50,7 @@ export function resolveWiringScope(
     ok: true,
     value: {
       keyIds: [...keyIds].toSorted(),
+      pinIds: scopePins(scope, { keyIds: [...keyIds], nets: selectedNets }),
       wireIds: [...wireIds].toSorted(),
       fixedWireIds: project.wires
         .filter((wire) => !wireIds.has(wire.id))
@@ -120,4 +122,17 @@ function isEditable(
     selectedNetWires.has(wire.id) ||
     (participants.length > 0 && participants.every((id) => keyIds.has(id)))
   );
+}
+
+function scopePins(
+  scope: WiringScope,
+  input: { readonly keyIds: readonly string[]; readonly nets: readonly Net[] },
+): readonly string[] {
+  const keys = scope.kind === 'selection' ? (scope.keyIds ?? []) : input.keyIds;
+  return [
+    ...new Set([
+      ...keys.flatMap((id) => [`${id}:1`, `${id}:2`]),
+      ...input.nets.flatMap((net) => net.pins.map((pin) => `${pin.keyId}:${pin.pin}`)),
+    ]),
+  ].toSorted();
 }

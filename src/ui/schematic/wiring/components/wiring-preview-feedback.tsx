@@ -3,7 +3,7 @@ import type { useWiringPreview } from '@ui/schematic/wiring/logic';
 
 type Props = Pick<
   ReturnType<typeof useWiringPreview>,
-  'failure' | 'message' | 'summary' | 'protectedWireIds'
+  'failure' | 'message' | 'summary' | 'protectedWireIds' | 'operationDescription'
 > & {
   readonly onInspectWire: (wireId: string) => void;
 };
@@ -13,10 +13,14 @@ export function WiringPreviewFeedback({
   message,
   summary,
   protectedWireIds,
+  operationDescription,
   onInspectWire: handleInspectWire,
 }: Props) {
   return (
     <>
+      {operationDescription === undefined ? undefined : (
+        <p className="text-xs">{operationDescription}</p>
+      )}
       {failure === undefined ? undefined : (
         <p role="alert" className="text-danger">
           {failure}

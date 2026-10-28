@@ -1,4 +1,6 @@
 import { validateWireProtection } from '@domain/wires/protection';
+import { regenerateWiring } from './regenerate-wiring';
+import type { WiringEdit } from './wiring-edit';
 import { completeWiring } from './complete-wiring';
 import { createWiringTerminals, autoAssignCells, getWiringConnections } from '@domain/wiring';
 import { prepareTerminals } from './prepare-terminals';
@@ -6,32 +8,15 @@ import { initializeWiring } from './initialize-wiring';
 import { getWiringCells } from '@domain/wiring/matrix';
 import type { WiringCell } from '@domain/wiring/matrix';
 import { routeWiring } from './route-wiring';
-import type { ControllerBoard, Half, Project, Result, Wiring } from '@domain';
-
-export type WiringEdit = { readonly board: ControllerBoard } & (
-  | { readonly kind: 'initialize' }
-  | { readonly kind: 'complete'; readonly gridStepU: number }
-  | { readonly kind: 'auto'; readonly gridStepU: number }
-  | { readonly kind: 'mode'; readonly mode: 'matrix' | 'direct' }
-  | { readonly kind: 'topology'; readonly topology: 'unibody' | 'split' }
-  | { readonly kind: 'direction'; readonly direction: Wiring['diodeDirection'] }
-  | { readonly kind: 'pin'; readonly terminalId: string; readonly boardPin: number | undefined }
-  | {
-      readonly kind: 'cell';
-      readonly keyId: string;
-      readonly row: number;
-      readonly col: number;
-      readonly half: Half;
-    }
-  | {
-      readonly kind: 'dimensions';
-      readonly half: Half;
-      readonly rows: number;
-      readonly cols: number;
-    }
-);
+import type { Project, Result, Wiring } from '@domain';
 
 function editWiringCandidate(original: Project, input: WiringEdit): Result<Project, string> {
+  if (input.kind === 'regenerate') {
+    const result = regenerateWiring(original, { ...input.input, board: input.board });
+    return result.ok
+      ? { ok: true, value: result.value.project }
+      : { ok: false, error: result.error.message };
+  }
   if (input.kind === 'complete') {
     return completeWiring(original, input);
   }

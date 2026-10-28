@@ -54,6 +54,7 @@ function describePreview(
   const result = draft?.result;
   return {
     phase,
+    operationDescription: describeOperation(draft?.edit),
     hasPreview: draft !== undefined,
     canApply: phase === 'ready' && result?.kind === 'changed',
     previewProject: getPreviewProject(project, draft),
@@ -94,4 +95,19 @@ function useWorkerCleanup(session: ReturnType<typeof createWiringWorkerSession>)
     },
     [session],
   );
+}
+
+function describeOperation(edit: WiringEdit | undefined): string | undefined {
+  if (edit?.kind !== 'regenerate') {
+    return undefined;
+  }
+  const style =
+    edit.input.settings.matrixStyle === 'symmetric-bus'
+      ? 'Symmetric matrix buses'
+      : 'Existing matrix routes';
+  const scope = edit.input.scope;
+  if (scope.kind === 'half') {
+    return `Generate ${style} · ${scope.half} half`;
+  }
+  return `Generate ${style} · ${scope.kind === 'all' ? 'Whole schematic' : 'Selected keys and nets'}`;
 }

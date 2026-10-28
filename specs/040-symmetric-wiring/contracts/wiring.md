@@ -41,3 +41,11 @@ Provider revision+base+request проверяются до принятия Work
 ## Owning amendments before implementation
 
 Не менять spec038. Добавить актуальные feature040 extensions в 003 wire schema/UI, 008 diode contract, 012 layout lock refusal и group policy, 013/033 wiring interaction names/preview и direct pin convention; historical behavior scope указывать по версии. 002 file contract расширить до текущей schema, сохранив frozen versions. Обновить domain-model, architecture explicit proposal Worker entry (без открытия engine UI), folder map только при новом owner, guidelines для protection refusal и local async calculation, resource notes и agent creation package. Onboarding учит новым flow и targets, а не исчезнувшему Rebuild-only контракту. Все amendments — в той же фиче, до affected production edits.
+
+## Implemented matrix proposal boundary
+
+`createWiringProposal(base, typedEdits)` is the pure high-level Worker entry; request/revision ownership remains in UI. It replays transient intent, prepares one candidate, and returns changed/no-change/refused plus surviving routing warnings. No intermediate Project is committed or persisted. `regenerateWiring` uses typed controller/limit inputs and returns structured operation/resource/lock failure with protecting wire IDs.
+
+Resolved scopes carry explicit pin IDs as well as selected keys/editable/fixed wires. Selecting a net selects its participant pins, not both sides of every participating key. Unselected missing axes receive neither fabricated routes nor GPIO allocations. Key selection permits both pins; outside pin relationships, terminal/GPIO meaning and physical objects stay fixed. Compatible selected pins may join an existing terminal boundary without merging unrelated outside circuits. Ambiguous selected shorts are refused rather than resolving matrix assignments by terminal order.
+
+Regeneration retains immediate protected attachments and the junction targets needed to resolve retained geometry. This is transient routing retention, not propagation of persisted locks across a whole net. New bus conductors use explicit junctions/pin contacts and fixed spine anchors; crossing insulation is materialized before independent candidate validation and Apply.

@@ -133,7 +133,7 @@ function getPreviewProject(workspace: Workspace) {
 
 function WorkspaceWiringControls({ workspace }: { readonly workspace: Workspace }) {
   return (
-    <WiringControls {...workspace.wiring}>
+    <WiringControls {...workspace.wiring} selection={workspace.selection}>
       <PartsWireSectionsTable
         isReadOnly
         project={workspace.wiring.previewProject}
