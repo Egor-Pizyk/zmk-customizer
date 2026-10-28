@@ -1,3 +1,4 @@
+import { refuseProtectedEdit } from './refuse-protected-edit';
 import { getNearestPointOnPath } from '@domain/geometry';
 import { getWirePath } from '@domain/wires/geometry';
 import {
@@ -35,6 +36,9 @@ export function insertBendAt(
   state: PointerState,
   input: { readonly wireId: string; readonly point: WirePoint },
 ) {
+  if (refuseProtectedEdit(state, { wireIds: [input.wireId] })) {
+    return;
+  }
   const bends = getWireBendsAfterInsertion(state.project, input);
   if (bends === undefined) {
     return;
@@ -85,6 +89,9 @@ function isPointOnSegment(input: {
 
 export function startBendDrag(state: PointerState, { hit, world, event }: SelectionPress): void {
   if (hit.kind !== 'bend') {
+    return;
+  }
+  if (refuseProtectedEdit(state, { wireIds: [hit.wireId] })) {
     return;
   }
   const sourceBends =

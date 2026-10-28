@@ -1,7 +1,6 @@
+import { nudgeSelection } from './nudge-selection';
 import { getKeySectionSelection } from './get-key-section-selection';
 import { getSelectedSectionIds } from './get-selected-section-ids';
-import { isKeyPositionFree } from '@domain/geometry';
-import { moveKeys } from '@domain/keys';
 import { getSelectedKeyIds } from './get-selected-key-ids';
 import type { SchematicSelection, SelectionChange } from './schematic-selection';
 import type { Project } from '@domain';
@@ -11,12 +10,13 @@ import { findNearestKey } from '@ui/canvas/logic';
 import type { Direction } from '@ui/canvas/logic';
 import type { KeyInput } from './key-input';
 
-type KeyKeyboardOptions = {
+export type KeyKeyboardOptions = {
   readonly project: Project;
   readonly selection: SchematicSelection;
   readonly onSelectionChange: SelectionChange;
   readonly gridSizeU: number;
   readonly commit: (change: (project: Project) => Project) => void;
+  readonly announce?: ((text: string) => void) | undefined;
   readonly onFocusKey: (keyId: string) => void;
 };
 
@@ -104,35 +104,4 @@ function toggleSelection(options: KeyKeyboardOptions, keyId: string, event: KeyI
     return true;
   }
   return false;
-}
-
-function nudgeSelection(
-  options: KeyKeyboardOptions,
-  {
-    keyId,
-    nudge,
-  }: { readonly keyId: string; readonly nudge: { readonly dx: number; readonly dy: number } },
-) {
-  const selected = getSelectedKeyIds(options.selection, { project: options.project });
-  const keyIds = selected.includes(keyId) ? selected : [keyId];
-  const moves = options.project.keys
-    .filter((candidate) => keyIds.includes(candidate.id))
-    .map((candidate) => ({
-      keyId: candidate.id,
-      position: {
-        xU: candidate.xU + nudge.dx * options.gridSizeU,
-        yU: candidate.yU + nudge.dy * options.gridSizeU,
-      },
-    }));
-  if (
-    moves.every((move) =>
-      isKeyPositionFree(options.project, {
-        position: move.position,
-        key: options.project.keys.find((candidate) => candidate.id === move.keyId),
-        ignoreKeyIds: keyIds,
-      }),
-    )
-  ) {
-    options.commit((project) => moveKeys(project, { moves }));
-  }
 }

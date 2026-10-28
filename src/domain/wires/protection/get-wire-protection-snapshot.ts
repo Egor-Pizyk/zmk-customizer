@@ -43,7 +43,7 @@ function getPins(project: Project, wire: Wire) {
         keyId: end.keyId,
         pin: end.pin,
         half: key?.half ?? 'left',
-        diode: key?.diode,
+        diode: key?.diode?.pin === end.pin ? key.diode : undefined,
         at: key === undefined ? undefined : getKeyPinPosition(key, end.pin),
       },
     ];

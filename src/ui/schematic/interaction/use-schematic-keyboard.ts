@@ -1,7 +1,8 @@
 import type { Project } from '@domain';
 import type { Commit } from './pointer-types';
 import type { SchematicSelection, SelectionChange } from './schematic-selection';
-import { createShortcutHandlers, focusKeyLater } from './schematic-shortcut-handlers';
+import { createShortcutHandlers } from './schematic-shortcut-handlers';
+import { focusKeyLater } from './focus-schematic';
 import type { ToolId } from '@ui/schematic/tools/logic';
 import { createKeyKeyboardHandler } from './use-key-keyboard';
 import { useKeyClipboard } from './use-key-clipboard';
@@ -53,6 +54,7 @@ export function useSchematicKeyboard(options: SchematicKeyboardOptions) {
     selection: options.selection,
     onSelectionChange: options.onSelectionChange,
     onFocusKey: focusKeyLater,
+    announce: options.announce,
   });
   return (keyId: string, event: KeyInput) => {
     keyKeyboard(keyId, event);

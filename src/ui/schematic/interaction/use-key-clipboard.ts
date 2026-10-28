@@ -4,7 +4,7 @@ import type { KeyClipboard } from '@domain/keys';
 import { PROJECT_BUDGET } from '@storage/project';
 import { useProject } from '@ui/project/logic';
 import { getSelectedKeyIds } from './get-selected-key-ids';
-import { focusKeyLater } from './schematic-shortcut-handlers';
+import { focusKeyLater } from './focus-schematic';
 import type { SchematicSelection, SelectionChange } from './schematic-selection';
 
 type ClipboardInput = {

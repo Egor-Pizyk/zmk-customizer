@@ -1,3 +1,4 @@
+import { refuseProtectedEdit } from './refuse-protected-edit';
 import { getKeyCenter, getKeyGeometry } from '@domain/geometry';
 import {
   getPointerRotationDeg,
@@ -117,6 +118,9 @@ function startTransform(
   }
   pointer.cancelDraft();
   options.onHintClear();
+  if (refuseProtectedEdit(options, { keyIds: [gesture.keyId] })) {
+    return;
+  }
   event.preventDefault();
   event.focus();
   event.capture();

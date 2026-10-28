@@ -26,3 +26,11 @@ it('cannot bypass protection through diode or crossing changes', () => {
   expect(toggleKeyDiode(base, { keyId: 'k0', pin: 1 })).toBe(base);
   expect(toggleCrossingInsulation(base, { ref: { wireIds: ['w0', 'w2'], ordinal: 0 } })).toBe(base);
 });
+
+it('allows a diode change at the other pin when the protected pin and conductor stay unchanged', () => {
+  const base = buildLockedWiringProject();
+  const next = toggleKeyDiode(base, { keyId: 'k1', pin: 2 });
+  expect(next).not.toBe(base);
+  expect(next.keys.find((key) => key.id === 'k1')?.diode?.pin).toBe(2);
+  expect(next.wires[0]).toEqual(base.wires[0]);
+});

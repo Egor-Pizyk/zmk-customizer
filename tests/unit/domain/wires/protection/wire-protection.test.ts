@@ -103,3 +103,14 @@ function requireWiring(project: Project) {
   }
   return project.wiring;
 }
+
+it('finds the protecting wire for deleting an immediate junction attachment without locking a remote key', () => {
+  const base = buildLockedWiringProject();
+  expect(
+    getWireProtection(base, { wireIds: ['w1'], includeAttachments: true }).map(
+      (wire) => wire.wireId,
+    ),
+  ).toEqual(['w0']);
+  expect(getWireProtection(base, { wireIds: ['w2'], includeAttachments: true })).toEqual([]);
+  expect(getWireProtection(base, { keyIds: ['k2'] })).toEqual([]);
+});
