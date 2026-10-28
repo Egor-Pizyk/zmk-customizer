@@ -1,4 +1,4 @@
-import { validateWireProtection } from '@domain/wires/protection';
+import { getWireProtection, validateWireProtection } from '@domain/wires/protection';
 import { expect, it } from 'vitest';
 import { replaceEncoder, removeEncoder, setEncoderPushSwitch } from '@domain/encoders';
 import type { Encoder, Project } from '@domain';
@@ -29,6 +29,10 @@ it('protects an encoder endpoint against movement, removal and pin reassignment'
       },
     ],
   };
+  expect(getWireProtection(base, { encoderIds: ['e0'] }).map((wire) => wire.wireId)).toEqual([
+    'w0',
+  ]);
+  expect(getWireProtection(base, { encoderIds: ['other'] })).toEqual([]);
   expect(replaceEncoder(base, { ...encoder, xU: 1 })).toBe(base);
   expect(replaceEncoder(base, { ...encoder, aPin: 5 })).toBe(base);
   expect(removeEncoder(base, 'e0')).toBe(base);

@@ -50,8 +50,8 @@ for (const { mode, pinLabel } of [
     await expect.poll(() => readWirePaths(paths)).toEqual(unified);
     expect(await saved(page)).toEqual(before);
     await page.screenshot({ path: test.info().outputPath('topology-round-trip.png') });
-    await expect(page.getByText('Wiring preview', { exact: true })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toHaveCount(0);
+    await expect(page.getByText('No wiring changes needed.', { exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toBeDisabled();
     await topology.selectOption('split');
     await page.getByRole('button', { name: 'Apply wiring', exact: true }).click();
     const split = await saved(page);

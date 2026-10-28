@@ -1,3 +1,4 @@
+import { refuseProtectedEdit } from './refuse-protected-edit';
 import { removeEncoder } from '@domain/encoders';
 import { removeKey, removeKeysAndSections } from '@domain/keys';
 import { removeWire } from '@domain/wires/editing';
@@ -16,16 +17,7 @@ export function deleteSelection(input: ShortcutHandlerInput) {
     return;
   }
   if (selection?.kind === 'key') {
-    const keyIndex = project.keys.findIndex((key) => key.id === selection.keyId);
-    commit((current) => removeKey(current, { keyId: selection.keyId }), `Deleted key ${keyIndex}`);
-    // Focus is never lost: the next key by index, else the previous one (accessibility.md).
-    const nextKey = project.keys[keyIndex + 1] ?? project.keys[keyIndex - 1];
-    onSelectionChange(nextKey === undefined ? undefined : { kind: 'key', keyId: nextKey.id });
-    if (nextKey === undefined) {
-      focusCanvasLater();
-    } else {
-      focusKeyLater(nextKey.id);
-    }
+    deleteKeySelection(input);
     return;
   }
   if (selection?.kind === 'multi') {
@@ -33,6 +25,14 @@ export function deleteSelection(input: ShortcutHandlerInput) {
     return;
   }
   if (selection === undefined) {
+    return;
+  }
+  if (
+    refuseProtectedEdit(
+      { project, onHint: (text) => input.announce?.(text) },
+      { wireIds: [selection.wireId], includeAttachments: true },
+    )
+  ) {
     return;
   }
   const wireIndex = project.wires.findIndex((wire) => wire.id === selection.wireId);
@@ -92,13 +92,45 @@ function deleteMultiSelection(input: ShortcutHandlerInput) {
 }
 
 function deleteEncoderSelection(input: ShortcutHandlerInput) {
-  const { commit, selection, onSelectionChange } = input;
+  const { project, commit, selection, onSelectionChange } = input;
   if (selection?.kind === 'encoder') {
+    if (
+      refuseProtectedEdit(
+        { project, onHint: (text) => input.announce?.(text) },
+        { encoderIds: [selection.encoderId] },
+      )
+    ) {
+      return;
+    }
     commit(
       (current) => removeEncoder(current, selection.encoderId),
       'Deleted encoder. Undo to restore.',
     );
     onSelectionChange();
     focusCanvasLater();
+  }
+}
+
+function deleteKeySelection(input: ShortcutHandlerInput) {
+  const { project, commit, selection, onSelectionChange } = input;
+  if (selection?.kind === 'key') {
+    if (
+      refuseProtectedEdit(
+        { project, onHint: (text) => input.announce?.(text) },
+        { keyIds: [selection.keyId] },
+      )
+    ) {
+      return;
+    }
+    const keyIndex = project.keys.findIndex((key) => key.id === selection.keyId);
+    commit((current) => removeKey(current, { keyId: selection.keyId }), `Deleted key ${keyIndex}`);
+    // Focus is never lost: the next key by index, else the previous one (accessibility.md).
+    const nextKey = project.keys[keyIndex + 1] ?? project.keys[keyIndex - 1];
+    onSelectionChange(nextKey === undefined ? undefined : { kind: 'key', keyId: nextKey.id });
+    if (nextKey === undefined) {
+      focusCanvasLater();
+    } else {
+      focusKeyLater(nextKey.id);
+    }
   }
 }

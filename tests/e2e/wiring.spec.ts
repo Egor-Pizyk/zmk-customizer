@@ -26,6 +26,7 @@ test('matrix preview, conflict repair, history and actual JSON/ZIP agree @cross-
   await openWiring(page);
   await page.getByRole('combobox', { name: 'left row 0 pin', exact: true }).selectOption('21');
   await expect(page.getByText('Wiring preview', { exact: true })).toBeVisible();
+  await expect(page.getByText('Calculating wiring…', { exact: true })).toHaveCount(0);
   expect(await saved(page)).toEqual(UNIBODY_PRESET);
   await page.getByRole('button', { name: 'Cancel wiring', exact: true }).click();
   await expect(page.getByRole('combobox', { name: 'left row 0 pin', exact: true })).toHaveValue(
@@ -275,6 +276,7 @@ test('Auto assign capacity failure explains recovery without a saved change @cro
   await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('GPIOs');
   await expect(page.getByRole('alert')).toContainText('group rows manually');
-  await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Recalculate wiring', exact: true })).toBeVisible();
   expect(await saved(page)).toEqual(before);
 });

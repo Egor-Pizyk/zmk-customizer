@@ -45,4 +45,10 @@ export type {
 
 export type { Encoder, EncoderBinding } from './encoder-types';
 
-export type { RoutingSettings, RoutingTargetCell } from './routing-types';
+export type {
+  RoutingSettings,
+  RoutingTargetCell,
+  WiringProposalFailure,
+  WiringProposalSummary,
+  WiringProposalResult,
+} from './routing-types';

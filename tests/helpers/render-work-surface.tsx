@@ -5,7 +5,7 @@ import type { CanvasWorkspaceId } from '@storage/preferences';
 import { PreferencesProvider } from '@ui/preferences';
 import { ProjectProvider } from '@ui/project/components';
 import { loadProject } from '@storage/project';
-import { installPlatformShims } from './render-app';
+import { installPlatformShims } from './app-platform';
 
 export function renderWorkSurface(workspaceId: CanvasWorkspaceId, content: SurfaceContent) {
   installPlatformShims();

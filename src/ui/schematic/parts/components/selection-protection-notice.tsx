@@ -7,10 +7,11 @@ type Props = Pick<PartsTableProps, 'project' | 'selection' | 'onSelectionChange'
 
 export function SelectionProtectionNotice({ project, selection, onSelectionChange }: Props) {
   const keyIds = getSelectedKeyIds(selection, { project });
-  if (keyIds.length === 0) {
+  const encoderIds = selection?.kind === 'encoder' ? [selection.encoderId] : [];
+  if (keyIds.length === 0 && encoderIds.length === 0) {
     return null;
   }
-  return getWireProtection(project, { keyIds }).map(({ wireId }) => {
+  return getWireProtection(project, { keyIds, encoderIds }).map(({ wireId }) => {
     const index = project.wires.findIndex((wire) => wire.id === wireId);
     function handleFind() {
       onSelectionChange({ kind: 'wire', wireId });

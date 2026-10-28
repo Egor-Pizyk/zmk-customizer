@@ -6,3 +6,5 @@ export type { WiringConnection } from './route-wiring';
 export { getWiringProposalSummary } from './get-wiring-proposal-summary';
 
 export { setRoutingSettings } from './set-routing-settings';
+export { prepareWiringProposal } from './prepare-wiring-proposal';
+export { applyWiringProposal } from './apply-wiring-proposal';

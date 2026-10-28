@@ -61,3 +61,15 @@ it('retains the mixed selection after the bulk delete button refuses and links t
   await user.click(screen.getByRole('button', { name: 'Find protecting wire 0' }));
   expect(screen.getByRole('button', { name: 'Unlock wire 0' })).toBe(document.activeElement);
 });
+
+it('explains a protected GPIO edit without changing the saved assignment', () => {
+  renderApp(buildLockedWiringProject());
+  const before = loadProject().project;
+  fireEvent.change(screen.getByRole('combobox', { name: 'Wire 0 end board pin' }), {
+    target: { value: '7' },
+  });
+  expect(loadProject().project).toEqual(before);
+  expect(
+    screen.getByText('Wire 0 is locked. Use Find wire in Parts and unlock it before editing.'),
+  ).toBeDefined();
+});

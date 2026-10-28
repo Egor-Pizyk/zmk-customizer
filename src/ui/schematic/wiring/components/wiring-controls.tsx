@@ -64,7 +64,6 @@ function WiringContent(props: WiringControlsProps & { readonly project: Project 
         irregular clusters in the table. Rebuilding proposes free GPIOs; review these against your
         physical hardware before applying. These pins are not detected hardware wiring.
       </p>
-      <WiringProposalSummary {...props} />
       <WiringOptionsControls project={project} onEdit={props.handleEdit} />
       {(['left', ...(wiring.topology === 'split' ? (['right'] as const) : [])] as const).map(
         (half) => (
@@ -94,32 +93,12 @@ function WiringFeedback(props: WiringControlsProps) {
       )
     : [];
 
-  return (
-    <>
-      {props.failure === undefined ? undefined : (
-        <p role="alert" className="text-danger">
-          {props.failure}
-        </p>
-      )}
-      {issues.length === 0 ? undefined : (
-        <ul className="text-danger">
-          {issues.map((issue) => (
-            <li key={`${issue.code}:${issue.path.join('.')}`}>{issue.message}</li>
-          ))}
-        </ul>
-      )}
-    </>
-  );
-}
-
-function WiringProposalSummary(props: WiringControlsProps) {
-  return (
-    <>
-      {props.summary === undefined ? undefined : (
-        <output>{`Retained ${props.summary.retained}; added ${props.summary.added}; rerouted ${props.summary.rerouted}; removed ${props.summary.removed}. Keys: ${props.summary.keyIds.join(', ') || 'none'}; terminals: ${props.summary.terminalIds.join(', ') || 'none'}.`}</output>
-      )}
-      {props.message === undefined ? undefined : <output>{props.message}</output>}
-    </>
+  return issues.length === 0 ? undefined : (
+    <ul className="text-danger">
+      {issues.map((issue) => (
+        <li key={`${issue.code}:${issue.path.join('.')}`}>{issue.message}</li>
+      ))}
+    </ul>
   );
 }
 

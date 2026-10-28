@@ -12,6 +12,7 @@ for (const action of ['Rebuild wiring']) {
     await openProject(page, source);
     await page.getByText('Wiring', { exact: true }).click();
     await page.getByRole('button', { name: action, exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toBeEnabled();
     const paths = page.locator('[data-section-id] path[pointer-events="none"]');
     expect(await paths.count()).toBeGreaterThan(0);
     const proposal = await readPaths(paths);
@@ -47,6 +48,7 @@ test('wired Rebuild preview remains selectable and survives Select and editing-t
   await page.getByRole('radio', { name: 'Wire', exact: true }).press('Space');
   await page.getByText('Wiring', { exact: true }).click();
   await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toBeEnabled();
   const paths = page.locator('[data-section-id] path[pointer-events="none"]');
   const proposal = await readPaths(paths);
   await page.screenshot({ path: info.outputPath('wired-rebuild-before-selection.png') });

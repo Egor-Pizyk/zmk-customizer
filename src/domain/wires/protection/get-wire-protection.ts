@@ -6,6 +6,7 @@ import type { Project, Wire } from '@domain';
 
 type Input = {
   readonly wireIds?: readonly string[];
+  readonly encoderIds?: readonly string[];
   readonly keyIds?: readonly string[];
   readonly includeAttachments?: boolean;
   readonly terminalIds?: readonly string[];
@@ -26,8 +27,10 @@ export function getWireProtection(project: Project, input: Input = {}): readonly
       const matches =
         (input.wireIds === undefined &&
           input.keyIds === undefined &&
-          input.terminalIds === undefined) ||
+          input.terminalIds === undefined &&
+          input.encoderIds === undefined) ||
         (input.wireIds?.includes(wire.id) ?? false) ||
+        matchesEncoder(project, { wire, details, ids: input.encoderIds }) ||
         details.keyIds.some((id) => input.keyIds?.includes(id) ?? false) ||
         details.terminalIds.some((id) => input.terminalIds?.includes(id) ?? false) ||
         (contacts !== undefined &&
@@ -60,4 +63,32 @@ function getAttachedWireIds(project: Project, wire: Wire, contacts: WireContacts
     ...snapshot.crossings.flatMap((entry) => entry.wireIds),
     ...snapshot.overlaps.map((entry) => entry.wireId),
   ];
+}
+
+function matchesEncoder(
+  project: Project,
+  {
+    wire,
+    details,
+    ids,
+  }: {
+    readonly wire: Wire;
+    readonly details: WireProtection;
+    readonly ids: readonly string[] | undefined;
+  },
+): boolean {
+  if (ids === undefined) {
+    return false;
+  }
+  return (
+    [wire.start, wire.end].some(
+      (end) => end.kind === 'encoder-pin' && ids.includes(end.encoderId),
+    ) ||
+    project.encoders.some(
+      (encoder) =>
+        ids.includes(encoder.id) &&
+        encoder.pushKeyId !== undefined &&
+        details.keyIds.includes(encoder.pushKeyId),
+    )
+  );
 }

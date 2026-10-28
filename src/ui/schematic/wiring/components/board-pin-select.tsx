@@ -1,3 +1,5 @@
+import { useProject } from '@ui/project/logic';
+import { refuseProtectedEdit } from '@ui/schematic/interaction';
 import { getControllerBoard } from '@catalog/controllers';
 import { formatBoardPin, findBoardPinUser } from '@domain/wires';
 import { setWireEndBoardPin } from '@domain/wires/editing';
@@ -16,8 +18,8 @@ const NOT_CONNECTED = '';
 const DROPPED = 'dropped';
 
 export function BoardPinSelect(props: BoardPinSelectProps) {
-  const { project, commit, issues, wireIndex, side } = props;
-  const wire = project.wires[wireIndex];
+  const { issues, wireIndex, side } = props;
+  const { announce } = useProject();
   const endPath = `wires.${wireIndex}.${side}`;
   const errors = issues
     .filter(
@@ -27,21 +29,7 @@ export function BoardPinSelect(props: BoardPinSelectProps) {
     .join(' ');
 
   function handleChange(event: { readonly target: { readonly value: string } }) {
-    if (wire === undefined || event.target.value === DROPPED) {
-      return;
-    }
-    const next =
-      event.target.value === NOT_CONNECTED || event.target.value === 'ground'
-        ? undefined
-        : Number(event.target.value);
-    commit((current) =>
-      setWireEndBoardPin(current, {
-        wireId: wire.id,
-        side,
-        boardPin: next,
-        ground: event.target.value === 'ground',
-      }),
-    );
+    handleBoardPinChange(props, event.target.value, announce);
   }
 
   return (
@@ -129,5 +117,31 @@ function AssignmentOptions({ hasDropped }: { readonly hasDropped: boolean }) {
       <option value="ground">GND</option>
       <option value={NOT_CONNECTED}>{hasDropped ? 'Clear assignment' : 'Not connected'}</option>
     </>
+  );
+}
+
+function handleBoardPinChange(
+  { project, commit, wireIndex, side }: BoardPinSelectProps,
+  value: string,
+  announce: (text: string) => void,
+) {
+  const wire = project.wires[wireIndex];
+  if (wire === undefined || value === DROPPED) {
+    return;
+  }
+  const terminalIds = [wire.start, wire.end].flatMap((end) =>
+    end.kind === 'free' && end.terminalId !== undefined ? [end.terminalId] : [],
+  );
+  if (refuseProtectedEdit({ project, onHint: announce }, { wireIds: [wire.id], terminalIds })) {
+    return;
+  }
+  const next = value === NOT_CONNECTED || value === 'ground' ? undefined : Number(value);
+  commit((current) =>
+    setWireEndBoardPin(current, {
+      wireId: wire.id,
+      side,
+      boardPin: next,
+      ground: value === 'ground',
+    }),
   );
 }

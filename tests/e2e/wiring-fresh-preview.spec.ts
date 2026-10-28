@@ -15,6 +15,7 @@ for (const mode of ['matrix', 'direct']) {
       await page.getByText('Wiring', { exact: true }).click();
       await page.getByRole('combobox', { name: 'Scanning type', exact: true }).selectOption(mode);
       await page.getByRole('button', { name: action, exact: true }).click();
+      await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toBeEnabled();
       const paths = page.locator('[data-section-id] path[pointer-events="none"]');
       const proposal = await readPaths(paths);
       expect(proposal.length).toBeGreaterThan(0);
@@ -73,6 +74,7 @@ for (const action of ['Rebuild wiring']) {
     await openProject(page, source);
     await page.getByText('Wiring', { exact: true }).click();
     await page.getByRole('button', { name: action, exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toBeEnabled();
     const paths = page.locator('[data-section-id] path[pointer-events="none"]');
     const proposal = await readPaths(paths);
     expect(proposal.length).toBeGreaterThan(0);
@@ -93,6 +95,7 @@ for (const action of ['Rebuild wiring']) {
     expect(await saved(page)).toEqual(source);
     await expect(history(page, 'Undo')).toHaveAttribute('aria-disabled', 'true');
     await page.getByRole('button', { name: action, exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toBeEnabled();
     expect(await readPaths(paths)).toEqual(proposal);
     await page.getByText('Parts', { exact: true }).click();
     await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toHaveCount(0);
@@ -101,19 +104,27 @@ for (const action of ['Rebuild wiring']) {
   });
 }
 
-test('a stale no-wire proposal never returns after an external edit and Undo @cross-browser', async ({
+test('a stale no-wire proposal remains visible but cannot revive after an external edit and Undo @cross-browser', async ({
   page,
 }) => {
   const source = buildProject({ keys: UNIBODY_PRESET.keys });
   await openProject(page, source);
   await page.getByText('Wiring', { exact: true }).click();
   await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toBeVisible();
+  const apply = page.getByRole('button', { name: 'Apply wiring', exact: true });
+  await expect(apply).toBeEnabled();
+  const paths = page.locator('[data-section-id] path[pointer-events="none"]');
+  const proposal = await readPaths(paths);
   await page.getByRole('textbox', { name: 'Name', exact: true }).fill('Edited after preview');
   await page.getByRole('textbox', { name: 'Name', exact: true }).press('Tab');
-  await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toHaveCount(0);
+  await expect(apply).toBeDisabled();
   await history(page, 'Undo').click();
   expect(await saved(page)).toEqual(source);
-  await expect(page.locator('[data-section-id]')).toHaveCount(0);
-  await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toHaveCount(0);
+  expect(await readPaths(paths)).toEqual(proposal);
+  await expect(apply).toBeDisabled();
+  await expect(page.getByRole('alert')).toHaveText(
+    'The project changed. Recalculate the wiring preview.',
+  );
+  await page.getByRole('button', { name: 'Cancel wiring', exact: true }).click();
+  await expect(paths).toHaveCount(0);
 });

@@ -64,9 +64,9 @@ export const SEEDS = [
   ],
   [
     'saved-wiring-preview',
-    'src/ui/schematic/wiring/logic/use-wiring-preview.ts',
-    'setDraft(getDraftResult(project, { result, source, input }));',
-    'const nextDraft = getDraftResult(project, { result, source, input }); if (nextDraft) { commit(() => nextDraft.preview); } setDraft(nextDraft && { ...nextDraft, base: nextDraft.preview });',
+    'src/ui/schematic/components/schematic-preview-bar.tsx',
+    "return wiring.canApply ? 'unsaved' : 'no changes';",
+    "if (wiring.canApply) { localStorage.setItem('zmk-customizer:project', JSON.stringify(wiring.previewProject)); } return wiring.canApply ? 'unsaved' : 'no changes';",
     'matrix preview, conflict repair',
     'toEqual',
   ],
