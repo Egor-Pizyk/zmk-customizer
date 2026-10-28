@@ -1,4 +1,4 @@
-import { findWireContacts } from '@domain/wires';
+import { findWireContacts } from '@domain/wires/contacts';
 import { describe, expect, it } from 'vitest';
 import { buildProject, freeEnd, keyPin } from '../../../helpers/build-project';
 

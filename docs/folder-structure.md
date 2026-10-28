@@ -27,6 +27,8 @@ not relax layer boundaries.
 | `src/domain/bindings/editing/` | Behavior and binding edits |
 | `src/domain/wires/` | Endpoints, pin contacts and wire queries |
 | `src/domain/wires/editing/` | Wire edits |
+| `src/domain/wires/contacts/` | Geometric conductor contacts, crossing and overlap descriptions |
+| `src/domain/wires/protection/` | Locked-wire query, edits and full-candidate protection policy |
 | `src/domain/wires/nets/` | Electrical net derivation |
 | `src/domain/crossings/` | Wire intersections and insulation |
 | `src/domain/diodes/` | Diode presence, pin and polarity |

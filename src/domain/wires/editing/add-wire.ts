@@ -1,10 +1,11 @@
+import { preserveWireProtection } from '@domain/wires/protection';
 import { canAddWire, captureWireContacts } from '@domain/wires';
 import { createEntityId, getProjectResourceError } from '@domain/project';
 import type { Project, WireEnd, WirePoint } from '@domain';
 
 // Guarded: ends that fail canAddWire would be rejected by the schema on reload,
 // so the invalid wire is refused and the project is returned unchanged.
-export function addWire(
+function addWireCandidate(
   project: Project,
   input: { readonly start: WireEnd; readonly end: WireEnd; readonly bends: readonly WirePoint[] },
 ): Project {
@@ -17,4 +18,8 @@ export function addWire(
     wires: [...project.wires, captureWireContacts(project, { id, ...input })],
   };
   return getProjectResourceError(next) === undefined ? next : project;
+}
+
+export function addWire(project: Project, input: Parameters<typeof addWireCandidate>[1]): Project {
+  return preserveWireProtection(project, addWireCandidate(project, input));
 }

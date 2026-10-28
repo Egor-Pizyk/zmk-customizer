@@ -4,3 +4,5 @@ export { initializeWiring } from './initialize-wiring';
 export { routeWiring } from './route-wiring';
 export type { WiringConnection } from './route-wiring';
 export { getWiringProposalSummary } from './get-wiring-proposal-summary';
+
+export { setRoutingSettings } from './set-routing-settings';

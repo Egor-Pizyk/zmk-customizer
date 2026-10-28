@@ -61,7 +61,7 @@ it('migrates a historical nested project without adding tour state to Project', 
   const loaded = loadOnboarding();
   expect(loaded).toMatchObject({
     ok: true,
-    value: { project: { schemaVersion: 13 }, stepId: 'name' },
+    value: { project: { schemaVersion: 14 }, stepId: 'name' },
   });
   expect(localStorage.getItem('zmk-customizer:project')).toBeNull();
 });

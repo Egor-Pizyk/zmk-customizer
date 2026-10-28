@@ -1,7 +1,7 @@
 import { getEncoderGeometry } from '@domain/geometry';
 import { getEncoderConnections } from './get-encoder-connections';
 import type { ControllerBoard, Encoder, Project, ValidationIssue } from '@domain';
-import { getWireHalf } from '@domain/wiring';
+import { getWireHalf } from '@domain/wires/geometry';
 import { validateAdvancedBinding } from '@domain/advanced-keymap';
 import type { BindingsCatalog } from '@domain/validation';
 

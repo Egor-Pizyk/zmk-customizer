@@ -5,7 +5,7 @@ import type { ProjectConfigurationInput } from './validate-project-configuration
 import { deriveShieldMatrix, getWiringCells } from '@domain/wiring/matrix';
 import type { ShieldTarget } from '@domain/wiring/matrix';
 import { findCrossings } from '@domain/crossings';
-import { findWireContacts } from '@domain/wires';
+import { findWireContacts } from '@domain/wires/contacts';
 import { getNets } from '@domain/wires/nets';
 import type { Project } from '@domain';
 import { validateSchematic } from '@domain/validation';

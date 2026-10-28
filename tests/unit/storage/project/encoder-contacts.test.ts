@@ -14,7 +14,7 @@ const encoder = {
 function schematicProject() {
   return {
     ...createProject({ controllerId: 'nice_nano_v2' }),
-    schemaVersion: 13,
+    schemaVersion: 14,
     keys: [{ id: 'k1', xU: 0, yU: 0 }],
     encoders: [{ ...encoder, rotationDeg: 35, wiringMode: 'schematic', pushKeyId: 'k1' }],
     wires: [
@@ -42,7 +42,7 @@ it('migrates v12 encoders without adding schematic mode or a button', () => {
   };
   expect(getResultValue(parseProjectFile(JSON.stringify(project)))).toEqual({
     ...project,
-    schemaVersion: 13,
+    schemaVersion: 14,
   });
 });
 it('rejects missing contacts, dangling push keys and duplicate push ownership', () => {

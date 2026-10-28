@@ -95,7 +95,7 @@ test('legacy import stays repairable after projected navigation', async ({ page 
   await importText(page, await readFile('tests/fixtures/project/v1.json', 'utf8'));
   await expect(page.locator('.joint-paper')).toHaveCount(1);
   const imported = await saved(page);
-  expect(imported.schemaVersion).toBe(13);
+  expect(imported.schemaVersion).toBe(14);
   await workspace(page, 'Bindings');
   await workspace(page, 'Schematic');
   expect(await saved(page)).toEqual(imported);

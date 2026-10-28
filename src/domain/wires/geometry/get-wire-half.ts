@@ -1,4 +1,4 @@
-import { getWirePinContacts } from '@domain/wires/geometry';
+import { getWirePinContacts } from './get-wire-pin-contacts';
 import type { Half, Project, Wire } from '@domain';
 
 export function getWireHalf(project: Project, wire: Wire): Half {

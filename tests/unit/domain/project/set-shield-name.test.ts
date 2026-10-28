@@ -3,7 +3,7 @@ import type { Project } from '@domain';
 import { expect, it } from 'vitest';
 
 const PROJECT: Project = {
-  schemaVersion: 13,
+  schemaVersion: 14,
   encoders: [],
   combos: [],
   macros: [],

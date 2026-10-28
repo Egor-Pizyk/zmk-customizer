@@ -1,3 +1,4 @@
+import { validateWireProtection } from '@domain/wires/protection';
 import { completeWiring } from './complete-wiring';
 import { createWiringTerminals, autoAssignCells, getWiringConnections } from '@domain/wiring';
 import { prepareTerminals } from './prepare-terminals';
@@ -30,7 +31,7 @@ export type WiringEdit = { readonly board: ControllerBoard } & (
     }
 );
 
-export function editWiring(original: Project, input: WiringEdit): Result<Project, string> {
+function editWiringCandidate(original: Project, input: WiringEdit): Result<Project, string> {
   if (input.kind === 'complete') {
     return completeWiring(original, input);
   }
@@ -277,4 +278,16 @@ function hasSameDimensions(wiring: Wiring, input: Extract<WiringEdit, { kind: 'd
     rowCount === input.rows &&
     terminals.filter((terminal) => terminal.kind === colKind).length === input.cols
   );
+}
+
+export function editWiring(
+  project: Project,
+  input: Parameters<typeof editWiringCandidate>[1],
+): Result<Project, string> {
+  const result = editWiringCandidate(project, input);
+  if (!result.ok) {
+    return result;
+  }
+  const issue = validateWireProtection(project, result.value)[0];
+  return issue === undefined ? result : { ok: false, error: issue.message };
 }

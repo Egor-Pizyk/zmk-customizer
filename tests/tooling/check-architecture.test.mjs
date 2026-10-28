@@ -93,3 +93,78 @@ test('JointJS core is confined to the private Schematic adapter', () => {
     );
   }
 });
+
+test('routing protection exposes only its safe wire operations and provider commit guard', () => {
+  const sourceByFile = {
+    'src/domain/wires/protection/index.ts': [
+      "export { validateWireProtection } from './validate-wire-protection.ts';",
+      "export { getWireProtection } from './get-wire-protection.ts';",
+      "export { setWireLocked } from './set-wire-locked.ts';",
+    ].join('\n'),
+  };
+  const options = { loadSource: (file) => sourceByFile[file] };
+  assert.deepEqual(
+    checkSource(
+      'src/ui/project/logic/project-state.ts',
+      "import { validateWireProtection } from '@domain/wires/protection';",
+      options,
+    ),
+    [],
+  );
+  for (const name of ['getWireProtection', 'setWireLocked']) {
+    assert.deepEqual(
+      checkSource(
+        'src/ui/schematic/parts/components/probe.tsx',
+        `import { ${name} } from '@domain/wires/protection';`,
+        options,
+      ),
+      [],
+    );
+  }
+  assert.ok(
+    checkSource(
+      'src/ui/schematic/parts/components/probe.tsx',
+      "import { validateWireProtection } from '@domain/wires/protection';",
+      options,
+    ).some((issue) => issue.rule === 'layer-import'),
+  );
+});
+
+test('inline worker query suffixes retain engine and pure-layer boundaries', () => {
+  for (const module of ['@domain/wires/nets', '@domain/wires/contacts', '@domain/wiring/matrix']) {
+    assert.ok(
+      checkSource(
+        'src/ui/schematic/wiring/logic/wiring-worker.ts',
+        `import * as engine from '${module}?worker&inline';`,
+      ).some((issue) => issue.rule === 'layer-import'),
+    );
+  }
+  assert.ok(
+    checkSource(
+      'src/domain/wiring/editing/probe.ts',
+      'const worker = new Worker("routing.js");',
+    ).some((issue) => issue.rule === 'purity'),
+  );
+  assert.ok(
+    checkSource(
+      'src/ui/schematic/wiring/logic/wiring-worker.ts',
+      "import { dia } from '@joint/core';",
+    ).some((issue) => issue.rule === 'external-import'),
+  );
+});
+
+test('cached project analysis has one provider-owned bridge after extracting history composition', () => {
+  assert.deepEqual(
+    checkSource(
+      'src/ui/project/logic/project-analysis.ts',
+      "import { analyzeProject } from '@domain/analysis';",
+    ),
+    [],
+  );
+  assert.ok(
+    checkSource(
+      'src/ui/schematic/wiring/logic/probe.ts',
+      "import { analyzeProject } from '@domain/analysis';",
+    ).some((issue) => issue.rule === 'layer-import'),
+  );
+});

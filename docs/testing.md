@@ -180,7 +180,7 @@ See [testing history](testing-history.md), [browser verification](../specs/025-p
 
 ## Focused diagnostic loop
 
-Implement the behavior, then adapt semantic tests to the resulting requirements.
+Follow the tests-first requirements in docs/workflow.md: domain, storage, generators and regressions need a failing behavioral contract before implementation. Use the focused loop below during implementation and diagnosis.
 Stage explicit paths and inspect `npm run check:focus -- --plan`; run
 `npm run check:focus` while fixing failures. Read `summary.json` first and open full
 logs only where needed. The bounded UI mapping includes cross-cutting accessibility,

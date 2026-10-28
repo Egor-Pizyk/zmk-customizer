@@ -1,10 +1,8 @@
-import { FIRMWARE_OPTIONS } from '@catalog/firmware';
+import { getValidationIssues } from './project-analysis';
+import { validateWireProtection } from '@domain/wires/protection';
 import { getProjectResourceError } from '@domain/project';
-import { BINDINGS_CATALOG } from '@catalog/bindings';
-import type { Project, ValidationIssue } from '@domain';
+import type { Project } from '@domain';
 import { saveOnboarding } from '@storage/onboarding';
-import { getControllerBoard } from '@catalog/controllers';
-import { analyzeProject } from '@domain/analysis';
 import { backupDamagedProject, discardBackup, saveProject } from '@storage/project';
 import type {
   ProjectFileError,
@@ -84,31 +82,6 @@ function autosave(state: ProjectState, project: Project): SaveError | undefined 
   return saved.ok ? undefined : saved.error;
 }
 
-// Validation cache (perf): one commit ran validateProject 3 times (before + after here,
-// plus the provider's useMemo on the same after object). Projects are immutable and shared
-// by reference through history, so a WeakMap keeps exactly one real run per new project.
-const analysisByProject = new WeakMap<Project, ReturnType<typeof analyzeProject>>();
-
-export function getProjectAnalysis(project: Project): ReturnType<typeof analyzeProject> {
-  const cached = analysisByProject.get(project);
-  if (cached !== undefined) {
-    return cached;
-  }
-  const board = getControllerBoard(project.controllerId);
-  const analysis = analyzeProject(project, {
-    bindingsCatalog: BINDINGS_CATALOG,
-    firmwareOptions: FIRMWARE_OPTIONS,
-    target: { ...board, boardId: board.id },
-    board,
-  });
-  analysisByProject.set(project, analysis);
-  return analysis;
-}
-
-export function getValidationIssues(project: Project): readonly ValidationIssue[] {
-  return getProjectAnalysis(project).issues;
-}
-
 // One text per change: the action's own text, plus the issue total when it changed (R15).
 function describeChange(input: {
   readonly before: Project;
@@ -135,6 +108,13 @@ export function applyHistoryAction(
   const history = reduceProjectHistory(state.history, input.action);
   if (history === state.history) {
     return state;
+  }
+  const protectionIssue =
+    input.action.kind === 'commit'
+      ? validateWireProtection(state.history.present, history.present)[0]
+      : undefined;
+  if (protectionIssue !== undefined) {
+    return withAnnouncement(state, protectionIssue.message);
   }
   const resourceError =
     input.action.kind === 'commit' ? getProjectResourceError(history.present) : undefined;

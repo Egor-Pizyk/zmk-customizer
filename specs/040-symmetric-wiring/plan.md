@@ -38,7 +38,7 @@
 
 ### Domain: lock policy below editing modules
 
-В `src/domain/wires/` добавить `validate-wire-protection.ts` и `set-wire-locked.ts`, отдельный типизированный запрос для UI (какой wire защищает объект). Policy зависит только от типов, низкоуровневой геометрии и явных контактов, не от keys/editing, wiring/editing или полного net analysis, чтобы не создать цикл. Сравнивать исходный и полный кандидат: locked wire по ID, поля/route, разрешённые pooled contacts, непосредственные pin/junction/terminal/connected-crossing отношения и реальные положения прикреплённых пинов, meaning терминала и board. Не сравнивать всю net: сосед на общей матрице остаётся свободным. Новое присоединение к locked wire также требует unlock.
+В `src/domain/wires/protection/` добавить `validate-wire-protection.ts` и `set-wire-locked.ts`, отдельный типизированный запрос для UI (какой wire защищает объект). Policy зависит только от типов, низкоуровневой геометрии и leaf contacts API; `getWireHalf` принадлежит wire geometry, а геометрические контакты — `domain/wires/contacts`, не от keys/editing, wiring/editing или полного net analysis, чтобы не создать цикл. Сравнивать исходный и полный кандидат: locked wire по ID, поля/route, разрешённые pooled contacts, непосредственные pin/junction/terminal/connected-crossing отношения и реальные положения прикреплённых пинов, meaning терминала и board. Не сравнивать всю net: сосед на общей матрице остаётся свободным. Новое присоединение к locked wire также требует unlock.
 
 Dedicated unlock меняет только locked у явно названных wires. Defensive commit guard допускает unlock-only candidate; unlock с любой другой геометрической/электрической правкой отвергается. Включение/снятие lock — обычный один commit; не preview.
 
@@ -46,7 +46,7 @@ Dedicated unlock меняет только locked у явно названных
 
 ### Domain: routing, electrical checks and scope
 
-`src/domain/wiring/editing/` владеет `create-wiring-proposal.ts`, `regenerate-wiring.ts`, `prettify-wiring.ts`, `apply-wiring-proposal.ts` и небольшими peer helpers по мере необходимости. Публичные named APIs через существующий index. `wires/nets/` владеет независимым от route builder каноническим описанием электрических отношений; `analysis/` добавляет UI-safe descriptors для подсветки/недостающих соединений. Runtime UI не импортирует net/matrix engine: shared `getProjectAnalysis` остаётся единственным UI мостом, Worker вызывает только высокоуровневую proposal operation. Добавить эту точную возможность в architecture gate, не разрешать произвольный analysis UI API.
+`src/domain/wiring/editing/` владеет `create-wiring-proposal.ts`, `regenerate-wiring.ts`, `prettify-wiring.ts`, `apply-wiring-proposal.ts` и небольшими peer helpers по мере необходимости. Публичные named APIs через существующий index. `wires/nets/` владеет независимым от route builder каноническим описанием электрических отношений; `analysis/` добавляет UI-safe descriptors для подсветки/недостающих соединений. Runtime UI не импортирует net/matrix engine: shared `getProjectAnalysis` из provider-owned `ui/project/logic/project-analysis.ts` остаётся единственным UI мостом, Worker вызывает только высокоуровневую proposal operation. Добавить эту точную возможность в architecture gate, не разрешать произвольный analysis UI API.
 
 1. Зафиксировать immutable base, выбранные IDs/half/net descriptors и boundary attachments. Scope resolves в domain; partial wire снаружи не разрезать молча, считать boundary фиксированным либо отказать с предложением расширить scope.
 2. Regenerate получает целевые assignments отдельно от геометрии: сохранить известные логические ячейки/валидные pins, для пустого/неназначенного проекта использовать существующий явный auto-assign как proposal и показать новые назначения. Не группировать уже назначенную матрицу заново по Y. Direct upper pin2 → input, lower pin1 → GND; отдельные paths до общего GND terminal своей половины.
@@ -72,7 +72,7 @@ Bundled module `ui/schematic/wiring/logic/wiring-worker.ts` принимает t
 
 ### Delivery order
 
-Сейчас дизайн; PR34/038 остаётся OPEN (проверено 2026-10-27), следовательно implementation gate ещё закрыт. После её интеграции сверить schema/paths и явно согласовать branch с main, сохранив спецификацию 040 и не доставляя историю 038 как 040. Не merge 038 автоматически. Затем tasks/analyze и обязательный pre-implement spec-reviewer по roadmap. Внутри одной фичи: safety+migration+preview foundation; шинная регенерация/Prettify MVP; direct/global toggles/scopes; irregular/split polish и полная приёмка. Все этапы обязательны.
+PR34/038 остаётся OPEN (проверено 2026-10-27). После анализа пользователь явно разрешил commit и начало040, зная это состояние: параллельная реализация теперь разрешена на явно зависимой ветке. Fetch/merge текущего main039 выполняется перед кодом; schema/paths сверяются сейчас и повторно после integration038. До поставки явно согласовать branch с main, сохранив040 и не доставляя историю038 как040. Не merge 038 автоматически. Затем tasks/analyze и обязательный pre-implement spec-reviewer по roadmap. Внутри одной фичи: safety+migration+preview foundation; шинная регенерация/Prettify MVP; direct/global toggles/scopes; irregular/split polish и полная приёмка. Все этапы обязательны.
 
 ## Verification strategy
 
@@ -93,4 +93,4 @@ Bundled module `ui/schematic/wiring/logic/wiring-worker.ts` принимает t
 
 ## Decisions and uncertainty
 
-Нет оставшихся product clarification. Базовые параметры приняты пятью ответами; новые schema defaults не переопределяют legacy wiring. Ограниченный детерминированный поиск выбран вместо библиотеки auto-router и полного глобального optimum. Worker выбран для responsiveness, не переносит business rules в UI. Ресурсное расширение, owning-rule updates и base reconciliation — явные execution gates; их нельзя считать выполненными этим документом. Никаких production edits, миграций или benchmarks на этом этапе не выполнено.
+Нет оставшихся product clarification. Базовые параметры приняты пятью ответами; новые schema defaults не переопределяют legacy wiring. Ограниченный детерминированный поиск выбран вместо библиотеки auto-router и полного глобального optimum. Worker выбран для responsiveness, не переносит business rules в UI. Ресурсное расширение и owning-rule updates — execution gates; финальная base reconciliation после038 — delivery gate при разрешённой пользователем параллельной реализации; их нельзя считать выполненными этим документом. Никаких production edits, миграций или benchmarks на этом этапе не выполнено.

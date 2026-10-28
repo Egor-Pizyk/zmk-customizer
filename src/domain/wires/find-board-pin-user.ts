@@ -1,4 +1,4 @@
-import { getWireHalf } from '@domain/wiring';
+import { getWireHalf } from '@domain/wires/geometry';
 import type { Project, WireEndSide } from '@domain';
 
 const SIDES: readonly WireEndSide[] = ['start', 'end'];

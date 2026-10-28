@@ -1,5 +1,6 @@
 import { removeWireSections } from '@domain/wires/editing';
-import { removeKeys } from './remove-keys';
+import { removeKeyCandidate } from './remove-key-candidate';
+import { validateWireProtection } from '@domain/wires/protection';
 import type { Project, Result } from '@domain';
 
 export function removeKeysAndSections(
@@ -11,5 +12,13 @@ export function removeKeysAndSections(
   },
 ): Result<Project, string> {
   const result = removeWireSections(project, input);
-  return result.ok ? { ok: true, value: removeKeys(result.value, input) } : result;
+  if (!result.ok) {
+    return result;
+  }
+  let candidate = result.value;
+  for (const keyId of input.keyIds) {
+    candidate = removeKeyCandidate(candidate, { keyId });
+  }
+  const issue = validateWireProtection(project, candidate)[0];
+  return issue === undefined ? { ok: true, value: candidate } : { ok: false, error: issue.message };
 }

@@ -8,7 +8,7 @@ import { getResultValue } from '../../../helpers/result';
 
 it('captures legacy contacts and retains them after movement and file round trip', () => {
   const project = getResultValue(parseProjectFile(legacy));
-  expect(project.schemaVersion).toBe(13);
+  expect(project.schemaVersion).toBe(14);
   const moved = moveKeys(project, { moves: [{ keyId: 'k1', position: { xU: 7, yU: 3 } }] });
   expect(getKeyPinWires(moved)({ keyId: 'k2', pin: 1 })).toEqual([0]);
   const again = getResultValue(parseProjectFile(getResultValue(serializeProject(moved))));

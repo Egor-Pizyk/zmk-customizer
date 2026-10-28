@@ -82,3 +82,39 @@ Tasks stage: `git diff --check` прошёл; новые Markdown-файлы о�
 69 task IDs и все обязательные возможности сохранены; ни одна production task не отмечена выполненной. Следующий проход speckit-analyze выполняется read-only после проверки ссылок/структуры/зависимостей. Запись о результате повторного анализа не добавляется автоматически в ходе read-only skill; результат сообщается пользователю отдельно.
 
 Перед повторным read-only анализом: `git diff --check`, локальные ссылки/whitespace, 69 уникальных Task IDs и покрытие26/26 прошли; dependency graph ацикличен, matrix MVP dependency closure не включает T039/T040/T044. Performance fixtures требуют nonzero geometry diff, no-change не подменяет нагрузку. `gh pr view 34` подтверждает OPEN/mergedAt=null: execution gate интеграции038 остаётся невыполненным. Все правки только в артефактах040; product checks не запускались.
+
+## Implementation start — 2026-10-27
+
+Пользователь поручил «сделай коммит и начинай имплементацию» после сообщения об OPEN038. Это явное разрешение параллельной реализации040 на зависимой ветке, а не разрешение merge038 или поставки stack. Обновлены spec/plan/T001; окончательная reconciliation после038 остаётся delivery gate. Initial spec commit: e5b6dae; staged tree2b7731901811, pre-commit passed typecheck/e2e types/architecture/guidelines, receipt `.check-logs/2b7731901811-9c461b4cb39f/passed.json`.
+
+Fetch обнаружил main b0e12fc (039/PR31 интегрирован); merge в040 потребовал только сохранения обеих записей specs/README.md. Новые focused diagnostic instructions прочитаны; tests-first сохраняется. Schema base по-прежнему13. Merge commit checks выполняются отдельно от unstaged изменений040.
+
+Mandatory spec-reviewer: verdict ready to implement, blockers/majors нет; две minor правки приняты: source function names перенесены из FR-002 в уже существующий research baseline, T010 дополнен regression очистки desired targetCells при key deletion и Undo/Redo до T011.
+
+Implement checklist read-only scan: requirements.md12/13; оставшийся unchecked пункт относится к verification готового продукта, не к полноте требований. Пользователь явно разрешил начать реализацию при ранее сообщённом отсутствии product checks; marker не менялся и не объявлен passed. Before/after extension hooks отсутствуют. Новый runtime package не нужен; ignore policies существующих Dockerfile-specific ignore сохраняются.
+
+### T003–T006 preparation and red evidence
+
+Pre-review minor findings corrected; owning TypeScript/React/admin rules and affected003/012/013/033/002 contracts amended before code. The new039 focused-loop wording contradicted workflow tests-first; clarified that same owning testing section to preserve mandatory red-before-implementation. Six hand-authored fixtures include old v13 pooled contacts/anchors/encoder ownership, irregular/split layouts and future locked v14. T006 new storage/migration tests ran before production changes:14 failed as expected for missing v14/lock/settings behavior, `.check-logs/040-schema-red.log`.
+
+Direct Docker diagnosis used while merge commit owns a fixed index, so staging new task tests would contaminate that unrelated merge. Initial `exec app` targeted another checkout's existing container and found no tests; it is not red evidence. Correct one-off compose.e2e run mounted this workspace and reached14 behavioral assertion failures. Subsequent focus/final runs will use explicit staged paths after merge finishes.
+
+Main integration first final check passed static/tooling/unit and168/169 Chromium tests, but038 native-corner long-task case observed338ms>200ms. Its source is unchanged by main039; no threshold weakened. Isolated rerun on exact staged tree47e2370c3397 passed1/1, log `.check-logs/040-merge-corner.log`; first failure retained in `.check-logs/040-merge-first-browser.log`. Required merge commit gate rerun in progress, not claimed passed.
+
+### Architecture refinement from focus evidence
+
+Focus tree1a080c6426fa caught new ValidationCode entries missing UI workspace routing; fixed exhaustive mapping. Next treecc28066a2895 passed types/architecture/guidelines but lint exposed actual import cycles from root wires/project barrels after adding guards, plus mechanical test/lint issues. Report: `.check-logs/focus/cc28066a2895-9df9f9c7c3fd/summary.json` and5-npx.log. Rules were not weakened.
+
+To resolve the evidenced cycle, split contacts and protection into real lower-level `domain/wires/contacts` and `domain/wires/protection` modules, move wire-half query to existing wire geometry owner, and register exact aliases. Contact derivation depends only on geometry/types, protection on contacts/geometry/types, project edit owners import protection directly. Existing functions keep behavior and tests move with ownership. UI engine restriction now explicitly includes contacts; only the provider-owned project-analysis.ts owns cached analyzeProject, while project-state.ts alone calls the defensive protection guard. This is a source-owner refinement, not a new store/electrical model/runtime dependency.
+
+### 2026-10-28 continuation
+
+Resumed same040 worktree; no startup restart. Lower contacts/protection owners and exact aliases are in place; existing wire-half query moved into geometry and tests follow ownership. Provider analysis cache extracted unchanged to project-analysis.ts to keep project-state dependency count bounded; updated exact architecture exception and private type/tutorial imports. An attempted mixed TS/MJS auto-fix command rejected nested scripts config; corrected separation. Subsequent typed auto-fix spent several minutes at400%CPU inside tsgolint without output; stopped only that owned one-off container (exit143), preserving all rules and source changes. Syntax-only fix/format and fresh typecheck are diagnostics before the mandatory focused/final gates; this is not a lint pass claim.
+
+### Foundation verification — 2026-10-28
+
+Focus staged tree `a26ad889cd12` passes types, browser types, architecture, guidelines, typed lint, formatting and tooling; all275 unit files /1501 tests pass, including schema14/settings/protection/provider contracts. Browser regression run remains in progress; this is not complete040 or UI acceptance. Full report: `.check-logs/focus/a26ad889cd12-9df9f9c7c3fd/summary.json`. Earlier focus failures were corrected without disabling checks: conditional fixture building extracted from test bodies, schema kept below file limit, encoder optional pin return made consistent, and mutation probe anchor follows the extracted private remove-key-candidate owner (original binding-removal mutation preserved).
+
+T024 next increment: real-provider UI tests fail as expected because accessible lock controls and deletion refusal explanation are absent; `.check-logs/040-lock-ui-red.log`. Initial table implementation is deliberately outside this foundation staged snapshot. Lock UI, gestures, diagram markers and full browser acceptance remain open.
+
+Focus `a26ad889cd12` completed successfully:1501 unit tests and169 Chromium journeys, including existing038 large-scene/corner/offline lifecycle regressions. Summary records434543ms. T001–T023 foundation/domain/provider work is checked against these contracts and earlier task-specific red/green logs; T024–T069 remain open. Final staged check/commit is the next gate, not inferred from focus. The authorized dependent branch remains based on038; final040 delivery reconciliation is still required.

@@ -1,5 +1,7 @@
+import { validateWireProtection } from '@domain/wires/protection';
+import { findWireContacts } from '@domain/wires/contacts';
+import { getKeyPinWires, captureWireContacts } from '@domain/wires';
 import { createEntityId, getProjectResourceError, PROJECT_BUDGET } from '@domain/project';
-import { findWireContacts, getKeyPinWires, captureWireContacts } from '@domain/wires';
 import { getKeyPinPosition } from '@domain/wires/geometry';
 import { getNets } from '@domain/wires/nets';
 import { getOutputPosition } from './get-output-position';
@@ -21,7 +23,7 @@ function findTerminalId(wire: Wire): string | undefined {
   return undefined;
 }
 
-export function routeWiring(
+function routeWiringCandidate(
   project: Project,
   input: {
     readonly connections: readonly WiringConnection[];
@@ -262,4 +264,16 @@ function findOutput(
   );
   const output = getOutputPosition(project, { terminal, index, occupied });
   return output.ok ? output.value : undefined;
+}
+
+export function routeWiring(
+  project: Project,
+  input: Parameters<typeof routeWiringCandidate>[1],
+): Result<Project, string> {
+  const result = routeWiringCandidate(project, input);
+  if (!result.ok) {
+    return result;
+  }
+  const issue = validateWireProtection(project, result.value)[0];
+  return issue === undefined ? result : { ok: false, error: issue.message };
 }

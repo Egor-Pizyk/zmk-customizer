@@ -1,3 +1,4 @@
+import { preserveWireProtection } from '@domain/wires/protection';
 import { getNearestPointOnPath } from '@domain/geometry';
 import { getWirePath } from '@domain/wires/geometry';
 import type { Project, Wire, WireEnd } from '@domain';
@@ -38,7 +39,7 @@ function removeOnce(project: Project, removedIds: ReadonlySet<string>): Project 
  * Removes the given wires, turns junctions onto them into free ends at their drawn point, then
  * removes wires left without a key pin (FR-009, FR-012), repeating until stable.
  */
-export function removeOrphanWires(
+function removeOrphanWiresCandidate(
   project: Project,
   input: { readonly removedWireIds: readonly string[] },
 ): Project {
@@ -49,4 +50,11 @@ export function removeOrphanWires(
     removedIds = new Set(current.wires.filter((wire) => !hasKeyPin(wire)).map((wire) => wire.id));
   }
   return current;
+}
+
+export function removeOrphanWires(
+  project: Project,
+  input: Parameters<typeof removeOrphanWiresCandidate>[1],
+): Project {
+  return preserveWireProtection(project, removeOrphanWiresCandidate(project, input));
 }
