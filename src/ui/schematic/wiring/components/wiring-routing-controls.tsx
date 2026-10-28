@@ -1,16 +1,18 @@
 import { useState } from 'react';
-import { getControllerBoard } from '@catalog/controllers';
-import { ZMK_LIMITS } from '@catalog/firmware';
+import type { ReactNode } from 'react';
+import { WiringRoutingActions } from './wiring-routing-actions';
 import { getRoutingSettings } from '@domain/wiring';
 import type { Project, RoutingSettings } from '@domain';
 import type { WiringEdit } from '@domain/wiring/editing';
 import type { SchematicSelection } from '@ui/schematic/interaction';
-import { getGenerationScope } from '@ui/schematic/wiring/logic';
-import { Button, Field, NumberInput } from '@ui/components/components';
+import { Field } from '@ui/components/components';
 import { INPUT_CLASSES } from '@ui/components/logic';
 
 type Props = {
+  readonly configuration: ReactNode;
+  readonly children?: ReactNode;
   readonly project: Project;
+  readonly hasPreview: boolean;
   readonly selection?: SchematicSelection;
   readonly onEdit: (input: WiringEdit) => void;
 };
@@ -19,36 +21,44 @@ type SettingsProps = {
   readonly onSettings: (patch: Partial<RoutingSettings>) => void;
 };
 
-export function WiringRoutingControls({ project, selection, onEdit: handleEdit }: Props) {
+export function WiringRoutingControls({
+  project,
+  configuration,
+  children,
+  selection,
+  hasPreview,
+  onEdit: handleEdit,
+}: Props) {
   const [draft, setDraft] = useState<RoutingSettings>();
   const settings = draft ?? getRoutingSettings(project);
   const handleSettings = (patch: Partial<RoutingSettings>) => {
     setDraft({ ...settings, ...patch });
   };
   return (
-    <fieldset className="flex flex-col gap-3 rounded-sm border border-border p-3">
-      <legend className="px-1 font-semibold">Routing</legend>
-      <p className="text-xs text-text-muted">
-        Generate proposes connections; Prettify only reshapes saved wiring and replaces any
-        unapplied generation preview. Apply saves the reviewed result.
-      </p>
-      <RoutingSelectors
-        settings={settings}
-        onSettings={handleSettings}
-        isMatrix={project.wiring?.kind !== 'direct'}
-      />
-      <RoutingDistances settings={settings} onSettings={handleSettings} />
-      <p className="text-xs text-text-muted">
-        Selected wires mean their complete electrical nets. Shared and locked conductors remain
-        fixed; incompatible boundaries refuse the entire operation.
-      </p>
-      <RoutingActions
-        project={project}
-        selection={selection}
-        settings={settings}
-        onEdit={handleEdit}
-      />
-    </fieldset>
+    <div className="flex flex-col gap-3">
+      <div className="px-4">
+        <WiringRoutingActions
+          project={project}
+          selection={selection}
+          settings={settings}
+          hasPreview={hasPreview}
+          onEdit={handleEdit}
+        />
+      </div>
+      <div className="flex max-h-96 flex-col gap-4 overflow-auto px-4 pb-4">
+        <p className="text-text-muted">
+          Generate replaces wiring; Prettify only reshapes existing connections. Check GPIOs against
+          your hardware before Apply.
+        </p>
+        {configuration}
+        <RoutingSelectors
+          settings={settings}
+          onSettings={handleSettings}
+          isMatrix={project.wiring?.kind !== 'direct'}
+        />
+        {children}
+      </div>
+    </div>
   );
 }
 
@@ -78,53 +88,6 @@ function RoutingSelectors({
         }}
       />
     </div>
-  );
-}
-
-function RoutingDistances({ settings, onSettings: handleSettings }: SettingsProps) {
-  return (
-    <div className="flex flex-wrap gap-3">
-      {[
-        { field: 'offsetU', label: 'Routing offset (u)' },
-        { field: 'clearanceU', label: 'Parallel clearance (u)' },
-        { field: 'fallbackRowIntervalU', label: 'Single-row interval (u)' },
-      ].map(({ field, label }) => (
-        <RoutingDistance
-          key={field}
-          label={label}
-          value={distanceValue(settings, field)}
-          onCommit={(value) => {
-            handleSettings(distancePatch(field, value));
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
-function RoutingDistance({
-  label,
-  value,
-  onCommit: handleCommit,
-}: {
-  readonly label: string;
-  readonly value: number;
-  readonly onCommit: (value: number) => void;
-}) {
-  return (
-    <Field
-      label={label}
-      renderControl={(control) => (
-        <NumberInput
-          id={control.id}
-          label={label}
-          value={value}
-          min={0.0001}
-          step={0.05}
-          onCommit={handleCommit}
-        />
-      )}
-    />
   );
 }
 
@@ -168,58 +131,6 @@ function scopeSettings(value: string): Partial<RoutingSettings> {
   }
   return { preferredScope: value === 'selection' ? 'selection' : 'all' };
 }
-function distanceValue(settings: RoutingSettings, field: string): number {
-  if (field === 'offsetU') {
-    return settings.offsetU;
-  }
-  return field === 'clearanceU' ? settings.clearanceU : settings.fallbackRowIntervalU;
-}
-function distancePatch(field: string, value: number): Partial<RoutingSettings> {
-  if (field === 'offsetU') {
-    return { offsetU: value };
-  }
-  return field === 'clearanceU' ? { clearanceU: value } : { fallbackRowIntervalU: value };
-}
-
-function RoutingActions({
-  project,
-  selection,
-  settings,
-  onEdit: handleEdit,
-}: Props & Pick<SettingsProps, 'settings'>) {
-  function handleOperation(kind: 'regenerate' | 'prettify') {
-    const input = {
-      settings,
-      limits: ZMK_LIMITS,
-      scope: getGenerationScope(project, settings, selection),
-    };
-    const board = getControllerBoard(project.controllerId);
-    handleEdit({ kind, input, board });
-  }
-  return (
-    <div className="flex flex-wrap gap-2">
-      {project.wiring?.kind === 'direct' ? undefined : (
-        <Button
-          variant="secondary"
-          onClick={() => {
-            handleOperation('regenerate');
-          }}
-        >
-          Generate wiring
-        </Button>
-      )}
-      <Button
-        variant="secondary"
-        onClick={() => {
-          handleOperation('prettify');
-        }}
-      >
-        Prettify
-      </Button>
-    </div>
-  );
-}
-
 function MatrixStyle({ settings, onSettings: handleSettings }: SettingsProps) {
   return (
     <RoutingSelect

@@ -16,7 +16,12 @@ export function finishRegeneration(
   candidate: Project,
   input: Input,
 ): Result<Project, WiringProposalFailure> {
-  const { project, contacts } = insulateNewCrossings(base, candidate);
+  // The legacy router has already materialized insulation and validated its intentional
+  // same-terminal contacts; blanket insulation would disconnect that existing topology.
+  const { project, contacts } =
+    candidate.routing?.matrixStyle === 'existing'
+      ? { project: candidate, contacts: findWireContacts(candidate) }
+      : insulateNewCrossings(base, candidate);
   const failure = findWiringProposalFailure(base, project);
   if (failure !== undefined) {
     return { ok: false, error: failure };

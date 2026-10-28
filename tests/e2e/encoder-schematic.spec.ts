@@ -169,7 +169,7 @@ test('encoder contacts and ordinary push key export together; deletion is atomic
   }
   await page.getByRole('button', { name: 'Center keyboard', exact: true }).click();
   await page.getByText('Wiring', { exact: true }).click();
-  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
+  await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
   await page.getByRole('button', { name: 'Apply wiring', exact: true }).click();
   await connectRotary(page);
   await assignPush(page);

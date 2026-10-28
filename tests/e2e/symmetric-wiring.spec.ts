@@ -96,9 +96,24 @@ test('generation options and fixed preview actions fit a narrow workspace', asyn
   await page
     .getByRole('combobox', { name: 'Routing style', exact: true })
     .selectOption('symmetric-bus');
-  const offset = page.getByRole('spinbutton', { name: 'Routing offset (u)', exact: true });
-  await offset.fill('0.2');
-  await offset.press('Enter');
+  await expect(page.getByRole('button', { name: 'Generate wiring', exact: true })).toBeInViewport({
+    ratio: 1,
+  });
+  await expect(page.getByRole('button', { name: 'Prettify', exact: true })).toBeInViewport({
+    ratio: 1,
+  });
+  await expect(page.getByRole('button', { name: 'Rebuild wiring', exact: true })).toHaveCount(0);
+  await expect(page.getByLabel('Routing offset (u)', { exact: true })).toHaveCount(0);
+  await expect(page.getByRole('group', { name: 'Routing', exact: true })).toHaveCount(0);
+  await expect(
+    page
+      .getByRole('group', { name: 'Wiring actions', exact: true })
+      .getByRole('button', { name: 'Generate wiring', exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText('Manual assignments', { exact: true }).locator('..'),
+  ).not.toHaveAttribute('open');
+  await page.screenshot({ path: test.info().outputPath('compact-wiring.png') });
   expect(await saved(page)).toEqual(source);
   await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
   const apply = page.getByRole('button', { name: 'Apply wiring', exact: true });
@@ -109,5 +124,5 @@ test('generation options and fixed preview actions fit a narrow workspace', asyn
   ).toBeVisible();
   await page.screenshot({ path: test.info().outputPath('narrow-bus-preview.png') });
   await apply.click();
-  expect((await saved(page)).routing?.offsetU).toBe(0.2);
+  expect((await saved(page)).routing?.offsetU).toBe(0.15);
 });

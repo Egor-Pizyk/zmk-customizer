@@ -27,7 +27,7 @@ for (const { mode, pinLabel } of [
     await openProject(page, UNIBODY_PRESET);
     await openWiring(page);
     await page.getByRole('combobox', { name: 'Scanning type', exact: true }).selectOption(mode);
-    await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
+    await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
     await page.getByRole('button', { name: 'Apply wiring', exact: true }).click();
     const before = await saved(page);
     const originalColumnPin = await page
@@ -37,6 +37,7 @@ for (const { mode, pinLabel } of [
     const unified = await readWirePaths(paths);
     const topology = page.getByRole('combobox', { name: 'Keyboard topology', exact: true });
     await topology.selectOption('split');
+    await page.getByText('Manual assignments', { exact: true }).click();
     await expect(page.getByRole('combobox', { name: 'Key 2 half', exact: true })).toHaveValue(
       'right',
     );

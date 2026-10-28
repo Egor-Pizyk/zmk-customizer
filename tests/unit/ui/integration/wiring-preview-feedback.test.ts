@@ -16,7 +16,7 @@ it('shows a browser worker failure without saving, and Cancel restores opener fo
   const source = buildProject({ keys: [{ id: 'k0', xU: 0, yU: 0 }] });
   const { user } = renderApp(source);
   await user.click(screen.getByText('Wiring', { exact: true }));
-  const rebuild = screen.getByRole('button', { name: 'Rebuild wiring' });
+  const rebuild = screen.getByRole('button', { name: 'Generate wiring' });
   await user.click(rebuild);
   act(() => {
     latestRoutingWorker().fail('Worker interrupted');
@@ -35,7 +35,7 @@ it('shows no work for unchanged settings and adds neither autosave nor history',
   const source = buildProject({ keys: [{ id: 'k0', xU: 0, yU: 0 }] });
   const { user } = renderApp(source);
   await user.click(screen.getByText('Wiring', { exact: true }));
-  await user.click(screen.getByRole('button', { name: 'Rebuild wiring' }));
+  await user.click(screen.getByRole('button', { name: 'Generate wiring' }));
   act(() => {
     latestRoutingWorker().complete();
   });
@@ -66,7 +66,7 @@ it('terminates a Worker whose request cannot be cloned and preserves the project
   const source = buildProject({ keys: [{ id: 'k0', xU: 0, yU: 0 }] });
   const { user } = renderApp(source);
   await user.click(screen.getByText('Wiring', { exact: true }));
-  await user.click(screen.getByRole('button', { name: 'Rebuild wiring' }));
+  await user.click(screen.getByRole('button', { name: 'Generate wiring' }));
   expect(screen.getByRole('alert').textContent).toBe(
     'Cannot start routing worker: Cannot clone request',
   );

@@ -1,11 +1,10 @@
 import type { ReactNode, ComponentProps } from 'react';
 import { WiringRoutingControls } from './wiring-routing-controls';
 import { WiringOptionsControls } from './wiring-options-controls';
-import { WiringHalfControls } from './wiring-half-controls';
+import { WiringAssignments } from './wiring-assignments';
 import { getControllerBoard } from '@catalog/controllers';
 import { initializeWiring } from '@domain/wiring/editing';
 import type { Half, Project } from '@domain';
-import { WiringTable } from './wiring-table';
 import type { useWiringPreview } from '@ui/schematic/wiring/logic';
 import { useProject, getProjectAnalysis } from '@ui/project/logic';
 import { useState } from 'react';
@@ -57,31 +56,19 @@ function WiringContent(props: WiringControlsProps & { readonly project: Project 
   const handleCell = (cell: { keyId: string; row: number; col: number; half: Half }) => {
     props.handleEdit({ kind: 'cell', ...cell, board });
   };
+  const configuration = <WiringOptionsControls project={project} onEdit={props.handleEdit} />;
   return (
-    <div className="flex max-h-96 flex-col gap-4 overflow-auto px-4 pb-4">
+    <WiringRoutingControls
+      project={props.previewProject}
+      selection={props.selection}
+      hasPreview={props.hasPreview}
+      onEdit={props.handleEdit}
+      configuration={configuration}
+    >
       {props.hasPreview ? <WiringPreviewInfo {...props} /> : undefined}
-      <p className="text-text-muted">
-        Assignments change the actual schematic connections. Inspect rerouted wires and diode
-        changes before applying. Rebuild wiring uses visible centers and the current grid; adjust
-        irregular clusters in the table. Rebuilding proposes free GPIOs; review these against your
-        physical hardware before applying. These pins are not detected hardware wiring.
-      </p>
-      <WiringOptionsControls project={project} onEdit={props.handleEdit} />
-      <RoutingControls {...props} />
-      {(['left', ...(wiring.topology === 'split' ? (['right'] as const) : [])] as const).map(
-        (half) => (
-          <WiringHalfControls
-            key={half}
-            half={half}
-            project={project}
-            onEdit={props.handleEdit}
-            onAssignCell={handleCell}
-          />
-        ),
-      )}
-      <WiringTable project={project} onAssignCell={handleCell} />
+      <WiringAssignments project={project} onEdit={props.handleEdit} onAssignCell={handleCell} />
       <WiringFeedback {...props} />
-    </div>
+    </WiringRoutingControls>
   );
 }
 
@@ -119,15 +106,5 @@ function WiringPreviewInfo(props: WiringControlsProps) {
         {props.children}
       </details>
     </>
-  );
-}
-
-function RoutingControls(props: WiringControlsProps) {
-  return (
-    <WiringRoutingControls
-      project={props.previewProject}
-      selection={props.selection}
-      onEdit={props.handleEdit}
-    />
   );
 }

@@ -4,7 +4,7 @@ import { UNIBODY_PRESET } from '../helpers/unibody-preset';
 import { buildProject } from '../helpers/build-project';
 import { center, history, key, openProject, saved } from './helpers';
 
-for (const action of ['Rebuild wiring']) {
+for (const action of ['Generate wiring']) {
   test(`${action} already draws the same fresh circuit before and after Apply`, async ({
     page,
   }, info) => {
@@ -47,7 +47,7 @@ test('wired Rebuild preview remains selectable and survives Select and editing-t
   await openProject(page, UNIBODY_PRESET);
   await page.getByRole('radio', { name: 'Wire', exact: true }).press('Space');
   await page.getByText('Wiring', { exact: true }).click();
-  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
+  await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toBeEnabled();
   const paths = page.locator('[data-section-id] path[pointer-events="none"]');
   const proposal = await readPaths(paths);

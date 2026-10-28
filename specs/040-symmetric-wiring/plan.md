@@ -100,3 +100,7 @@ PR34/038 остаётся OPEN (проверено 2026-10-27). После ан�
 ### US2 execution refinement (2026-10-28)
 
 The independent relation engine (T045/T046) and the existing bounded single-span router permit a safe first Prettify increment before the remaining coordinated regeneration work in T038. This increment freezes intentional attachment sites/free endpoints, routes only between them, remaps insulation and accepts only an electrically equivalent fixed point. T047/T048 may start with these contracts; their completion and MVP acceptance still require T038 and the full coordinated-junction/symmetry cases. No requested capability becomes optional and T038/T047/T048 remain open until their complete criteria pass.
+
+## Compact Wiring amendment — 2026-10-28
+
+User supersedes exposed numeric auto-routing customization. Keep persisted domain settings/validation for file compatibility; remove numeric controls and bordered Routing group. Keep electrical configuration and GPIO visible; move dimensions/grid/key table under one native Manual assignments disclosure. Remove Rebuild UI; Generate dispatches current matrix regeneration, or historical direct auto operation until new direct routing is ready. Place primary Generate beside secondary Prettify; Apply owns primary emphasis during preview. Update affected historical UI names/onboarding/tests; domain legacy auto remains supported. Do not implement the unfinished bus-output request before clarification.

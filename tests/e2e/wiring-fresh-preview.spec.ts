@@ -5,7 +5,7 @@ import { center, history, key, openProject, saved } from './helpers';
 import { readPaths, visibleSection } from './wiring-preview-helpers';
 
 for (const mode of ['matrix', 'direct']) {
-  for (const action of ['Rebuild wiring']) {
+  for (const action of ['Generate wiring']) {
     test(`fresh ${mode} ${action} keeps proposal feedback and selection until Apply or Cancel @cross-browser`, async ({
       page,
     }, info) => {
@@ -66,7 +66,7 @@ for (const mode of ['matrix', 'direct']) {
   }
 }
 
-for (const action of ['Rebuild wiring']) {
+for (const action of ['Generate wiring']) {
   test(`no-wire project with existing assignments retains ${action} until explicit cancellation @cross-browser`, async ({
     page,
   }) => {
@@ -110,7 +110,7 @@ test('a stale no-wire proposal remains visible but cannot revive after an extern
   const source = buildProject({ keys: UNIBODY_PRESET.keys });
   await openProject(page, source);
   await page.getByText('Wiring', { exact: true }).click();
-  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
+  await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
   const apply = page.getByRole('button', { name: 'Apply wiring', exact: true });
   await expect(apply).toBeEnabled();
   const paths = page.locator('[data-section-id] path[pointer-events="none"]');

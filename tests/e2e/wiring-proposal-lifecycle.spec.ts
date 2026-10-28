@@ -19,12 +19,12 @@ test('first routing Worker and restart after Cancel work offline with one accept
     workerUrls.push(worker.url());
   });
   await page.context().setOffline(true);
-  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
+  await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
   await expect(page.getByText('Calculating wiring…', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Cancel wiring', exact: true }).click();
   expect(await saved(page)).toEqual(source);
   await expect(history(page, 'Undo')).toBeDisabled();
-  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
+  await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
   const apply = page.getByRole('button', { name: 'Apply wiring', exact: true });
   await expect(apply).toBeEnabled({ timeout: 20_000 });
   await page.screenshot({ path: test.info().outputPath('offline-preview.png'), fullPage: true });
@@ -45,7 +45,7 @@ test('editing and Undo keep the previous Worker proposal stale until explicit re
   const source = buildProject({ keys: [{ id: 'k0', xU: 3, yU: 3 }] });
   await openProject(page, source);
   await page.getByText('Wiring', { exact: true }).click();
-  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
+  await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
   const apply = page.getByRole('button', { name: 'Apply wiring', exact: true });
   await expect(apply).toBeEnabled();
   const name = page.getByRole('textbox', { name: 'Name', exact: true });

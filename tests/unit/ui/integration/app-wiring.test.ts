@@ -79,7 +79,7 @@ function unavailableFirstRow(
 it('restores an automatic unibody circuit and GPIOs after a topology-only preview round trip', async () => {
   const { user } = renderApp(UNIBODY_PRESET);
   await user.click(screen.getByText('Wiring', { exact: true }));
-  await user.click(screen.getByRole('button', { name: 'Rebuild wiring' }));
+  await user.click(screen.getByRole('button', { name: 'Generate wiring' }));
   await user.click(screen.getByRole('button', { name: 'Apply wiring' }));
   const before = loadProject().project;
   const pin = screen.getByRole('combobox', { name: 'left col 2 pin' });
@@ -91,7 +91,7 @@ it('restores an automatic unibody circuit and GPIOs after a topology-only previe
       .getByRole('option', { selected: true })
       .getAttribute('value'),
   ).toBe(originalOption);
-  expect(screen.getByText('No wiring changes needed.')).toBeDefined();
+  expect(await screen.findByText('No wiring changes needed.')).toBeDefined();
   expect(screen.getByRole('button', { name: 'Apply wiring' }).getAttribute('aria-disabled')).toBe(
     'true',
   );

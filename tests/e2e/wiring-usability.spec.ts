@@ -200,12 +200,12 @@ test('rebuild previews safely, allocates GPIOs and exports the applied circuit @
   };
   await openProject(page, partial);
   await page.getByText('Wiring', { exact: true }).click();
-  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
+  await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
   await expect(page.getByText('Wiring preview', { exact: true })).toBeVisible();
   expect(await saved(page)).toEqual(partial);
   await page.getByRole('button', { name: 'Cancel wiring', exact: true }).click();
   expect(await saved(page)).toEqual(partial);
-  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
+  await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
   await page.getByRole('button', { name: 'Apply wiring', exact: true }).click();
   const complete = await saved(page);
   expect(getWiringCells(complete).map((cell) => [cell.row, cell.col])).toEqual([
@@ -216,7 +216,7 @@ test('rebuild previews safely, allocates GPIOs and exports the applied circuit @
   expect(complete.wires.length).toBeGreaterThan(0);
   const files = await downloadZip(page);
   expect(files['boards/shields/browser_shield/browser_shield.overlay']).toContain(
-    '<&pro_micro 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>',
+    '<&pro_micro 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>',
   );
   expect(files['boards/shields/browser_shield/browser_shield.overlay']).toContain('RC(0,2)');
   await history(page, 'Undo').click();

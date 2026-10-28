@@ -54,7 +54,7 @@ function describePreview(
   const result = draft?.result;
   return {
     phase,
-    operationDescription: describeOperation(draft?.edit),
+    operationDescription: describeOperation(draft?.edit, getPreviewProject(project, draft)),
     hasPreview: draft !== undefined,
     canApply: phase === 'ready' && result?.kind === 'changed',
     previewProject: getPreviewProject(project, draft),
@@ -108,12 +108,15 @@ function useWorkerCleanup(session: ReturnType<typeof createWiringWorkerSession>)
   );
 }
 
-function describeOperation(edit: WiringEdit | undefined): string | undefined {
+function describeOperation(edit: WiringEdit | undefined, project: Project): string | undefined {
   if (edit?.kind === 'prettify') {
     return 'Prettify existing wiring';
   }
   if (edit?.kind !== 'regenerate') {
     return undefined;
+  }
+  if (project.wiring?.kind === 'direct') {
+    return 'Generate direct wiring · Whole schematic';
   }
   const style =
     edit.input.settings.matrixStyle === 'symmetric-bus'

@@ -102,6 +102,7 @@ test('BLE split uses separate GPIO namespaces and full key order in downloaded s
   await page
     .getByRole('combobox', { name: 'Keyboard topology', exact: true })
     .selectOption('split');
+  await page.getByText('Manual assignments', { exact: true }).click();
   await expect(page.getByRole('combobox', { name: 'Key 2 half', exact: true })).toHaveValue(
     'right',
   );
@@ -180,6 +181,7 @@ test('keyboard grid assignment, auto and diode direction preserve geometry @cros
 }) => {
   await openProject(page, UNIBODY_PRESET);
   await openWiring(page);
+  await page.getByText('Manual assignments', { exact: true }).click();
   await page.getByRole('combobox', { name: 'left key to assign', exact: true }).selectOption('k0');
   const cell = page.getByRole('button', { name: 'left row 1 col 0: Key 3', exact: true });
   await cell.focus();
@@ -188,7 +190,7 @@ test('keyboard grid assignment, auto and diode direction preserve geometry @cros
     page.getByRole('button', { name: 'left row 1 col 0: Key 0, Key 3', exact: true }),
   ).toBeVisible();
   await page.getByRole('button', { name: 'Cancel wiring', exact: true }).click();
-  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
+  await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
   await expect(page.getByText('Wiring preview', { exact: true })).toBeVisible();
   expect(await saved(page)).toEqual(UNIBODY_PRESET);
   await page.getByRole('button', { name: 'Apply wiring', exact: true }).click();
@@ -231,16 +233,16 @@ test('Auto assign proposes free GPIOs with outward outputs and atomic history @c
   const project = { ...UNIBODY_PRESET, wires: [], insulatedCrossings: [] };
   await openProject(page, project);
   await openWiring(page);
-  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
+  await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
   await expect(page.getByText('Wiring preview', { exact: true })).toBeVisible();
-  await expect(page.getByText(/These pins are not detected hardware wiring/u)).toBeVisible();
+  await expect(page.getByText(/Check GPIOs against your hardware before Apply/u)).toBeVisible();
   await expect(page.getByRole('combobox', { name: 'left row 0 pin', exact: true })).toHaveValue(
     '0',
   );
   expect(await saved(page)).toEqual(project);
   await page.getByRole('button', { name: 'Cancel wiring', exact: true }).click();
   expect(await saved(page)).toEqual(project);
-  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
+  await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
   await page.getByRole('button', { name: 'Zoom out', exact: true }).click();
   await page.getByRole('button', { name: 'Zoom out', exact: true }).click();
   await page.getByRole('application').hover();
@@ -273,7 +275,7 @@ test('Auto assign capacity failure explains recovery without a saved change @cro
   await page.getByRole('button', { name: 'Create project from preset', exact: true }).click();
   const before = await saved(page);
   await openWiring(page);
-  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
+  await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('GPIOs');
   await expect(page.getByRole('alert')).toContainText('group rows manually');
   await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toBeDisabled();

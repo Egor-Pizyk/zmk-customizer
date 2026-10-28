@@ -9,7 +9,7 @@ import { editWiring } from './edit-wiring';
 import type { WiringEdit } from './wiring-edit';
 import { prepareWiringProposal } from './prepare-wiring-proposal';
 import { prettifyWiring } from './prettify-wiring';
-import { regenerateWiring } from './regenerate-wiring';
+import { calculateRegeneration } from './calculate-regeneration';
 
 type Calculation = {
   readonly project: Project;
@@ -67,7 +67,7 @@ function calculateEdit(
   edit: WiringEdit,
 ): Result<Calculation, WiringProposalFailure> {
   if (edit.kind === 'regenerate') {
-    return regenerateWiring(source, { ...edit.input, board: edit.board });
+    return calculateRegeneration(source, edit);
   }
   if (edit.kind === 'prettify') {
     return prettifyWiring(source, edit.input);

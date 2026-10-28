@@ -47,7 +47,7 @@ export async function continueOnboardingExercise(page: Page, info: TestInfo, isK
   await expect(
     page.getByRole('heading', { name: 'Connect the matrix', exact: true }),
   ).toBeVisible();
-  await activate(page.getByRole('button', { name: 'Rebuild wiring', exact: true }), isKeyboard);
+  await activate(page.getByRole('button', { name: 'Generate wiring', exact: true }), isKeyboard);
   await expect(
     page.getByRole('heading', { name: 'Connect the matrix', exact: true }),
   ).toBeVisible();

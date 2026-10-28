@@ -204,7 +204,14 @@ export async function expectGeometry(page: Page, geometry: Key, keyIndex = 0) {
   }
 }
 export async function editNumber(page: Page, name: string, value: string) {
-  const input = page.getByRole('spinbutton', { name, exact: true });
+  const input = page.getByLabel(name, { exact: true });
+  if (!(await input.isVisible())) {
+    for (const disclosure of await page.locator('details').filter({ has: input }).all()) {
+      if ((await disclosure.getAttribute('open')) === null) {
+        await disclosure.locator(':scope > summary').click();
+      }
+    }
+  }
   await input.fill(value);
   await input.press('Enter');
 }

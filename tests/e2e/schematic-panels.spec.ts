@@ -73,7 +73,7 @@ test('keeps Settings compact and editor switches transient in both themes @cross
     await page.keyboard.press('Escape');
     await expect(page.getByRole('button', { name: 'Settings', exact: true })).toBeFocused();
     await page.getByText('Wiring', { exact: true }).click();
-    await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
+    await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
     await page.getByText('Controller', { exact: true }).click();
     await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toHaveCount(0);
     expect(await page.locator('details[name="schematic-editor"][open]').count()).toBe(1);
@@ -165,7 +165,7 @@ test('resizes editors with pointer and keyboard, cancels and retains preferred s
   await page.setViewportSize({ width: 1920, height: 1080 });
   await expect.poll(width).toBe(512);
   await page.getByText('Wiring', { exact: true }).click();
-  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
+  await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toBeVisible();
   await handle.focus();
   await page.keyboard.press('ArrowRight');
