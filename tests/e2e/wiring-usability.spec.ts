@@ -86,8 +86,9 @@ test('a wire stays selected while and after dragging a bend @cross-browser', asy
   const inserted = await saved(page);
   expect(inserted.wires[0]?.contacts).toEqual(beforeInsert.wires[0]?.contacts);
   expect(await section.boundingBox()).toEqual(sectionBounds);
-  // Collinear saved points do not add redundant handles between actual turns (FR-008).
-  await expect(page.locator('[data-wire-bend]')).toHaveCount(1);
+  // Keep the real turn plus the active newly inserted collinear waypoint.
+  await expect(page.locator('[data-wire-bend]')).toHaveCount(2);
+  await expect(page.locator('[data-wire-bend][data-bend-index="0"]')).toBeVisible();
   await history(page, 'Undo').click();
   expect(await saved(page)).toEqual(beforeInsert);
   await history(page, 'Redo').click();

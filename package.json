@@ -29,6 +29,7 @@
     "check:focus": "node scripts/check-changes.mjs --focus"
   },
   "dependencies": {
+    "@joint/core": "4.3.3",
     "fflate": "0.8.3",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",

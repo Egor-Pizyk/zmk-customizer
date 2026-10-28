@@ -1,5 +1,7 @@
 import { getEditingPointer } from './get-editing-pointer';
 import { useSchematicPreviews } from './use-schematic-previews';
+import { createDiagramGestureSession } from '@ui/schematic/diagram/logic';
+import type { DiagramGestureSession } from '@ui/schematic/diagram/logic';
 import type { Project } from '@domain';
 import { usePreferences } from '@ui/preferences';
 import { toWorkspaceIssues } from '@ui/issues';
@@ -8,10 +10,12 @@ import { useSchematicKeyboard, useEditingPointer } from '@ui/schematic/interacti
 import type { Commit, SchematicSelection } from '@ui/schematic/interaction';
 import type { ToolId } from '@ui/schematic/tools/logic';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 type InteractionInput = {
   readonly project: Project;
+  readonly getGestureSession: () => DiagramGestureSession;
+  readonly projectRevision: number;
   readonly commit: Commit;
   readonly announce: (text: string) => void;
   readonly gridSizeU: number;
@@ -60,10 +64,14 @@ function useSchematicInteraction(input: InteractionInput) {
 // Schematic UI state (tool, selection, drag, wire draft); the project stays in ProjectProvider and
 // changes only through domain operations (react.md "Project state").
 export function useSchematicWorkspace() {
-  const { project, issues, commit, announce } = useProject();
+  const { project, issues, commit, announce, importSession } = useProject();
+  const gestureSessionRef = useRef(createDiagramGestureSession(importSession.getRevision));
+  const getGestureSession = () => gestureSessionRef.current;
   const { gridSizeU, isSnapEnabled } = usePreferences().preferences;
   const interaction = useSchematicInteraction({
     project,
+    getGestureSession,
+    projectRevision: importSession.getRevision(),
     commit,
     announce,
     gridSizeU,
@@ -84,6 +92,8 @@ function useWorkspacePointer(
 ) {
   return useEditingPointer({
     project: input.project,
+    getGestureSession: input.getGestureSession,
+    projectRevision: input.projectRevision,
     commit: input.commit,
     snapGridU: input.isSnapEnabled ? input.gridSizeU : undefined,
     ...handlers,

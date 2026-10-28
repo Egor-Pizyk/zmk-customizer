@@ -27,7 +27,9 @@ export function ToolWindow({ activeToolId, hint, onToolChange }: ToolWindowProps
     onToolChange(toolId);
     // Return focus to the canvas so canvas shortcuts (Escape, Delete, …) work immediately.
     requestAnimationFrame(() => {
-      document.querySelector<SVGSVGElement>('[data-canvas-workspace="schematic"]')?.focus();
+      document
+        .querySelector<SVGElement | HTMLElement>('[data-canvas-workspace="schematic"]')
+        ?.focus();
     });
   }
 

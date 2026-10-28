@@ -32,3 +32,5 @@ export { getWiringPreviewSelection } from './get-wiring-preview-selection';
 export { getMarqueeSelection } from './get-marquee-selection';
 export { getSelectedSectionIds } from './get-selected-section-ids';
 export { getKeySectionSelection } from './get-key-section-selection';
+export type { KeyInput } from './key-input';
+export type { SchematicPointerInput, SchematicPointerHandler } from './pointer-types';

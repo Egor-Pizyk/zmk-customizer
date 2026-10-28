@@ -6,6 +6,10 @@ import { editNumber } from './helpers';
 
 export async function runOnboardingExercise(page: Page, info: TestInfo, isKeyboard: boolean) {
   await page.goto('/');
+  await continueOnboardingExercise(page, info, isKeyboard);
+}
+
+export async function continueOnboardingExercise(page: Page, info: TestInfo, isKeyboard: boolean) {
   await activate(
     page.getByRole('button', { name: 'Start empty learning project', exact: true }),
     isKeyboard,
@@ -75,12 +79,16 @@ export async function runOnboardingExercise(page: Page, info: TestInfo, isKeyboa
     page.getByRole('heading', { name: 'Review firmware options', exact: true }),
   ).toBeVisible();
   await activate(page.getByRole('button', { name: 'Confirm and continue' }), isKeyboard);
-  for (const path of [
+  await expect(
+    page.getByRole('heading', { name: 'Inspect generated files', exact: true }),
+  ).toBeFocused();
+  for (const [index, path] of [
     'config/my_macropad.keymap',
     'config/my_macropad.conf',
     'boards/shields/my_macropad/my_macropad.overlay',
-  ]) {
+  ].entries()) {
     await activate(page.getByRole('button', { name: `Inspect ${path}`, exact: true }), isKeyboard);
+    await expect(page.getByText(`File groups inspected: ${index + 1} of 3.`)).toBeVisible();
   }
   await activate(page.getByRole('button', { name: 'Confirm and continue' }), isKeyboard);
   for (const heading of [

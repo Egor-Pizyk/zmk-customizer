@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react';
-import type { PointerEvent } from 'react';
-import type { WirePoint } from '@domain';
+import type { Project, WirePoint } from '@domain';
 import { getHoverPreview } from './get-hover-preview';
 import type { Hover } from './get-hover-preview';
 import { getPreviewProject } from './pointer-preview';
@@ -12,12 +11,17 @@ import {
   moveSelectDrag,
   pressSelectTool,
 } from './pointer-select';
-import type { Drag, PointerState, SchematicPointerOptions } from './pointer-types';
-import { readCanvasHit } from './read-canvas-hit';
+import type {
+  Drag,
+  PointerState,
+  SchematicPointerOptions,
+  SchematicPointerInput,
+} from './pointer-types';
+import type { CanvasHit } from './read-canvas-hit';
 import type { WireDraft } from './reduce-wire-draft';
 
-function handlePress(state: PointerState, world: WirePoint, event: PointerEvent<SVGSVGElement>) {
-  const hit = readCanvasHit(event.target);
+function handlePress(state: PointerState, world: WirePoint, event: SchematicPointerInput) {
+  const hit = event.hit;
   if (hit.kind === 'control') {
     return;
   }
@@ -39,10 +43,13 @@ function handlePress(state: PointerState, world: WirePoint, event: PointerEvent<
 // Tool-specific pointer handling (003 R9). Drags keep a local preview and commit once on
 // pointer-up, so one gesture is one undo step (react.md).
 export function useSchematicPointer(options: SchematicPointerOptions) {
-  const [drag, setDrag] = useState<Drag | undefined>();
-  const [draft, setDraft] = useState<WireDraft | undefined>();
+  const [drag, setDrag] = usePointerDraft<Drag>(options.project, options.projectRevision ?? 0);
+  const [draft, setDraft] = usePointerDraft<WireDraft>(
+    options.project,
+    options.projectRevision ?? 0,
+  );
   const [hover, setHover] = useState<Hover | undefined>();
-  const wirePressHistory = useWirePressHistory();
+  const wirePressHistory = useWirePressHistory(options);
   const state: PointerState = {
     ...options,
     drag,
@@ -67,6 +74,7 @@ export function useSchematicPointer(options: SchematicPointerOptions) {
     hoverPreview: getHoverPreview(options.project, { activeToolId, hover, snapGridU, draft }),
     hasDraft: draft !== undefined || drag !== undefined,
     cancelDraft: () => {
+      wirePressHistory.setLastWirePress(undefined);
       setDraft(undefined);
       setDrag(undefined);
     },
@@ -80,12 +88,21 @@ type LastWirePress = {
 };
 
 // Event history must be synchronous even when React batches two native presses.
-function useWirePressHistory() {
-  const lastWirePress = useRef<LastWirePress | null>(null);
+function useWirePressHistory(options: SchematicPointerOptions) {
+  const lastWirePress = useRef<{ base: Project; revision: number; press: LastWirePress } | null>(
+    null,
+  );
   return {
-    getLastWirePress: () => lastWirePress.current ?? undefined,
+    getLastWirePress: () =>
+      lastWirePress.current?.base === options.project &&
+      lastWirePress.current.revision === (options.projectRevision ?? 0)
+        ? lastWirePress.current.press
+        : undefined,
     setLastWirePress: (press: LastWirePress | undefined) => {
-      lastWirePress.current = press ?? null;
+      lastWirePress.current =
+        press === undefined
+          ? null
+          : { base: options.project, revision: options.projectRevision ?? 0, press };
     },
   };
 }
@@ -96,13 +113,13 @@ function createHandlers(
   doublePress: ReturnType<typeof useWirePressHistory>,
 ) {
   return {
-    handlePointerDown: (world: WirePoint, event: PointerEvent<SVGSVGElement>) => {
+    handlePointerDown: (world: WirePoint, event: SchematicPointerInput) => {
       handlePointerDown(state, doublePress, [world, event]);
     },
-    handlePointerMove: (world: WirePoint, event: PointerEvent<SVGSVGElement>) => {
+    handlePointerMove: (world: WirePoint, event: SchematicPointerInput) => {
       moveSelectDrag(state, world, event);
       if (state.activeToolId !== 'select') {
-        setHover({ world, hit: readCanvasHit(event.target) });
+        setHover({ world, hit: event.hit });
       }
     },
     handlePointerUp: () => {
@@ -120,9 +137,9 @@ function createHandlers(
 function handlePointerDown(
   state: PointerState,
   doublePress: Parameters<typeof createHandlers>[2],
-  [world, event]: readonly [WirePoint, PointerEvent<SVGSVGElement>],
+  [world, event]: readonly [WirePoint, SchematicPointerInput],
 ) {
-  const hit = readCanvasHit(event.target);
+  const hit = event.hit;
   const handled = handleDoubleWirePress(state, {
     lastWirePress: doublePress.getLastWirePress(),
     setLastWirePress: doublePress.setLastWirePress,
@@ -139,7 +156,7 @@ function handlePointerDown(
 function handleDoubleWirePress(
   state: PointerState,
   input: {
-    readonly hit: ReturnType<typeof readCanvasHit>;
+    readonly hit: CanvasHit;
     readonly world: WirePoint;
     readonly timeMs: number;
     readonly shiftKey: boolean;
@@ -169,4 +186,17 @@ function handleDoubleWirePress(
     doubleClickSelectTool(state, { hit: input.hit, world: input.world });
   }
   return isDouble;
+}
+
+function usePointerDraft<Value>(project: Project, revision: number) {
+  const [draft, setDraft] = useState<{
+    readonly base: Project;
+    readonly revision: number;
+    readonly value: Value;
+  }>();
+  const current = draft?.base === project && draft.revision === revision ? draft.value : undefined;
+  const change = (value: Value | undefined) => {
+    setDraft(value === undefined ? undefined : { base: project, revision, value });
+  };
+  return [current, change] as const;
 }

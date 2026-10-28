@@ -1,4 +1,4 @@
-import { getWiringPreviewSelection, readCanvasHit } from '@ui/schematic/interaction';
+import { getWiringPreviewSelection } from '@ui/schematic/interaction';
 import type {
   useEditingPointer,
   SchematicSelection,
@@ -27,7 +27,7 @@ export function getEditingPointer(
             getWiringPreviewSelection({
               project: input.wiring.previewProject,
               selection: input.selection,
-              hit: readCanvasHit(event.target),
+              hit: event.hit,
               shiftKey: event.shiftKey,
             }),
           );

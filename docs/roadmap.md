@@ -8,7 +8,7 @@ The following major has a separate [discovery roadmap](roadmap-2.0.0.md), target
 
 A later [3.0.0 discovery roadmap](roadmap-3.0.0.md) records the candidate keycap generator and public project references. It does not expand the first-major or 2.0.0 scope.
 
-Features in implementation order. User decision (2026-10-25): execute **036 → 037**; proposed stage 038 is cancelled; 037 remains the last product feature. One feature = one Spec Kit branch `NNN-short-name` = one `specs/NNN-short-name/` directory (AGENTS.md §6). Numbers of specified features (a `specs/NNN-*` directory exists) are immutable. A feature added out of order takes the next number and every planned, not yet specified feature after it moves up; the added feature's section records the shift, because older specs keep the old numbers. Spec Kit numbers specs by counting existing `specs/` directories, so run `/speckit-specify` in this order to keep numbers aligned with this file.
+Features in implementation order. User decision (2026-10-25): execute **036 → 037**; the proposed residual audit stage (then called 038) is cancelled; 037 remains the last product feature within that first-major schedule. On 2026-10-26 the owner requested a distinct JointJS migration, now specified as 038 below, with release allocation left open. One feature = one Spec Kit branch `NNN-short-name` = one `specs/NNN-short-name/` directory (AGENTS.md §6). Numbers of specified features (a `specs/NNN-*` directory exists) are immutable. A feature added out of order takes the next number and every planned, not yet specified feature after it moves up; the added feature's section records the shift, because older specs keep the old numbers. Spec Kit numbers specs by counting existing `specs/` directories, so run `/speckit-specify` in this order to keep numbers aligned with this file.
 
 Ordering rule: every feature ends with something a user can load, see and download. Generators come before editors: feature 009 generates real files from preset keyboards, so each later editor changes a project whose output is already visible in the export preview and covered by golden tests. Exceptions, added on user request: 003 schematic, the 004/005 bindings editors, the 006 Action panel rework, 007 layers and 008 diodes come before 009; they store project data only, and 009 generates files from it.
 
@@ -682,11 +682,11 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 
 **Done when.** All 21 original items and audit follow-ups 22–23 have agreed acceptance criteria and verified outcomes, including a 2×2 wired movement regression, topology round trips, initially empty wiring, both sides of L-shaped wire crossings, wire marquee selection, macOS clipboard use and center-preserving pointer/numeric rotation. Report unresolved items explicitly; do not silently treat them as completed or defer them beyond the first-major milestone.
 
-### 037 — interactive-onboarding (implement last)
+### 037 — interactive-onboarding (implement last within first-major scope)
 
 **Goal.** Guide a first-time user through the product with short explanations and real actions, ending with their first simple custom keyboard built from scratch: a 3×3 macropad and its downloadable ZMK configuration.
 
-**Ordering.** Next after delivered 036; proposed 038 was cancelled by the user on 2026-10-25. Retain number 037. Added on user request after keyboard-presets. Implement after every other planned product feature so the tour describes the complete product. Keep it last when adding future roadmap items.
+**Ordering.** Next after delivered 036; proposed 038 was cancelled by the user on 2026-10-25. Retain number 037. Added on user request after keyboard-presets. Implement after every other planned product feature so the tour describes the complete product. Keep it last within that first-major schedule. The distinct JointJS migration requested on 2026-10-26 is tracked separately below and must preserve/update this onboarding.
 
 
 **In scope**
@@ -711,6 +711,18 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 Parsing existing ZMK shield files back into a project (Devicetree parsing), custom board definitions, in-browser compilation or flashing (docs/product.md).
 
 ---
+
+## Additional owner-requested migration — 2026-10-26
+
+### 038 — jointjs-schematic-editor
+
+**Status.** [Specified](../specs/038-jointjs-schematic-editor/spec.md); planned; ready for task generation. This new directory is unrelated to the residual audit stage cancelled before specification on 2026-10-25. No existing feature number changes. Release allocation is open; do not silently add it to the historical first-major or mechanical/keycap roadmap.
+
+**Goal.** Adopt open-source JointJS core for the Schematic diagram and applicable interactions while preserving the accepted editor behavior. Project remains the only committed state; the diagram displays it or an isolated proposal, and completed gestures invoke authoritative domain operations. Retain electrical nets, routing policy, validation, storage, generators and project Undo/Redo in their existing layers.
+
+**Scope.** Preserve keys/diodes/encoders, manual wires/corners, durable contacts, insulation, section/mixed selection and deletion, Rebuild preview/Apply/Cancel, accessible alternatives, old files, deterministic export and offline operation. Keep the Bindings canvas and existing panels. No new grouping UX, paid JointJS+ components, libavoid or electrical-engine replacement. Update onboarding targets and checks where affected.
+
+**Ordering.** The owner explicitly requested this additional feature while PRs #29/#30 are open. Keep a separate branch from current main and reconcile overlapping changes merged before implementation; do not absorb another active feature or create a stack. Planning must record version/license/core capability evidence, dependency/presentation ADR and measurable parity/performance gates before production adoption.
 
 ## Open decisions (AGENTS.md is silent)
 

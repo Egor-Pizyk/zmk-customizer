@@ -16,9 +16,9 @@ export const SEEDS = [
   ],
   [
     'invisible-preview',
-    'src/ui/schematic/rendering/components/key-art.tsx',
-    'className="fill-surface-raised stroke-border-strong',
-    'className="opacity-0 fill-surface-raised stroke-border-strong',
+    'src/ui/schematic/diagram/logic/project-diagram-keys.ts',
+    "'fill-surface-raised stroke-border-strong",
+    "'opacity-0 fill-surface-raised stroke-border-strong",
     'switch sizing unavailable.*light',
     'toHaveCSS',
   ],

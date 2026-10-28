@@ -116,6 +116,8 @@
       "@domain/onboarding": ["./src/domain/onboarding/index.ts"],
       "@storage/onboarding": ["./src/storage/onboarding/index.ts"],
       "@ui/onboarding/logic": ["./src/ui/onboarding/logic/index.ts"],
+      "@ui/schematic/diagram/logic": ["./src/ui/schematic/diagram/logic/index.ts"],
+      "@ui/schematic/diagram/components": ["./src/ui/schematic/diagram/components/index.ts"],
       "@ui/onboarding/components": ["./src/ui/onboarding/components/index.ts"]
     }
   },
