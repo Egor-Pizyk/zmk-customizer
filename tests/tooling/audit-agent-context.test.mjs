@@ -23,7 +23,7 @@ test('reports malformed link encoding as a finding rather than losing the audit'
   assert.deepEqual(report.missingLinks, [{ file: 'AGENTS.md', target: '%ZZ.md' }]);
 });
 
-test('counts startup once per file and detects prose shared by different files', () => {
+test('counts only bootstrap instructions at startup and keeps lazy documents in the routed corpus', () => {
   const paragraph = Array.from({ length: 40 }, (_, index) => `word${index}`).join(' ');
   const report = auditDocuments(
     new Map([
@@ -33,7 +33,7 @@ test('counts startup once per file and detects prose shared by different files',
     ]),
     { root: '/repository', exists: () => true },
   );
-  assert.equal(report.startupWords, 120);
+  assert.equal(report.startupWords, 80);
   assert.equal(report.totalWords, 121);
   assert.deepEqual(report.repeatedParagraphs, [
     { words: 40, files: ['AGENTS.md', 'docs/agent-rules.md'] },

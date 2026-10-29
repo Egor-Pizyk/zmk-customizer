@@ -85,3 +85,37 @@ duplicate accounting, and CLI execution outside the repository with third-party
 files excluded. Static review does not prove independent-agent context quality.
 The maintenance PR owns current-tree check receipts and limits. No product/UI,
 onboarding, schema, generator or firmware behavior changed.
+
+
+## Lazy context and focused checks — 2026-10-29
+
+[ADR0024](decisions/0024-lazy-context-and-focused-review.md) replaces the historical
+startup budget/routing policy above. AGENTS.md is now the only startup document;
+no automatic product/principles/workflow/agent-rules imports. Load applicable sections
+for the next decision/edit, not the union of every matching routing row. Prose-only
+work does not need feature resolution. Reviewer, constitution and Git-flow wording
+use the same lazy lookup. Explicit constraints remain in the bootstrap.
+
+Source-size audit: startup falls from2517 whitespace-delimited words across five
+documents to626 words in AGENTS.md (about75% less). These are not token or latency
+measurements. Routed corpus remains available; audit reports zero missing local
+inline-link targets and zero repeated prose groups. The audit helper now counts
+bootstrap-only startup while keeping deferred documents in the corpus. Its regression
+first failed with the old count, then all4 helper tests passed after correction
+(`.check-logs/lazy-context-{red,green}.log`).
+
+Workflow/testing remove the generic before/after UI/manual accessibility review gate.
+Performance checks may run with independent workloads, including the updated038
+quickstart protocol; isolate only to investigate contention. Product accessibility,
+automated tests, performance budgets and final changed-check gates are preserved.
+Mutation-runner exclusivity remains because those runners temporarily edit source.
+No product runtime behavior changed; final tooling/document checks follow below.
+
+
+The first final snapshote617cf6748ff failed1/129 tooling tests: the pre-existing
+lost-wiring-route mutation still targeted edit-wiring.ts after the earlier routing
+extraction. HEAD already has zero matching anchors there. Updated the mutation path
+to route-assigned-wiring.ts without changing its replacement, test or assertion.
+Anchor contracts pass; the single real browser mutation detects the intended
+user-visible toBeVisible failure and restores exact source bytes
+(`.check-logs/lazy-context-mutation-sensitivity.log`). No application edits remain.

@@ -40,7 +40,7 @@ in [commands](commands.md). CI owns full unit coverage, static/tooling, browser,
 image and mutation suites; firmware compilation is local-only (see Git flow).
 Direct/full local commands require a diagnostic or justified-necessity reason in
 the task journal. No repeated full-local or three-run browser gate is required.
-Tests-first, manual acceptance and the final-index hook remain mandatory.
+Tests-first and the final-index hook remain mandatory. Manual acceptance is required only by an explicit task-specific acceptance criterion.
 
 Keep tests-first red/green diagnosis early. Finish planned production changes,
 regression scenarios and applicable lint/format fixes before the mandatory staged
@@ -48,7 +48,7 @@ check, so avoidable omissions do not repeatedly trigger the broad local selectio
 After success, rerun when executable changes, failures or unresolved concerns
 invalidate evidence; do not manually repeat suites already covered for that revision.
 Reporting-only edits follow the documentation route. The final-index hook, exact-tree
-receipts, conservative browser selection and CI/manual gates remain mandatory.
+receipts, conservative browser selection and CI gates remain mandatory.
 
 CI publishes one bot coverage comment per PR with the checked SHA, metrics, threshold
 outcome and run link. New runs replace it; stale heads/attempts cannot overwrite current
@@ -159,14 +159,23 @@ For new or changed user journeys, add or update Playwright E2E tests and include
 - Retain useful failure traces/screenshots. Record scenario → risk → existing coverage → new E2E → visible assertion → saved/exported assertion, verification results and remaining limits in feature artifacts. Commands and artifact handling are documented in `docs/testing.md`.
 - Never weaken assertions to make CI green or claim absence of user problems solely from passing tests.
 
-## Post-implementation UI/UX review (Codex)
+## Optional UI and accessibility review
 
-After creating or changing an interface, review the implemented result against its specification and project UI/accessibility guidelines as required by [workflow.md](workflow.md#frontend-uiux-workflow-codex). Apply web-relevant checks within the supported product scope; record unrelated items as inapplicable with a reason.
+There is no blanket before/after rendered UI or manual accessibility review gate.
+Choose focused checks for the affected requirement or reported bug; broader visual,
+responsive, theme, keyboard or screen-reader audits run only when requested or needed
+to resolve a specific acceptance question. Existing automated accessibility tests and
+product accessibility contracts remain. Missing optional reviews do not block completion.
+Record actual checks and limits without claiming unperformed manual checks passed.
 
-- Check affected flows and relevant empty, error, disabled and success states; labels, hierarchy, consistency and feedback; keyboard navigation, focus visibility/order/restoration, accessible names and non-pointer alternatives; contrast in supported themes, overflow/responsive layout, text zoom and reduced motion where applicable.
-- Inspect the actual rendered result in isolated Playwright under the browser rules above. Local search output or source inspection alone is not rendered-interface verification. Use the required automated checks from [commands.md](commands.md); UI/UX review supplements those checks.
-- Record the reviewed scope, design guidance used, acceptance criteria, findings, fixes, check commands/results and remaining manual limits in the owning feature's verification artifacts. Give each finding a stable ID and status and link its requirement/task/check without duplicating an existing traceability mapping.
-- Reproduce regressions before fixes and rerun affected checks after fixes. An unresolved acceptance failure keeps its task open and blocks completion. Never label unperformed keyboard, screen-reader, visual or other manual checks as passed.
+## Performance check scheduling
+
+Performance tests may run alongside independent checks or other work. There is no
+repository-wide requirement to stop other workloads or run timed tests alone, including
+older feature protocols that prescribed this. Record relevant concurrent load when
+interpreting a timing result; isolate a rerun only when diagnosing evidence of contention.
+Keep existing metrics, thresholds and assertions. Mutation runners still run alone
+because they temporarily edit production files; that restriction protects source data.
 
 ## Mutation runner implementation
 

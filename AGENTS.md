@@ -2,14 +2,16 @@
 
 Static browser application for custom keyboard design and ready-to-build ZMK v0.3 shields. No backend.
 
-## Required startup context
+## Lazy context loading
 
-Read these imports once per session unless already supplied in full by the client. Follow-up messages do not restart startup reading. Reuse unchanged rules still available in context; reopen changed documents or recover missing applicable sections after compaction. Claude Code expands `@path`; other agents open the same files manually. Linked documents follow the routing below.
+This file is the complete startup context. Do not automatically import or read other
+documents at session start. Inspect the request and working tree first; load only the
+sections needed for the next decision or edit. The routing table below is a lookup,
+not a batch reading checklist. Applicable rules still apply when their area is touched.
 
-@docs/product.md
-@docs/principles.md
-@docs/workflow.md
-@docs/agent-rules.md
+Reuse unchanged context across follow-ups. After compaction, recover only missing
+applicable sections. Follow a link only when it resolves a concrete question; do not
+recursively load related documents, every guideline, ADR or feature artifact.
 
 ## Critical implementation constraints
 
@@ -20,34 +22,35 @@ Read these imports once per session unless already supplied in full by the clien
 
 These are reminders; the routed documents own the detailed rules.
 
-For testing, follow `docs/testing.md#focused-diagnostic-loop`: stage explicit task
-paths, inspect `check:focus -- --plan`, use focus reports during diagnosis, then run
-the mandatory final `check:changed`. Preserve tests-first requirements; focus success
-never substitutes for final verification.
+## Context lookup
 
-## Load context for the task
+For documentation/analysis, edit or report directly and check links/instruction
+consistency; no feature resolution or product test run is needed unless feature
+ownership or product behavior is in question. For feature work, resolve the intended
+feature with the installed Spec Kit resolver and compare it with the request before
+editing feature artifacts or code. Do not trust remembered branches or persisted
+selection alone.
 
-Before editing, identify the change type using `docs/workflow.md`, inspect the working tree, and resolve the intended feature from the user request and Spec Kit feature resolver. Check the resolved directory against the task; do not assume a remembered feature or branch is current.
-
-Read all matching rows before working in that area. Conditional reading is mandatory when its trigger applies; expand the set if the task crosses boundaries.
-
-| Task / area | Required context |
+| Question / next action | Load the relevant section when needed |
 |---|---|
-| Start/resume work, create a feature/branch; finish work, commit, push, open/merge PRs or release | `docs/guidelines/git-flow.md` (review at startup and delivery; reuse unchanged context) |
-| Find files or feature ownership | `docs/repository-map.md`, `specs/README.md`; relevant roadmap entry for scope |
-| Plan or change production code | `docs/architecture.md`, `docs/folder-structure.md`, `docs/tooling.md` |
-| Implement existing feature work | Relevant `spec.md`, `plan.md`, `tasks.md` and contracts; other artifacts only when cited or needed |
-| Domain / TypeScript code | `docs/domain-model.md`, `docs/guidelines/code-quality/typescript.md`, `control-flow.md`, and both `naming/*.md` in that directory |
-| Errors, validation, storage / migrations | Above code-quality rules, `docs/guidelines/code-quality/observability.md`, relevant storage and compatibility contracts |
-| Frontend / interface design, implementation or review | Before/after UI workflow in `docs/workflow.md` and review evidence in `docs/testing.md` |
-| React / UI behavior | Code-quality rules, `docs/guidelines/frontend/react.md`, `accessibility.md`, `admin-ui.md` |
-| Styles / design tokens | `docs/guidelines/frontend/tailwind.md`, `accessibility.md`, existing `src/styles.css` tokens |
-| ZMK output / catalog facts | `docs/zmk/README.md`, relevant reference pages, generator/catalog contracts and independent fixtures |
-| Tests or code verification | `docs/testing.md`, `docs/commands.md` |
-| Dependencies / infrastructure / tooling | `docs/tooling.md`, `docs/commands.md`, relevant ADRs |
-| Change a project decision | `docs/decisions/README.md` and affected ADRs |
+| Product purpose or principle is unclear | `docs/product.md`, `docs/principles.md` |
+| Choose change route or completion gate | `docs/workflow.md` |
+| Agent execution, resumption or evidence handling | `docs/agent-rules.md` |
+| Create/switch branch, inspect feature dependencies, commit/push/PR/release | `docs/guidelines/git-flow.md` |
+| Locate files or establish feature ownership | `docs/repository-map.md`, `specs/README.md`; affected roadmap entry |
+| Change existing feature behavior | Affected requirements/contracts and task in its feature; relevant plan section before implementation |
+| Decide module boundary or file placement | `docs/architecture.md`, `docs/folder-structure.md` |
+| Change domain / TypeScript | Relevant `docs/domain-model.md` section and applicable TypeScript/control-flow/naming rules under `docs/guidelines/code-quality/` |
+| Change errors, validation, storage or schema | Applicable code-quality/observability rules; affected storage/migration contracts |
+| Change React behavior or controls | Applicable `docs/guidelines/frontend/react.md`, `accessibility.md`, `admin-ui.md` sections |
+| Change styles or tokens | `docs/guidelines/frontend/tailwind.md`; relevant existing `src/styles.css` tokens |
+| Change ZMK output/catalog facts | Relevant verified `docs/zmk/` page, affected generator/catalog contract and independent fixture; use its README to locate the page if needed |
+| Choose/run tests | Relevant `docs/testing.md` and `docs/commands.md` sections: tests-first where required, focused diagnosis, mandatory final `check:changed` |
+| Change dependencies, infrastructure or tooling | Relevant `docs/tooling.md`, `docs/commands.md` sections and affected decision |
+| Change an accepted project decision | `docs/decisions/README.md` and affected ADR |
 
-Do not recursively load all specs, ADRs, guidelines, templates or skills. Load a Spec Kit skill only for its stage. `.claude/rules` provides path-scoped adapters to the same guidelines; agents without this mechanism follow the table explicitly.
+Load a Spec Kit skill only for its current stage. Path-scoped client adapters, when
+present, use this same lazy lookup; they must not trigger broad document imports.
 
 ## Rule ownership
 

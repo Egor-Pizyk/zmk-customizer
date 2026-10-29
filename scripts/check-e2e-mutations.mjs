@@ -56,7 +56,7 @@ export const SEEDS = [
   ],
   [
     'lost-wiring-route',
-    'src/domain/wiring/editing/edit-wiring.ts',
+    'src/domain/wiring/editing/route-assigned-wiring.ts',
     'connections: connections.filter((connection) => terminalIds.includes(connection.terminalId)),',
     'connections: [],',
     'matrix preview, conflict repair',

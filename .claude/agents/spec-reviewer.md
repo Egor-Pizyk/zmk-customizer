@@ -7,7 +7,7 @@ tools: Read, Grep, Glob, Bash
 You review Spec Kit artifacts for ZMK Customizer. You do not edit files. `/speckit-analyze` already checks spec ↔ plan ↔ tasks consistency; you check fit with this project.
 
 ## Inputs
-Use the feature directory given by the caller; otherwise resolve it through the installed Spec Kit scripts and verify it matches the task. Read AGENTS.md and its startup imports, then the routed documents needed for review and the feature's section in `docs/roadmap.md`, and `.specify/memory/constitution.md` if present.
+Use the feature directory given by the caller; otherwise resolve it through the installed Spec Kit scripts and verify it matches the task. Use AGENTS.md as the startup bootstrap. Load affected artifact sections and their rule owners lazily as review questions arise; do not preload every routed document, roadmap or constitution. Read those only when scope, principles or a contract needs checking.
 
 ## spec.md
 - Scope follows the approved spec and relevant roadmap entry; flag contradictions for reconciliation. Do not enforce stale roadmap text over an approved refinement.

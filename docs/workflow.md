@@ -2,7 +2,7 @@
 
 New capabilities and changes to user-visible contracts require a specification before feature code. Read only the artifacts needed for the current stage; reuse completed, current stages rather than restarting the workflow.
 
-[Git flow](guidelines/git-flow.md) owns branch and delivery rules for every route below. Review it at startup and delivery using the context-reuse rule in `AGENTS.md`.
+[Git flow](guidelines/git-flow.md) owns branch and delivery rules for every route below. Load the relevant section before a Git operation; reuse unchanged context under `AGENTS.md`.
 
 ## Choose the change route
 
@@ -32,20 +32,22 @@ Feature order and initial scope: `docs/roadmap.md`. Approved feature specs captu
 
 Resolve the feature using the installed Spec Kit scripts when invoking its commands. Verify the selected directory against the user's task; persisted `.specify/feature.json` is selection state, not evidence that a feature is active or complete.
 
-## Frontend UI/UX workflow (Codex)
+## Frontend changes
 
-Every interface, interaction or styling change requires a specified outcome before code and rendered review afterward.
-
-1. **Specify:** describe flow, hierarchy, controls/layout, relevant empty/error/disabled states, feedback, keyboard/focus, themes, responsiveness and reduced motion. Follow existing components, semantic tokens, accessibility and user scope. Put accepted requirements/acceptance scenarios in the owning `spec.md` before planning; put implementation choices in `plan.md` and implementation/review tasks in `tasks.md`. Amend existing artifacts rather than restarting completed stages. For bugs/refactors, cite the existing requirement and amend only missing or changed behavior. Record rejected/inapplicable recommendations briefly; suggestions are not automatically requirements.
-2. **Review:** compare the rendered result against the spec using [testing.md](testing.md). Fix in-scope findings, rerun affected checks, and record actual evidence. Specify contract changes before expanding implementation. Unresolved acceptance failures block completion; report unperformed manual checks and remaining limits.
-
-Preserve compatibility, Undo/Redo, deterministic exports and dependency/offline rules. Existing feature artifacts remain the record; do not create another design-system authority. Design guidance alone does not prove rendered acceptance.
+Use the change route above and the affected feature requirements. There is no
+mandatory before/after UI review, screenshot matrix, design checklist or manual
+accessibility audit for every interface change. Perform a focused review only when
+the user requests it or a concrete requirement, regression or unresolved risk needs it.
+Existing keyboard/accessibility product contracts and automated regression coverage
+remain in force. Record checks actually performed; do not add unperformed optional
+reviews as completion blockers. This replaces generic review gates in older artifacts;
+explicit task-specific acceptance requirements still apply.
 
 ## Stage gates
 
 - Before planning: scope, non-goals and acceptance are clear; material questions are resolved.
-- Before implementation: complete frontend specification above; ensure testable requirements, an architecture-compliant plan, requirement/test coverage in tasks and resolved blocking analysis findings.
-- Before completion: record rendered UI review and requirement evidence, pass required checks, update task status and disclose unperformed/manual checks and remaining limits.
+- Before implementation: ensure testable requirements, an architecture-compliant plan, requirement/test coverage in tasks and resolved blocking analysis findings.
+- Before completion: record requirement evidence, pass required checks, update task status and disclose material remaining limits.
 - Amend missing requirements or changed contracts before expanding implementation. Code existing alone does not complete a task.
 
 ## Task brief and continuity

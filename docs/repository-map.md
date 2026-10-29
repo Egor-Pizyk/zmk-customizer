@@ -1,7 +1,7 @@
 # Repository map
 
 ```
-AGENTS.md              startup context and mandatory task-based reading router
+AGENTS.md              startup bootstrap and lazy context lookup
 CLAUDE.md              imports AGENTS.md for Claude Code
 docs/
   guidelines/          implementation rules, mandatory when their task/path scope applies
