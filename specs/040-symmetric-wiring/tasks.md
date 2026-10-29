@@ -187,5 +187,5 @@ Evidence первоначально **не выполнено**; после ис
 - [x] T076 Fix private adapter structural updates without stale attribute resets; preserve same-structure attribute cleanup/performance and exact Project. Verify native Chromium/Firefox/WebKit pin lifecycle.
 - [x] T077 Add independent compact symmetric-port and new-empty default contracts: half bounds/rotations, row2.5u/top0.5u, aligned column X/common topY, mirrored rows, retained fixed roots, same scan/GPIO/direction and insulated crossings.
 - [x] T078 Implement compact symmetric bus ports/default and legible short labels without changing saved/legacy style, topology, protected objects or ZMK syntax.
-- [ ] T079 Real3×3 generation/preview/Undo/Redo/JSON/ZIP plus rendered light/dark review and required focus/final gates; record remaining broader040 limits.
-- [ ] T080 Resolve final-gate bus cleanup regression and rendered row-label overlap: tests-first empty/surviving/unrelated fragment cleanup, actual encoder deletion, native readable label placement and clickable straight conductor selection; preserve protected objects and exact Project/history.
+- [x] T079 Real3×3 generation/preview/Undo/Redo/JSON/ZIP plus rendered light/dark review and required focus/final gates; record remaining broader040 limits.
+- [x] T080 Resolve final-gate bus cleanup regression and rendered row-label overlap: tests-first empty/surviving/unrelated fragment cleanup, actual encoder deletion, native readable label placement and clickable straight conductor selection; preserve protected objects and exact Project/history.
