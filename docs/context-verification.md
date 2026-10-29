@@ -127,3 +127,14 @@ tooling tests,11391ms. Receipt `.check-logs/9a6460d22898-097a767836ac/{summary,p
 commit78f1c31 reused it. No product unit/full browser suite was selected for this
 instruction/tooling change. The targeted mutation probe above is the only browser run.
 This final evidence addition is reporting-only.
+
+
+## Logical changed-check checkpoints — 2026-10-29
+
+Owner clarification: run mandatory check:changed at the logical end of each task item
+or a substantial completed change, not each file edit. Testing owns the cadence;
+commands, workflow, agent rules and bootstrap link/apply it. Intermediate edits and
+related fixes use focused diagnostics; finish the next checkpoint before rerunning
+an invalidated receipt. Red-only TDD steps remain intermediate until their red/green
+implementation unit is ready. Exact-tree pre-commit receipts, tests-first, test
+selection and CI coverage are unchanged. This is instruction-only maintenance.

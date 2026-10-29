@@ -66,7 +66,10 @@ Use the [focused diagnostic loop](testing.md#focused-diagnostic-loop) during
 implementation: stage explicit paths, inspect `npm run check:focus -- --plan`, run
 `npm run check:focus` and read its `summary.json` before full logs. Preserve the
 tests-first requirements above. Focus receipts cannot satisfy the mandatory final
-`npm run check:changed` gate. Use [commands](commands.md) for snapshot checks and CI
+`npm run check:changed` gate at the logical end of a task item or substantial completed
+change, not after each file edit. During the task, use focused diagnostics; finish
+related corrections before rerunning a failed checkpoint. Follow
+[changed-check cadence](testing.md#changed-check-cadence). Use [commands](commands.md) for snapshot checks and CI
 scope, and [agent rules](agent-rules.md#efficient-context-and-verification) for the
 single revision-specific journal. [Git flow](guidelines/git-flow.md#deliver) owns
 delivery: open/update one PR and stop unless separately authorized to merge.

@@ -30,9 +30,16 @@ npm run hooks:install                 # once per clone; also installed by make i
 git add -- path/to/changed-file       # stage explicit paths
 npm run check:focus -- --plan         # diagnostic selection as JSON; no Docker run
 npm run check:focus                   # targeted diagnostic run
-npm run check:changed                 # required final staged snapshot, also pre-commit
+npm run check:changed                 # completed task/large-change checkpoint; also pre-commit
 npm run check:changed -- --base origin/main # committed branch vs base
 ```
+
+Run `check:changed` at the logical end of a task item or a substantial completed
+change, not after each file edit/save. Use affected tests or `check:focus` inside the
+task; finish related fixes before rerunning a failed checkpoint. Batch intermediate
+edits into the next checkpoint even when they invalidate an earlier receipt. See
+[changed-check cadence](testing.md#changed-check-cadence). Commit completed units;
+the pre-commit hook verifies that snapshot and reuses an exact successful receipt.
 
 The host needs Node 24, Git, tar and Docker Compose. The runner exports the Git tree
 into an ignored temporary directory, mounts it into the browser-capable test container

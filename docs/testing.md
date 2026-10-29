@@ -42,13 +42,27 @@ Direct/full local commands require a diagnostic or justified-necessity reason in
 the task journal. No repeated full-local or three-run browser gate is required.
 Tests-first and the final-index hook remain mandatory. Manual acceptance is required only by an explicit task-specific acceptance criterion.
 
-Keep tests-first red/green diagnosis early. Finish planned production changes,
-regression scenarios and applicable lint/format fixes before the mandatory staged
-check, so avoidable omissions do not repeatedly trigger the broad local selection.
-After success, rerun when executable changes, failures or unresolved concerns
-invalidate evidence; do not manually repeat suites already covered for that revision.
-Reporting-only edits follow the documentation route. The final-index hook, exact-tree
-receipts, conservative browser selection and CI gates remain mandatory.
+### Changed-check cadence
+
+Run mandatory `npm run check:changed` at a logical checkpoint: the completed scope
+of a `tasks.md` item (or `task.md` when that is the task file), or a substantial
+completed change such as a cross-module behavior change or large refactor. Finish
+its implementation, regression coverage and applicable lint/format fixes together,
+then stage the complete checkpoint and check it once before recording it as verified.
+A red-only TDD step is intermediate; check the completed red/green unit after its
+implementation is ready. Do not split incomplete work merely to create checkpoints.
+
+Within a task, use the affected test, lint or `check:focus` for diagnosis as needed.
+Editing or saving a file, adjusting formatting, or responding to an intermediate
+failure does not trigger `check:changed`. If later edits invalidate a receipt, finish
+the next logical checkpoint and rerun there, rather than after each file edit.
+For a failed checkpoint, diagnose and finish the related corrections before rerunning.
+Never repeat a successful check of the same tree/base without a concrete reason.
+
+Commit at logical checkpoints. The final-index hook still requires the exact staged
+snapshot to pass and reuses its successful receipt; it is not an instruction to
+commit/check every file. Reporting-only edits follow the documentation route.
+Conservative browser selection and CI gates remain unchanged.
 
 CI publishes one bot coverage comment per PR with the checked SHA, metrics, threshold
 outcome and run link. New runs replace it; stale heads/attempts cannot overwrite current
@@ -195,7 +209,8 @@ Stage explicit paths and inspect `npm run check:focus -- --plan`; run
 logs only where needed. The bounded UI mapping includes cross-cutting accessibility,
 keyboard and onboarding journeys; unknown/shared/global changes retain broad selection.
 Update mapping and selection regressions together when introducing new UI areas.
-After diagnostics, stage the complete change and run the mandatory `check:changed`
-once; rerun after executable changes or unresolved failures. Focus and final receipts
-are separate. This reduces repeated output and diagnostic work without changing final
+At the logical task/substantial-change checkpoint, stage its complete change and run
+mandatory `check:changed` once, following the cadence above. Intermediate edits use
+focused diagnostics; reruns wait for the next completed checkpoint or related fix.
+Focus and final receipts are separate. This reduces repeated output and diagnostic work without changing final
 coverage policy. Test assertions still require human/agent judgment; no script rewrites them.
