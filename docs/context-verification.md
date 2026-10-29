@@ -119,3 +119,11 @@ to route-assigned-wiring.ts without changing its replacement, test or assertion.
 Anchor contracts pass; the single real browser mutation detects the intended
 user-visible toBeVisible failure and restores exact source bytes
 (`.check-logs/lazy-context-mutation-sensitivity.log`). No application edits remain.
+
+
+Final tree9a6460d228984e39704963e03e4c2357a0298356 against097a767 passes mandatory
+check:changed: types, architecture, guidelines, changed-file lint/format and129/129
+tooling tests,11391ms. Receipt `.check-logs/9a6460d22898-097a767836ac/{summary,passed}.json`;
+commit78f1c31 reused it. No product unit/full browser suite was selected for this
+instruction/tooling change. The targeted mutation probe above is the only browser run.
+This final evidence addition is reporting-only.
