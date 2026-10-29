@@ -9,7 +9,6 @@ import {
   importText,
   openProject,
   saved,
-  workspace,
 } from './helpers';
 import { getNets } from '@domain/wires/nets';
 import type { Project } from '@domain';
@@ -22,6 +21,7 @@ for (const colorScheme of ['light', 'dark'] as const) {
     const source = grid();
     await openProject(page, source);
     await page.getByText('Wiring', { exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Prettify', exact: true })).toHaveCount(0);
     await expect(page.getByRole('combobox', { name: 'Routing style', exact: true })).toHaveValue(
       'symmetric-bus',
     );
@@ -79,13 +79,8 @@ for (const colorScheme of ['light', 'dark'] as const) {
     await importText(page, json);
     expect(await saved(page)).toEqual(accepted);
     const files = await downloadZip(page);
-    await workspace(page, 'Schematic');
-    await page.getByText('Wiring', { exact: true }).click();
-    await page.getByRole('button', { name: 'Prettify', exact: true }).click();
-    await expect(page.getByText('No wiring changes needed.', { exact: true })).toBeVisible();
-    await expect(apply).toBeDisabled();
-    await page.getByRole('button', { name: 'Cancel wiring', exact: true }).click();
-    expect(await downloadZip(page)).toEqual(files);
+    expect(files['boards/shields/compact_grid/compact_grid.overlay']).toContain('rows = <3>');
+    expect(files['boards/shields/compact_grid/compact_grid.overlay']).toContain('columns = <3>');
   });
 }
 

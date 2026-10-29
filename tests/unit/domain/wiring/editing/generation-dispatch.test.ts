@@ -38,8 +38,7 @@ it('refuses a partial legacy Direct generation instead of silently rebuilding th
     failure: {
       code: 'operation',
       wireIds: [],
-      message:
-        'Direct generation requires Whole schematic scope. Prettify supports the selected scope.',
+      message: 'Direct generation requires Whole schematic scope.',
     },
   });
   expect(source.wires).toEqual([]);

@@ -47,8 +47,8 @@ export function WiringRoutingControls({
       </div>
       <div className="flex max-h-96 flex-col gap-4 overflow-auto px-4 pb-4">
         <p className="text-text-muted">
-          Generate replaces wiring; Prettify only reshapes existing connections. Check GPIOs against
-          your hardware before Apply.
+          Generate replaces wiring in the selected scope and preserves locked objects. Check GPIOs
+          against your hardware before Apply.
         </p>
         {configuration}
         <RoutingSelectors

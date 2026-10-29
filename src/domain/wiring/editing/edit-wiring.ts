@@ -11,7 +11,7 @@ import { routeWiring } from './route-wiring';
 import type { Project, Result, Wiring } from '@domain';
 
 function editWiringCandidate(original: Project, input: WiringEdit): Result<Project, string> {
-  if (input.kind === 'prettify' || input.kind === 'regenerate') {
+  if (input.kind === 'regenerate') {
     return editRoutingOperation(original, input);
   }
   if (input.kind === 'complete') {

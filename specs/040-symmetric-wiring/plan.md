@@ -113,3 +113,7 @@ Bug route: native pin visibility regression first, then keep attribute resets on
 ## Editable detour recovery — 2026-10-29
 
 FR-011 bug: the sequential span optimizer can reject mutually obstructing editable detours before either is removed. Try a coordinated fixed-site seed against locked/out-of-scope obstacles, remap crossing insulation and require independent exact electrical-relation equality; then run the full constrained optimizer against the proposed geometry. If seed/validation fails, retain the conservative existing optimizer. No topology allocator, endpoint/contact relocation, weakened clearance or partial Apply. Cover redundant matrix nodes, mutually obstructing detours, locked/outside obstacles, idempotence, history and actual export equality. This does not complete movable-junction/mirror routing tasks.
+
+## Remove Prettify — 2026-10-29
+
+Per current user scope, delete the optimizer and its public edit/API/Worker dispatch, remove the UI action and operation-specific preview state/copy, and update onboarding. Keep generation-only transaction/history guards and all saved schema fields unchanged. Remove optimizer-only tests; replace availability assertions with absence plus real generation/Cancel/Apply/Undo/Redo/JSON/ZIP evidence. No runtime dependencies, migrations or ZMK syntax changes.

@@ -72,3 +72,7 @@ Row terminal labels sit above horizontal conductors. Deleting the final attached
 
 
 Prettify may remove editable detours together; their obsolete source segments must not act as permanent obstacles to each other. Locked/out-of-scope geometry remains fixed. A coordinated fixed-site seed requires insulation remapping, exact independent electrical equivalence and a full constrained routing pass before preview acceptance. Existing endpoints, ordered attachments, GPIO and diodes remain unchanged; infeasible candidates remain atomic refusals.
+
+## Current override: generation only — 2026-10-29
+
+User withdraws Prettify from this release. Earlier optimizer contracts are historical/deferred. Current typed wiring edits and Worker replay expose generation and electrical editing only; no optimizer implementation/export/UI action remains. Existing projects and routing preferences round-trip unchanged; generation retains protection and preview/history contracts.

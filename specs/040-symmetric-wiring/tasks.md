@@ -192,3 +192,10 @@ Evidence первоначально **не выполнено**; после ис
 
 
 - [x] T081 [FR-011] Reproduce mutually obstructing editable detours with the reported route refusal; add redundant matrix-node regression. Implement bounded coordinated seed plus independent electrical and full-clearance validation, retaining fixed endpoints/contacts/locks/scope. Verify native preview/Cancel/Apply/history/idempotence and unchanged downloaded output; record focus/final receipts and exact-file limits.
+
+
+## Current user override — 2026-10-29
+
+Prettify requirements/tasks above are withdrawn from the current release by explicit user request, including T047–T051 and Prettify portions of shared/performance gates. Historical checked tasks describe past work, not current availability. Other feature requirements remain unchanged.
+
+- [ ] T082 Remove Prettify implementation/public commands/UI/copy; retain schema/data and Generate preview/locks/history. Tests-first absence regression; replace relevant native checks, update onboarding/roadmap, review light/dark layout and run focus/final gates.

@@ -8,7 +8,6 @@ import type {
 import { editWiring } from './edit-wiring';
 import type { WiringEdit } from './wiring-edit';
 import { prepareWiringProposal } from './prepare-wiring-proposal';
-import { prettifyWiring } from './prettify-wiring';
 import { calculateRegeneration } from './calculate-regeneration';
 
 type Calculation = {
@@ -39,10 +38,6 @@ function replay(
   let topologySource: Project | undefined;
   const warnings: WiringProposalSummary['warnings'][number][] = [];
   for (const edit of edits) {
-    if (edit.kind === 'prettify') {
-      current = base;
-      warnings.length = 0;
-    }
     const source = edit.kind === 'topology' ? (topologySource ?? current) : current;
     topologySource = edit.kind === 'topology' ? source : undefined;
     const result = calculateEdit(source, edit);
@@ -68,9 +63,6 @@ function calculateEdit(
 ): Result<Calculation, WiringProposalFailure> {
   if (edit.kind === 'regenerate') {
     return calculateRegeneration(source, edit);
-  }
-  if (edit.kind === 'prettify') {
-    return prettifyWiring(source, edit.input);
   }
   const result = editWiring(source, edit);
   return result.ok

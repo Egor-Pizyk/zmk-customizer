@@ -19,8 +19,7 @@ export function calculateRegeneration(
       error: {
         code: 'operation',
         wireIds: [],
-        message:
-          'Direct generation requires Whole schematic scope. Prettify supports the selected scope.',
+        message: 'Direct generation requires Whole schematic scope.',
       },
     };
   }

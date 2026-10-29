@@ -105,9 +105,7 @@ test('generation options and fixed preview actions fit a narrow workspace', asyn
   await expect(page.getByRole('button', { name: 'Generate wiring', exact: true })).toBeInViewport({
     ratio: 1,
   });
-  await expect(page.getByRole('button', { name: 'Prettify', exact: true })).toBeInViewport({
-    ratio: 1,
-  });
+  await expect(page.getByRole('button', { name: 'Prettify', exact: true })).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Rebuild wiring', exact: true })).toHaveCount(0);
   await expect(page.getByLabel('Routing offset (u)', { exact: true })).toHaveCount(0);
   await expect(page.getByRole('group', { name: 'Routing', exact: true })).toHaveCount(0);

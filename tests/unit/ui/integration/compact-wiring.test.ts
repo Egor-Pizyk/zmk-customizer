@@ -6,7 +6,7 @@ import { loadProject } from '@storage/project';
 import { renderApp } from '../../../helpers/render-app';
 import { UNIBODY_PRESET } from '../../../helpers/unibody-preset';
 
-it('offers one generation action beside Prettify without numeric routing tuning or a separate routing group', async () => {
+it('offers only generation without numeric routing tuning or a separate routing group', async () => {
   const { user } = renderApp();
   await user.click(screen.getByText('Wiring', { exact: true }));
   expect(screen.queryByRole('button', { name: 'Rebuild wiring' })).toBeNull();
@@ -15,9 +15,7 @@ it('offers one generation action beside Prettify without numeric routing tuning 
   expect(screen.queryByLabelText('Parallel clearance (u)')).toBeNull();
   expect(screen.queryByLabelText('Single-row interval (u)')).toBeNull();
   const generate = screen.getByRole('button', { name: 'Generate wiring' });
-  expect(generate.parentElement).toBe(
-    screen.getByRole('button', { name: 'Prettify' }).parentElement,
-  );
+  expect(screen.queryByRole('button', { name: 'Prettify' })).toBeNull();
   expect(generate.className).toContain('bg-accent');
   expect(screen.getByRole('combobox', { name: 'left row 0 pin' })).toBeDefined();
   const manual = screen.getByText('Manual assignments', { exact: true });

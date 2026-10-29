@@ -23,8 +23,8 @@ export function WiringRoutingActions({
   onEdit: handleEdit,
 }: Props) {
   const { gridSizeU } = usePreferences().preferences;
-  function handleOperation(kind: 'regenerate' | 'prettify') {
-    handleEdit(createRoutingEdit({ project, settings, selection, gridStepU: gridSizeU }, kind));
+  function handleGenerate() {
+    handleEdit(createRoutingEdit({ project, settings, selection, gridStepU: gridSizeU }));
   }
 
   const isScopedDirect = project.wiring?.kind === 'direct' && settings.preferredScope !== 'all';
@@ -33,24 +33,12 @@ export function WiringRoutingActions({
       <Button
         variant={hasPreview ? 'secondary' : 'primary'}
         isDisabled={isScopedDirect}
-        hint={
-          isScopedDirect
-            ? 'Direct generation requires Whole schematic scope. Prettify supports the selected scope.'
-            : undefined
-        }
+        hint={isScopedDirect ? 'Direct generation requires Whole schematic scope.' : undefined}
         onClick={() => {
-          handleOperation('regenerate');
+          handleGenerate();
         }}
       >
         Generate wiring
-      </Button>
-      <Button
-        variant="secondary"
-        onClick={() => {
-          handleOperation('prettify');
-        }}
-      >
-        Prettify
       </Button>
     </fieldset>
   );
@@ -58,17 +46,16 @@ export function WiringRoutingActions({
 
 function createRoutingEdit(
   context: Pick<Props, 'project' | 'settings' | 'selection'> & { readonly gridStepU: number },
-  kind: 'regenerate' | 'prettify',
 ): WiringEdit {
   const { project, settings, selection } = context;
   return {
-    kind,
+    kind: 'regenerate',
     board: getControllerBoard(project.controllerId),
     input: {
       settings,
       limits: ZMK_LIMITS,
       scope: getGenerationScope(project, settings, selection),
     },
-    ...(kind === 'regenerate' ? { gridStepU: context.gridStepU } : {}),
+    gridStepU: context.gridStepU,
   };
 }

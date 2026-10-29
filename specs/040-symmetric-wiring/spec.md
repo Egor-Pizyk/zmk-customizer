@@ -1,5 +1,9 @@
 # Feature Specification: Симметричная генерация и оптимизация проводки
 
+## User scope revision — remove Prettify (2026-10-29)
+
+Latest explicit user decision supersedes all earlier Prettify requirements and acceptance in this specification: remove Prettify entirely from the current product. No button, keyboard action, preview operation, domain/Worker command or onboarding recommendation remains. Generate wiring and its read-only Apply/Cancel, locks, scope, Undo/Redo, persisted settings and existing project data remain supported. Do not replace generation with optimization or mutate projects during removal. Prettify is deferred for a separately approved future return; historical requirements below describe that postponed work, not a current completion gate.
+
 **Feature Branch**: `feature/040-symmetric-wiring`
 **Created**: 2026-10-27
 **Status**: Clarified — готово к speckit-plan, реализация не начата
