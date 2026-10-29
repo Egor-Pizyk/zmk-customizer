@@ -108,3 +108,8 @@ User supersedes exposed numeric auto-routing customization. Keep persisted domai
 ## Pin visibility and compact bus outputs — 2026-10-29
 
 Bug route: native pin visibility regression first, then keep attribute resets only for same-markup updates in the private JointJS adapter; fresh markup gets fresh descriptor attributes. Project/contacts remain authoritative. User clarified rows remain between rows. Derive new symmetric bus ports from rotated half bounds and preferred line, not the legacy label fan-out; fixed existing roots remain fixed. Row padding2.5u, top padding0.5u above both keys and top row bus; mirrored rows, aligned columns. Default symmetric only when no saved routing and no wires; preserve existing/saved style. Short screen labels with full list identity. Tests: independent coordinate/scan/insulation checks, native pin/diode/Undo lifecycle, real3×3 generation, both themes and Save/Open/ZIP. No schema/dependency/ZMK-syntax change.
+
+
+## Editable detour recovery — 2026-10-29
+
+FR-011 bug: the sequential span optimizer can reject mutually obstructing editable detours before either is removed. Try a coordinated fixed-site seed against locked/out-of-scope obstacles, remap crossing insulation and require independent exact electrical-relation equality; then run the full constrained optimizer against the proposed geometry. If seed/validation fails, retain the conservative existing optimizer. No topology allocator, endpoint/contact relocation, weakened clearance or partial Apply. Cover redundant matrix nodes, mutually obstructing detours, locked/outside obstacles, idempotence, history and actual export equality. This does not complete movable-junction/mirror routing tasks.

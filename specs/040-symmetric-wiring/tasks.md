@@ -189,3 +189,6 @@ Evidence первоначально **не выполнено**; после ис
 - [x] T078 Implement compact symmetric bus ports/default and legible short labels without changing saved/legacy style, topology, protected objects or ZMK syntax.
 - [x] T079 Real3×3 generation/preview/Undo/Redo/JSON/ZIP plus rendered light/dark review and required focus/final gates; record remaining broader040 limits.
 - [x] T080 Resolve final-gate bus cleanup regression and rendered row-label overlap: tests-first empty/surviving/unrelated fragment cleanup, actual encoder deletion, native readable label placement and clickable straight conductor selection; preserve protected objects and exact Project/history.
+
+
+- [ ] T081 [FR-011] Reproduce mutually obstructing editable detours with the reported route refusal; add redundant matrix-node regression. Implement bounded coordinated seed plus independent electrical and full-clearance validation, retaining fixed endpoints/contacts/locks/scope. Verify native preview/Cancel/Apply/history/idempotence and unchanged downloaded output; record focus/final receipts and exact-file limits.

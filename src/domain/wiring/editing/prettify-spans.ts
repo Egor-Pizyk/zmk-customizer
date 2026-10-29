@@ -15,6 +15,7 @@ type Input = {
   readonly path: ElectricalRoutingPath;
   readonly settings: RoutingSettings;
   readonly segments: readonly Segment[];
+  readonly obstacles: readonly Segment[];
 };
 
 export function prettifySpine(project: Project, wire: Wire, input: Input): Result<Wire, string> {
@@ -42,7 +43,7 @@ export function prettifySpine(project: Project, wire: Wire, input: Input): Resul
         outward: half === 'right' ? 'right' : 'left',
         clearanceU: input.settings.clearanceU,
         offsetU: input.settings.offsetU,
-        obstacles: input.segments,
+        obstacles: input.obstacles,
         forbiddenPoints,
       },
     );

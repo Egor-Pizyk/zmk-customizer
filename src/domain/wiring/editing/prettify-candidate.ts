@@ -1,15 +1,55 @@
 import type { ElectricalRoutingPath } from '@domain/wires/nets';
-import { getElectricalRelationAnalysis } from '@domain/wires/nets';
+import { getElectricalRelationAnalysis, getElectricalRelations } from '@domain/wires/nets';
 import type { Project, Result, RoutingSettings } from '@domain';
 import { getRoutingSegments } from './routing-segments';
 import { prettifySpine, replaceRoutingSegments } from './prettify-spans';
+import { preservePrettifyInsulation } from './prettify-insulation';
 
-export function calculatePrettifyCandidate(
+type Input = {
+  readonly wireIds: readonly string[];
+  readonly settings: RoutingSettings;
+};
+type SweepInput = {
+  readonly order: readonly string[];
+  readonly paths: readonly ElectricalRoutingPath[];
+  readonly settings: RoutingSettings;
+  readonly segments: ReturnType<typeof getRoutingSegments>;
+  readonly relaxEditable: boolean;
+};
+
+export function calculatePrettifyCandidate(base: Project, input: Input): Result<Project, string> {
+  const seed = calculatePass(base, { ...input, relaxEditable: true });
+  if (seed.ok) {
+    const candidate = preservePrettifyInsulation(base, seed.value);
+    if (sameRelations({ base, candidate })) {
+      const checked = calculatePass(candidate, { ...input, relaxEditable: false });
+      if (
+        checked.ok &&
+        sameRelations({ base, candidate: preservePrettifyInsulation(base, checked.value) })
+      ) {
+        return checked;
+      }
+    }
+  }
+  return calculatePass(base, { ...input, relaxEditable: false });
+}
+
+function sameRelations({
+  base,
+  candidate,
+}: {
+  readonly base: Project;
+  readonly candidate: Project;
+}): boolean {
+  return (
+    JSON.stringify(getElectricalRelations(base)) ===
+    JSON.stringify(getElectricalRelations(candidate))
+  );
+}
+
+function calculatePass(
   base: Project,
-  input: {
-    readonly wireIds: readonly string[];
-    readonly settings: RoutingSettings;
-  },
+  input: Input & { readonly relaxEditable: boolean },
 ): Result<Project, string> {
   const paths = getElectricalRelationAnalysis(base).paths.filter((path) => path.id === 'spine');
   const order = [...input.wireIds].toSorted();
@@ -26,7 +66,13 @@ export function calculatePrettifyCandidate(
       };
     }
     visited.add(before);
-    const result = calculateSweep(current, { order, paths, settings: input.settings, segments });
+    const result = calculateSweep(current, {
+      order,
+      paths,
+      settings: input.settings,
+      segments,
+      relaxEditable: input.relaxEditable,
+    });
     if (!result.ok) {
       return result;
     }
@@ -44,12 +90,7 @@ export function calculatePrettifyCandidate(
 
 function calculateSweep(
   base: Project,
-  input: {
-    readonly order: readonly string[];
-    readonly paths: readonly ElectricalRoutingPath[];
-    readonly settings: RoutingSettings;
-    readonly segments: ReturnType<typeof getRoutingSegments>;
-  },
+  input: SweepInput,
 ): Result<
   { readonly project: Project; readonly segments: ReturnType<typeof getRoutingSegments> },
   string
@@ -62,7 +103,15 @@ function calculateSweep(
     if (wire === undefined || path === undefined || wire.locked === true) {
       continue;
     }
-    const result = prettifySpine(current, wire, { path, settings: input.settings, segments });
+    const obstacles = input.relaxEditable
+      ? segments.filter((segment) => !input.order.includes(segment.wireId))
+      : segments;
+    const result = prettifySpine(current, wire, {
+      path,
+      settings: input.settings,
+      segments,
+      obstacles,
+    });
     if (!result.ok) {
       return result;
     }

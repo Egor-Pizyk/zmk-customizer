@@ -69,3 +69,6 @@ User confirmed row buses between rows, not a new pass-through electrical topolog
 Private adapter uses old-attribute removal only when markup is unchanged. Fresh markup receives fresh descriptor attributes: old text:null must never clear a new SVG group at a reused positional selector. Pin dots/numbers/hit targets remain visible through connection/preview/diode/history changes; no saved Project meaning changes to repair artwork.
 
 Row terminal labels sit above horizontal conductors. Deleting the final attached key/encoder cleans affected explicit bus chains with no real pin contact; empty contact metadata is not an attachment. Surviving branches retain their roots, unrelated repairable fragments remain, and protection refusal stays atomic (003 extension).
+
+
+Prettify may remove editable detours together; their obsolete source segments must not act as permanent obstacles to each other. Locked/out-of-scope geometry remains fixed. A coordinated fixed-site seed requires insulation remapping, exact independent electrical equivalence and a full constrained routing pass before preview acceptance. Existing endpoints, ordered attachments, GPIO and diodes remain unchanged; infeasible candidates remain atomic refusals.
