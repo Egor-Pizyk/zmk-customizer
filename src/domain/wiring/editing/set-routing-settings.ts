@@ -17,7 +17,7 @@ export function setRoutingSettings(
   if (issues.length > 0) {
     return { ok: false, error: issues };
   }
-  const routing = normalize(input.settings);
+  const routing = normalize({ ...input.settings, matrixStyle: 'symmetric-bus' });
   const previous = project.routing === undefined ? undefined : normalize(project.routing);
   return {
     ok: true,

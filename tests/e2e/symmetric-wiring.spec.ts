@@ -22,9 +22,7 @@ for (const colorScheme of ['light', 'dark'] as const) {
     await openProject(page, source);
     await page.getByText('Wiring', { exact: true }).click();
     await page.screenshot({ path: test.info().outputPath('before-generation.png') });
-    await page
-      .getByRole('combobox', { name: 'Routing style', exact: true })
-      .selectOption('symmetric-bus');
+    await expect(page.getByRole('combobox', { name: 'Routing style', exact: true })).toHaveCount(0);
     expect(await saved(page)).toEqual(source);
     await page.context().setOffline(true);
     await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
@@ -71,9 +69,7 @@ test('matrix bus regeneration retains configured scan output and exact Save/Open
   const originalFiles = await downloadZip(page);
   await workspace(page, 'Schematic');
   await page.getByText('Wiring', { exact: true }).click();
-  await page
-    .getByRole('combobox', { name: 'Routing style', exact: true })
-    .selectOption('symmetric-bus');
+  await expect(page.getByRole('combobox', { name: 'Routing style', exact: true })).toHaveCount(0);
   await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
   await page.getByRole('button', { name: 'Apply wiring', exact: true }).click();
   const accepted = await saved(page);
@@ -99,9 +95,7 @@ test('generation options and fixed preview actions fit a narrow workspace', asyn
   const source = emptySource();
   await openProject(page, source);
   await page.getByText('Wiring', { exact: true }).click();
-  await page
-    .getByRole('combobox', { name: 'Routing style', exact: true })
-    .selectOption('symmetric-bus');
+  await expect(page.getByRole('combobox', { name: 'Routing style', exact: true })).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Generate wiring', exact: true })).toBeInViewport({
     ratio: 1,
   });

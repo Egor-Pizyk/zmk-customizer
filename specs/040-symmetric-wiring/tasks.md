@@ -199,3 +199,7 @@ Evidence первоначально **не выполнено**; после ис
 Prettify requirements/tasks above are withdrawn from the current release by explicit user request, including T047–T051 and Prettify portions of shared/performance gates. Historical checked tasks describe past work, not current availability. Other feature requirements remain unchanged.
 
 - [x] T082 Remove Prettify implementation/public commands/UI/copy; retain schema/data and Generate preview/locks/history. Tests-first absence regression; replace relevant native checks, update onboarding/roadmap, review light/dark layout and run focus/final gates.
+
+
+- [ ] T083 Current user scope supersedes earlier matrix style choice: tests-first fixed symmetric default/legacy read preservation and absence of Routing style; remove old generator branch, retain historical format parsing and update impacted contracts/onboarding/tests.
+- [ ] T084 Tests-first Direct separated paths/GND outputs and minimum parallel clearance for grid, stagger/rotation and split, unchanged GPIO/GND/export/locks/history; implement deterministic local route helper, review real generated UI and run focus/final gates.

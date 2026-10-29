@@ -14,7 +14,14 @@ export async function visibleSection(paths: Locator) {
       if (matrix === null) {
         continue;
       }
-      for (const fraction of [0.37, 0.61, 0.83]) {
+      const fractions = [
+        0.37,
+        0.61,
+        0.83,
+        0.5,
+        ...Array.from({ length: 19 }, (_, index) => (index + 1) / 20),
+      ];
+      for (const fraction of fractions) {
         const point = element
           .getPointAtLength(element.getTotalLength() * fraction)
           .matrixTransform(matrix);
@@ -24,6 +31,8 @@ export async function visibleSection(paths: Locator) {
         }
       }
     }
-    throw new Error('No visible clickable conductor');
+    throw new Error(
+      `No visible clickable conductor: ${elements.map((element) => element.parentElement?.dataset['sectionId']).join(',')}`,
+    );
   });
 }

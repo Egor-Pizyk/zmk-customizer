@@ -87,7 +87,7 @@ function isPointOnSegment(input: {
   return isCollinear && withinX && withinY;
 }
 
-export function startBendDrag(state: PointerState, { hit, world, event }: SelectionPress): void {
+export function startBendDrag(state: PointerState, { hit, event }: SelectionPress): void {
   if (hit.kind !== 'bend') {
     return;
   }
@@ -116,7 +116,7 @@ export function startBendDrag(state: PointerState, { hit, world, event }: Select
     wireId: hit.wireId,
     bendIndex,
     sourceBends,
-    point: hit.bendIndex === undefined ? hit.point : world,
+    point: hit.point,
     collapseToleranceU: (state.snapGridU ?? 2e-6) / 2,
   });
 }

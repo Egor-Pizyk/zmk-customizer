@@ -8,6 +8,7 @@ export type RoutingTargetCell = {
 };
 
 export type RoutingSettings = {
+  /** existing is historical file data; generation always uses symmetric-bus. */
   readonly matrixStyle: 'existing' | 'symmetric-bus';
   readonly offsetU: number;
   readonly clearanceU: number;

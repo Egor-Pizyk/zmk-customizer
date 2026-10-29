@@ -9,7 +9,7 @@ import type { Project, Wire, Key } from '@domain';
 import { buildProject } from '../../../../helpers/build-project';
 import { getResultValue } from '../../../../helpers/result';
 
-it('uses symmetric buses only for a new empty project without saved routing settings', () => {
+it('always uses symmetric buses without mutating historical saved projects', () => {
   const empty = grid();
   expect(getRoutingSettings(empty).matrixStyle).toBe('symmetric-bus');
   const existing = {
@@ -23,13 +23,13 @@ it('uses symmetric buses only for a new empty project without saved routing sett
       },
     ],
   } as const;
-  expect(getRoutingSettings(existing).matrixStyle).toBe('existing');
+  expect(getRoutingSettings(existing).matrixStyle).toBe('symmetric-bus');
   expect(
     getRoutingSettings({
       ...empty,
       routing: { ...getRoutingSettings(empty), matrixStyle: 'existing' },
     }).matrixStyle,
-  ).toBe('existing');
+  ).toBe('symmetric-bus');
 });
 
 it('places three row roots on a common outer line and three straight column roots over their pins', () => {

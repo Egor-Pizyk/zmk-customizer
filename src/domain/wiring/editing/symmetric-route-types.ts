@@ -16,6 +16,7 @@ export type SymmetricRouteInput = {
   readonly offsetU: number;
   readonly obstacles: readonly RoutingSegment[];
   readonly forbiddenPoints?: readonly WirePoint[];
+  readonly pinClearanceU?: number;
 };
 export type RouteSearchFailure = {
   readonly code: 'route-impossible' | 'route-invalid';

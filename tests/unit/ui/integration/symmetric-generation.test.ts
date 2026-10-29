@@ -15,10 +15,7 @@ it('stages routing options locally, previews actual buses and applies them in on
   });
   const { user } = renderApp(source);
   await user.click(screen.getByText('Wiring', { exact: true }));
-  await user.selectOptions(
-    screen.getByRole('combobox', { name: 'Routing style' }),
-    'symmetric-bus',
-  );
+
   expect(loadProject().project).toEqual(source);
   await user.click(screen.getByRole('button', { name: 'Generate wiring' }));
   await waitFor(() => {

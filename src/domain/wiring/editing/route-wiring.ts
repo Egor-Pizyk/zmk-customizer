@@ -4,6 +4,7 @@ import { getKeyPinWires, captureWireContacts } from '@domain/wires';
 import { createEntityId, getProjectResourceError, PROJECT_BUDGET } from '@domain/project';
 import { getKeyPinPosition } from '@domain/wires/geometry';
 import { getNets } from '@domain/wires/nets';
+import { findDirectRoute } from './find-direct-route';
 import { getOutputPosition } from './get-output-position';
 import { getRetainedWires } from './get-retained-wires';
 import type { Key, KeyPin, Project, Result, Wire, WirePoint } from '@domain';
@@ -86,7 +87,7 @@ function getRouteInsulation(project: Project, candidate: Project) {
       return (
         first !== undefined &&
         second !== undefined &&
-        findTerminalId(first) !== findTerminalId(second)
+        (project.wiring?.kind === 'direct' || findTerminalId(first) !== findTerminalId(second))
       );
     })
     .map(({ wireIds: ids, ordinal }) => ({ wireIds: ids, ordinal }));
@@ -158,13 +159,15 @@ function findRoute(
   connection: WiringConnection,
   context: FindRouteInput,
 ): Wire | undefined {
+  if (project.wiring?.kind === 'direct') {
+    return findDirectRoute(project, connection, context);
+  }
   const { key, terminalId, id, index, wires } = context;
   const output = findOutput(project, { terminalId, wires });
   if (output === undefined) {
     return undefined;
   }
   const start = getKeyPinPosition(key, connection.pin);
-  let routed: Wire | undefined;
   for (let attempt = 0; attempt < 12; attempt += 1) {
     const { xU, yU } = output;
     const escapeY =
@@ -185,12 +188,11 @@ function findRoute(
         wires.some((wire) => pair.includes(wire.id) && findTerminalId(wire) !== terminalId),
     );
     if (!hasOverlap && !touchesOtherPin(project, candidate, connection)) {
-      routed = candidate;
-      break;
+      return candidate;
     }
   }
 
-  return routed;
+  return undefined;
 }
 
 type FindRouteInput = {

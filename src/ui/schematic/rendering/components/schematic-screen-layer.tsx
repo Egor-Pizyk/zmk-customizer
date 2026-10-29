@@ -4,7 +4,7 @@ import { toggleCrossingInsulation } from '@domain/crossings';
 import type { Crossing } from '@domain/crossings';
 import type { Project } from '@domain';
 import { toScreenPoint, getBoardPinLabels } from '@ui/canvas/logic';
-import type { ContentView } from '@ui/canvas/logic';
+import type { ContentView, BoardPinLabel } from '@ui/canvas/logic';
 import { formatCrossingLabel } from '@ui/schematic/formatting';
 
 type SchematicScreenLayerProps = {
@@ -38,15 +38,21 @@ export function SchematicScreenLayer(props: SchematicScreenLayerProps) {
   const { project, view } = props;
   return (
     <>
-      {getBoardPinLabels(project).map(({ id, at, boardPin, label, aboveWire }) => {
+      {getBoardPinLabels(project).map((entry) => {
+        const { id, at, boardPin, label } = entry;
+        const position = labelPosition(entry);
         const { xPx, yPx } = toScreenPoint(view, at);
         return (
           <text
             aria-hidden="true"
-            className="fill-text text-xs font-medium"
+            className="fill-text stroke-surface-raised font-medium"
+            paintOrder="stroke"
+            fontSize={entry.placement === 'direct-ground' ? 10 : labelFontSize(entry)}
+            strokeWidth={entry.placement === undefined ? 0 : 3}
+            textAnchor={position.anchor}
             key={id}
-            x={xPx + 8}
-            y={yPx + (aboveWire === true ? -8 : 4)}
+            x={xPx + position.dx}
+            y={yPx + position.dy}
           >
             {label ?? (boardPin === undefined ? '' : formatBoardPin(boardPin))}
           </text>
@@ -81,4 +87,18 @@ function CrossingButtons({ project, view, crossings, commit }: SchematicScreenLa
       />
     );
   });
+}
+
+function labelPosition(label: BoardPinLabel) {
+  if (label.placement === 'direct-input') {
+    return { dx: 0, dy: 0, anchor: 'start' as const };
+  }
+  if (label.placement === 'direct-ground') {
+    return { dx: 0, dy: 0, anchor: 'middle' as const };
+  }
+  return { dx: 8, dy: label.aboveWire === true ? -8 : 4, anchor: 'start' as const };
+}
+
+function labelFontSize(label: BoardPinLabel): number {
+  return label.placement === 'direct-input' ? 11 : 12;
 }

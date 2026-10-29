@@ -117,3 +117,12 @@ FR-011 bug: the sequential span optimizer can reject mutually obstructing editab
 ## Remove Prettify — 2026-10-29
 
 Per current user scope, delete the optimizer and its public edit/API/Worker dispatch, remove the UI action and operation-specific preview state/copy, and update onboarding. Keep generation-only transaction/history guards and all saved schema fields unchanged. Remove optimizer-only tests; replace availability assertions with absence plus real generation/Cancel/Apply/Undo/Redo/JSON/ZIP evidence. No runtime dependencies, migrations or ZMK syntax changes.
+
+
+## Single-style matrix and Direct spacing
+
+Normalize active routing settings to symmetric buses; retain historical schema enum for lossless Open/Save compatibility but remove existing-style generation branch and UI selector. Generation writes symmetric settings only on Apply. Keep generic low-level wire routing for Direct/manual electrical edits, not as an exposed matrix style. Add pure Direct route construction with short per-pin local outputs, bounded orthogonal routing against all retained/earlier conductor geometry (including same-GND wires), at least0.1u clearance, distinct outputs and forbidden unrelated pins. Existing terminal/GPIO allocation remains; GND endpoints share terminal identity but not drawn segments. Materialize isolated crossings before electrical validation and maintain lock atomicity. Short terminal labels identify local input/GND outputs. Read pinned docs/zmk/kscan.md Direct rules before changing geometry; no generator syntax/schema/dependency change.
+
+Owners: `find-direct-route.ts` constructs bounded local leads; `route-assigned-wiring.ts` keeps whole-mode/topology/auto matrix rebuilds on the same bus router as Generate, while preserving existing manual incremental edits. Existing Direct physical pin roles remain unchanged; this amendment changes geometry and availability, not scanning syntax. Onboarding already says Generate without a Routing style choice, so its active learning flow requires no copy/target change.
+
+Direct UI review refinement: 0.5u straight leads are fully covered by the two24px pin/end hit targets at100%. Preferred elbows keep output caps near key edges and expose selectable conductor spans (input0.3u outward then0.3u up; ground0.15u across then0.5u down, X mirrored for right). Bounded alternatives keep the same electrical checks. GPIO and GND captions sit within their own key artwork, with text halo, to avoid neighbouring pins/routes. Wire selection at100% must work in preview and accepted state.

@@ -14,6 +14,7 @@ it('offers only generation without numeric routing tuning or a separate routing 
   expect(screen.queryByLabelText('Routing offset (u)')).toBeNull();
   expect(screen.queryByLabelText('Parallel clearance (u)')).toBeNull();
   expect(screen.queryByLabelText('Single-row interval (u)')).toBeNull();
+  expect(screen.queryByRole('combobox', { name: 'Routing style' })).toBeNull();
   const generate = screen.getByRole('button', { name: 'Generate wiring' });
   expect(screen.queryByRole('button', { name: 'Prettify' })).toBeNull();
   expect(generate.className).toContain('bg-accent');
@@ -24,10 +25,7 @@ it('offers only generation without numeric routing tuning or a separate routing 
   await user.click(manual);
   expect(manual.closest('details')?.open).toBe(true);
   expect(screen.getByLabelText('Key 0 matrix row')).toBeDefined();
-  await user.selectOptions(
-    screen.getByRole('combobox', { name: 'Routing style' }),
-    'symmetric-bus',
-  );
+
   await user.click(generate);
   await waitFor(() => {
     expect(
@@ -51,10 +49,7 @@ it('preserves saved routing distances without exposing tuning controls', async (
   };
   const { user } = renderApp(source);
   await user.click(screen.getByText('Wiring', { exact: true }));
-  await user.selectOptions(
-    screen.getByRole('combobox', { name: 'Routing style' }),
-    'symmetric-bus',
-  );
+
   expect(loadProject().project).toEqual(source);
   await user.click(screen.getByRole('button', { name: 'Generate wiring' }));
   await waitFor(() => {

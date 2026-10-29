@@ -22,9 +22,7 @@ for (const colorScheme of ['light', 'dark'] as const) {
     await openProject(page, source);
     await page.getByText('Wiring', { exact: true }).click();
     await expect(page.getByRole('button', { name: 'Prettify', exact: true })).toHaveCount(0);
-    await expect(page.getByRole('combobox', { name: 'Routing style', exact: true })).toHaveValue(
-      'symmetric-bus',
-    );
+    await expect(page.getByRole('combobox', { name: 'Routing style', exact: true })).toHaveCount(0);
     await page.context().setOffline(true);
     await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
     const apply = page.getByRole('button', { name: 'Apply wiring', exact: true });

@@ -2,12 +2,12 @@ import { validateWireProtection } from '@domain/wires/protection';
 import { editRoutingOperation } from './edit-routing-operation';
 import type { WiringEdit } from './wiring-edit';
 import { completeWiring } from './complete-wiring';
-import { createWiringTerminals, autoAssignCells, getWiringConnections } from '@domain/wiring';
+import { createWiringTerminals, autoAssignCells } from '@domain/wiring';
 import { prepareTerminals } from './prepare-terminals';
 import { initializeWiring } from './initialize-wiring';
 import { getWiringCells } from '@domain/wiring/matrix';
 import type { WiringCell } from '@domain/wiring/matrix';
-import { routeWiring } from './route-wiring';
+import { routeAssignedWiring } from './route-assigned-wiring';
 import type { Project, Result, Wiring } from '@domain';
 
 function editWiringCandidate(original: Project, input: WiringEdit): Result<Project, string> {
@@ -49,7 +49,7 @@ function applyCells(
 ): Result<Project, string> {
   const { cells, wiring } = prepared;
   let nextWiring = wiring;
-  let terminals = createWiringTerminals(project, nextWiring, {
+  const terminals = createWiringTerminals(project, nextWiring, {
     cells,
     ...(input.kind === 'dimensions' ? { dimensions: input } : {}),
   });
@@ -58,29 +58,11 @@ function applyCells(
     return assigned;
   }
   nextWiring = { ...nextWiring, terminals: assigned.value };
-  terminals = [...assigned.value];
   const keys = getWiringKeys(project, nextWiring, cells);
-  const connections = getWiringConnections(nextWiring, cells);
-  let terminalIds = terminals.map((terminal) => terminal.id);
-  if (input.kind === 'cell') {
-    const oldConnections = getWiringConnections(wiring, getWiringCells(project));
-    terminalIds = [
-      ...new Set(
-        [...oldConnections, ...connections]
-          .filter((connection) => connection.keyId === input.keyId)
-          .map((connection) => connection.terminalId),
-      ),
-    ];
-  }
-  return routeWiring(
-    { ...project, keys, wiring: nextWiring },
-    {
-      connections: connections.filter((connection) => terminalIds.includes(connection.terminalId)),
-      terminalIds,
-      replaceKeyNets: input.kind === 'auto',
-      sourceProject: project,
-    },
-  );
+  return routeAssignedWiring(project, input, {
+    candidate: { ...project, keys, wiring: nextWiring },
+    cells,
+  });
 }
 
 function editPin(

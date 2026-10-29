@@ -1,7 +1,7 @@
 import { expect, it } from 'vitest';
 import { getControllerBoard } from '@catalog/controllers';
 import { ZMK_LIMITS } from '@catalog/firmware';
-import { regenerateWiring } from '@domain/wiring/editing';
+import { regenerateWiring, editWiring } from '@domain/wiring/editing';
 import { getWiringCells } from '@domain/wiring/matrix';
 import { getNets } from '@domain/wires/nets';
 import type { RoutingSettings, Wire, Project } from '@domain';
@@ -122,14 +122,15 @@ function contactsOf(wire: Wire) {
   return wire.contacts ?? [];
 }
 
-it('keeps the legacy matrix geometry style as the same electrical topology', () => {
+it('normalizes historical matrix style requests to the only supported bus generator', () => {
   const buses = getResultValue(regenerateWiring(EMPTY, INPUT)).project;
   const existing = getResultValue(
     regenerateWiring(EMPTY, { ...INPUT, settings: { ...SETTINGS, matrixStyle: 'existing' } }),
   ).project;
   expect(getWiringCells(existing)).toEqual(getWiringCells(buses));
   expect(existing.wiring).toEqual(buses.wiring);
-  expect(existing.wires.filter((wire) => wire.end.kind === 'junction')).toEqual([]);
+  expect(existing.wires).toEqual(buses.wires);
+  expect(existing.routing?.matrixStyle).toBe('symmetric-bus');
 });
 
 it('uses physical pin two for new row assignments when explicitly requested', () => {
@@ -289,4 +290,13 @@ it('stores normalized routing distances together with the generated geometry', (
     }),
   ).project;
   expect(candidate.routing).toEqual(SETTINGS);
+});
+
+it('uses buses immediately when switching from Direct back to Matrix', () => {
+  const direct = getResultValue(editWiring(EMPTY, { kind: 'mode', mode: 'direct', board: BOARD }));
+  const candidate = getResultValue(
+    editWiring(direct, { kind: 'mode', mode: 'matrix', board: BOARD }),
+  );
+  expect(candidate.routing?.matrixStyle).toBe('symmetric-bus');
+  expect(candidate.wires.some((wire) => wire.end.kind === 'junction')).toBe(true);
 });

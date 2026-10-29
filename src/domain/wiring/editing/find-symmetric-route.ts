@@ -53,6 +53,8 @@ function validInput(input: SymmetricRouteInput): boolean {
     [input.clearanceU, input.offsetU].every(
       (value) => Number.isFinite(value) && roundU(value) > 0,
     ) &&
+    Number.isFinite(input.pinClearanceU ?? 0) &&
+    (input.pinClearanceU ?? 0) >= 0 &&
     input.points.every(
       (point, index) =>
         finitePoint(point) &&

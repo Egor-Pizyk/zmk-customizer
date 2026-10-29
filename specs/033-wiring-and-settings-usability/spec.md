@@ -111,3 +111,10 @@ The owner requested fixing PR #15 conflicts and enabling automatic merge after C
 ## Current040 UI override — 2026-10-29
 
 User removes Prettify from the current product. Wiring exposes Generate only, with its existing preview Apply/Cancel, manual editing and locks. Earlier amendments mentioning an optimization action are historical/deferred; no Prettify control, command or onboarding recommendation remains. Saved Project fields are unchanged.
+
+
+## Current040 routing choice override — 2026-10-29
+
+Routing style is removed. Matrix Generate and whole-mode/auto rebuilds use symmetric buses only. Historical existing settings parse losslessly but cannot select a generator; Open does not reroute saved conductors. Direct retains one input GPIO/key and common electrical GND, with distinct local output sites, no shared spans and >=0.1u parallel clearance. Electrical/manual controls and locks remain.
+
+A pointer click on an existing bend without motion selects it without moving/removing that bend or adding history. Drag initialization uses the stored bend coordinate; snapping starts only after actual pointer movement. This preserves precise auto-generated geometry at ordinary zoom.

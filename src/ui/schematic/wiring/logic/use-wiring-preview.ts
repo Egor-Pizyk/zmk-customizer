@@ -104,10 +104,7 @@ function describeOperation(edit: WiringEdit | undefined, project: Project): stri
   if (project.wiring?.kind === 'direct') {
     return 'Generate direct wiring · Whole schematic';
   }
-  const style =
-    edit.input.settings.matrixStyle === 'symmetric-bus'
-      ? 'Symmetric matrix buses'
-      : 'Existing matrix routes';
+  const style = 'Symmetric matrix buses';
   const scope = edit.input.scope;
   if (scope.kind === 'half') {
     return `Generate ${style} · ${scope.half} half`;

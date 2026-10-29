@@ -51,25 +51,16 @@ export function WiringRoutingControls({
           against your hardware before Apply.
         </p>
         {configuration}
-        <RoutingSelectors
-          settings={settings}
-          onSettings={handleSettings}
-          isMatrix={project.wiring?.kind !== 'direct'}
-        />
+        <RoutingSelectors settings={settings} onSettings={handleSettings} />
         {children}
       </div>
     </div>
   );
 }
 
-function RoutingSelectors({
-  settings,
-  onSettings: handleSettings,
-  isMatrix,
-}: SettingsProps & { readonly isMatrix: boolean }) {
+function RoutingSelectors({ settings, onSettings: handleSettings }: SettingsProps) {
   return (
     <div className="flex flex-wrap gap-3">
-      {isMatrix ? <MatrixStyle settings={settings} onSettings={handleSettings} /> : undefined}
       <RoutingSelect
         label="Routing scope"
         value={
@@ -130,19 +121,4 @@ function scopeSettings(value: string): Partial<RoutingSettings> {
     return { preferredScope: 'half', preferredHalf: value };
   }
   return { preferredScope: value === 'selection' ? 'selection' : 'all' };
-}
-function MatrixStyle({ settings, onSettings: handleSettings }: SettingsProps) {
-  return (
-    <RoutingSelect
-      label="Routing style"
-      value={settings.matrixStyle}
-      options={[
-        { id: 'existing', label: 'Existing matrix routes' },
-        { id: 'symmetric-bus', label: 'Symmetric matrix buses' },
-      ]}
-      onSelect={(value) => {
-        handleSettings({ matrixStyle: value === 'symmetric-bus' ? 'symmetric-bus' : 'existing' });
-      }}
-    />
-  );
 }

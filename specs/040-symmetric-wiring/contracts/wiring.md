@@ -76,3 +76,6 @@ Prettify may remove editable detours together; their obsolete source segments mu
 ## Current override: generation only — 2026-10-29
 
 User withdraws Prettify from this release. Earlier optimizer contracts are historical/deferred. Current typed wiring edits and Worker replay expose generation and electrical editing only; no optimizer implementation/export/UI action remains. Existing projects and routing preferences round-trip unchanged; generation retains protection and preview/history contracts.
+
+
+Current user contract2026-10-29: only symmetric matrix generation is available. existing enum remains historical file data; it cannot select a routing algorithm. Direct draws separate local input/GND leads per key, at least0.1u parallel clearance (larger saved clearance wins), no positive-length shared conductor spans, distinct geometric output positions. Common GND terminal remains electrical with one input GPIO per key. Local terminal labels identify GPIO/GND; crossings are insulated, locks retained or operation refused. Open never reroutes existing geometry.

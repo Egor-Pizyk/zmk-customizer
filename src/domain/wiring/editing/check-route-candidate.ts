@@ -19,7 +19,7 @@ export function checkRouteCandidate(
     if (to === undefined) {
       break;
     }
-    for (const id of findBlockingPins({ from, to }, input.forbiddenPoints ?? [])) {
+    for (const id of findBlockingPins({ from, to }, input)) {
       blocked.add(id);
     }
     for (const segment of nearby(from, to, input.clearanceU)) {
@@ -129,9 +129,29 @@ function compareCrossings(
 
 function findBlockingPins(
   span: { readonly from: WirePoint; readonly to: WirePoint },
-  pins: readonly WirePoint[],
+  input: SymmetricRouteInput,
 ): readonly string[] {
-  return pins.flatMap((pin, index) => (onSegment(pin, span) ? [`pin:${index}`] : []));
+  return (input.forbiddenPoints ?? []).flatMap((pin, index) =>
+    onSegment(pin, span) || pointDistance(span, pin) < (input.pinClearanceU ?? 0) - 1e-8
+      ? [`pin:${index}`]
+      : [],
+  );
+}
+function pointDistance(
+  span: { readonly from: WirePoint; readonly to: WirePoint },
+  pin: WirePoint,
+): number {
+  const x = Math.max(
+    Math.min(span.from.xU, span.to.xU) - pin.xU,
+    0,
+    pin.xU - Math.max(span.from.xU, span.to.xU),
+  );
+  const y = Math.max(
+    Math.min(span.from.yU, span.to.yU) - pin.yU,
+    0,
+    pin.yU - Math.max(span.from.yU, span.to.yU),
+  );
+  return Math.hypot(x, y);
 }
 
 function isFixedEndpoint(point: WirePoint, points: readonly WirePoint[]): boolean {
