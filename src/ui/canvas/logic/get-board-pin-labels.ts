@@ -111,7 +111,7 @@ function directPlacement(
   }
   const ground = terminal?.kind === 'ground';
   const horizontal = ground ? 0.55 : 0.08;
-  const vertical = ground ? 0.92 : 0.22;
+  const vertical = ground ? 0.85 : 0.18;
   return {
     at: {
       xU:

@@ -45,10 +45,8 @@ export function SchematicScreenLayer(props: SchematicScreenLayerProps) {
         return (
           <text
             aria-hidden="true"
-            className="fill-text stroke-surface-raised font-medium"
-            paintOrder="stroke"
+            className="fill-text font-medium"
             fontSize={entry.placement === 'direct-ground' ? 10 : labelFontSize(entry)}
-            strokeWidth={entry.placement === undefined ? 0 : 3}
             textAnchor={position.anchor}
             key={id}
             x={xPx + position.dx}
