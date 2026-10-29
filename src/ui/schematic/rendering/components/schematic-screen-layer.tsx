@@ -38,7 +38,7 @@ export function SchematicScreenLayer(props: SchematicScreenLayerProps) {
   const { project, view } = props;
   return (
     <>
-      {getBoardPinLabels(project).map(({ id, at, boardPin, label }) => {
+      {getBoardPinLabels(project).map(({ id, at, boardPin, label, aboveWire }) => {
         const { xPx, yPx } = toScreenPoint(view, at);
         return (
           <text
@@ -46,7 +46,7 @@ export function SchematicScreenLayer(props: SchematicScreenLayerProps) {
             className="fill-text text-xs font-medium"
             key={id}
             x={xPx + 8}
-            y={yPx + 4}
+            y={yPx + (aboveWire === true ? -8 : 4)}
           >
             {label ?? (boardPin === undefined ? '' : formatBoardPin(boardPin))}
           </text>

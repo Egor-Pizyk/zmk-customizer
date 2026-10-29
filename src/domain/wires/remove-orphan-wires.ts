@@ -1,18 +1,8 @@
+import { getAnchoredWireIds, getRelatedWireIds } from './get-anchored-wire-ids';
 import { preserveWireProtection } from '@domain/wires/protection';
 import { getNearestPointOnPath } from '@domain/geometry';
 import { getWirePath } from '@domain/wires/geometry';
 import type { Project, Wire, WireEnd } from '@domain';
-
-function hasKeyPin(wire: Wire): boolean {
-  return (
-    wire.start.kind === 'key-pin' ||
-    wire.end.kind === 'key-pin' ||
-    wire.start.kind === 'encoder-pin' ||
-    wire.end.kind === 'encoder-pin' ||
-    wire.contacts !== undefined ||
-    wire.contactIds !== undefined
-  );
-}
 
 function freeJunction(project: Project, end: WireEnd, removedIds: ReadonlySet<string>): WireEnd {
   if (end.kind !== 'junction' || !removedIds.has(end.wireId)) {
@@ -37,17 +27,24 @@ function removeOnce(project: Project, removedIds: ReadonlySet<string>): Project 
 
 /**
  * Removes the given wires, turns junctions onto them into free ends at their drawn point, then
- * removes wires left without a key pin (FR-009, FR-012), repeating until stable.
+ * removes affected conductor chains left without a real pin. Unrelated repairable
+ * fragments remain intact (003 FR-012 as extended by 033/040).
  */
 function removeOrphanWiresCandidate(
   project: Project,
   input: { readonly removedWireIds: readonly string[] },
 ): Project {
   let current = project;
+  const affected = getRelatedWireIds(project, input.removedWireIds);
   let removedIds: ReadonlySet<string> = new Set(input.removedWireIds);
   while (removedIds.size > 0) {
     current = removeOnce(current, removedIds);
-    removedIds = new Set(current.wires.filter((wire) => !hasKeyPin(wire)).map((wire) => wire.id));
+    const anchored = getAnchoredWireIds(current);
+    removedIds = new Set(
+      current.wires
+        .filter((wire) => affected.has(wire.id) && !anchored.has(wire.id))
+        .map((wire) => wire.id),
+    );
   }
   return current;
 }

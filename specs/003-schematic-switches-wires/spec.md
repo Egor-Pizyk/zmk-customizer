@@ -237,3 +237,7 @@ Acceptance: connect pins of two different keys without a board pin; both connect
 ## Feature 033 extension (schema v12)
 
 033 captures pass-through key-pin connections when wiring is created and persists fixed-anchor contacts; moving a key preserves these relationships and does not connect an unrelated pin merely by overlap. Stored conductor fragments need not have a direct key-pin endpoint; disconnected fragments remain repairable and visible. Section selection/deletion removes only the chosen conductor between adjacent electrical connection points, preserving other branches and all keys. Earlier schema formats remain historical migration contracts. See specs/033-wiring-and-settings-usability/spec.md and data-model.md for the current extension.
+
+## Feature 040 bus cleanup clarification
+
+Deleting a key/encoder or a whole wire cleans only affected explicit junction chains that no longer reach an actual key/encoder endpoint or persisted pin contact. Empty contact arrays are not pin connections. A bus remains when a surviving branch reaches a real pin; unrelated repairable free fragments remain unchanged. Existing lock refusal and atomic history apply to cleanup too. This extends historical FR-009/FR-012 for generated buses without changing section-deletion behavior.

@@ -99,7 +99,9 @@ export async function continueOnboardingExercise(page: Page, info: TestInfo, isK
     'Hardware and app settings',
     'App settings',
   ]) {
-    await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible();
+    const stepHeading = page.getByRole('heading', { name: heading, exact: true });
+    await expect(stepHeading).toBeVisible();
+    await expect(stepHeading).toBeFocused();
     await activate(page.getByRole('button', { name: 'Confirm and continue' }), isKeyboard);
   }
   await expect(

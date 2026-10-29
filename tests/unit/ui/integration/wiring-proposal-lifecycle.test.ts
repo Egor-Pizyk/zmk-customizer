@@ -79,7 +79,7 @@ it('keeps a preview stale after an edit and Undo ABA, then recalculates explicit
     latestRoutingWorker().complete();
   });
   await user.click(screen.getByRole('button', { name: 'Apply wiring' }));
-  expect(loadProject().project.wires).toHaveLength(2);
+  expect(loadProject().project.wires).toHaveLength(3);
   await user.click(screen.getByRole('button', { name: /^Undo/u }));
   expect(loadProject().project).toEqual(source);
 });
@@ -103,7 +103,7 @@ it('ignores a superseded request and applies an accepted result only once', asyn
   const apply = screen.getByRole('button', { name: 'Apply wiring' });
   fireEvent.click(apply);
   fireEvent.click(apply);
-  expect(loadProject().project.wires).toHaveLength(2);
+  expect(loadProject().project.wires).toHaveLength(3);
   await user.click(screen.getByRole('button', { name: /^Undo/u }));
   expect(loadProject().project).toEqual(source);
 });

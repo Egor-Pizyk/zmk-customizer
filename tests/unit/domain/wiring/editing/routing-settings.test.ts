@@ -23,10 +23,10 @@ const project = (): Project =>
   });
 
 describe('routing settings', () => {
-  it('reads legacy-safe defaults without adding anything to the project', () => {
+  it('reads fresh symmetric defaults without adding anything to the project', () => {
     const input = project();
     expect(getRoutingSettings(input)).toMatchObject({
-      matrixStyle: 'existing',
+      matrixStyle: 'symmetric-bus',
       offsetU: 0.15,
       clearanceU: 0.1,
       fallbackRowIntervalU: 1,

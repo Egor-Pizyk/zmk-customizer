@@ -1,5 +1,5 @@
 import { roundU } from '@domain/geometry';
-import { getOutputPosition } from './get-output-position';
+import { getMatrixBusPort } from './get-matrix-bus-port';
 import type { Project, Result, RoutingSettings, Wire, WirePoint } from '@domain';
 import type { MatrixBusRoute } from './matrix-bus-types';
 
@@ -11,8 +11,8 @@ export function createBusTrunk(
     readonly settings: RoutingSettings;
   },
 ): Result<Wire, string> {
-  const { route, id, settings } = input;
-  const output = getBusPort(project, { route, settings });
+  const { route, id } = input;
+  const output = getMatrixBusPort(project, route);
   if (!output.ok) {
     return output;
   }
@@ -29,7 +29,7 @@ export function createBusTrunk(
       half: route.half,
       start: { kind: 'free', at: port, terminalId: route.terminalId },
       end: { kind: 'free', at: end },
-      bends: [bend],
+      bends: equalPoints({ first: port, second: bend }) ? [] : [bend],
       anchors: { start: port, end },
       contacts: route.branches
         .filter((branch) => equalPoints({ first: branch.pinAt, second: branch.busAt }))
@@ -66,35 +66,4 @@ export function equalPoints({
   readonly second: WirePoint;
 }): boolean {
   return first.xU === second.xU && first.yU === second.yU;
-}
-
-function getBusPort(
-  project: Project,
-  { route, settings }: { readonly route: MatrixBusRoute; readonly settings: RoutingSettings },
-): Result<WirePoint, string> {
-  const terminal = project.wiring?.terminals.find((entry) => entry.id === route.terminalId);
-  if (terminal === undefined) {
-    return { ok: false, error: 'A matrix bus references a missing terminal.' };
-  }
-  const output = getOutputPosition(project, { terminal, index: route.index });
-  if (!output.ok) {
-    return output;
-  }
-  const existing = project.wires
-    .flatMap((wire) => [wire.start, wire.end])
-    .find((end) => end.kind === 'free' && end.terminalId === route.terminalId);
-  const step = Math.max(settings.offsetU, settings.clearanceU);
-  const port =
-    existing?.kind === 'free'
-      ? existing.at
-      : {
-          xU: roundU(
-            output.value.xU +
-              (route.kind === 'row'
-                ? route.index * (step - 0.07) * (route.half === 'right' ? 1 : -1)
-                : 0),
-          ),
-          yU: roundU(output.value.yU - (route.kind === 'col' ? route.index * step : 0)),
-        };
-  return { ok: true, value: port };
 }

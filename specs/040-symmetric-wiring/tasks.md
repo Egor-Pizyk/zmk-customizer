@@ -181,4 +181,11 @@ Evidence первоначально **не выполнено**; после ис
 - [x] T071 Add real-provider regression for compact shared form: no Rebuild/numeric routing controls/extra fieldset, Generate+Prettify hierarchy, manual assignments disclosure, no hidden settings mutation, preview/history and historical direct generation.
 - [x] T072 Implement compact Wiring and update actual onboarding names/targets/copy. Keep GPIO fields visible; manual dimension/grid/key editing stays available, problem navigation expands needed disclosures.
 - [x] T073 Update affected real browser journeys, review light/dark1024×768 rendered UI, offline generation/Prettify/Cancel/Apply/manual assignment/learning and JSON/ZIP. Run focused and final gates; record exact revision/evidence.
-- [ ] T074 Clarify unfinished request about reducing bus-output distance; only then amend geometry contract, reproduce coordinate tests and implement/verify.
+- [x] T074 Clarified2026-10-29: rows between rows, shorten outputs and align columns; see spec amendment. Geometry implementation/verification is T077–T079.
+
+- [x] T075 Reproduce visible-pin disappearance with real Wire tool passing through lower pin in both themes; both physical dots/labels stay visible in preview/commit/Undo/Redo and diode changes (003 US1/US2,038 FR-004).
+- [x] T076 Fix private adapter structural updates without stale attribute resets; preserve same-structure attribute cleanup/performance and exact Project. Verify native Chromium/Firefox/WebKit pin lifecycle.
+- [x] T077 Add independent compact symmetric-port and new-empty default contracts: half bounds/rotations, row2.5u/top0.5u, aligned column X/common topY, mirrored rows, retained fixed roots, same scan/GPIO/direction and insulated crossings.
+- [x] T078 Implement compact symmetric bus ports/default and legible short labels without changing saved/legacy style, topology, protected objects or ZMK syntax.
+- [ ] T079 Real3×3 generation/preview/Undo/Redo/JSON/ZIP plus rendered light/dark review and required focus/final gates; record remaining broader040 limits.
+- [ ] T080 Resolve final-gate bus cleanup regression and rendered row-label overlap: tests-first empty/surviving/unrelated fragment cleanup, actual encoder deletion, native readable label placement and clickable straight conductor selection; preserve protected objects and exact Project/history.

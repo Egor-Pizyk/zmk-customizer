@@ -30,7 +30,7 @@ test('first routing Worker and restart after Cancel work offline with one accept
   await page.screenshot({ path: test.info().outputPath('offline-preview.png'), fullPage: true });
   await apply.click();
   const accepted = await saved(page);
-  expect(accepted.wires).toHaveLength(128);
+  expect(accepted.wires).toHaveLength(80);
   expect(workerUrls.length).toBeGreaterThanOrEqual(2);
   expect(workerUrls.every((url) => url.startsWith('blob:'))).toBe(true);
   await history(page, 'Undo').click();
@@ -62,7 +62,7 @@ test('editing and Undo keep the previous Worker proposal stale until explicit re
   await page.getByRole('button', { name: 'Recalculate wiring', exact: true }).click();
   await expect(apply).toBeEnabled();
   await apply.click();
-  expect((await saved(page)).wires).toHaveLength(2);
+  expect((await saved(page)).wires).toHaveLength(3);
 });
 
 test('a real no-change Worker reply does not autosave or add history', async ({ page }) => {

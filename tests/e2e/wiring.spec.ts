@@ -247,7 +247,7 @@ test('Auto assign proposes free GPIOs with outward outputs and atomic history @c
   await page.getByRole('button', { name: 'Zoom out', exact: true }).click();
   await page.getByRole('application').hover();
   await page.mouse.wheel(0, -40);
-  await expect(page.locator('svg text').filter({ hasText: 'left col t3 D2' })).toBeVisible();
+  await expect(page.locator('svg text').filter({ hasText: 'C0 D2' })).toBeVisible();
   await page.screenshot({ path: testInfo.outputPath('auto-preview.png') });
   await page.getByRole('button', { name: 'Apply wiring', exact: true }).click();
   const applied = await saved(page);

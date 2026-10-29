@@ -1,3 +1,4 @@
+import { visibleSection } from './wiring-preview-helpers';
 import { expect, test } from './test';
 import { UNIBODY_PRESET } from '../helpers/unibody-preset';
 import { getWiringCells } from '@domain/wiring/matrix';
@@ -29,9 +30,14 @@ for (const colorScheme of ['light', 'dark'] as const) {
     await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
     const apply = page.getByRole('button', { name: 'Apply wiring', exact: true });
     await expect(apply).toBeEnabled();
+    const conductor = await visibleSection(
+      page.locator('[data-section-id] path[pointer-events="none"]'),
+    );
+    await page.mouse.click(conductor.x, conductor.y);
     await expect(
-      page.locator('[data-section-id] path[pointer-events="stroke"]').first(),
-    ).toBeVisible();
+      page.locator(`[data-section-id="${conductor.id}"] path[data-selected]`),
+    ).toHaveCount(1);
+    expect(await saved(page)).toEqual(source);
     await page.screenshot({ path: test.info().outputPath('symmetric-bus-preview.png') });
     expect(await saved(page)).toEqual(source);
     await page.getByRole('button', { name: 'Cancel wiring', exact: true }).click();

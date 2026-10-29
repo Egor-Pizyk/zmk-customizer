@@ -18,7 +18,7 @@ it('cancels rebuilding without saving and applies it as one undoable edit', asyn
   await user.click(screen.getByRole('button', { name: 'Generate wiring' }));
   await user.click(screen.getByRole('button', { name: 'Apply wiring' }));
   await waitFor(() => {
-    expect(loadProject().project.wires).toHaveLength(2);
+    expect(loadProject().project.wires).toHaveLength(3);
   });
   await user.click(screen.getByRole('button', { name: /^Undo/u }));
   await waitFor(() => {

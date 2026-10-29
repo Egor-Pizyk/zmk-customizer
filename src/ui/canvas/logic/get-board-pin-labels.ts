@@ -1,11 +1,12 @@
 import { getWirePath } from '@domain/wires/geometry';
-import type { Project, WirePoint } from '@domain';
+import type { Project, WirePoint, WiringTerminal } from '@domain';
 
 export type BoardPinLabel = {
   readonly id: string;
   readonly at: WirePoint;
   readonly boardPin?: number;
   readonly label?: string;
+  readonly aboveWire?: true;
 };
 
 export function getBoardPinLabels(project: Project): readonly BoardPinLabel[] {
@@ -24,7 +25,10 @@ export function getBoardPinLabels(project: Project): readonly BoardPinLabel[] {
           {
             id: `${wire.id}:${side}`,
             at,
-            label: `${terminal?.half ?? ''} ${terminal?.kind ?? ''} ${terminal?.id ?? ''} ${terminal?.kind === 'ground' ? 'GND' : pinLabel}`,
+            label: terminalLabel(project, terminal, pinLabel),
+            ...(project.routing?.matrixStyle === 'symmetric-bus' && terminal?.kind === 'row'
+              ? { aboveWire: true as const }
+              : {}),
           },
         ];
       }
@@ -43,4 +47,25 @@ export function getBoardPinLabels(project: Project): readonly BoardPinLabel[] {
           other.at.yU === label.at.yU,
       ) === index,
   );
+}
+
+function terminalLabel(
+  project: Project,
+  terminal: WiringTerminal | undefined,
+  pinLabel: string,
+): string {
+  if (
+    project.routing?.matrixStyle === 'symmetric-bus' &&
+    terminal !== undefined &&
+    (terminal.kind === 'row' || terminal.kind === 'col')
+  ) {
+    const index =
+      project.wiring?.terminals
+        .filter((entry) => entry.half === terminal.half && entry.kind === terminal.kind)
+        .findIndex((entry) => entry.id === terminal.id) ?? 0;
+    const half =
+      project.wiring?.topology === 'split' ? `${terminal.half === 'left' ? 'L' : 'R'} ` : '';
+    return `${half}${terminal.kind === 'row' ? 'R' : 'C'}${index} ${pinLabel}`;
+  }
+  return `${terminal?.half ?? ''} ${terminal?.kind ?? ''} ${terminal?.id ?? ''} ${terminal?.kind === 'ground' ? 'GND' : pinLabel}`;
 }
