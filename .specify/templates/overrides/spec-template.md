@@ -32,6 +32,21 @@
 
 [Boundary conditions, invalid input, cancellation, failure recovery and interactions with existing behavior relevant to this feature.]
 
+## Core behavior test matrix
+
+[Define correct behavior before tests/implementation. Follow docs/testing.md. Cover
+core outcomes and relevant boundaries; reuse requirement IDs. File/method locations
+may be pending at specification time but must be resolved from the plan before tests.
+These references are traceability, not implementation design.]
+
+| ID / requirement | Files (source and test) | Main methods / operations | Condition / input | Expected observable result | Why correct / independent source | Wrong variant / bug rejected |
+|---|---|---|---|---|---|---|
+| BM-001 / FR-001 | [owner; test] | [actual or planned operation] | [concrete case] | [observable result] | [requirement/invariant + independent derivation] | [plausible bug + distinguishing assertion] |
+
+[Ask “Почему этот результат правильный?” for each expectation. Link matrix row IDs
+to the existing task/test/evidence mapping. Record observed wrong-variant rejection
+in verification; hypothetical bugs or green counts alone do not establish sensitivity.]
+
 ## Key entities
 
 [Concepts and identity/relationships if needed; no implementation design. Omit if irrelevant.]

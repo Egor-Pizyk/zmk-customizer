@@ -8,6 +8,64 @@ Tests assert what the product must do, independently of its implementation. Inpu
 come from requirement examples, historical project fixtures and pinned upstream
 ZMK output. Expectations must not be computed by the function being tested.
 
+### Behavior before implementation
+
+First determine the correct observable behavior from an accepted requirement,
+domain invariant, independently worked example, historical compatibility fixture or
+verified pinned ZMK source. Resolve material uncertainty before choosing an expected
+value. Existing implementation output is not its own specification. Then define the
+matrix below and write tests; implementation follows those contracts. Preserve the
+existing tests-first rules for domain, storage, generators and bug regressions.
+
+### Core behavior matrix in the specification
+
+Before writing new tests or changing their expected results, add/update the affected
+core behavior rows in the owning `spec.md`. Cover main outcomes, relevant failure/
+boundary cases and preserved contracts; do not enumerate every helper or duplicate
+an existing row for each permutation. Reuse stable row IDs and link the existing
+requirement/task/test/evidence mapping rather than maintaining a second copy.
+
+| ID / requirement | Files (source and test) | Main methods / operations | Condition / input | Expected observable result | Why correct / independent source | Wrong variant / bug the test rejects |
+|---|---|---|---|---|---|---|
+| BM-001 / FR-… | [owning file; test file] | [public method/operation] | [concrete state, input or boundary] | [specific output, rejection or preserved state] | [requirement/invariant/source plus independently derived example] | [plausible incorrect result and the assertion that distinguishes it] |
+
+The matrix is behavioral traceability, not implementation design. During specification,
+file/method locations may be pending; fill them from the plan before writing the test.
+Do not invent APIs merely to fill a cell. For existing code use actual owners; planned
+paths/symbols are explicitly marked. If no owning spec exists, establish ownership
+before product tests; tooling tests may use their owning maintenance specification.
+Documentation-only changes that add no tests need no artificial matrix.
+
+### Review the expected result
+
+For every affected core row ask **“Why is this result correct?”**
+(“Почему этот результат правильный?”). Point to the source and show enough derivation
+to check the exact expected value independently. “The code returns it”, a copied
+snapshot or a mirrored implementation formula is not an answer. Use this review
+when first writing expectations and whenever changing them to fix a failing test.
+Keep the explanation in the matrix; add a test comment only for non-obvious reasoning.
+
+### Evidence that tests reject wrong behavior
+
+A green run becomes convincing when the wrong behaviors it actually rejects are
+known. Each core row names a plausible bug and its distinguishing assertion; record
+observed rejection evidence for the core behavior in the existing verification
+journal, linked by row ID. Use a reproduced pre-fix regression or a small controlled
+behavioral mutation/counterexample probe. One probe may support several rows when
+its observed failures demonstrate their assertions; no full mutation suite is
+required per row or task. Mere enumeration of hypothetical bugs is not evidence. Keep the intended assertions
+unchanged while probing a plausible behavior defect; changing expected values merely
+to force a failure proves nothing.
+
+A missing export, compile/lint error, timeout or broken runner is preliminary red,
+not proof of behavioral sensitivity. Require the intended observable or saved/output
+assertion to reject the incorrect behavior. Mutation probes restore exact source
+bytes and follow runner safety rules. An agent forbidden to edit production code
+hands probes to the implementer or an existing mutation runner. Record unprobed
+variants as limits; do not claim they are detected. If a meaningful wrong variant
+passes, strengthen the scenario/assertion before claiming that behavior protected.
+Run the mandatory changed check only at the completed logical checkpoint below.
+
 | Contract | Protection |
 |---|---|
 | Every edit preserves unrelated keys, layers and wiring | Pure domain tests, frozen-input edit sequences, exact undo/redo and JSON round trips |

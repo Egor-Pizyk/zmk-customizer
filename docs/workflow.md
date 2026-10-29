@@ -15,7 +15,7 @@ New capabilities and changes to user-visible contracts require a specification b
 | Documentation / analysis | Edit or report directly; verify content, links and instruction consistency. No product test run is required for prose-only changes |
 | Dependency / tooling maintenance | Use focused scope and checks; add an ADR when dependency policy or another accepted decision changes. A new developer capability follows full SDD |
 
-Do not use the smaller routes to hide new behavior. For mixed work, apply the stronger route to the affected behavior. Tests-first is mandatory for domain, storage and generator behavior, and for bug regressions. UI testing and browser gates are owned by `docs/testing.md`.
+Do not use the smaller routes to hide new behavior. For mixed work, apply the stronger route to the affected behavior. Determine correct behavior first, record the core behavior matrix in the owning spec before writing tests, then implement against those contracts. Tests-first is mandatory for domain, storage and generator behavior, and for bug regressions. Follow [behavior-first test policy](testing.md#behavior-before-implementation), including independent expected-result reasoning and evidence of rejected wrong behavior. UI testing and browser gates are owned by `docs/testing.md`.
 
 ## Full feature flow
 
@@ -46,6 +46,7 @@ explicit task-specific acceptance requirements still apply.
 ## Stage gates
 
 - Before planning: scope, non-goals and acceptance are clear; material questions are resolved.
+- Before tests: add/update the affected core behavior matrix in spec.md, justify expected results and identify wrong variants to reject. Fill source/test owners and methods from the plan.
 - Before implementation: ensure testable requirements, an architecture-compliant plan, requirement/test coverage in tasks and resolved blocking analysis findings.
 - Before completion: record requirement evidence, pass required checks, update task status and disclose material remaining limits.
 - Amend missing requirements or changed contracts before expanding implementation. Code existing alone does not complete a task.

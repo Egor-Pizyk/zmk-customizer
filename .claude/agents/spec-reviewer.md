@@ -12,7 +12,8 @@ Use the feature directory given by the caller; otherwise resolve it through the 
 ## spec.md
 - Scope follows the approved spec and relevant roadmap entry; flag contradictions for reconciliation. Do not enforce stale roadmap text over an approved refinement.
 - Each applicable acceptance criterion appears as a testable requirement or scenario; approved scope refinements are reconciled with the roadmap.
-- No technology (no React, Vite, zod, file paths, function names) — that belongs in plan.md.
+- Product requirements describe what/why; implementation design belongs in plan.md. The core behavior test matrix may reference source/test files and main methods solely for traceability, filled from the plan before tests.
+- Before tests, affected core matrix rows specify conditions, expected results, independent correctness rationale and wrong variants/distinguishing assertions. Green counts or hypothetical bugs alone do not prove sensitivity; verification links observed rejection evidence and unprobed limits.
 - ZMK terms match docs/domain-model.md (shield, kscan, matrix transform, physical layout, behavior, combo).
 - Remaining `[NEEDS CLARIFICATION]` markers listed; roadmap "Open" items for this feature are either resolved or marked.
 

@@ -138,3 +138,21 @@ related fixes use focused diagnostics; finish the next checkpoint before rerunni
 an invalidated receipt. Red-only TDD steps remain intermediate until their red/green
 implementation unit is ready. Exact-tree pre-commit receipts, tests-first, test
 selection and CI coverage are unchanged. This is instruction-only maintenance.
+
+
+## Behavior-first test contracts — 2026-10-29
+
+Owner request: establish correct behavior before implementation; before tests, write
+a core behavior matrix in the owning spec with files, methods, conditions, expected
+results, correctness rationale and bugs rejected. Testing owns expected-result review
+(“Почему этот результат правильный?”) and observed wrong-variant rejection evidence;
+green counts and hypothetical bug lists alone are insufficient. Existing tests-first
+and logical changed-check cadence remain. File/method references are traceability,
+filled from the plan before tests, rather than implementation design in requirements.
+
+Updated workflow, bootstrap, domain-test-writer, spec reviewer and active Spec Kit
+spec/plan/task overrides. The domain agent can update matrix/evidence but not src/;
+source mutations remain implementer/runner work. Missing exports are preliminary red,
+not behavioral sensitivity. Reuse the existing requirement/task/test/evidence mapping
+and targeted probes rather than adding a full mutation suite per row. No product
+behavior, runtime dependencies or test assertions changed in this maintenance task.
