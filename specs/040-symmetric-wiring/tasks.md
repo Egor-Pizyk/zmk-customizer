@@ -198,4 +198,4 @@ Evidence первоначально **не выполнено**; после ис
 
 Prettify requirements/tasks above are withdrawn from the current release by explicit user request, including T047–T051 and Prettify portions of shared/performance gates. Historical checked tasks describe past work, not current availability. Other feature requirements remain unchanged.
 
-- [ ] T082 Remove Prettify implementation/public commands/UI/copy; retain schema/data and Generate preview/locks/history. Tests-first absence regression; replace relevant native checks, update onboarding/roadmap, review light/dark layout and run focus/final gates.
+- [x] T082 Remove Prettify implementation/public commands/UI/copy; retain schema/data and Generate preview/locks/history. Tests-first absence regression; replace relevant native checks, update onboarding/roadmap, review light/dark layout and run focus/final gates.
