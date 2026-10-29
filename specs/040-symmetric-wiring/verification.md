@@ -305,3 +305,6 @@ Rendered review UI040-DETOUR-01 passed for the corrected fixed-site recovery sco
 
 
 Native real-file follow-up3/3 passed (`040-prettify-native-export.log`,12.3s): nonzero Prettify geometry change on the complete independent six-key matrix retains exact electrical relations and every actual downloaded ZIP path/content byte. No ZMK generation syntax change. Required final staged gate follows.
+
+
+T081 implemented and committed as `3a1567f`. Mandatory final tree `7e984340bfcc8ec03dd4fbf5aaa4a1877825bd20` against61ff1ee passed all static checks,352 related unit tests in80 suites and190/190 Chromium journeys (including all six native performance cases),426721ms. Receipt `.check-logs/7e984340bfcc-61ff1ee95024/{summary,related,passed}.json`; pre-commit reused the exact snapshot. Six targeted cross-engine detour cases and the real matrix ZIP check are recorded above. This fixes the reproduced obsolete-obstacle refusal class; exact screenshot Project/w11 was not supplied or inspected. Fixed-site/free-end/contact preservation still applies; coordinated movable-junction/full symmetry/large-scale/manual040 requirements remain open. Dev5173 returns200 and reflects the source; no user browser/project was changed and no production deployment is claimed. This task/evidence closure is documentation-only.
