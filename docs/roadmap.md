@@ -8,7 +8,7 @@ The following major has a separate [discovery roadmap](roadmap-2.0.0.md), target
 
 A later [3.0.0 discovery roadmap](roadmap-3.0.0.md) records the candidate keycap generator and public project references. It does not expand the first-major or 2.0.0 scope.
 
-Features in implementation order. User decision (2026-10-25): execute **036 → 037**; proposed stage 038 is cancelled; 037 remains the last product feature. One feature = one Spec Kit branch `NNN-short-name` = one `specs/NNN-short-name/` directory (AGENTS.md §6). Numbers of specified features (a `specs/NNN-*` directory exists) are immutable. A feature added out of order takes the next number and every planned, not yet specified feature after it moves up; the added feature's section records the shift, because older specs keep the old numbers. Spec Kit numbers specs by counting existing `specs/` directories, so run `/speckit-specify` in this order to keep numbers aligned with this file.
+Features in implementation order. User decision (2026-10-25): execute **036 → 037**; the proposed residual audit stage (then called 038) is cancelled; 037 remains the last product feature within that first-major schedule. On 2026-10-26 the owner requested a distinct JointJS migration, now specified as 038 below, with release allocation left open. One feature = one Spec Kit branch `NNN-short-name` = one `specs/NNN-short-name/` directory (AGENTS.md §6). Numbers of specified features (a `specs/NNN-*` directory exists) are immutable. A feature added out of order takes the next number and every planned, not yet specified feature after it moves up; the added feature's section records the shift, because older specs keep the old numbers. Spec Kit numbers specs by counting existing `specs/` directories, so run `/speckit-specify` in this order to keep numbers aligned with this file.
 
 Ordering rule: every feature ends with something a user can load, see and download. Generators come before editors: feature 009 generates real files from preset keyboards, so each later editor changes a project whose output is already visible in the export preview and covered by golden tests. Exceptions, added on user request: 003 schematic, the 004/005 bindings editors, the 006 Action panel rework, 007 layers and 008 diodes come before 009; they store project data only, and 009 generates files from it.
 
@@ -404,7 +404,7 @@ Was 005 until 2026-10-06; on user request it comes before the shield generators 
 
 ## 014 — keymap-editor
 
-**Specified:** [`specs/014-keymap-editor/spec.md`](../specs/014-keymap-editor/spec.md). Acceptance and discovered gaps: category search and inspected-key Escape focus recovery. Automated acceptance is implemented; the manual accessibility completion gate remains pending in [`verification.md`](../specs/014-keymap-editor/verification.md).
+**Specified:** [`specs/014-keymap-editor/spec.md`](../specs/014-keymap-editor/spec.md). Acceptance and discovered gaps: category search and inspected-key Escape focus recovery. Automated acceptance is implemented; historical unperformed manual accessibility checks are recorded in [`verification.md`](../specs/014-keymap-editor/verification.md).
 
 **Reduced by 004 and 007 (2026-09-28).** The keycode picker, built-in behaviors, catalog, keymap view and list alternative are delivered by 004 bindings-keycaps; layer management and layer behaviors by 007 layers. What remains here: the keymap round-trip acceptance against the preset golden files once shield generators (009) and the layout editor (012) exist, and any gaps found then. The original scope is kept below for reference.
 
@@ -678,15 +678,15 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 22. **Canvas control overlap.** Reserve canvas control space so expanded or moved Tools cannot cover Snap/Zoom/Center on narrow layouts; preserve pointer/keyboard access and hints. Owner: 001/canvas, 036 FR-037.
 23. **Preview visibility.** Keep active layout/wiring preview status and Apply/Cancel visible while nested editor content scrolls, preserving cancellation, refusals and one-step history. Owner: 033/036 FR-038.
 
-**Specification and verification gates.** Reproduce each reported bug before choosing a fix; clarify the exact panel/buttons, rotation-snap thresholds, encoder pin model and clipboard scope. Distinguish bug regressions from new capabilities (encoder placement/wiring, magnetic snap and resizing the panel) and use the appropriate SDD route. Amend the owning requirements/contracts and preserve a report → requirement → task → regression → evidence mapping; do not mark this stage done merely because a related earlier feature shipped. Use the mandatory pre/post UI/UX workflow when implementing the interface. Check real canvas gestures, keyboard behavior, preview/Apply/Cancel, one-step Undo/Redo, save/reload and JSON/export agreement where affected. Preserve existing projects, manual wiring, electrical connections, fixed-size switch editing policy and the pinned ZMK v0.3.0 target. Any schema changes require migrations and old-file tests; any changed ZMK output requires verified reference notes and independent golden/build evidence. Record actual manual accessibility limits.
+**Specification and verification gates.** Reproduce each reported bug before choosing a fix; clarify the exact panel/buttons, rotation-snap thresholds, encoder pin model and clipboard scope. Distinguish bug regressions from new capabilities (encoder placement/wiring, magnetic snap and resizing the panel) and use the appropriate SDD route. Amend the owning requirements/contracts and preserve a report → requirement → task → regression → evidence mapping; do not mark this stage done merely because a related earlier feature shipped. Use affected requirements and focused automated regression checks; no generic pre/post UI or manual accessibility audit is required. Check real canvas gestures, keyboard behavior, preview/Apply/Cancel, one-step Undo/Redo, save/reload and JSON/export agreement where affected. Preserve existing projects, manual wiring, electrical connections, fixed-size switch editing policy and the pinned ZMK v0.3.0 target. Any schema changes require migrations and old-file tests; any changed ZMK output requires verified reference notes and independent golden/build evidence. Record actual manual accessibility limits.
 
 **Done when.** All 21 original items and audit follow-ups 22–23 have agreed acceptance criteria and verified outcomes, including a 2×2 wired movement regression, topology round trips, initially empty wiring, both sides of L-shaped wire crossings, wire marquee selection, macOS clipboard use and center-preserving pointer/numeric rotation. Report unresolved items explicitly; do not silently treat them as completed or defer them beyond the first-major milestone.
 
-### 037 — interactive-onboarding (implement last)
+### 037 — interactive-onboarding (implement last within first-major scope)
 
 **Goal.** Guide a first-time user through the product with short explanations and real actions, ending with their first simple custom keyboard built from scratch: a 3×3 macropad and its downloadable ZMK configuration.
 
-**Ordering.** Next after delivered 036; proposed 038 was cancelled by the user on 2026-10-25. Retain number 037. Added on user request after keyboard-presets. Implement after every other planned product feature so the tour describes the complete product. Keep it last when adding future roadmap items.
+**Ordering.** Next after delivered 036; proposed 038 was cancelled by the user on 2026-10-25. Retain number 037. Added on user request after keyboard-presets. Implement after every other planned product feature so the tour describes the complete product. Keep it last within that first-major schedule. The distinct JointJS migration requested on 2026-10-26 is tracked separately below and must preserve/update this onboarding.
 
 
 **In scope**
@@ -711,6 +711,26 @@ Choose a target ZMK version (today fixed to v0.3, ADR 0010); catalog and fixture
 Parsing existing ZMK shield files back into a project (Devicetree parsing), custom board definitions, in-browser compilation or flashing (docs/product.md).
 
 ---
+
+## Additional owner-requested migration — 2026-10-26
+
+### 038 — jointjs-schematic-editor
+
+**Status.** [Specified](../specs/038-jointjs-schematic-editor/spec.md); planned; ready for task generation. This new directory is unrelated to the residual audit stage cancelled before specification on 2026-10-25. No existing feature number changes. Release allocation is open; do not silently add it to the historical first-major or mechanical/keycap roadmap.
+
+**Goal.** Adopt open-source JointJS core for the Schematic diagram and applicable interactions while preserving the accepted editor behavior. Project remains the only committed state; the diagram displays it or an isolated proposal, and completed gestures invoke authoritative domain operations. Retain electrical nets, routing policy, validation, storage, generators and project Undo/Redo in their existing layers.
+
+**Scope.** Preserve keys/diodes/encoders, manual wires/corners, durable contacts, insulation, section/mixed selection and deletion, Rebuild preview/Apply/Cancel, accessible alternatives, old files, deterministic export and offline operation. Keep the Bindings canvas and existing panels. No new grouping UX, paid JointJS+ components, libavoid or electrical-engine replacement. Update onboarding targets and checks where affected.
+
+**Ordering.** The owner explicitly requested this additional feature while PRs #29/#30 are open. Keep a separate branch from current main and reconcile overlapping changes merged before implementation; do not absorb another active feature or create a stack. Planning must record version/license/core capability evidence, dependency/presentation ADR and measurable parity/performance gates before production adoption.
+
+### 040 — symmetric-wiring
+
+**Status.** [Clarified specification](../specs/040-symmetric-wiring/spec.md), 2026-10-27; пять ответов приняты, [план подготовлен](../specs/040-symmetric-wiring/plan.md); [задачи подготовлены](../specs/040-symmetric-wiring/tasks.md), следующий этап speckit-analyze; реализация не начата. 039 уже занят focused-local-checks в отдельной ветке; существующие номера не меняются.
+
+**Goal and scope.** Единственная геометрия генерации матрицы — симметричные шины; Direct с отдельными локальными GPIO/GND-маршрутами без общих отрезков, независимые переключатели пинов/диодов, генерация с заменой, защищённые провода, области, диагностика и сохраняемые настройки. Prettify снят с текущего scope по запросу пользователя2026-10-29; возможное возвращение требует отдельного решения. Остальные возможности обязательны; MVP и последующие этапы находятся внутри одной фичи.
+
+**Ordering.** После 038. Пользователь явно запросил ветку от текущей 038 с включением main при открытом PR #34; это записанная зависимость и исключение из старта от main, а не неявный стек. Сейчас только спецификация; реализация/слияние после принятия 038 и согласования основания с main. Не расширяет историческую первую major, механическую или keycap roadmap; релизная принадлежность открыта. [Журнал](../specs/040-symmetric-wiring/verification.md).
 
 ## Open decisions (AGENTS.md is silent)
 

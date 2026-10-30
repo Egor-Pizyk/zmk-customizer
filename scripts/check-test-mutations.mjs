@@ -21,7 +21,7 @@ export const MUTATIONS = [
   ],
   [
     'deleted key keeps layer bindings',
-    'src/domain/keys/remove-key.ts',
+    'src/domain/keys/remove-key-candidate.ts',
     'keyId !== input.keyId',
     'true',
     ['tests/unit/domain/keys/remove-key.test.ts'],

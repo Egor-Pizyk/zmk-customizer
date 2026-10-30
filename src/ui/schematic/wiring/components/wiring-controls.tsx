@@ -1,16 +1,17 @@
-import type { ReactNode } from 'react';
+import type { ReactNode, ComponentProps } from 'react';
+import { WiringRoutingControls } from './wiring-routing-controls';
 import { WiringOptionsControls } from './wiring-options-controls';
-import { WiringHalfControls } from './wiring-half-controls';
+import { WiringAssignments } from './wiring-assignments';
 import { getControllerBoard } from '@catalog/controllers';
 import { initializeWiring } from '@domain/wiring/editing';
 import type { Half, Project } from '@domain';
-import { WiringTable } from './wiring-table';
 import type { useWiringPreview } from '@ui/schematic/wiring/logic';
 import { useProject, getProjectAnalysis } from '@ui/project/logic';
 import { useState } from 'react';
 
 type WiringControlsProps = ReturnType<typeof useWiringPreview> & {
   readonly children?: ReactNode;
+  readonly selection?: ComponentProps<typeof WiringRoutingControls>['selection'];
 };
 export function WiringControls(props: WiringControlsProps) {
   const { tutorial } = useProject();
@@ -55,31 +56,19 @@ function WiringContent(props: WiringControlsProps & { readonly project: Project 
   const handleCell = (cell: { keyId: string; row: number; col: number; half: Half }) => {
     props.handleEdit({ kind: 'cell', ...cell, board });
   };
+  const configuration = <WiringOptionsControls project={project} onEdit={props.handleEdit} />;
   return (
-    <div className="flex max-h-96 flex-col gap-4 overflow-auto px-4 pb-4">
+    <WiringRoutingControls
+      project={props.previewProject}
+      selection={props.selection}
+      hasPreview={props.hasPreview}
+      onEdit={props.handleEdit}
+      configuration={configuration}
+    >
       {props.hasPreview ? <WiringPreviewInfo {...props} /> : undefined}
-      <p className="text-text-muted">
-        Assignments change the actual schematic connections. Inspect rerouted wires and diode
-        changes before applying. Rebuild wiring uses visible centers and the current grid; adjust
-        irregular clusters in the table. Rebuilding proposes free GPIOs; review these against your
-        physical hardware before applying. These pins are not detected hardware wiring.
-      </p>
-      <WiringProposalSummary {...props} />
-      <WiringOptionsControls project={project} onEdit={props.handleEdit} />
-      {(['left', ...(wiring.topology === 'split' ? (['right'] as const) : [])] as const).map(
-        (half) => (
-          <WiringHalfControls
-            key={half}
-            half={half}
-            project={project}
-            onEdit={props.handleEdit}
-            onAssignCell={handleCell}
-          />
-        ),
-      )}
-      <WiringTable project={project} onAssignCell={handleCell} />
+      <WiringAssignments project={project} onEdit={props.handleEdit} onAssignCell={handleCell} />
       <WiringFeedback {...props} />
-    </div>
+    </WiringRoutingControls>
   );
 }
 
@@ -94,32 +83,12 @@ function WiringFeedback(props: WiringControlsProps) {
       )
     : [];
 
-  return (
-    <>
-      {props.failure === undefined ? undefined : (
-        <p role="alert" className="text-danger">
-          {props.failure}
-        </p>
-      )}
-      {issues.length === 0 ? undefined : (
-        <ul className="text-danger">
-          {issues.map((issue) => (
-            <li key={`${issue.code}:${issue.path.join('.')}`}>{issue.message}</li>
-          ))}
-        </ul>
-      )}
-    </>
-  );
-}
-
-function WiringProposalSummary(props: WiringControlsProps) {
-  return (
-    <>
-      {props.summary === undefined ? undefined : (
-        <output>{`Retained ${props.summary.retained}; added ${props.summary.added}; rerouted ${props.summary.rerouted}; removed ${props.summary.removed}. Keys: ${props.summary.keyIds.join(', ') || 'none'}; terminals: ${props.summary.terminalIds.join(', ') || 'none'}.`}</output>
-      )}
-      {props.message === undefined ? undefined : <output>{props.message}</output>}
-    </>
+  return issues.length === 0 ? undefined : (
+    <ul className="text-danger">
+      {issues.map((issue) => (
+        <li key={`${issue.code}:${issue.path.join('.')}`}>{issue.message}</li>
+      ))}
+    </ul>
   );
 }
 

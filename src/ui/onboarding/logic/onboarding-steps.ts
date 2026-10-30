@@ -58,7 +58,7 @@ export const ONBOARDING_CONTENT = {
     title: 'Connect the matrix',
     why: 'A 3×3 matrix reads nine keys with six lines: three rows and three columns. Wire crossings and diode polarity determine the real electrical connections.',
     action:
-      'Open Wiring, keep Unibody and Matrix, choose the matching diode direction, then Rebuild wiring. Inspect the preview and press Apply. Manual wiring is also supported. Preview alone is not saved.',
+      'Open Wiring, keep Unibody and Matrix, choose the matching diode direction, then Generate wiring. Inspect the preview and press Apply. Manual wiring is also supported. Preview alone is not saved.',
     target: 'schematic-editors',
     workspace: 'schematic',
     requiresAction: true,

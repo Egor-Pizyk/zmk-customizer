@@ -1,7 +1,9 @@
 import { PROJECT_BUDGET } from './project-budget';
 import { BOARD_PIN_COUNT } from '@domain/wires';
-import type { Project, WiringTerminal } from '@domain';
+import type { Project, WiringTerminal, RoutingSettings } from '@domain';
 import * as z from 'zod';
+import { ZMK_LIMITS } from '@catalog/firmware';
+import { roundU } from '@domain/geometry';
 
 export const wiringSchema = z
   .strictObject({
@@ -76,4 +78,64 @@ function fitsGridBudget(wiring: { readonly terminals: readonly WiringTerminal[] 
       PROJECT_BUDGET.crossings
     );
   });
+}
+
+const maxDistanceU = (ZMK_LIMITS.maxLayoutCell - ZMK_LIMITS.minLayoutCell) / 100;
+const distance = z
+  .number()
+  .positive()
+  .max(maxDistanceU)
+  .refine((value) => roundU(value) > 0, {
+    message: 'Use a distance of at least 0.0001u after rounding.',
+  });
+
+export const routingSchema = z.strictObject({
+  matrixStyle: z.enum(['existing', 'symmetric-bus']),
+  offsetU: distance,
+  clearanceU: distance,
+  fallbackRowIntervalU: distance,
+  mirrorAxisXU: z
+    .number()
+    .min(ZMK_LIMITS.minLayoutCell / 100)
+    .max(ZMK_LIMITS.maxLayoutCell / 100)
+    .exactOptional(),
+  preferredScope: z.enum(['all', 'half', 'selection']),
+  preferredHalf: z.enum(['left', 'right']).exactOptional(),
+  rowPin: z.literal([1, 2]).exactOptional(),
+  diodeSide: z.enum(['row', 'col']).exactOptional(),
+  targetCells: z
+    .array(
+      z.strictObject({
+        keyId: z
+          .string()
+          .regex(/^k\d+$/u)
+          .max(PROJECT_BUDGET.idLength),
+        half: z.enum(['left', 'right']),
+        row: z.int().min(0).max(254),
+        col: z.int().min(0).max(254),
+      }),
+    )
+    .max(PROJECT_BUDGET.keys)
+    .exactOptional(),
+}) satisfies z.ZodType<RoutingSettings>;
+
+export function findRoutingReferenceIssues(project: Pick<Project, 'routing' | 'keys'>) {
+  const seen = new Set<string>();
+  const issues: { message: string; path: (string | number)[] }[] = [];
+  for (const [index, cell] of (project.routing?.targetCells ?? []).entries()) {
+    const key = project.keys.find((entry) => entry.id === cell.keyId);
+    if (key === undefined || seen.has(cell.keyId)) {
+      issues.push({
+        message: 'Choose an existing key once per desired assignment.',
+        path: ['routing', 'targetCells', index, 'keyId'],
+      });
+    } else if ((key.half ?? 'left') !== cell.half) {
+      issues.push({
+        message: 'The desired assignment must use the key’s half.',
+        path: ['routing', 'targetCells', index, 'half'],
+      });
+    }
+    seen.add(cell.keyId);
+  }
+  return issues;
 }

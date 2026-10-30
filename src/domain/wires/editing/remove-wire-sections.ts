@@ -1,13 +1,20 @@
+import { validateWireProtection } from '@domain/wires/protection';
+import { getWireSections } from '@domain/wires';
+import { findWireContacts } from '@domain/wires/contacts';
 import { getSurvivingWireSpans } from './get-surviving-wire-spans';
-import { getWirePinContacts, getWirePath, getKeyPinPosition } from '@domain/wires/geometry';
+import {
+  getWirePinContacts,
+  getWirePath,
+  getKeyPinPosition,
+  getWireHalf,
+} from '@domain/wires/geometry';
 import type { Project, Result, Wire, WireEnd, WirePoint } from '@domain';
-import { getWireSections, findWireContacts } from '@domain/wires';
 import type { WireSection } from '@domain/wires';
-import { getWireHalf } from '@domain/wiring';
+
 import { getNets } from '@domain/wires/nets';
 import { createEntityId, getProjectResourceError } from '@domain/project';
 
-export function removeWireSections(
+function removeWireSectionsCandidate(
   project: Project,
   input: { readonly base: Project; readonly sectionIds: readonly string[] },
 ): Result<Project, string> {
@@ -238,4 +245,16 @@ function getFragmentContacts(project: Project, wire: Wire, path: readonly WirePo
           }),
         }),
   };
+}
+
+export function removeWireSections(
+  project: Project,
+  input: Parameters<typeof removeWireSectionsCandidate>[1],
+): Result<Project, string> {
+  const result = removeWireSectionsCandidate(project, input);
+  if (!result.ok) {
+    return result;
+  }
+  const issue = validateWireProtection(project, result.value)[0];
+  return issue === undefined ? result : { ok: false, error: issue.message };
 }

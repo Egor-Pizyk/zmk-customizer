@@ -95,3 +95,7 @@ try { localStorage.setItem(PROJECT_STORAGE_KEY, json); } catch {}
 
 - oxlint: `no-console`, `no-empty` (empty `catch`), `no-useless-catch`, `typescript/no-floating-promises` (type-aware, if enabled).
 - Review only: issue shape and message quality, path correctness, storage failure table, no network APIs, error boundary behavior, no PII in exports.
+
+## External diagram renderer boundary (038)
+
+[ADR0023](../../decisions/0023-jointjs-schematic-projection.md) permits a narrowly scoped adapter boundary for recoverable failures of the external Graph/Paper mount/update/dispose calls. Input construction and all application/domain operations remain outside its catch. Classify supported external failures, detach unsafe interaction, preserve the accepted project/history and show readable feedback with Retry diagram; reconstruct from current Project without a commit. Do not silently continue a stale interactive scene, retry automatically, swallow unknown application/programmer errors or add another React error boundary. Tests must establish recovery as well as propagation of programmer errors. This exception does not authorize generic catch wrappers around rendering, reducers or validation.

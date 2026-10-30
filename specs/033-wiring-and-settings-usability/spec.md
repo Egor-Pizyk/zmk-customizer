@@ -104,3 +104,17 @@ The owner requested fixing PR #15 conflicts and enabling automatic merge after C
 
 
 036 FR-029 supersedes the Complete wiring UI requirement: on explicit user selection (2026-10-23), remove its button and retain Rebuild wiring as the sole automatic action with replacement explanation and unchanged preview/Apply/Cancel/history contracts. Additive domain operations/tests remain historical supported contracts, without a UI entry point.
+
+040 compact Wiring amendment (user2026-10-28) supersedes the Rebuild button name/duplicate entry: Generate wiring is the single replacement action, beside the distinct geometry-only Prettify. Matrix generation follows040 retained logical assignment contracts; historical direct retains the supported legacy full generator until its040 replacement is complete. Manual assignments remain available under a disclosure; GPIO stays visible. Preview/Cancel/Apply/history/protection contracts remain unchanged.
+
+
+## Current040 UI override — 2026-10-29
+
+User removes Prettify from the current product. Wiring exposes Generate only, with its existing preview Apply/Cancel, manual editing and locks. Earlier amendments mentioning an optimization action are historical/deferred; no Prettify control, command or onboarding recommendation remains. Saved Project fields are unchanged.
+
+
+## Current040 routing choice override — 2026-10-29
+
+Routing style is removed. Matrix Generate and whole-mode/auto rebuilds use symmetric buses only. Historical existing settings parse losslessly but cannot select a generator; Open does not reroute saved conductors. Direct retains one input GPIO/key and common electrical GND, with distinct local output sites, no shared spans and >=0.1u parallel clearance. Electrical/manual controls and locks remain.
+
+A pointer click on an existing bend without motion selects it without moving/removing that bend or adding history. Drag initialization uses the stored bend coordinate; snapping starts only after actual pointer movement. This preserves precise auto-generated geometry at ordinary zoom.

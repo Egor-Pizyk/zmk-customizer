@@ -7,7 +7,7 @@ import { UNIBODY_PRESET } from '../../../helpers/unibody-preset';
 it('migrates unchanged v9 data and retains all previous content', () => {
   const result = getResultValue(parseProjectFile(fixture));
   expect(result).toMatchObject({
-    schemaVersion: 13,
+    schemaVersion: 14,
     encoders: [],
     behaviors: [],
     combos: [],

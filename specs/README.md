@@ -37,6 +37,10 @@ Read this index when locating feature ownership. Read only the spec, plan, tasks
 - [036-ui-ux-remediation](036-ui-ux-remediation/) — items 1–23 implemented or regression-verified; user-reported manual acceptance; PR #24 merged and v0.5.0 published on 2026-10-25
 - [037-interactive-onboarding](037-interactive-onboarding/) — final scheduled product feature after delivered 036; implementation/acceptance evidence in its verification journal.
 
+- [038-jointjs-schematic-editor](038-jointjs-schematic-editor/) — owner-requested Schematic presentation migration, specified and planned 2026-10-26; Project/domain authority and existing behavior remain. Release allocation is not yet selected.
+
 - [039-focused-local-checks](039-focused-local-checks/) — diagnostic test selection and compact timing/failure reports; final checks remain mandatory.
 
-037 follows delivered 036 directly. The proposed 038 stage was cancelled by the user on 2026-10-25; deferred 020–022 remain deferred.
+037 follows delivered 036 directly within the historical first-major schedule. The proposed residual audit stage was cancelled on 2026-10-25 before any 038 spec directory existed. The new 038 JointJS migration is a distinct owner request, not reinstatement of that stage; deferred 020–022 remain deferred.
+
+- [040-symmetric-wiring](040-symmetric-wiring/) — отдельная фича после 038: симметричная генерация, Prettify и замки; clarify завершён, план подготовлен, задачи подготовлены, следующий этап analyze; реализация не начата. Номер 039 занят спецификацией focused-local-checks в отдельной активной ветке.

@@ -30,7 +30,7 @@ for (const theme of ['light', 'dark'] as const) {
     for (const width of [390, 1024, 1440]) {
       await page.setViewportSize({ width, height: width === 390 ? 844 : 768 });
       await page.getByText('Wiring', { exact: true }).click();
-      await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
+      await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
       for (const direction of [1, -1]) {
         const scanning = page.getByRole('combobox', { name: 'Scanning type', exact: true });
         await scanning.hover();

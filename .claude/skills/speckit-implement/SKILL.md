@@ -21,8 +21,10 @@ preserve requirement identifiers and maintain one requirement → task → check
 mapping. Do not regenerate completed stages without a relevant change.
 
 Project rules take precedence over conflicting generic guidance below:
-- Tests-first and browser coverage follow docs/workflow.md and docs/testing.md;
-  required tests are not optional even when the prompt does not request them.
+- Define behavior/matrix and test contracts before implementation. Follow docs/testing.md:
+  static check after a complete module/import flow, full units at task completion,
+  focused units only after a full-run failure, full E2E only at feature/final completion.
+  No mandatory incomplete-code red run; pre-commit/check:changed are static-only.
 - Supporting research/data-model/contracts/quickstart files are needed only for
   distinct useful content, as defined in docs/workflow.md.
 - Select local checks and completion evidence using docs/commands.md and Git flow;

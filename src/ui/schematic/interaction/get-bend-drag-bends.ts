@@ -1,3 +1,5 @@
+import { refuseProtectedEdit } from './refuse-protected-edit';
+import { getNearestPointOnPath } from '@domain/geometry';
 import { getWirePath } from '@domain/wires/geometry';
 import {
   getWireBendsAfterCornerMove,
@@ -34,6 +36,9 @@ export function insertBendAt(
   state: PointerState,
   input: { readonly wireId: string; readonly point: WirePoint },
 ) {
+  if (refuseProtectedEdit(state, { wireIds: [input.wireId] })) {
+    return;
+  }
   const bends = getWireBendsAfterInsertion(state.project, input);
   if (bends === undefined) {
     return;
@@ -43,7 +48,16 @@ export function insertBendAt(
     state.onHint(resourceError);
     return;
   }
-  state.onSelectionChange({ kind: 'wire', wireId: input.wireId });
+  const wire = state.project.wires.find((candidate) => candidate.id === input.wireId);
+  const activeBend =
+    wire === undefined
+      ? undefined
+      : getNearestPointOnPath(getWirePath(state.project, wire), input.point);
+  state.onSelectionChange({
+    kind: 'wire',
+    wireId: input.wireId,
+    ...(activeBend === undefined ? {} : { activeBend }),
+  });
   state.commit((current) => setWireBends(current, { wireId: input.wireId, bends }));
 }
 
@@ -73,8 +87,11 @@ function isPointOnSegment(input: {
   return isCollinear && withinX && withinY;
 }
 
-export function startBendDrag(state: PointerState, { hit, world, event }: SelectionPress): void {
+export function startBendDrag(state: PointerState, { hit, event }: SelectionPress): void {
   if (hit.kind !== 'bend') {
+    return;
+  }
+  if (refuseProtectedEdit(state, { wireIds: [hit.wireId] })) {
     return;
   }
   const sourceBends =
@@ -90,14 +107,16 @@ export function startBendDrag(state: PointerState, { hit, world, event }: Select
   if (bendIndex === -1) {
     return;
   }
-  event.currentTarget.setPointerCapture(event.pointerId);
-  state.onSelectionChange({ kind: 'wire', wireId: hit.wireId });
+  event.preventDefault();
+  event.focus();
+  event.capture();
+  state.onSelectionChange({ kind: 'wire', wireId: hit.wireId, activeBend: hit.point });
   state.onDragChange({
     kind: 'bend',
     wireId: hit.wireId,
     bendIndex,
     sourceBends,
-    point: hit.bendIndex === undefined ? hit.point : world,
+    point: hit.point,
     collapseToleranceU: (state.snapGridU ?? 2e-6) / 2,
   });
 }

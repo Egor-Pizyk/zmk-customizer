@@ -85,3 +85,74 @@ duplicate accounting, and CLI execution outside the repository with third-party
 files excluded. Static review does not prove independent-agent context quality.
 The maintenance PR owns current-tree check receipts and limits. No product/UI,
 onboarding, schema, generator or firmware behavior changed.
+
+
+## Lazy context and focused checks — 2026-10-29
+
+[ADR0024](decisions/0024-lazy-context-and-focused-review.md) replaces the historical
+startup budget/routing policy above. AGENTS.md is now the only startup document;
+no automatic product/principles/workflow/agent-rules imports. Load applicable sections
+for the next decision/edit, not the union of every matching routing row. Prose-only
+work does not need feature resolution. Reviewer, constitution and Git-flow wording
+use the same lazy lookup. Explicit constraints remain in the bootstrap.
+
+Source-size audit: startup falls from2517 whitespace-delimited words across five
+documents to626 words in AGENTS.md (about75% less). These are not token or latency
+measurements. Routed corpus remains available; audit reports zero missing local
+inline-link targets and zero repeated prose groups. The audit helper now counts
+bootstrap-only startup while keeping deferred documents in the corpus. Its regression
+first failed with the old count, then all4 helper tests passed after correction
+(`.check-logs/lazy-context-{red,green}.log`).
+
+Workflow/testing remove the generic before/after UI/manual accessibility review gate.
+Performance checks may run with independent workloads, including the updated038
+quickstart protocol; isolate only to investigate contention. Product accessibility,
+automated tests, performance budgets and final changed-check gates are preserved.
+Mutation-runner exclusivity remains because those runners temporarily edit source.
+No product runtime behavior changed; final tooling/document checks follow below.
+
+
+The first final snapshote617cf6748ff failed1/129 tooling tests: the pre-existing
+lost-wiring-route mutation still targeted edit-wiring.ts after the earlier routing
+extraction. HEAD already has zero matching anchors there. Updated the mutation path
+to route-assigned-wiring.ts without changing its replacement, test or assertion.
+Anchor contracts pass; the single real browser mutation detects the intended
+user-visible toBeVisible failure and restores exact source bytes
+(`.check-logs/lazy-context-mutation-sensitivity.log`). No application edits remain.
+
+
+Final tree9a6460d228984e39704963e03e4c2357a0298356 against097a767 passes mandatory
+check:changed: types, architecture, guidelines, changed-file lint/format and129/129
+tooling tests,11391ms. Receipt `.check-logs/9a6460d22898-097a767836ac/{summary,passed}.json`;
+commit78f1c31 reused it. No product unit/full browser suite was selected for this
+instruction/tooling change. The targeted mutation probe above is the only browser run.
+This final evidence addition is reporting-only.
+
+
+## Logical changed-check checkpoints — 2026-10-29
+
+Owner clarification: run mandatory check:changed at the logical end of each task item
+or a substantial completed change, not each file edit. Testing owns the cadence;
+commands, workflow, agent rules and bootstrap link/apply it. Intermediate edits and
+related fixes use focused diagnostics; finish the next checkpoint before rerunning
+an invalidated receipt. Red-only TDD steps remain intermediate until their red/green
+implementation unit is ready. Exact-tree pre-commit receipts, tests-first, test
+selection and CI coverage are unchanged. This is instruction-only maintenance.
+
+
+## Behavior-first test contracts — 2026-10-29
+
+Owner request: establish correct behavior before implementation; before tests, write
+a core behavior matrix in the owning spec with files, methods, conditions, expected
+results, correctness rationale and bugs rejected. Testing owns expected-result review
+(“Почему этот результат правильный?”) and observed wrong-variant rejection evidence;
+green counts and hypothetical bug lists alone are insufficient. Existing tests-first
+and logical changed-check cadence remain. File/method references are traceability,
+filled from the plan before tests, rather than implementation design in requirements.
+
+Updated workflow, bootstrap, domain-test-writer, spec reviewer and active Spec Kit
+spec/plan/task overrides. The domain agent can update matrix/evidence but not src/;
+source mutations remain implementer/runner work. Missing exports are preliminary red,
+not behavioral sensitivity. Reuse the existing requirement/task/test/evidence mapping
+and targeted probes rather than adding a full mutation suite per row. No product
+behavior, runtime dependencies or test assertions changed in this maintenance task.

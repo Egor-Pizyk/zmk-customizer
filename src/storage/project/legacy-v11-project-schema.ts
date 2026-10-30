@@ -3,7 +3,7 @@ import { encoderBindingsSchema } from './encoder-schema';
 import { projectContentSchema } from './project-content-schema';
 import { bindingSchema, layerIdSchema } from './binding-schema';
 import { wiringSchema, findTerminalIssues } from './wiring-schema';
-import { PROJECT_BUDGET } from './project-budget';
+import { LEGACY_PROJECT_BUDGET as PROJECT_BUDGET } from './legacy-project-budget';
 import { CONTROLLER_BOARDS } from '@catalog/controllers';
 import { BOARD_PIN_COUNT } from '@domain/wires';
 import type { Project as CurrentProject, Wire, WireEnd, WireEndSide } from '@domain';
@@ -156,7 +156,9 @@ export const legacyV11ProjectSchema = z
     schemaVersion: z.literal(11),
     ...projectContentSchema.shape,
     encoders: z.array(legacyEncoderSchema).max(16),
-    wiring: wiringSchema.exactOptional(),
+    wiring: wiringSchema
+      .refine((wiring) => wiring.terminals.length <= PROJECT_BUDGET.wires)
+      .exactOptional(),
     controllerId: z.enum(CONTROLLER_BOARDS.map((board) => board.id)),
     name: z.string().max(PROJECT_BUDGET.stringLength),
     shieldName: z.string().max(PROJECT_BUDGET.stringLength).exactOptional(),
@@ -214,7 +216,7 @@ export const legacyV11ProjectSchema = z
       }
     }
     const issues = [
-      ...findTerminalIssues({ ...project, schemaVersion: 13 }),
+      ...findTerminalIssues({ ...project, schemaVersion: 14 }),
       ...findDuplicateIds(project.keys, 'keys'),
       ...findDuplicateIds(project.encoders, 'encoders'),
       ...findEncoderBindingIssues(project),

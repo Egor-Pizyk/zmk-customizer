@@ -1,9 +1,8 @@
-import { removeWire } from '@domain/wires/editing';
+import { SelectionProtectionNotice } from './selection-protection-notice';
+import { WireActions } from './wire-actions';
 import type { Wire, WireEndSide } from '@domain';
-import { Button } from '@ui/components/components';
 import { AddWireForm } from './add-wire-form';
 import { BoardPinSelect } from '@ui/schematic/wiring/components';
-import { focusAfterDelete } from '@ui/schematic/interaction';
 import { formatWireEnd } from '@ui/schematic/formatting';
 import type { PartsTableProps } from './parts-list';
 import { PartsTableHead } from './parts-table-head';
@@ -16,6 +15,7 @@ export function PartsWiresTable(props: PartsTableProps) {
   return (
     <div className="flex flex-col gap-2">
       <h3 className="font-semibold">Wires</h3>
+      <SelectionProtectionNotice {...props} />
       {project.wires.length === 0 ? (
         <p className="text-text-muted">
           No wires yet. Pick the Wire tool and click a pin, or add one here.
@@ -47,12 +47,6 @@ function WireRow(props: WireRowProps) {
     onSelectionChange({ kind: 'wire', wireId: wire.id });
   }
 
-  function handleDeleteClick() {
-    commit((current) => removeWire(current, { wireId: wire.id }), `Deleted wire ${wireIndex}`);
-    onSelectionChange();
-    focusAfterDelete({ table: 'wire', index: wireIndex });
-  }
-
   return (
     <tr
       className="align-top data-selected:bg-surface-muted"
@@ -66,14 +60,7 @@ function WireRow(props: WireRowProps) {
         <WireBendsEditor commit={commit} project={project} wire={wire} wireIndex={wireIndex} />
       </td>
       <td>
-        <Button
-          aria-label={`Delete wire ${wireIndex}`}
-          data-parts-delete={`wire:${wireIndex}`}
-          onClick={handleDeleteClick}
-          size="sm"
-        >
-          Delete
-        </Button>
+        <WireActions {...props} />
       </td>
     </tr>
   );

@@ -1,9 +1,10 @@
+import { preserveWireProtection } from '@domain/wires/protection';
 import { captureWireContacts, findWireContactError } from '@domain/wires';
 import { getProjectResourceError } from '@domain/project';
 import { pruneInsulatedCrossings } from '@domain/crossings';
 import type { Project, WirePoint } from '@domain';
 
-export function setWireBends(
+function setWireBendsCandidate(
   project: Project,
   input: { readonly wireId: string; readonly bends: readonly WirePoint[] },
 ): Project {
@@ -24,4 +25,11 @@ export function setWireBends(
     wires.every((wire, index) => wire === project.wires[index])
     ? project
     : pruneInsulatedCrossings({ ...project, wires });
+}
+
+export function setWireBends(
+  project: Project,
+  input: Parameters<typeof setWireBendsCandidate>[1],
+): Project {
+  return preserveWireProtection(project, setWireBendsCandidate(project, input));
 }

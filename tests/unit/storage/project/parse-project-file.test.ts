@@ -27,7 +27,7 @@ function issuePathsOf(raw: string): readonly string[] {
 
 function projectJson(binding: unknown) {
   return JSON.stringify({
-    schemaVersion: 13,
+    schemaVersion: 14,
     encoders: [],
     combos: [],
     macros: [],
@@ -84,7 +84,7 @@ describe('parseProjectFile', () => {
     expect(parseProjectFile('{"schemaVersion":1,"name":"x","extra":true}')).toEqual({
       ok: true,
       value: {
-        schemaVersion: 13,
+        schemaVersion: 14,
         encoders: [],
         combos: [],
         macros: [],
@@ -105,7 +105,7 @@ describe('parseProjectFile', () => {
     expect(parseProjectFile(fixtureV1)).toEqual({
       ok: true,
       value: {
-        schemaVersion: 13,
+        schemaVersion: 14,
         encoders: [],
         combos: [],
         macros: [],

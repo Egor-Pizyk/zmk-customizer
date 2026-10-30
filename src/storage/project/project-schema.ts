@@ -6,7 +6,12 @@ import {
 import { getWireSegmentCount } from '@domain/wires/geometry';
 import { layerSchema } from './project-layer-schema';
 import { projectContentSchema } from './project-content-schema';
-import { wiringSchema, findTerminalIssues } from './wiring-schema';
+import {
+  wiringSchema,
+  findTerminalIssues,
+  routingSchema,
+  findRoutingReferenceIssues,
+} from './wiring-schema';
 import { PROJECT_BUDGET } from './project-budget';
 import { CONTROLLER_BOARDS } from '@catalog/controllers';
 import { BOARD_PIN_COUNT, findWireContactError } from '@domain/wires';
@@ -52,6 +57,7 @@ const checkedWireEndSchema = wireEndSchema.refine(
 );
 
 const wireSchema = z.strictObject({
+  locked: z.literal(true).exactOptional(),
   contactIds: z.array(z.int().min(0).max(1023)).max(1024).exactOptional(),
   half: z.enum(['left', 'right']).exactOptional(),
   id: z
@@ -69,7 +75,6 @@ const wireSchema = z.strictObject({
 });
 
 type Issue = { readonly message: string; readonly path: readonly (string | number)[] };
-
 function findDuplicateIds(items: readonly { readonly id: string }[], collection: string): Issue[] {
   const seen = new Set<string>();
   const issues: Issue[] = [];
@@ -81,7 +86,6 @@ function findDuplicateIds(items: readonly { readonly id: string }[], collection:
   }
   return issues;
 }
-
 function findEndIssues(input: {
   readonly end: WireEnd;
   readonly path: readonly (string | number)[];
@@ -102,7 +106,6 @@ function findEndIssues(input: {
   }
   return [];
 }
-
 function isSamePin(wire: Wire): boolean {
   const { start, end } = wire;
   if (start.kind === 'encoder-pin' && end.kind === 'encoder-pin') {
@@ -115,7 +118,6 @@ function isSamePin(wire: Wire): boolean {
     start.pin === end.pin
   );
 }
-
 function findWireIssues(project: Project): Issue[] {
   const keyIds = new Set(project.keys.map((key) => key.id));
   const wireIds = new Set(project.wires.map((wire) => wire.id));
@@ -162,13 +164,12 @@ function findCrossingIssues(project: Project): Issue[] {
   });
 }
 
-// a layer behavior's layerId may name a deleted layer; no operation dereferences it and
-// validation reports it (spec 007 R2).
 // The top level strips unknown keys (forward compat, tested in parse-project-file.test.ts);
 // every nested node is strict so a malformed binding, wire or key is rejected at its own path.
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(13),
+    schemaVersion: z.literal(14),
+    routing: routingSchema.exactOptional(),
     wireContacts: z
       .array(z.union([contactSchema, z.literal(false)]))
       .max(1024)
@@ -221,6 +222,7 @@ export const projectSchema = z
       }
     }
     const issues = [
+      ...findRoutingReferenceIssues(project),
       ...findTerminalIssues(project),
       ...findDuplicateIds(project.keys, 'keys'),
       ...findDuplicateIds(project.encoders, 'encoders'),

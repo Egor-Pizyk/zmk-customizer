@@ -3,7 +3,7 @@ import { duplicateKeys, removeKeys, renumberKeys } from '@domain/keys';
 import { PROJECT_BUDGET } from '@storage/project';
 import { useProject } from '@ui/project/logic';
 import { Button } from '@ui/components/components';
-import { getSelectedKeyIds } from '@ui/schematic/interaction';
+import { getSelectedKeyIds, refuseProtectedEdit } from '@ui/schematic/interaction';
 import type { PartsTableProps } from '@ui/schematic/parts/components';
 
 const LIMIT_MESSAGE = `A project can contain at most ${PROJECT_BUDGET.keys} keys. Delete keys before duplicating.`;
@@ -14,22 +14,12 @@ export function LayoutActions({ project, selection, onSelectionChange, commit }:
     project.keys.some((key) => key.id === id),
   );
   function handleDuplicateClick() {
-    const next = duplicateKeys(project, { keyIds, maxKeyCount: PROJECT_BUDGET.keys });
-    if (next === project) {
-      announce(LIMIT_MESSAGE);
-      return;
-    }
-    commit(
-      (current) => duplicateKeys(current, { keyIds, maxKeyCount: PROJECT_BUDGET.keys }),
-      `Duplicated ${keyIds.length} keys without wires`,
-    );
-    onSelectionChange({
-      kind: 'multi',
-      keyIds: next.keys.slice(project.keys.length).map((key) => key.id),
-      wireIds: [],
-    });
+    duplicateSelection({ project, keyIds, commit, onSelectionChange, announce });
   }
   function handleDeleteClick() {
+    if (refuseProtectedEdit({ project, onHint: announce }, { keyIds })) {
+      return;
+    }
     commit((current) => removeKeys(current, { keyIds }), `Deleted ${keyIds.length} keys`);
     onSelectionChange();
     requestAnimationFrame(() => {
@@ -82,4 +72,30 @@ function LayoutActionButtons({
       </Button>
     </div>
   );
+}
+
+function duplicateSelection({
+  project,
+  keyIds,
+  commit,
+  onSelectionChange,
+  announce,
+}: Pick<PartsTableProps, 'project' | 'commit' | 'onSelectionChange'> & {
+  readonly keyIds: readonly string[];
+  readonly announce: (text: string) => void;
+}) {
+  const next = duplicateKeys(project, { keyIds, maxKeyCount: PROJECT_BUDGET.keys });
+  if (next === project) {
+    announce(LIMIT_MESSAGE);
+    return;
+  }
+  commit(
+    (current) => duplicateKeys(current, { keyIds, maxKeyCount: PROJECT_BUDGET.keys }),
+    `Duplicated ${keyIds.length} keys without wires`,
+  );
+  onSelectionChange({
+    kind: 'multi',
+    keyIds: next.keys.slice(project.keys.length).map((key) => key.id),
+    wireIds: [],
+  });
 }

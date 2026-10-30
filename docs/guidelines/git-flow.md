@@ -1,7 +1,7 @@
 # Git flow
 
-Owner of branch, PR and delivery rules. Review at startup and before delivery;
-reuse unchanged rules available in context under `AGENTS.md` rather than rereading.
+Owner of branch, PR and delivery rules. Load the relevant section before a Git
+operation or feature dependency decision; reuse unchanged context under `AGENTS.md`.
 [Workflow](../workflow.md) owns SDD; [testing](../testing.md) owns verification.
 
 ## Start
@@ -41,7 +41,9 @@ compare it with the request; persisted selection alone does not establish owners
 
 One feature = one branch and one PR to main, including spec, code, tests and evidence.
 Use separate logical commits for local changes; do not split a feature into PR stacks.
-Run [changed checks](../commands.md), inspect the final diff and record actual limits.
+Follow [separate verification stages](../commands.md): static checks after complete
+modules, all units at task completion, full configured E2E only for the completed
+feature/final commit. Pre-commit is static-only. Inspect the final diff and record limits.
 Required manual acceptance still applies: open a draft when it is outstanding.
 The PR describes the problem, resulting behavior, validation and compatibility limits.
 

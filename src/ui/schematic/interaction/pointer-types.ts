@@ -1,5 +1,4 @@
 import type { RotationSnap } from '@domain/geometry/transforms';
-import type { PointerEvent } from 'react';
 import type { CanvasHit } from './read-canvas-hit';
 import type { Project, WirePoint } from '@domain';
 import type { WireDraft } from './reduce-wire-draft';
@@ -52,6 +51,7 @@ export type Commit = (change: (project: Project) => Project, announcementText?: 
 
 export type SchematicPointerOptions = {
   readonly project: Project;
+  readonly projectRevision?: number;
   readonly activeToolId: ToolId;
   /** Grid step when snapping is on. */
   readonly snapGridU: number | undefined;
@@ -73,5 +73,22 @@ export type PointerState = SchematicPointerOptions & {
 export type SelectionPress = {
   readonly hit: CanvasHit;
   readonly world: WirePoint;
-  readonly event: PointerEvent<SVGSVGElement>;
+  readonly event: SchematicPointerInput;
+};
+
+export type SchematicPointerHandler = (world: WirePoint, event: SchematicPointerInput) => void;
+
+export type SchematicPointerInput = {
+  readonly world: WirePoint;
+  readonly hit: CanvasHit;
+  readonly target: EventTarget | null;
+  readonly pointerId: number;
+  readonly timeStamp: number;
+  readonly shiftKey: boolean;
+  readonly ctrlKey: boolean;
+  readonly metaKey: boolean;
+  readonly capture: () => void;
+  readonly release: () => void;
+  readonly focus: () => void;
+  readonly preventDefault: () => void;
 };

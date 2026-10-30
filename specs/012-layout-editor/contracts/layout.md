@@ -21,3 +21,10 @@ Acceptance: select a switch; no Resize controls or width/height inputs appear, i
 ## Numeric rotation amendment (036 items 18–19)
 
 036 FR-034 supersedes implicit common-origin angle editing: numeric angle alone rotates each selected key about its own visible center. Explicitly editing an Origin coordinate retains deliberate absolute-origin transforms. Pointer rotation and persisted geometry representation remain unchanged. Clipboard semantics are defined by 036 FR-033.
+
+
+## Feature040 extension (implementation target)
+
+[040](../../040-symmetric-wiring/spec.md) adds persisted wire locks and routing preferences in the next schema after the integrated base (currently v13→v14). Historical file versions remain frozen; legacy wires are unlocked, geometry and electrical meaning do not regenerate on Open. Protected direct wire/key/terminal/diode/encoder edits and mixed groups refuse atomically with a guarding-wire link; protection does not propagate through an entire net. Explicit unlock is a separate undoable lock-only command.
+
+Regenerate and Prettify are separate read-only proposals with Apply/Cancel, current source revision checks and one Undo per changing Apply. Prettify preserves electrical relations/free ends/branch contacts/GPIO/diodes, without adding missing links. Existing matrix and bus matrix are geometry styles; new direct regeneration explicitly proposes upper-pin input/lower-pin separate GND paths, preserving legacy wiring until Apply. Pin swap and diode-side controls act globally and independently on logical states; physical diode pin follows rowPin/diodeSide with correct polarity. No-op/Cancel add no history. All current source/storage/generator authority and keyboard/table alternatives remain.

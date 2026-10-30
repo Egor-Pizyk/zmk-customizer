@@ -102,6 +102,7 @@ export function assertNever(value: never): never {
 - User-causable problems are values, never exceptions:
   - Domain validation: `validateProject(project): readonly ValidationIssue[]` (shape in `observability.md`).
   - Domain operations are total: they apply the change even if it creates a conflict (e.g. two keys on one cell); validation reports it so the UI can highlight it.
+  - Protected edits (040) and wiring proposals are total results with atomic refusal: never change a locked connection or apply only part of a group. Existing Project-returning operations return the original project on refusal and expose a pure validation/query for actionable feedback; Result-returning operations return a structured failure. Ordinary editable validation conflicts retain the rule above. Explicit unlock is a separate lock-only edit, not an unlock-and-mutate bypass.
   - Parsing untrusted input: `Result<T, E>` = `{ ok: true; value: T } | { ok: false; error: E }`.
 - `throw` only for programmer errors (impossible states, `assertNever`). Never catch those to continue; they reach the error boundary.
 

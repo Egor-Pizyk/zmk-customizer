@@ -1,6 +1,6 @@
 # 0021. Selective local checks and PR delivery
 
-Status: Accepted
+Status: Partially superseded by 0025 (local combined checks/browser expansion)
 Date: 2026-10-21
 
 ## Decision

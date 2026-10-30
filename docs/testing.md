@@ -8,6 +8,64 @@ Tests assert what the product must do, independently of its implementation. Inpu
 come from requirement examples, historical project fixtures and pinned upstream
 ZMK output. Expectations must not be computed by the function being tested.
 
+### Behavior before implementation
+
+First determine the correct observable behavior from an accepted requirement,
+domain invariant, independently worked example, historical compatibility fixture or
+verified pinned ZMK source. Resolve material uncertainty before choosing an expected
+value. Existing implementation output is not its own specification. Then define the
+matrix below and write tests; implementation follows those contracts. Write the behavioral contracts before implementation where practical; execute tests
+at the task/feature boundaries below, not while APIs/imports are knowingly incomplete.
+
+### Core behavior matrix in the specification
+
+Before writing new tests or changing their expected results, add/update the affected
+core behavior rows in the owning `spec.md`. Cover main outcomes, relevant failure/
+boundary cases and preserved contracts; do not enumerate every helper or duplicate
+an existing row for each permutation. Reuse stable row IDs and link the existing
+requirement/task/test/evidence mapping rather than maintaining a second copy.
+
+| ID / requirement | Files (source and test) | Main methods / operations | Condition / input | Expected observable result | Why correct / independent source | Wrong variant / bug the test rejects |
+|---|---|---|---|---|---|---|
+| BM-001 / FR-… | [owning file; test file] | [public method/operation] | [concrete state, input or boundary] | [specific output, rejection or preserved state] | [requirement/invariant/source plus independently derived example] | [plausible incorrect result and the assertion that distinguishes it] |
+
+The matrix is behavioral traceability, not implementation design. During specification,
+file/method locations may be pending; fill them from the plan before writing the test.
+Do not invent APIs merely to fill a cell. For existing code use actual owners; planned
+paths/symbols are explicitly marked. If no owning spec exists, establish ownership
+before product tests; tooling tests may use their owning maintenance specification.
+Documentation-only changes that add no tests need no artificial matrix.
+
+### Review the expected result
+
+For every affected core row ask **“Why is this result correct?”**
+(“Почему этот результат правильный?”). Point to the source and show enough derivation
+to check the exact expected value independently. “The code returns it”, a copied
+snapshot or a mirrored implementation formula is not an answer. Use this review
+when first writing expectations and whenever changing them to fix a failing test.
+Keep the explanation in the matrix; add a test comment only for non-obvious reasoning.
+
+### Evidence that tests reject wrong behavior
+
+A green run becomes convincing when the wrong behaviors it actually rejects are
+known. Each core row names a plausible bug and its distinguishing assertion; record
+observed rejection evidence for the core behavior in the existing verification
+journal, linked by row ID. Use a reproduced pre-fix regression or a small controlled
+behavioral mutation/counterexample probe. One probe may support several rows when
+its observed failures demonstrate their assertions; no full mutation suite is
+required per row or task. Mere enumeration of hypothetical bugs is not evidence. Keep the intended assertions
+unchanged while probing a plausible behavior defect; changing expected values merely
+to force a failure proves nothing.
+
+A missing export, compile/lint error, timeout or broken runner is preliminary red,
+not proof of behavioral sensitivity. Require the intended observable or saved/output
+assertion to reject the incorrect behavior. Mutation probes restore exact source
+bytes and follow runner safety rules. An agent forbidden to edit production code
+hands probes to the implementer or an existing mutation runner. Record unprobed
+variants as limits; do not claim they are detected. If a meaningful wrong variant
+passes, strengthen the scenario/assertion before claiming that behavior protected.
+Run the mandatory changed check only at the completed logical checkpoint below.
+
 | Contract | Protection |
 |---|---|
 | Every edit preserves unrelated keys, layers and wiring | Pure domain tests, frozen-input edit sequences, exact undo/redo and JSON round trips |
@@ -35,20 +93,38 @@ normally. jsdom shims model missing native APIs, not business behavior.
 
 ## Commands and regression floors
 
-Use the local snapshot selection, conservative test expansion and exact-tree receipts
-in [commands](commands.md). CI owns full unit coverage, static/tooling, browser,
-image and mutation suites; firmware compilation is local-only (see Git flow).
-Direct/full local commands require a diagnostic or justified-necessity reason in
-the task journal. No repeated full-local or three-run browser gate is required.
-Tests-first, manual acceptance and the final-index hook remain mandatory.
+Use the separate commands in [commands](commands.md). CI retains coverage floors,
+tooling and browser matrix. Local static, unit and browser stages are independent;
+no static/unit command may implicitly start Playwright.
 
-Keep tests-first red/green diagnosis early. Finish planned production changes,
-regression scenarios and applicable lint/format fixes before the mandatory staged
-check, so avoidable omissions do not repeatedly trigger the broad local selection.
-After success, rerun when executable changes, failures or unresolved concerns
-invalidate evidence; do not manually repeat suites already covered for that revision.
-Reporting-only edits follow the documentation route. The final-index hook, exact-tree
-receipts, conservative browser selection and CI/manual gates remain mandatory.
+### Changed-check cadence
+
+1. **Logical module:** finish all related source/test files, imports/exports, types
+   and callers, then run `npm run check` (architecture, types, lint, format). Do not
+   run during an obviously incomplete edit sequence. Pre-commit/check:changed provide
+   the same static-only responsibility on exact staged bytes.
+2. **Completed task item:** run `npm run test:unit` (all app and tooling units).
+   `test:unit:changed` is available for staged impact checks but does not replace
+   the full-unit task checkpoint. Author contracts/matrix first; there is no mandatory
+   early red execution or per-file TDD run while implementation is incomplete.
+3. **Actual unit failure:** finish the related repair, then use
+   `test:unit:focus -- path/to/test -t "case"` for that failed module/case. Do not
+   use focus routinely before the full suite has exposed a failure. Record the
+   full-run failure and the diagnostic result; full units run again at the next
+   task/final checkpoint, not after every diagnostic edit.
+4. **Feature/final commit:** after implementation, static checks and unit repairs are
+   complete, run the entire configured `test:e2e` suite explicitly. No partial or
+   full browser run mid-task. On a final-suite failure repair it, complete static/unit
+   checks appropriate to the repair, and rerun the final suite before claiming it passed.
+
+This cadence supersedes generic early-red/combined-check execution instructions in
+older feature artifacts; their behavior assertions and acceptance coverage remain.
+No repeated successful run is required for the same unchanged scope/revision. Batch
+fixes before validation; do not split knowingly incomplete work into checkpoints.
+Intermediate module commits run static-only hooks. Full unit/coverage and E2E remain
+separate CI jobs; local check does not provide their evidence. Mutation sensitivity
+experiments are deliberate boundary-stage work, not automatic per-edit test runs.
+Reporting-only edits use documentation checks, not a new product E2E cycle.
 
 CI publishes one bot coverage comment per PR with the checked SHA, metrics, threshold
 outcome and run link. New runs replace it; stale heads/attempts cannot overwrite current
@@ -96,7 +172,8 @@ glibc. `npm run test:e2e` is the equivalent on a supported host after `npm ci` a
 an existing server or a normal browser profile. Every test has an isolated context and
 imports predictable JSON through the real app's file dialog. Runtime dependencies stay unchanged.
 
-`make check` also typechecks/lints the browser tests; it retains the Vitest coverage gates.
+`make check` typechecks/lints browser test source but executes no unit/browser suites.
+Vitest coverage gates remain in the separate CI unit job.
 Browser execution is a separate required CI job. It uses one worker and zero retries,
 so a flaky first attempt stays visible. CI uploads `playwright-report/` and `test-results/`
 for 14 days even on failure. Traces and screenshots are retained for failed tests;
@@ -152,21 +229,30 @@ For new or changed user journeys, add or update Playwright E2E tests and include
 - Use accessible roles/names. For canvas interactions use coordinates of displayed elements; perform drags with `mouse.move/down/up` and intermediate movements.
 - Do not mock core services, use `force:true`, dispatch synthetic events, call handlers, change state through `evaluate`, or use arbitrary sleeps. `evaluate` is observation-only; wait for a concrete state.
 - Check screen geometry, including corners of rotated elements rather than only bounding boxes. Add independent visual snapshots where they detect paint errors; justify tolerances and inspect the cause of differences before updating references.
-- For a discovered bug, first reproduce a failing test, then fix its cause in the owning architectural layer. Domain/generator repairs also require their own tests-first contracts.
+- For a discovered bug, define its expected behavior and regression contract before the repair. Execute it with the full unit task checkpoint and final E2E stage; a knowingly incomplete API/import is not a required red checkpoint.
 - For a substantial new interaction contract, prove test sensitivity with a controlled behavioral regression. Run it separately from checks and production edits, require a user-facing or saved-data assertion failure, and restore exact original files. Do not require every domain permutation or all six existing browser seeds for every feature.
-- The complete Chromium suite is mandatory in CI. Add targeted Firefox/WebKit cases for SVG, foreignObject, pointer capture, native inputs and focus where the feature touches them.
+- The complete configured browser suite runs only at feature/final completion locally; CI retains its browser matrix. Add representative Firefox/WebKit cases for engine-sensitive behavior without running them mid-task.
 - Apply the change-specific completion checks in [commands.md](commands.md). Local selection runs through the changed-check script; full cross-browser execution belongs to CI.
 - Retain useful failure traces/screenshots. Record scenario → risk → existing coverage → new E2E → visible assertion → saved/exported assertion, verification results and remaining limits in feature artifacts. Commands and artifact handling are documented in `docs/testing.md`.
 - Never weaken assertions to make CI green or claim absence of user problems solely from passing tests.
 
-## Post-implementation UI/UX review (Codex)
+## Optional UI and accessibility review
 
-After creating or changing an interface, review the implemented result against its specification and project UI/accessibility guidelines as required by [workflow.md](workflow.md#frontend-uiux-workflow-codex). Apply web-relevant checks within the supported product scope; record unrelated items as inapplicable with a reason.
+There is no blanket before/after rendered UI or manual accessibility review gate.
+Choose focused checks for the affected requirement or reported bug; broader visual,
+responsive, theme, keyboard or screen-reader audits run only when requested or needed
+to resolve a specific acceptance question. Existing automated accessibility tests and
+product accessibility contracts remain. Missing optional reviews do not block completion.
+Record actual checks and limits without claiming unperformed manual checks passed.
 
-- Check affected flows and relevant empty, error, disabled and success states; labels, hierarchy, consistency and feedback; keyboard navigation, focus visibility/order/restoration, accessible names and non-pointer alternatives; contrast in supported themes, overflow/responsive layout, text zoom and reduced motion where applicable.
-- Inspect the actual rendered result in isolated Playwright under the browser rules above. Local search output or source inspection alone is not rendered-interface verification. Use the required automated checks from [commands.md](commands.md); UI/UX review supplements those checks.
-- Record the reviewed scope, design guidance used, acceptance criteria, findings, fixes, check commands/results and remaining manual limits in the owning feature's verification artifacts. Give each finding a stable ID and status and link its requirement/task/check without duplicating an existing traceability mapping.
-- Reproduce regressions before fixes and rerun affected checks after fixes. An unresolved acceptance failure keeps its task open and blocks completion. Never label unperformed keyboard, screen-reader, visual or other manual checks as passed.
+## Performance check scheduling
+
+Performance tests may run alongside independent checks or other work. There is no
+repository-wide requirement to stop other workloads or run timed tests alone, including
+older feature protocols that prescribed this. Record relevant concurrent load when
+interpreting a timing result; isolate a rerun only when diagnosing evidence of contention.
+Keep existing metrics, thresholds and assertions. Mutation runners still run alone
+because they temporarily edit production files; that restriction protects source data.
 
 ## Mutation runner implementation
 
@@ -180,13 +266,11 @@ See [testing history](testing-history.md), [browser verification](../specs/025-p
 
 ## Focused diagnostic loop
 
-Implement the behavior, then adapt semantic tests to the resulting requirements.
-Stage explicit paths and inspect `npm run check:focus -- --plan`; run
-`npm run check:focus` while fixing failures. Read `summary.json` first and open full
-logs only where needed. The bounded UI mapping includes cross-cutting accessibility,
-keyboard and onboarding journeys; unknown/shared/global changes retain broad selection.
-Update mapping and selection regressions together when introducing new UI areas.
-After diagnostics, stage the complete change and run the mandatory `check:changed`
-once; rerun after executable changes or unresolved failures. Focus and final receipts
-are separate. This reduces repeated output and diagnostic work without changing final
-coverage policy. Test assertions still require human/agent judgment; no script rewrites them.
+Define behavior and the spec matrix before implementation. Complete the module and
+run static checks; execute all units at the task boundary. Only after that run exposes
+a failure, repair it and use `test:unit:focus` for the named failing file/case. Inspect
+actual assertion failures and retain expected-result rationale. `test:unit:changed`
+is a separate optional staged-impact command, not a hidden static/browser stage.
+Final full configured E2E runs only at feature completion. Exact static/unit staged
+receipts are separate; a passing static stage cannot stand in for tests. See
+[commands](commands.md) and the cadence above. No script rewrites assertions.

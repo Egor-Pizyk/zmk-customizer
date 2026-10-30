@@ -5,8 +5,6 @@ export { findBoardPinUser } from './find-board-pin-user';
 export { findFreeEndPosition } from './find-free-end-position';
 export { findKeyCurrentFlow } from './find-key-current-flow';
 export { findNearestKeyPin } from './find-nearest-key-pin';
-export { findWireContacts } from './find-wire-contacts';
-export type { WireCrossing, WireContacts } from './find-wire-contacts';
 export { getKeyPinWires } from './get-key-pin-wires';
 export { removeOrphanWires } from './remove-orphan-wires';
 
@@ -16,3 +14,5 @@ export type { WireSection } from './get-wire-sections';
 export { findWireContactError } from './find-wire-contact-error';
 
 export { shareWireContacts } from './share-wire-contacts';
+
+export { createBoardPinUserLookup } from './create-board-pin-user-lookup';

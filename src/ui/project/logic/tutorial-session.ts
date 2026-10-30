@@ -6,7 +6,8 @@ import { createProject } from '@domain/project';
 import { CONTROLLER_BOARDS } from '@catalog/controllers';
 import { saveProject } from '@storage/project';
 import { saveOnboarding, discardOnboarding } from '@storage/onboarding';
-import { getProjectAnalysis, withAnnouncement } from './project-state';
+import { getProjectAnalysis } from './project-analysis';
+import { withAnnouncement } from './project-state';
 import type { ProjectState } from './project-state';
 
 export function getTutorialConditions(state: ProjectState) {

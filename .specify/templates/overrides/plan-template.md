@@ -28,7 +28,7 @@
 
 ## Verification strategy
 
-[Independent assertions, fixtures, tests-first steps, browser scenarios and commands selected by docs/commands.md and docs/testing.md. Record a reason if no new E2E coverage is needed.]
+[Link the core behavior matrix in spec.md; fill its source/test files and main methods before tests. Explain independent expected-result derivation and how plausible wrong variants will be rejected. Schedule static checks after logical modules, full units after task items, focused units only after full-run failures and full E2E only at feature/final completion under docs/testing.md and docs/commands.md. Record a reason if no new E2E coverage is needed.]
 
 ## Supporting artifacts
 

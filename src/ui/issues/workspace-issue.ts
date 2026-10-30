@@ -6,6 +6,9 @@ import type { Preferences, WorkspaceId } from '@storage/preferences';
 export type WorkspaceIssue = ValidationIssue & { readonly workspaceId: WorkspaceId };
 
 const WORKSPACE_BY_ISSUE_CODE: Record<ValidationCode, WorkspaceId> = {
+  'routing-cell-conflict': 'schematic',
+  'routing-settings-invalid': 'schematic',
+  'wire-locked': 'schematic',
   'encoder-invalid': 'schematic',
   'encoder-pin-missing': 'schematic',
   'encoder-pin-conflict': 'schematic',

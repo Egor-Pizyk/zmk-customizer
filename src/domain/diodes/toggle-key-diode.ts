@@ -1,7 +1,8 @@
+import { preserveWireProtection } from '@domain/wires/protection';
 import { getKeyDiodeState } from './get-key-diode-state';
 import type { Project, KeyPin } from '@domain';
 
-export function toggleKeyDiode(
+function toggleKeyDiodeCandidate(
   project: Project,
   input: { readonly keyId: string; readonly pin: KeyPin },
 ): Project {
@@ -18,4 +19,11 @@ export function toggleKeyDiode(
     ...project,
     keys: project.keys.map((candidate) => (candidate.id === key.id ? replacement : candidate)),
   };
+}
+
+export function toggleKeyDiode(
+  project: Project,
+  input: Parameters<typeof toggleKeyDiodeCandidate>[1],
+): Project {
+  return preserveWireProtection(project, toggleKeyDiodeCandidate(project, input));
 }

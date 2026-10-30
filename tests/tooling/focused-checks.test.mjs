@@ -5,57 +5,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { focusedCheckPlan } from '../../scripts/focused-check-plan.mjs';
-
-const exists = () => true;
-test('Parts diagnostics include cross-cutting journeys and explain smaller selection', () => {
-  const plan = focusedCheckPlan(['src/ui/schematic/parts/components/parts-list.tsx'], exists);
-  assert.notDeepEqual(plan.browser, ['tests/e2e']);
-  for (const file of [
-    'encoders',
-    'onboarding-accessibility',
-    'onboarding-keyboard',
-    'accessibility',
-    'product',
-  ]) {
-    assert.ok(plan.browser.includes(`tests/e2e/${file}.spec.ts`), file);
-  }
-  assert.ok(plan.reasons.some((reason) => /Parts|parts/u.test(reason)));
-  assert.deepEqual(plan.browser, [...new Set(plan.browser)].toSorted());
-});
-test('unknown/global/shared/deleted changes stay broad; changed specs are included', () => {
-  for (const file of [
-    'src/ui/unknown/view.tsx',
-    'src/styles.css',
-    'package-lock.json',
-    'tests/helpers/render-app.tsx',
-    'tests/e2e/helpers.ts',
-    'tests/e2e/parts-fixture.ts',
-    'src/domain/keys/move-key.ts',
-  ]) {
-    assert.deepEqual(focusedCheckPlan([file], exists).browser, ['tests/e2e'], file);
-  }
-  assert.deepEqual(focusedCheckPlan(['src/ui/schematic/parts/removed.tsx'], () => false).browser, [
-    'tests/e2e',
-  ]);
-  const plan = focusedCheckPlan(
-    ['src/ui/shell/components/project-bar.tsx', 'tests/e2e/custom.spec.ts'],
-    exists,
-  );
-  assert.ok(plan.browser.includes('tests/e2e/custom.spec.ts'));
-  assert.ok(plan.browser.includes('tests/e2e/kle-import.spec.ts'));
-  assert.deepEqual(focusedCheckPlan(['docs/commands.md'], exists).browser, []);
-  assert.deepEqual(
-    focusedCheckPlan(['src/ui/schematic/parts/a.tsx'], (file) => !file.startsWith('tests/e2e/'))
-      .browser,
-    ['tests/e2e'],
-  );
-  assert.deepEqual(focusedCheckPlan(['src/ui/schematic/parts/a.tsx'], () => false).browser, [
-    'tests/e2e',
-  ]);
-});
-
-test('plan uses the staged tree without Docker; focus cache cannot satisfy final checks', () => {
+test('VC-04 plans use staged bytes; unit and static receipts cannot satisfy each other', () => {
   const directory = mkdtempSync(path.join(tmpdir(), 'focused-check-'));
   const git = (...args) => execFileSync('git', args, { cwd: directory, encoding: 'utf8' }).trim();
   const command = fileURLToPath(new URL('../../scripts/check-changes.mjs', import.meta.url));
@@ -81,13 +31,12 @@ test('plan uses the staged tree without Docker; focus cache cannot satisfy final
     const env = { ...process.env, PATH: `${path.join(directory, 'bin')}:${process.env.PATH}` };
     const run = (...args) =>
       spawnSync(process.execPath, [command, ...args], { cwd: directory, env, encoding: 'utf8' });
-    const preview = run('--focus', '--plan');
+    const preview = run('--unit-only', '--plan');
     assert.equal(preview.status, 0, preview.stderr);
     const plan = JSON.parse(preview.stdout);
-    assert.ok(
-      plan.browser.includes('tests/e2e/encoders.spec.ts'),
-      'indexed file exists despite unstaged deletion',
-    );
+    assert.deepEqual(plan.unit, [source], 'indexed source exists despite unstaged deletion');
+    assert.deepEqual(plan.browser, []);
+    assert.equal(plan.static, false);
     assert.equal(existsSync(path.join(directory, '.check-logs')), false);
     writeFileSync(path.join(directory, source), 'unstaged');
     writeFileSync(
@@ -96,20 +45,21 @@ test('plan uses the staged tree without Docker; focus cache cannot satisfy final
 const fs=require('node:fs'),p=require('node:path'); const mount=process.argv[process.argv.indexOf('-v')+1].slice(0,-5); const m=JSON.parse(fs.readFileSync(p.join(mount,'.changed-files.json'))); fs.appendFileSync('runs.jsonl',JSON.stringify({mode:m.mode,bytes:fs.readFileSync(p.join(mount,${JSON.stringify(source)}),'utf8')})+'\\n');`,
       { mode: 0o755 },
     );
-    assert.equal(run('--focus').status, 0);
-    assert.equal(run().status, 0, 'focus success does not cache a final check');
-    assert.equal(run('--focus').status, 0);
+    assert.equal(run('--unit-only').status, 0);
+    assert.equal(run().status, 0, 'unit success does not cache a static check');
+    assert.equal(run('--unit-only').status, 0);
     const runs = readFileSync(path.join(directory, 'runs.jsonl'), 'utf8')
       .trim()
       .split('\n')
       .map((line) => JSON.parse(line));
     assert.equal(runs.length, 2);
-    assert.equal(runs[0].mode, 'focus');
+    assert.equal(runs[0].mode, 'unit');
+    assert.equal(runs[1].mode, 'static');
     assert.equal(runs[0].bytes, 'staged');
     writeFileSync(docker, '#!/bin/sh\nexit 3\n', { mode: 0o755 });
-    assert.equal(run('--focus', '--force').status, 1);
-    assert.equal(run('--focus').status, 1);
-    assert.equal(run().status, 0, 'focus failure cannot invalidate final success');
+    assert.equal(run('--unit-only', '--force').status, 1);
+    assert.equal(run('--unit-only').status, 1);
+    assert.equal(run().status, 0, 'unit failure cannot invalidate static success');
     assert.equal(git('write-tree'), tree);
     assert.equal(readFileSync(path.join(directory, source), 'utf8'), 'unstaged');
   } finally {

@@ -100,7 +100,7 @@ Every catalog-backed control (behavior, keycode, Kconfig option) shows label, on
 ## Loading and async
 
 - No network, so no spinners. Synchronous commits and generator previews render immediately.
-- The only async work is reading an import file and building the zip. The triggering button shows "Building zip…" and `aria-busy` while pending, and the result or error goes to `StatusMessage`.
+- Async work includes reading an import file, building the zip, and feature040 bounded proposal calculation in a local inline Worker. Routing shows a labeled busy state with Cancel, never fabricated percentage progress or a network spinner. Calculation never changes saved Project; first use and restart work offline after initial app load. The triggering button shows "Building zip…" and `aria-busy` while pending, and the result or error goes to `StatusMessage`.
 
 ## UI copy
 

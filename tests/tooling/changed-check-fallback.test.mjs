@@ -14,7 +14,7 @@ test('unknown test impact runs full units when Vitest produces no related-test r
     writeFileSync(path.join(directory, 'src/probe.ts'), 'export const probe = 1;');
     writeFileSync(
       path.join(directory, '.changed-files.json'),
-      JSON.stringify({ files: ['src/probe.ts'], revision: 'test-tree' }),
+      JSON.stringify({ mode: 'unit', files: ['src/probe.ts'], revision: 'test-tree' }),
     );
     writeFileSync(
       path.join(directory, 'bin/npm'),
@@ -38,7 +38,7 @@ if(process.argv[2]==='run' && process.argv[3]==='test') require('node:fs').write
       readFileSync(path.join(directory, '.check-logs/summary.json'), 'utf8'),
     );
     assert.equal(summary.status, 'passed');
-    assert.equal(summary.mode, 'final');
+    assert.equal(summary.mode, 'unit');
     assert.ok(summary.durationMs >= 0);
     assert.ok(summary.checks.every((check) => check.status === 'passed'));
   } finally {

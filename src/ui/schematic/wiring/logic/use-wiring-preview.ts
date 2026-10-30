@@ -1,99 +1,113 @@
-import { editWiring, getWiringProposalSummary } from '@domain/wiring/editing';
 import type { WiringEdit } from '@domain/wiring/editing';
-import type { Project, Result } from '@domain';
+import type { Project, WiringProposalResult } from '@domain';
 import type { Commit } from '@ui/schematic/interaction';
-import { useState } from 'react';
-
-type Draft = {
-  readonly base: Project;
-  readonly preview: Project;
-  readonly topologySource?: Project;
-};
-
-function getDraftResult(
-  project: Project,
-  {
-    result,
-    source,
-    input,
-  }: {
-    readonly result: Result<Project, string>;
-    readonly source: Project;
-    readonly input: WiringEdit;
-  },
-): Draft | undefined {
-  if (!result.ok || result.value === project) {
-    return undefined;
-  }
-  return {
-    base: project,
-    preview: result.value,
-    ...(input.kind === 'topology' ? { topologySource: source } : {}),
-  };
-}
-
-function getEditSource(preview: Project, input: WiringEdit, draft: Draft | undefined): Project {
-  return input.kind === 'topology' ? (draft?.topologySource ?? preview) : preview;
-}
+import { useProject } from '@ui/project/logic';
+import { useEffect, useState } from 'react';
+import { createWiringWorkerSession } from './wiring-worker-session';
+import { getWiringPreviewPhase, STALE_WIRING_MESSAGE } from './wiring-preview-state';
+import type { WiringPreviewDraft } from './wiring-preview-state';
+import {
+  startWiringPreview,
+  createWiringPreviewDraft,
+  recalculateWiringPreview,
+} from './start-wiring-preview';
+import { applyWiringPreview } from './apply-wiring-preview';
 
 export function useWiringPreview(project: Project, commit: Commit, onStart: () => void) {
-  const [draft, setDraft] = useState<Draft>();
-  const feedback = useWiringFeedback();
-  const hasPreview = draft?.base === project;
-  if (draft !== undefined && !hasPreview) {
-    setDraft(undefined);
-  }
-  const previewProject = hasPreview ? draft.preview : project;
-  function handleEdit(input: WiringEdit) {
+  const { importSession, announce } = useProject();
+  const [draft, setDraft] = useState<WiringPreviewDraft>();
+  const [session, setSession] = useState(createWiringWorkerSession);
+  useWorkerCleanup(session);
+  const phase = getWiringPreviewPhase(draft, project, importSession.getRevision());
+  const state = { session, setDraft, getRevision: importSession.getRevision };
+  function handleEdit(edit: WiringEdit) {
+    session.captureFocus(document.activeElement);
     onStart();
-    const source = getEditSource(previewProject, input, hasPreview ? draft : undefined);
-    const result = editWiring(source, input);
-    feedback.report(result, { project, kind: input.kind });
-    setDraft(getDraftResult(project, { result, source, input }));
+    const next = createWiringPreviewDraft({ project, draft, edit }, state);
+    setDraft(next);
+    startWiringPreview(next, state);
   }
   function handleCancel() {
+    session.cancel();
     setDraft(undefined);
-    feedback.clear();
+    session.restoreFocus();
+    setSession(createWiringWorkerSession());
   }
-  function handleApply() {
-    if (hasPreview) {
-      commit(
-        (current) => (current === draft.base ? draft.preview : current),
-        'Applied wiring. Undo',
-      );
-    }
-    handleCancel();
-  }
-  const summary = hasPreview ? getWiringProposalSummary(project, previewProject) : undefined;
   return {
-    hasPreview,
-    previewProject,
-    failure: feedback.failure,
-    message: feedback.message,
-    summary,
+    ...describePreview(project, draft, phase),
     handleEdit,
     handleCancel,
-    handleApply,
+    handleRecalculate: () => {
+      recalculateWiringPreview(draft, project, state);
+    },
+    handleApply: () => {
+      applyWiringPreview(draft, { ...state, commit, announce });
+    },
   };
 }
 
-function useWiringFeedback() {
-  const [failure, setFailure] = useState<string>();
-  const [message, setMessage] = useState<string>();
-  function report(
-    result: Result<Project, string>,
-    input: { readonly project: Project; readonly kind: WiringEdit['kind'] },
-  ) {
-    setFailure(result.ok ? undefined : result.error);
-    setMessage(
-      result.ok && result.value === input.project && input.kind === 'complete'
-        ? 'No wiring changes needed.'
-        : undefined,
-    );
+function describePreview(
+  project: Project,
+  draft: WiringPreviewDraft | undefined,
+  phase: ReturnType<typeof getWiringPreviewPhase>,
+) {
+  const result = draft?.result;
+  return {
+    phase,
+    operationDescription: describeOperation(draft?.edit, getPreviewProject(project, draft)),
+    hasPreview: draft !== undefined,
+    canApply: phase === 'ready' && result?.kind === 'changed',
+    previewProject: getPreviewProject(project, draft),
+    protectedWireIds: result?.kind === 'refused' ? result.failure.wireIds : [],
+    summary: result !== undefined && result.kind !== 'refused' ? result.summary : undefined,
+    failure: getFailure(phase, result),
+    message: getMessage(phase, result),
+  };
+}
+
+function getFailure(phase: string, result: WiringProposalResult | undefined) {
+  if (phase === 'stale') {
+    return STALE_WIRING_MESSAGE;
   }
-  function clear() {
-    setFailure(undefined);
-    setMessage(undefined);
+  return result?.kind === 'refused' ? result.failure.message : undefined;
+}
+function getMessage(phase: string, result: WiringProposalResult | undefined) {
+  if (phase === 'calculating') {
+    return 'Calculating wiring…';
   }
-  return { failure, message, report, clear };
+  return result?.kind === 'no-change' ? 'No wiring changes needed.' : undefined;
+}
+
+function getPreviewProject(project: Project, draft: WiringPreviewDraft | undefined) {
+  if (draft?.result?.kind === 'changed') {
+    return draft.result.candidate;
+  }
+  if (draft?.result?.kind === 'no-change') {
+    return draft.base;
+  }
+  return draft?.source ?? project;
+}
+
+function useWorkerCleanup(session: ReturnType<typeof createWiringWorkerSession>) {
+  useEffect(
+    () => () => {
+      session.cancel();
+    },
+    [session],
+  );
+}
+
+function describeOperation(edit: WiringEdit | undefined, project: Project): string | undefined {
+  if (edit?.kind !== 'regenerate') {
+    return undefined;
+  }
+  if (project.wiring?.kind === 'direct') {
+    return 'Generate direct wiring · Whole schematic';
+  }
+  const style = 'Symmetric matrix buses';
+  const scope = edit.input.scope;
+  if (scope.kind === 'half') {
+    return `Generate ${style} · ${scope.half} half`;
+  }
+  return `Generate ${style} · ${scope.kind === 'all' ? 'Whole schematic' : 'Selected keys and nets'}`;
 }

@@ -18,9 +18,9 @@ The normative principles and rationale are in [docs/principles.md](../../docs/pr
 - Target ZMK v0.3.0; no main-only output or UI options. Read relevant verified notes before changing syntax.
 - [Architecture](../../docs/architecture.md) owns the exact dependency matrix and exceptions; do not replace it with a simplified layer chain.
 - [Tooling](../../docs/tooling.md) owns approved dependencies; new runtime dependencies require an ADR.
-- [Workflow](../../docs/workflow.md) owns change routes, tests-first requirements, stage gates and traceability.
+- [Workflow](../../docs/workflow.md) owns change routes, behavior-first contracts, module/task/final verification stages and traceability.
 - [Commands](../../docs/commands.md) owns completion checks by change type; [testing](../../docs/testing.md) owns behavioral verification.
-- Load implementation guidelines through the mandatory routing in `AGENTS.md`, not all guidelines at every stage.
+- Load applicable guideline sections lazily through `AGENTS.md` when needed for the next decision/edit; no startup document batch.
 
 ## Governance
 
@@ -28,4 +28,4 @@ The normative principles and rationale are in [docs/principles.md](../../docs/pr
 
 Version amendments: MAJOR for incompatible principle changes, MINOR for materially expanded constraints, PATCH for wording/synchronization. Spec analysis checks applicable principles and gates before implementation. Do not run constitution generation for every feature.
 
-**Version**: 1.2.0 | **Ratified**: 2026-09-27 | **Last Amended**: 2026-10-15
+**Version**: 1.2.2 | **Ratified**: 2026-09-27 | **Last Amended**: 2026-10-30

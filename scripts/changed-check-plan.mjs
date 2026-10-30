@@ -1,6 +1,6 @@
 import { existsSync } from 'node:fs';
 
-export function changedCheckPlan(files, exists = existsSync) {
+export function changedCheckPlan(files, exists = existsSync, mode = 'static') {
   const code = files.filter((file) => /\.(?:[cm]?[jt]sx?)$/u.test(file) && exists(file));
   const fullLint = files.some((file) => /(?:oxlintrc|oxfmtrc)/u.test(file));
   const broad =
@@ -12,29 +12,32 @@ export function changedCheckPlan(files, exists = existsSync) {
         ) ||
         (!exists(file) && /^(?:src|tests)\//u.test(file)),
     );
-  const source = files.some((file) => file.startsWith('src/'));
   const asset = files.some((file) => file.startsWith('src/') && !/\.[jt]sx?$/u.test(file));
   const unit = code.filter((file) => /^(?:src\/|tests\/unit\/)/u.test(file));
-  const browser = files.filter((file) => /^tests\/e2e\/.*\.spec\.ts$/u.test(file) && exists(file));
   return {
     code,
-    fullUnit: broad || asset,
+    static: mode === 'static',
+    fullUnit: mode === 'unit' && (broad || asset),
     fullLint,
-    related: unit,
-    // Browser journeys use runtime UI interactions; static imports cannot establish impact.
-    browser: broad || source || files.includes('tests/e2e/helpers.ts') ? ['tests/e2e'] : browser,
-    tooling: files.some((file) =>
-      /^(?:scripts\/|tests\/tooling\/|\.github\/|\.githooks\/)/u.test(file),
-    ),
+    related: mode === 'unit' ? unit : [],
+    browser: [],
+    tooling:
+      mode === 'unit' &&
+      files.some((file) => /^(?:scripts\/|tests\/tooling\/|\.github\/|\.githooks\/)/u.test(file)),
+    reasons: [
+      mode === 'unit'
+        ? 'Unit-only staged check; E2E and static checks are separate.'
+        : 'Static-only staged check; unit and E2E tests are separate.',
+    ],
   };
 }
 
 export function describeCheckPlan(plan) {
   return {
-    static: 'Whole-project types/architecture/guidelines; changed-file lint/format',
+    static: plan.static ? 'Whole-project types/architecture; changed-file lint/format' : false,
     unit: plan.fullUnit ? 'all' : plan.related,
     browser: plan.browser,
     tooling: plan.tooling,
-    reasons: plan.reasons ?? ['Final check retains conservative Chromium expansion.'],
+    reasons: plan.reasons,
   };
 }

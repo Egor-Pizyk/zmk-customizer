@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 13,
+  "encoders": [],
+  "combos": [],
+  "macros": [],
+  "conditionalLayers": [],
+  "behaviors": [],
+  "firmware": {},
+  "controllerId": "nice_nano_v2",
+  "name": "Routing contract",
+  "keys": [
+    {
+      "id": "k0",
+      "xU": 0,
+      "yU": 0
+    },
+    {
+      "id": "k1",
+      "xU": 1.5,
+      "yU": 0.25,
+      "widthU": 1.5
+    },
+    {
+      "id": "k2",
+      "xU": 3,
+      "yU": 0.5,
+      "rotationDeg": 30
+    },
+    {
+      "id": "k3",
+      "xU": 0,
+      "yU": 1.5
+    },
+    {
+      "id": "k4",
+      "xU": 1.5,
+      "yU": 1.75
+    },
+    {
+      "id": "k5",
+      "xU": 3.5,
+      "yU": 3,
+      "rotationDeg": 90,
+      "heightU": 1.5
+    }
+  ],
+  "wires": [],
+  "insulatedCrossings": [],
+  "layers": [
+    {
+      "id": "l0",
+      "name": "Base",
+      "bindings": {}
+    }
+  ]
+}

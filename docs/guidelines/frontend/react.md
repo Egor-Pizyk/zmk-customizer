@@ -41,7 +41,7 @@ Mixed UI groups split .ts functions/hooks/contracts into `logic/` and .tsx rende
 
 - One store: `useReducer` in `ProjectProvider` holding `{ past, present, future }` of `Project` (ADR 0003). Components get `{ project, issues, commit, undo, redo }` from `useProject()`.
 - `commit` takes an updater that calls one domain operation. The reducer stays generic; it never learns about keys or pins.
-- `getProjectAnalysis(project)` owns contacts, nets, matrix and issues. A WeakMap in project-state.ts shares one result per immutable project across history, provider, schematic and export. UI consumers do not build a separate electrical validation pipeline.
+- `getProjectAnalysis(project)` owns contacts, nets, matrix and issues. A WeakMap in project-analysis.ts shares one result per immutable project across history, provider, schematic and export. UI consumers do not build a separate electrical validation pipeline.
 
 ```tsx
 // ✅
@@ -68,10 +68,12 @@ dispatch({ type: 'resize-key', keyIndex, widthU });
 
 ## Effects
 
-Effects sync with systems outside React. A change that adds, moves or removes an effect updates this table in the same commit; `npm run check:guidelines` checks the set of files containing production effects against the file inventory below (tests and useEffectEvent are excluded). This is a file inventory, not a count or semantic approval of individual effects: additional effects in a listed file still require review for purpose and cleanup.
+Effects sync with systems outside React. Feature040 additionally permits lifecycle synchronization with its local inline routing Worker: create/start in an event handler, terminate on Cancel/supersede/unmount, and reject late/stale replies using the existing project revision. Domain calculations stay synchronous and pure. Add the exact cleanup effect file to the inventory only when that effect is implemented; no effect computes or commits a proposal from state changes. A change that adds, moves or removes an effect updates this table in the same commit; `npm run check:guidelines` checks the set of files containing production effects against the file inventory below (tests and useEffectEvent are excluded). This is a file inventory, not a count or semantic approval of individual effects: additional effects in a listed file still require review for purpose and cleanup.
 
 | Effect | Where |
 |---|---|
+| Terminate the local routing Worker on preview-owner unmount; calculations start only in event handlers | `schematic/wiring/logic/use-wiring-preview.ts` |
+| Mount/dispose the external diagram, delegate native key/focus events and synchronize the latest projection; cleanup removes Paper/listeners | `schematic/diagram/logic/use-diagram-host.ts` |
 | Persist the visible first learning offer; idempotent marker only, never Project writes | `onboarding/logic/use-onboarding-welcome.ts` |
 | Synchronize active tutorial workspace/panel visibility with navigation preferences | `onboarding/logic/use-onboarding-controller.ts` |
 | Measure/reveal tutorial target; clean ResizeObserver, MutationObserver, resize/scroll listeners | `onboarding/logic/use-onboarding-target.ts` |

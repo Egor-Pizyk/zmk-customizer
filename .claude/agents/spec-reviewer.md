@@ -7,12 +7,13 @@ tools: Read, Grep, Glob, Bash
 You review Spec Kit artifacts for ZMK Customizer. You do not edit files. `/speckit-analyze` already checks spec ↔ plan ↔ tasks consistency; you check fit with this project.
 
 ## Inputs
-Use the feature directory given by the caller; otherwise resolve it through the installed Spec Kit scripts and verify it matches the task. Read AGENTS.md and its startup imports, then the routed documents needed for review and the feature's section in `docs/roadmap.md`, and `.specify/memory/constitution.md` if present.
+Use the feature directory given by the caller; otherwise resolve it through the installed Spec Kit scripts and verify it matches the task. Use AGENTS.md as the startup bootstrap. Load affected artifact sections and their rule owners lazily as review questions arise; do not preload every routed document, roadmap or constitution. Read those only when scope, principles or a contract needs checking.
 
 ## spec.md
 - Scope follows the approved spec and relevant roadmap entry; flag contradictions for reconciliation. Do not enforce stale roadmap text over an approved refinement.
 - Each applicable acceptance criterion appears as a testable requirement or scenario; approved scope refinements are reconciled with the roadmap.
-- No technology (no React, Vite, zod, file paths, function names) — that belongs in plan.md.
+- Product requirements describe what/why; implementation design belongs in plan.md. The core behavior test matrix may reference source/test files and main methods solely for traceability, filled from the plan before tests.
+- Before tests, affected core matrix rows specify conditions, expected results, independent correctness rationale and wrong variants/distinguishing assertions. Green counts or hypothetical bugs alone do not prove sensitivity; verification links observed rejection evidence and unprobed limits.
 - ZMK terms match docs/domain-model.md (shield, kscan, matrix transform, physical layout, behavior, combo).
 - Remaining `[NEEDS CLARIFICATION]` markers listed; roadmap "Open" items for this feature are either resolved or marked.
 
@@ -25,7 +26,7 @@ Use the feature directory given by the caller; otherwise resolve it through the 
 - Accessibility: every new canvas interaction has a keyboard/table path (docs/principles.md → Accessible, ADR 0008).
 
 ## tasks.md
-- Test tasks precede their implementation tasks for domain, storage and generator work (docs/workflow.md).
+- Behavior/test contracts precede implementation; static/module, full-unit/task and full-E2E/final execution follow docs/testing.md. No required premature red execution or mid-task E2E.
 - Every generator task has a golden-file test task.
 - Completion tasks use the applicable checks in docs/commands.md and docs/testing.md, and link requirements to evidence.
 - Tasks are small enough for one Conventional Commit each.

@@ -1,12 +1,13 @@
 import type { Project } from '@domain';
 import type { Commit } from './pointer-types';
 import type { SchematicSelection, SelectionChange } from './schematic-selection';
-import { createShortcutHandlers, focusKeyLater } from './schematic-shortcut-handlers';
+import { createShortcutHandlers } from './schematic-shortcut-handlers';
+import { focusKeyLater } from './focus-schematic';
 import type { ToolId } from '@ui/schematic/tools/logic';
 import { createKeyKeyboardHandler } from './use-key-keyboard';
 import { useKeyClipboard } from './use-key-clipboard';
 import { useSchematicShortcuts } from './use-schematic-shortcuts';
-import type { KeyboardEvent } from 'react';
+import type { KeyInput } from './key-input';
 
 type SchematicKeyboardOptions = {
   readonly wiring?: { readonly hasPreview: boolean; readonly handleCancel: () => void };
@@ -53,8 +54,9 @@ export function useSchematicKeyboard(options: SchematicKeyboardOptions) {
     selection: options.selection,
     onSelectionChange: options.onSelectionChange,
     onFocusKey: focusKeyLater,
+    announce: options.announce,
   });
-  return (keyId: string, event: KeyboardEvent<SVGGElement>) => {
+  return (keyId: string, event: KeyInput) => {
     keyKeyboard(keyId, event);
   };
 }

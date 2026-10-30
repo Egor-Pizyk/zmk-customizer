@@ -1,3 +1,4 @@
+import type { getProjectAnalysis } from './project-analysis';
 import { createContext, use } from 'react';
 import type { Project } from '@domain';
 import type { ProjectFileError } from '@storage/project';
@@ -8,7 +9,6 @@ import type { createImportSession } from './import-session';
 import type { createFileActions } from './project-file-actions';
 import type {
   createHistoryActions,
-  getProjectAnalysis,
   Announcement,
   KeptBackup,
   ProjectState,

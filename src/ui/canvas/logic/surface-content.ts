@@ -15,8 +15,7 @@ export type ContentPointerHandler = (world: WorldPoint, event: PointerEvent<SVGS
 
 // World-space content drawn by a workspace (003 R3). Handlers get the primary button only; the
 // middle button and the wheel stay with the surface for pan and zoom.
-export type SurfaceContent = {
-  readonly render: (view: ContentView) => ReactNode;
+type SurfaceContentBase = {
   /** Drawn unscaled above `render`, for controls and text with a fixed screen size. */
   readonly renderScreen?: (view: ContentView) => ReactNode;
   readonly onPointerDown?: ContentPointerHandler;
@@ -29,6 +28,21 @@ export type SurfaceContent = {
   /** Accessible name of the canvas, e.g. "Schematic canvas, 4 keys". */
   readonly label?: string;
 };
+
+export type SurfaceContent =
+  | (SurfaceContentBase & {
+      readonly kind?: 'svg';
+      readonly render: (view: ContentView) => ReactNode;
+      readonly renderHost?: never;
+    })
+  | (Omit<SurfaceContentBase, 'onPointerDown' | 'onPointerMove' | 'onPointerUp'> & {
+      readonly kind: 'host';
+      readonly onPointerDown?: (world: WorldPoint, event: PointerEvent<HTMLDivElement>) => void;
+      readonly onPointerMove?: (world: WorldPoint, event: PointerEvent<HTMLDivElement>) => void;
+      readonly onPointerUp?: (world: WorldPoint, event: PointerEvent<HTMLDivElement>) => void;
+      readonly render?: never;
+      readonly renderHost: (view: ContentView) => ReactNode;
+    });
 
 export function toWorldPoint(
   event: { readonly clientX: number; readonly clientY: number; readonly currentTarget: Element },

@@ -3,13 +3,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
-const STARTUP = [
-  'AGENTS.md',
-  'docs/product.md',
-  'docs/principles.md',
-  'docs/workflow.md',
-  'docs/agent-rules.md',
-];
+const STARTUP = ['AGENTS.md'];
 
 function findMarkdown(directory) {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -78,6 +72,10 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
     const selected = new Set([
       ...STARTUP,
       'CLAUDE.md',
+      'docs/product.md',
+      'docs/principles.md',
+      'docs/workflow.md',
+      'docs/agent-rules.md',
       'docs/architecture.md',
       'docs/folder-structure.md',
       'docs/domain-model.md',

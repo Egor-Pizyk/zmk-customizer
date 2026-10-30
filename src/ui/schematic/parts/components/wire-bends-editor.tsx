@@ -17,7 +17,10 @@ type WireBendsEditorProps = Pick<PartsTableProps, 'project' | 'commit'> & {
 export function WireBendsEditor({ project, commit, wire, wireIndex }: WireBendsEditorProps) {
   const { announce } = useProject();
   function handleBendsChange(bends: readonly WirePoint[]) {
-    const resourceError = getWireBendsResourceError(project, { wireId: wire.id, bends });
+    const resourceError =
+      wire.locked === true
+        ? `Wire ${wireIndex} is locked. Unlock it before changing bends.`
+        : getWireBendsResourceError(project, { wireId: wire.id, bends });
     if (resourceError !== undefined) {
       announce(resourceError);
       return;

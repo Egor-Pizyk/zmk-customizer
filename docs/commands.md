@@ -1,74 +1,88 @@
 # Commands
 
-Node-related tasks are npm scripts. Everything else is `make`. Both run inside Docker by default so host Node version does not matter.
+The application uses Node24 in Docker. `make` wraps container commands; direct npm
+commands work in a prepared container or supported host with dependencies installed.
 
-```
-make up          # start dev server in Docker (http://localhost:5173)
-make down        # stop containers
-make logs        # follow dev server logs
-make sh          # shell inside the app container
-make install     # npm ci inside the container (run after dependency changes: node_modules is a Docker volume)
-make check       # typecheck + lint + format check + Vitest coverage inside the container
-make test-e2e    # production build + Chromium suite + focused Firefox/WebKit checks
-make test-e2e-mutations # controlled browser regressions; run alone after make test-e2e
-make zmk-build   # local-only pinned firmware verification; not run in CI
-make image       # build production image (nginx serving dist/)
-make prod        # run production image locally (http://localhost:8080)
-make clean       # remove dist/, coverage, containers, volumes
+## Separate verification stages
 
-npm run dev | build | preview
-npm run typecheck | lint | lint:fix | format | format:check
-npm run test | test:watch
-npm run test:e2e | test:e2e:types
-npm run check    # static checks + Vitest coverage; browser execution is a separate CI job
-```
+| Command | Runs | When |
+|---|---|---|
+| `npm run check` / `make check` | Architecture, app/E2E types, lint, oxfmt format check | After a complete logical module: finish related files/imports/exports/callers first |
+| `npm run test:unit` / `make test-unit` | All Vitest app/golden tests and Node tooling unit tests | After completing a task item in tasks.md |
+| `npm run test:unit:changed` / `make test-unit-changed` | Units related to the exact staged changes; tooling units when affected | Optional changed-impact check at a task checkpoint, never implicit from static checks |
+| `npm run test:unit:focus -- tests/unit/example.test.ts -t "case"` | Only the named file/module and optional test name | Diagnose/fix an actual failure from the full unit run |
+| `npm run test:unit:focus -- tests/tooling/example.test.mjs` | Only the named Node tooling unit file | Same failure-diagnosis rule |
+| `npm run test:e2e` / `make test-e2e` | Complete configured Playwright suite: Chromium plus configured Firefox/WebKit cases | Only at feature/final commit completion, after static and units are settled |
 
-`make help` lists targets. Normal local verification:
+The formatter is the existing **oxfmt**; Prettier is not installed. `check:static`
+is an alias of `check`. `test` remains the Vitest-only compatibility command;
+`test:tooling` runs Node tooling units separately. `test:coverage` retains CI coverage
+thresholds. `check:guidelines`, `check:mutation-runners`, `check:release` remain
+available explicitly; tooling units and CI retain their existing protection.
+
+Do not run checks after an edit that predictably leaves imports, exports, types or
+callers unfinished. Complete the obvious implementation flow, then run static checks.
+Full units belong to task completion. If they fail, fix the issue and rerun the failed
+file/case with `test:unit:focus`; resume full validation at the next task/final boundary.
+Do not use focused tests as routine per-edit checks or a replacement for full units.
+Do not run browser suites mid-task or silently via another verification command.
+
+## Staged snapshots and pre-commit
 
 ```sh
-npm run hooks:install                 # once per clone; also installed by make install
-git add -- path/to/changed-file       # stage explicit paths
-npm run check:focus -- --plan         # diagnostic selection as JSON; no Docker run
-npm run check:focus                   # targeted diagnostic run
-npm run check:changed                 # required final staged snapshot, also pre-commit
-npm run check:changed -- --base origin/main # committed branch vs base
+npm run hooks:install
+git add -- path/to/completed-module
+npm run check:changed -- --plan       # static staged selection; no test execution
+npm run check:changed                 # static stage only, also pre-commit
+npm run test:unit:changed -- --plan    # unit-only staged selection
+npm run test:unit:changed             # unit-only staged execution
+npm run check:changed -- --base origin/main # committed HEAD vs base, static only
 ```
 
-The host needs Node 24, Git, tar and Docker Compose. The runner exports the Git tree
-into an ignored temporary directory, mounts it into the browser-capable test container
-and removes it after checks. Full logs and successful tree/base receipts remain in
-`.check-logs/`; identical checks are reused by pre-commit. Add `-- --force` to rerun. Run `make install` and build `infra/compose.e2e.yaml` once
-when needed; Docker must be available. No automatic stash or index rewrite occurs.
-Changed dependency manifests require `npm ci` in the snapshot before checks. Failures
-block commits. Existing custom hooks must be reviewed before installing this hook.
+Both snapshot commands require host Node24, Git, tar and Docker Compose. They export
+the index (or committed HEAD with `--base`) into a temporary container directory;
+unstaged edits remain untouched. Stage explicit task paths. Missing/deleted/global
+unit inputs widen unit selection; missing related-test evidence falls back to full
+app units. Neither stage selects E2E. Static checks retain whole type/architecture
+graphs and changed-file lint/format. Full `check` lints/formats the full configured scope.
 
-Selection: changed files for lint/format, related Vitest tests, whole-project typecheck
-and architectural invariants, all tooling tests for tooling changes. Deletions and
-global inputs expand unit selection; production changes expand browser selection to
-all Chromium journeys. Full CI runs every suite, with browsers in a parallel matrix.
-Use direct/full commands only for diagnosis or justified necessity, recording why.
-Manual acceptance is separate; scripts do not establish screen-reader/OS acceptance.
+Logs/summary and successful receipts live under `.check-logs/static/` and
+`.check-logs/unit/`, keyed by exact tree/base. Static and unit receipts cannot satisfy
+each other or reuse historical combined receipts. `--force` explicitly reruns;
+`--plan` displays selection without Docker. No stash/index rewrite occurs. Changed
+manifests install dependencies in the snapshot when needed.
 
-Build command inside Docker: `docker compose -p zmk-customizer -f infra/compose.yaml run --rm app npm run build`. Do not run destructive cleanup to prepare checks. Record failures and unavailable checks accurately.
+Pre-commit checks **only static** staged bytes and reuses an exact passing static
+receipt. It never starts unit/E2E tests; run those explicitly at their task/feature
+boundaries. A final feature commit requires full unit and full configured E2E evidence;
+intermediate module commits do not implicitly trigger browsers. CI still owns full
+coverage thresholds, tooling checks and the browser matrix for the final PR revision.
+The legacy `check:focus` alias now forwards to `test:unit:focus` and requires a file;
+it is no longer a combined/browser diagnostic runner. `test:unit:focus -- tests/unit/domain/wiring` also accepts an explicit app test module.
+The old `--focus` snapshot
+option and automatic production-to-Chromium expansion are retired.
 
-Container definitions and the pinned ZMK runner live in `infra/`; Makefile selects them with explicit paths and the stable `zmk-customizer` Compose project name. Build contexts and app mounts remain at the repository root. Docker ignore rules are Dockerfile-specific files beside the Dockerfiles, so no root `.dockerignore` is needed.
+## Development and explicit diagnostics
 
-Mutation orchestration uses host Node 24: Makefile delegates to npm run test:mutations / npm run test:e2e:mutations, which launch the test containers through Docker. The application checks and builds continue to run inside Docker.
+```
+make up / down / logs / sh / install  # development server http://localhost:5173
+npm run dev / build / preview
+npm run lint:fix / format            # explicit repairs; check never rewrites files
+make image / prod                   # production image, http://localhost:8080
+make zmk-build                      # local pinned firmware verification
+make test-mutations / test-e2e-mutations # deliberate sensitivity experiments
+```
 
-Focused checks are diagnostic: supported Parts/layout/encoder, project creation/import
-and onboarding changes select related Chromium journeys plus keyboard, accessibility
-and lifecycle guards. Unknown runtime areas, shared/global inputs and deletions fall
-back to all Chromium journeys. Changed browser specs are always included. Unit and
-static selection follow the normal runner. The mapping lives in
-`scripts/focused-check-plan.mjs`; extend it with affected user journeys when adding areas.
+`make test-unit-focus ARGS='tests/unit/example.test.ts -t case'` runs the focused
+command in Docker. Build browser image/dependencies when needed; `make help` lists
+wrappers. Mutation runners still execute alone because they temporarily edit source;
+quality experiments are explicit, not a mandatory per-edit red/green loop. The browser
+runner uses isolated profiles and a production build. Do not claim OS/screen-reader
+or firmware acceptance from static/unit/browser results alone.
 
-`check:focus` accepts the same `--base REV` and `--force` options. `--plan` also works
-with `check:changed`; file existence comes from the selected Git tree. Planning uses
-the invoked runner version, while execution recomputes selection inside the snapshot.
-Focus receipts/logs live under `.check-logs/focus/`, separate from final receipts.
-Each execution writes `summary.json` with selection reasons, status, per-step timing,
-full-log paths and bounded failure excerpts. Read it first, then the relevant full log.
-A successful focus run never replaces `check:changed` or its pre-commit gate.
+Container definitions and pinned ZMK runner live in `infra/`; Compose project name
+is `zmk-customizer`. Never run destructive cleanup to prepare checks. Record actual
+failures, commands, revision and limits in the owning verification journal.
 
 ## Agent maintenance helpers
 
