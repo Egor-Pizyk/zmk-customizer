@@ -7,7 +7,11 @@ export function prepareTerminals(
   input: WiringEdit,
   terminals: readonly WiringTerminal[],
 ): Result<readonly WiringTerminal[], string> {
-  if (input.kind === 'auto') {
+  if (
+    input.kind === 'auto' ||
+    (input.kind === 'mode' && input.mode === 'matrix') ||
+    (input.kind === 'topology' && project.wiring?.kind === 'matrix')
+  ) {
     return assignAutoPins(project, { board: input.board, terminals });
   }
   const error = getPinCapacityError(terminals, input.board);

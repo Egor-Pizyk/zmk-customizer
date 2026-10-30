@@ -203,3 +203,6 @@ Prettify requirements/tasks above are withdrawn from the current release by expl
 
 - [x] T083 Current user scope supersedes earlier matrix style choice: tests-first fixed symmetric default/legacy read preservation and absence of Routing style; remove old generator branch, retain historical format parsing and update impacted contracts/onboarding/tests.
 - [x] T084 Tests-first Direct separated paths/GND outputs and minimum parallel clearance for grid, stagger/rotation and split, unchanged GPIO/GND/export/locks/history; implement deterministic local route helper, review real generated UI and run focus/final gates.
+
+
+- [ ] T085 [BM-085–BM-088] Reproduce Matrix mode/topology buses without GPIO; reuse assignAutoPins in prepareTerminals to assign available pins immediately. Preserve valid/manual/encoder reservations, independent split namespaces, resource/lock atomicity, preview/history and exports. Verify independent pin/circuit assertions plus native preview/Apply/Cancel/Undo, record rejected wrong behavior and run the logical-checkpoint final gate.

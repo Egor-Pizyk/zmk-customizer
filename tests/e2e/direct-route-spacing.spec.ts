@@ -99,7 +99,21 @@ for (const colorScheme of ['light', 'dark'] as const) {
     await page.getByText('Wiring', { exact: true }).click();
     await page.getByRole('combobox', { name: 'Scanning type', exact: true }).selectOption('matrix');
     await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toBeEnabled();
-    await expect(page.locator('svg text').filter({ hasText: /^R0 unassigned$/u })).toHaveCount(1);
+    await expect(page.locator('svg text').filter({ hasText: /^R0 D0$/u })).toHaveCount(1);
+    await expect(page.locator('svg text').filter({ hasText: /^C2 D5$/u })).toHaveCount(1);
+    for (const [index, label] of ['row 0', 'row 1', 'row 2', 'col 0', 'col 1', 'col 2'].entries()) {
+      await expect(
+        page.getByRole('combobox', { name: `left ${label} pin`, exact: true }),
+      ).toHaveValue(String(index));
+    }
+    expect(await saved(page)).toEqual(accepted);
+    await page.getByRole('button', { name: 'Apply wiring', exact: true }).click();
+    expect((await saved(page)).wiring?.terminals.map((terminal) => terminal.boardPin)).toEqual([
+      0, 1, 2, 3, 4, 5,
+    ]);
+    await history(page, 'Undo').click();
+    expect(await saved(page)).toEqual(accepted);
+    await page.getByRole('combobox', { name: 'Scanning type', exact: true }).selectOption('matrix');
     await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
     await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toBeEnabled();
     await expect(page.locator('svg text').filter({ hasText: /^R0 D\d+$/u })).toHaveCount(1);

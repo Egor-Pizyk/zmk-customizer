@@ -181,3 +181,25 @@ Matrix generation always uses Symmetric matrix buses. Remove Routing style and t
 Direct refinement: separate output sites have at least0.3u clearance from other output sites and unrelated physical pins (larger saved clearance wins). Bend handles appear for selected Direct wires only, so unrelated handles cannot obscure neighbouring pins or wire inspection. Selecting a section reveals its handles; clicking a handle without moving does not alter geometry/history. Matrix bend interaction remains unchanged.
 
 Direct controls stay inspectable: only the selected wire shows bend handles; lock icons are shown for selected/locked wires and on keyboard focus, with the list always available. Hidden controls do not intercept other wires. Direct does not offer adding unsupported diodes on the drawing; existing diode removal stays available. Routing maintains0.3u standoff from unrelated pins as well as distinct outputs, avoiding apparent contacts and covered inspection targets.
+
+
+## Automatic Matrix GPIO assignment — 2026-10-29
+
+Automatic Matrix construction on a scan-mode or topology change assigns available
+controller GPIOs to every row/column terminal in the preview, just as Generate does.
+A separate Generate click is not required to turn drawn buses into assigned circuits.
+Retain valid existing terminal assignments; exclude occupied encoder/manual GPIOs;
+split halves have independent controller namespaces. Insufficient resources or invalid
+retained assignments refuse the whole proposal without modifying the source/history.
+Manual pin clearing and project Open remain explicit/manual operations; neither
+silently assigns pins. Existing preview/Apply/Cancel/Undo/export contracts remain.
+This supersedes earlier expectations that mode/topology previews leave GPIO unassigned.
+
+### Core behavior test matrix
+
+| ID / requirement | Files (source and test) | Main methods / operations | Condition / input | Expected observable result | Why correct / independent source | Wrong variant / bug rejected |
+|---|---|---|---|---|---|---|
+| BM-085 / automatic Matrix GPIO | src/domain/wiring/editing/prepare-terminals.ts; tests/unit/domain/wiring/editing/automatic-matrix-pins.test.ts; tests/e2e/direct-route-spacing.spec.ts | prepareTerminals, editWiring, deriveWiring | Direct→Matrix on3×3 nice_nano_v2, no occupied pins |3 rows D0–D2,3 cols D3–D5; attached circuit derives those pins before another Generate |3 logical rows+3 cols need6 distinct GPIOs; catalog order starts0–5; wiring/export derive the bound terminals | Mode branch skips allocation: six Unassigned terminals; exact terminal/derived matrix assertions and native labels reject it |
+| BM-086 / split namespaces and preservation | same domain/test files | prepareTerminals, editWiring |2×2 Matrix→split; left rows8,9/cols10,14 retained where present |Left rows8,9/col10; new right rows0,1/col2 |Each half has2 rows/1 column; valid left assignments preserved; each controller independently allocates its free catalog GPIOs | Only mode allocates, topology does not; or allocator overwrites valid pins/incorrectly shares controller namespace |
+| BM-087 / occupied GPIOs | same domain/test files | prepareTerminals, editWiring |3×3 conversion with retained manual wire occupying D0 |Matrix terminals use D1–D6; manual D0 wire stays unchanged |One retained manual net already owns D0; six new nets need six other GPIOs | Allocate0–5 blindly, collide with manual D0 or delete unrelated wire |
+| BM-088 / atomic capacity refusal | same domain/test files | prepareTerminals, editWiring |3×3 conversion, controller exposes only5 GPIOs |Refuse with capacity reason; source unchanged |6 distinct row/column nets cannot fit5 pins; partial assignment is not an acceptable matrix | Return partial/unassigned matrix or mutate input on allocation failure |

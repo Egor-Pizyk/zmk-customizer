@@ -348,3 +348,40 @@ Additional three-engine acceptance found Firefox caption bounds touching pin art
 
 
 Final caption acceptance: `040-direct-captions-final.log` passes6/6 offline native cases across Chromium/Firefox/WebKit, light/dark,59.4s. Updated final light/dark screenshots at `040-direct-final-review/{light,dark}.png` were inspected after the correction: plain D0–D8/GND captions remain readable without covering pin dots/numbers. Mandatory staged tree `dd37899d5b31403d667796d8521deab5b5d470e7` against aee8759 passes all static checks,263/263 related units in80 reported suites and186/186 Chromium cases including six native performance cases,425353ms. Receipt `.check-logs/dd37899d5b31-aee87594456d/{summary,passed}.json`. This supersedes the caption limitation of the earlier full1622-unit/186-browser passing implementation snapshot. Final evidence closure changes documentation only; no source or test changes follow this passing tree. T083/T084 complete, other open040 tasks unchanged.
+
+
+## T085 automatic Matrix GPIO assignment — 2026-10-29
+
+At da6ac8e user reports3×3 automatic Matrix buses with six Unassigned terminals.
+Mode/topology construction routed buses through routeAssignedWiring, while
+prepareTerminals invoked assignAutoPins only for Auto; Generate separately assigned
+GPIO. Current spec amendment and BM085–088 matrix were written before tests.
+Expected0–5 follows the controller catalog and3+3 distinct nets, not implementation
+output. Split preservation and occupied manual D0 have independently specified pins.
+
+New regression initially fails3/4 (`040-auto-matrix-pins-red.log`); fixture review
+corrected a buildProject override that the helper does not support and D11, absent
+from nice_nano_v2's catalog. Corrected baseline probe restores the original Auto-only
+branch under withSourceMutation, and BM085/086/087 reject undefined assignments
+(`040-auto-matrix-pins-red3.log`); source bytes restore exactly. The earlier probe
+red2 log is a runner-argument error, not sensitivity evidence. BM088 is a preserved
+capacity regression, not a separately mutated capacity-policy proof. Other allocator
+mutations were not run. Existing Auto tests cover encoder reservations/conflicts.
+
+prepareTerminals now also allocates for Matrix mode/topology changes, using the same
+allocator and atomic outer protection policy. Direct mode/topology, manual clearing,
+Open and schema/ZMK syntax remain unchanged. Focused37/37 domain tests pass
+(`040-auto-matrix-pins-green3.log`); typed lint replaced an unsafe asymmetric matcher
+with the existing typed result-error helper, without weakening refusal behavior.
+Native light/dark Direct→Matrix checks assert immediately assigned row/col labels
+and all6 GPIO controls, unchanged saved state until Apply, saved assignments after
+Apply, exact Undo and later Generate/Cancel. No onboarding text/target changes are
+needed: actions/controls are unchanged and existing Generate learning still applies.
+Final logical-checkpoint gate follows after the targeted three-engine run.
+
+
+Targeted native run passes6/6 Chromium/Firefox/WebKit light/dark cases
+(`040-auto-matrix-pins-browser.log`,1.1m). Focus planning expands this shared domain
+file to the full Chromium suite; the diagnostic run was stopped after static checks,
+before browser execution, to avoid duplicating the mandatory final broad run. It is
+not a successful focus receipt. Required final gate uses the complete task snapshot.
