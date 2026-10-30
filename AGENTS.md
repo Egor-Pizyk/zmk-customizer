@@ -45,7 +45,7 @@ selection alone.
 | Change React behavior or controls | Applicable `docs/guidelines/frontend/react.md`, `accessibility.md`, `admin-ui.md` sections |
 | Change styles or tokens | `docs/guidelines/frontend/tailwind.md`; relevant existing `src/styles.css` tokens |
 | Change ZMK output/catalog facts | Relevant verified `docs/zmk/` page, affected generator/catalog contract and independent fixture; use its README to locate the page if needed |
-| Choose/run tests | Relevant `docs/testing.md` and `docs/commands.md` sections: correct behavior and spec matrix before tests, tests-first where required, focused diagnosis; mandatory `check:changed` at the logical end of a task item or substantial change, never after each file edit |
+| Choose/run checks | `docs/testing.md`, `docs/commands.md`: behavior matrix first; static `check` after a complete module/import flow; all units at task completion; focus only after a full-unit failure; full E2E only at feature/final completion. Pre-commit/check:changed are static-only |
 | Change dependencies, infrastructure or tooling | Relevant `docs/tooling.md`, `docs/commands.md` sections and affected decision |
 | Change an accepted project decision | `docs/decisions/README.md` and affected ADR |
 

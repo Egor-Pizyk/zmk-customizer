@@ -22,7 +22,7 @@ install: ## npm ci and install the staged-check Git hook
 	$(RUN) npm ci
 	npm run hooks:install
 
-check: ## typecheck + lint + format check + tests (same as CI)
+check: ## architecture + types + lint + format (no unit/E2E tests)
 	$(RUN) npm run check
 
 test-mutations: ## Verify tests catch seeded business regressions (run alone)
@@ -48,5 +48,16 @@ test-e2e: ## Run production browser journeys in isolated Chromium/Firefox/WebKit
 test-e2e-mutations: ## Verify nine browser regressions (run alone)
 	npm run test:e2e:mutations
 
-check-changed: ## Check staged files (exact index snapshot)
+check-changed: ## Static checks for staged files (exact index snapshot)
 	npm run check:changed
+
+.PHONY: test-unit test-unit-changed test-unit-focus
+
+test-unit: ## All application/tooling unit tests at task completion
+	$(RUN) npm run test:unit
+
+test-unit-changed: ## Unit tests related to staged changes
+	npm run test:unit:changed
+
+test-unit-focus: ## Diagnose a failed unit: make test-unit-focus ARGS='tests/unit/example.test.ts'
+	$(RUN) npm run test:unit:focus -- $(ARGS)

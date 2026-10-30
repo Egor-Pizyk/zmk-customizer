@@ -13,9 +13,9 @@
     "format:check": "oxfmt --check",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check": "npm run check:architecture && npm run check:guidelines && npm run check:mutation-runners && npm run check:release && npm run typecheck && npm run test:e2e:types && npm run lint && npm run format:check && npm run test:coverage",
+    "check": "npm run check:architecture && npm run typecheck && npm run test:e2e:types && npm run lint && npm run format:check",
     "test:coverage": "vitest run --coverage",
-    "check:architecture": "node --test tests/tooling/check-architecture.test.mjs tests/tooling/module-imports.test.mjs tests/tooling/module-imports-lint.test.mjs tests/tooling/public-api-origins.test.mjs && node scripts/check-architecture.mjs",
+    "check:architecture": "node scripts/check-architecture.mjs",
     "check:guidelines": "node --test tests/tooling/check-guidelines.test.mjs && node scripts/check-guidelines.mjs",
     "test:e2e": "playwright test",
     "test:e2e:types": "tsc --project tsconfig.e2e.json --noEmit",
@@ -25,8 +25,12 @@
     "check:release": "node --test tests/tooling/create-release.test.mjs",
     "check:changed": "node scripts/check-changes.mjs",
     "hooks:install": "node scripts/install-hooks.mjs",
-    "check:static": "npm run check:architecture && npm run check:guidelines && npm run check:mutation-runners && npm run check:release && npm run typecheck && npm run test:e2e:types && npm run lint && npm run format:check",
-    "check:focus": "node scripts/check-changes.mjs --focus"
+    "check:static": "npm run check",
+    "check:focus": "npm run test:unit:focus --",
+    "test:unit": "npm run test && npm run test:tooling",
+    "test:tooling": "node --test tests/tooling/*.test.mjs",
+    "test:unit:changed": "node scripts/check-changes.mjs --unit-only",
+    "test:unit:focus": "node scripts/unit-test-focus.mjs"
   },
   "dependencies": {
     "@joint/core": "4.3.3",

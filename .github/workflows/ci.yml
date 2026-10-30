@@ -22,6 +22,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check:static
+      - run: npm run check:guidelines
       - run: npm run build
 
   unit:
@@ -33,6 +34,7 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - run: npm run test:tooling
       - name: Unit tests and coverage thresholds
         id: coverage
         run: npm run test:coverage

@@ -1,6 +1,6 @@
 # 0018. Task-scoped agent context and proportional SDD
 
-Status: Partially superseded by 0024 (startup/context-loading policy)
+Status: Partially superseded by 0024 (context loading) and 0025 (test execution timing)
 Date: 2026-10-15
 
 ## Context

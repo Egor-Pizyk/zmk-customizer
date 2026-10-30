@@ -1,5 +1,4 @@
 import { changedCheckPlan, describeCheckPlan } from './changed-check-plan.mjs';
-import { focusedCheckPlan } from './focused-check-plan.mjs';
 import { spawnSync, execFileSync } from 'node:child_process';
 import {
   mkdirSync,
@@ -22,11 +21,11 @@ for (let index = 0; index < args.length; index++) {
   if (arg === '--base') {
     base = args[++index];
     if (!base || base.startsWith('--')) throw new Error('--base requires a Git revision');
-  } else if (!['--focus', '--plan', '--force'].includes(arg)) {
+  } else if (!['--unit-only', '--plan', '--force'].includes(arg)) {
     throw new Error(`Unknown check option: ${arg}`);
   }
 }
-const mode = args.includes('--focus') ? 'focus' : 'final';
+const mode = args.includes('--unit-only') ? 'unit' : 'static';
 // Index mode is exact even with partially staged files. --base compares committed HEAD.
 const baseRevision = git('rev-parse', '--verify', `${base ?? 'HEAD'}^{commit}`);
 const revision = base ? git('rev-parse', 'HEAD^{tree}') : git('write-tree');
@@ -42,9 +41,7 @@ const indexed = new Set(
     '\0',
   ),
 );
-const plan = (mode === 'focus' ? focusedCheckPlan : changedCheckPlan)(files, (file) =>
-  indexed.has(file),
-);
+const plan = changedCheckPlan(files, (file) => indexed.has(file), mode);
 if (args.includes('--plan')) {
   console.log(
     JSON.stringify(
@@ -63,28 +60,25 @@ mkdirSync('.check-changes', { recursive: true });
 const logs = path.join(
   root,
   '.check-logs',
-  ...(mode === 'focus' ? ['focus'] : []),
+  mode,
   `${revision.slice(0, 12)}-${baseRevision.slice(0, 12)}`,
 );
 mkdirSync(logs, { recursive: true });
-const receipt = path.join(logs, mode === 'focus' ? 'focus-passed.json' : 'passed.json');
+const receipt = path.join(logs, `${mode}-passed.json`);
 if (!process.argv.includes('--force') && existsSync(receipt)) {
   const previous = JSON.parse(readFileSync(receipt, 'utf8'));
   if (
+    previous.mode === mode &&
     previous.revision === revision &&
     previous.base === baseRevision &&
     JSON.stringify(previous.files) === JSON.stringify(files)
   ) {
-    console.log(
-      `Already checked ${mode === 'focus' ? 'diagnostic focus (final still required) for ' : ''}tree ${revision}; receipt: ${receipt}`,
-    );
+    console.log(`Already checked tree ${revision} (${mode}); receipt: ${receipt}`);
     process.exit(0);
   }
 }
 rmSync(receipt, { force: true });
-console.log(
-  `${mode === 'focus' ? 'Diagnostic focus (not a final check)' : 'Checking'} tree ${revision}; logs: ${logs}`,
-);
+console.log(`Checking ${mode} stage tree ${revision}; logs: ${logs}`);
 const snapshot = mkdtempSync(path.join(root, '.check-changes', 'snapshot-'));
 try {
   const archive = execFileSync('git', ['archive', revision], { maxBuffer: 100 * 1024 * 1024 });

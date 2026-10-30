@@ -10,11 +10,13 @@ Requires Docker.
 
 ```
 make up      # dev server at http://localhost:5173
-make check   # typecheck, lint, format check, tests (same as CI)
+make check   # architecture, types, lint, format (no unit/E2E)
+make test-unit # all app/tooling units at task completion
+make test-e2e  # full browser suite at feature/final completion
 make help    # all targets
 ```
 
-Full command list: [AGENTS.md §5](AGENTS.md#5-commands).
+Full command list: [docs/commands.md](docs/commands.md).
 
 ## App layout
 

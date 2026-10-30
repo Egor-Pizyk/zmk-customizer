@@ -62,3 +62,5 @@ What becomes easier, what becomes harder, what we must now keep true.
 - [0023 — JointJS Schematic projection](0023-jointjs-schematic-projection.md) — Accepted UI-only dependency and state boundary; implementation pending.
 
 - [0024 — Lazy agent context and focused review](0024-lazy-context-and-focused-review.md) — Partially supersedes 0018 startup/context loading; removes blanket UI/manual accessibility review and exclusive performance scheduling.
+
+- [0025 — Separate static, unit and final browser verification](0025-separate-verification-stages.md) — Module/task/feature checkpoints; partially supersedes 0018 execution timing and 0021 combined local checks.

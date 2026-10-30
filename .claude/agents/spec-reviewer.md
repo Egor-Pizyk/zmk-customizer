@@ -26,7 +26,7 @@ Use the feature directory given by the caller; otherwise resolve it through the 
 - Accessibility: every new canvas interaction has a keyboard/table path (docs/principles.md → Accessible, ADR 0008).
 
 ## tasks.md
-- Test tasks precede their implementation tasks for domain, storage and generator work (docs/workflow.md).
+- Behavior/test contracts precede implementation; static/module, full-unit/task and full-E2E/final execution follow docs/testing.md. No required premature red execution or mid-task E2E.
 - Every generator task has a golden-file test task.
 - Completion tasks use the applicable checks in docs/commands.md and docs/testing.md, and link requirements to evidence.
 - Tasks are small enough for one Conventional Commit each.

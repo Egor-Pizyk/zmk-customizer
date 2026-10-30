@@ -13,7 +13,7 @@ test('worker reports bounded failures, timing and complete logs without a Node s
       mkdirSync(path.join(directory, name), { recursive: true });
     writeFileSync(
       path.join(directory, '.changed-files.json'),
-      JSON.stringify({ files: ['docs/testing.md'], revision: 'probe-tree', mode: 'focus' }),
+      JSON.stringify({ files: ['docs/testing.md'], revision: 'probe-tree', mode: 'static' }),
     );
     writeFileSync(
       path.join(directory, 'bin/npm'),
@@ -37,7 +37,7 @@ process.exit(7);
     const summary = JSON.parse(
       readFileSync(path.join(directory, '.check-logs/summary.json'), 'utf8'),
     );
-    assert.equal(summary.mode, 'focus');
+    assert.equal(summary.mode, 'static');
     assert.equal(summary.status, 'failed');
     assert.equal(summary.revision, 'probe-tree');
     assert.equal(summary.checks.length, 1);

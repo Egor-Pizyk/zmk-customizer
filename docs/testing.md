@@ -14,8 +14,8 @@ First determine the correct observable behavior from an accepted requirement,
 domain invariant, independently worked example, historical compatibility fixture or
 verified pinned ZMK source. Resolve material uncertainty before choosing an expected
 value. Existing implementation output is not its own specification. Then define the
-matrix below and write tests; implementation follows those contracts. Preserve the
-existing tests-first rules for domain, storage, generators and bug regressions.
+matrix below and write tests; implementation follows those contracts. Write the behavioral contracts before implementation where practical; execute tests
+at the task/feature boundaries below, not while APIs/imports are knowingly incomplete.
 
 ### Core behavior matrix in the specification
 
@@ -93,34 +93,38 @@ normally. jsdom shims model missing native APIs, not business behavior.
 
 ## Commands and regression floors
 
-Use the local snapshot selection, conservative test expansion and exact-tree receipts
-in [commands](commands.md). CI owns full unit coverage, static/tooling, browser,
-image and mutation suites; firmware compilation is local-only (see Git flow).
-Direct/full local commands require a diagnostic or justified-necessity reason in
-the task journal. No repeated full-local or three-run browser gate is required.
-Tests-first and the final-index hook remain mandatory. Manual acceptance is required only by an explicit task-specific acceptance criterion.
+Use the separate commands in [commands](commands.md). CI retains coverage floors,
+tooling and browser matrix. Local static, unit and browser stages are independent;
+no static/unit command may implicitly start Playwright.
 
 ### Changed-check cadence
 
-Run mandatory `npm run check:changed` at a logical checkpoint: the completed scope
-of a `tasks.md` item (or `task.md` when that is the task file), or a substantial
-completed change such as a cross-module behavior change or large refactor. Finish
-its implementation, regression coverage and applicable lint/format fixes together,
-then stage the complete checkpoint and check it once before recording it as verified.
-A red-only TDD step is intermediate; check the completed red/green unit after its
-implementation is ready. Do not split incomplete work merely to create checkpoints.
+1. **Logical module:** finish all related source/test files, imports/exports, types
+   and callers, then run `npm run check` (architecture, types, lint, format). Do not
+   run during an obviously incomplete edit sequence. Pre-commit/check:changed provide
+   the same static-only responsibility on exact staged bytes.
+2. **Completed task item:** run `npm run test:unit` (all app and tooling units).
+   `test:unit:changed` is available for staged impact checks but does not replace
+   the full-unit task checkpoint. Author contracts/matrix first; there is no mandatory
+   early red execution or per-file TDD run while implementation is incomplete.
+3. **Actual unit failure:** finish the related repair, then use
+   `test:unit:focus -- path/to/test -t "case"` for that failed module/case. Do not
+   use focus routinely before the full suite has exposed a failure. Record the
+   full-run failure and the diagnostic result; full units run again at the next
+   task/final checkpoint, not after every diagnostic edit.
+4. **Feature/final commit:** after implementation, static checks and unit repairs are
+   complete, run the entire configured `test:e2e` suite explicitly. No partial or
+   full browser run mid-task. On a final-suite failure repair it, complete static/unit
+   checks appropriate to the repair, and rerun the final suite before claiming it passed.
 
-Within a task, use the affected test, lint or `check:focus` for diagnosis as needed.
-Editing or saving a file, adjusting formatting, or responding to an intermediate
-failure does not trigger `check:changed`. If later edits invalidate a receipt, finish
-the next logical checkpoint and rerun there, rather than after each file edit.
-For a failed checkpoint, diagnose and finish the related corrections before rerunning.
-Never repeat a successful check of the same tree/base without a concrete reason.
-
-Commit at logical checkpoints. The final-index hook still requires the exact staged
-snapshot to pass and reuses its successful receipt; it is not an instruction to
-commit/check every file. Reporting-only edits follow the documentation route.
-Conservative browser selection and CI gates remain unchanged.
+This cadence supersedes generic early-red/combined-check execution instructions in
+older feature artifacts; their behavior assertions and acceptance coverage remain.
+No repeated successful run is required for the same unchanged scope/revision. Batch
+fixes before validation; do not split knowingly incomplete work into checkpoints.
+Intermediate module commits run static-only hooks. Full unit/coverage and E2E remain
+separate CI jobs; local check does not provide their evidence. Mutation sensitivity
+experiments are deliberate boundary-stage work, not automatic per-edit test runs.
+Reporting-only edits use documentation checks, not a new product E2E cycle.
 
 CI publishes one bot coverage comment per PR with the checked SHA, metrics, threshold
 outcome and run link. New runs replace it; stale heads/attempts cannot overwrite current
@@ -168,7 +172,8 @@ glibc. `npm run test:e2e` is the equivalent on a supported host after `npm ci` a
 an existing server or a normal browser profile. Every test has an isolated context and
 imports predictable JSON through the real app's file dialog. Runtime dependencies stay unchanged.
 
-`make check` also typechecks/lints the browser tests; it retains the Vitest coverage gates.
+`make check` typechecks/lints browser test source but executes no unit/browser suites.
+Vitest coverage gates remain in the separate CI unit job.
 Browser execution is a separate required CI job. It uses one worker and zero retries,
 so a flaky first attempt stays visible. CI uploads `playwright-report/` and `test-results/`
 for 14 days even on failure. Traces and screenshots are retained for failed tests;
@@ -224,9 +229,9 @@ For new or changed user journeys, add or update Playwright E2E tests and include
 - Use accessible roles/names. For canvas interactions use coordinates of displayed elements; perform drags with `mouse.move/down/up` and intermediate movements.
 - Do not mock core services, use `force:true`, dispatch synthetic events, call handlers, change state through `evaluate`, or use arbitrary sleeps. `evaluate` is observation-only; wait for a concrete state.
 - Check screen geometry, including corners of rotated elements rather than only bounding boxes. Add independent visual snapshots where they detect paint errors; justify tolerances and inspect the cause of differences before updating references.
-- For a discovered bug, first reproduce a failing test, then fix its cause in the owning architectural layer. Domain/generator repairs also require their own tests-first contracts.
+- For a discovered bug, define its expected behavior and regression contract before the repair. Execute it with the full unit task checkpoint and final E2E stage; a knowingly incomplete API/import is not a required red checkpoint.
 - For a substantial new interaction contract, prove test sensitivity with a controlled behavioral regression. Run it separately from checks and production edits, require a user-facing or saved-data assertion failure, and restore exact original files. Do not require every domain permutation or all six existing browser seeds for every feature.
-- The complete Chromium suite is mandatory in CI. Add targeted Firefox/WebKit cases for SVG, foreignObject, pointer capture, native inputs and focus where the feature touches them.
+- The complete configured browser suite runs only at feature/final completion locally; CI retains its browser matrix. Add representative Firefox/WebKit cases for engine-sensitive behavior without running them mid-task.
 - Apply the change-specific completion checks in [commands.md](commands.md). Local selection runs through the changed-check script; full cross-browser execution belongs to CI.
 - Retain useful failure traces/screenshots. Record scenario → risk → existing coverage → new E2E → visible assertion → saved/exported assertion, verification results and remaining limits in feature artifacts. Commands and artifact handling are documented in `docs/testing.md`.
 - Never weaken assertions to make CI green or claim absence of user problems solely from passing tests.
@@ -261,14 +266,11 @@ See [testing history](testing-history.md), [browser verification](../specs/025-p
 
 ## Focused diagnostic loop
 
-Follow the tests-first requirements in docs/workflow.md: domain, storage, generators and regressions need a failing behavioral contract before implementation. Use the focused loop below during implementation and diagnosis.
-Stage explicit paths and inspect `npm run check:focus -- --plan`; run
-`npm run check:focus` while fixing failures. Read `summary.json` first and open full
-logs only where needed. The bounded UI mapping includes cross-cutting accessibility,
-keyboard and onboarding journeys; unknown/shared/global changes retain broad selection.
-Update mapping and selection regressions together when introducing new UI areas.
-At the logical task/substantial-change checkpoint, stage its complete change and run
-mandatory `check:changed` once, following the cadence above. Intermediate edits use
-focused diagnostics; reruns wait for the next completed checkpoint or related fix.
-Focus and final receipts are separate. This reduces repeated output and diagnostic work without changing final
-coverage policy. Test assertions still require human/agent judgment; no script rewrites them.
+Define behavior and the spec matrix before implementation. Complete the module and
+run static checks; execute all units at the task boundary. Only after that run exposes
+a failure, repair it and use `test:unit:focus` for the named failing file/case. Inspect
+actual assertion failures and retain expected-result rationale. `test:unit:changed`
+is a separate optional staged-impact command, not a hidden static/browser stage.
+Final full configured E2E runs only at feature completion. Exact static/unit staged
+receipts are separate; a passing static stage cannot stand in for tests. See
+[commands](commands.md) and the cadence above. No script rewrites assertions.

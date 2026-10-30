@@ -15,11 +15,11 @@ Implementation conventions live in guidelines; test policy in `docs/testing.md`;
 
 - Inspect the working tree first. Use `bash scripts/agent-status.sh` when feature/branch ownership or resumption needs its revision and Spec Kit details; prose-only work does not require feature resolution. Inspect open PRs when Git flow requires it.
 - Search with `rg` / `rg --files` (`git grep` / `git ls-files` if unavailable), then load only the section needed for the next decision/edit. No startup document batch or union of all matching routing rows is required. Avoid broad multi-file dumps; reuse loaded rules under `AGENTS.md`.
-- Use `npm run check:focus -- --plan` and `npm run check:focus` for targeted diagnostics
-  after staging explicit paths; read `summary.json` before full logs. Focus receipts
-  never replace required `check:changed` at a completed task/substantial-change checkpoint.
-  Do not run it after each file edit; batch implementation and related fixes first,
-  following [changed-check cadence](testing.md#changed-check-cadence).
+- Complete the logical module (related files/imports/exports/callers) before static
+  `check`. Run all `test:unit` at task completion; only after a full-run failure use
+  `test:unit:focus` for the repaired failed file/case. `test:unit:changed` is explicit
+  staged impact selection. Full `test:e2e` runs only at feature/final completion.
+  Pre-commit/check:changed are static-only; never silently run browsers mid-task.
 - Save full logs to files. Return outcomes/counts and log paths; inspect focused
   failure excerpts. Repeated successful output and unchanged log tails add no evidence.
 - Wait for long processes in 20–30 second intervals; communicate meaningful progress

@@ -44,23 +44,28 @@ instead of inventing a contract. Stay within the assigned task.
 - Name tests by behavior. No domain mocks, any, non-null assertions or type casts
   except as const; parse untrusted fixtures through storage schemas.
 
-## Prove rejection and hand off
+## Execution and handoff
 
-Run the smallest relevant test/diagnostic and preserve expected red. A missing export
-or compile/lint failure is only preliminary red; it does not prove that the intended
-behavioral assertion detects a bug. Do not weaken assertions or edit production code.
+Prepare the behavior matrix and tests first, but do not run incomplete imports/APIs
+merely to manufacture red. Complete the assigned test-authoring module; static check
+only after its obvious import/export flow is ready. At a completed task item run the
+full test:unit suite (or hand execution to the implementing agent when code is not
+ready). Do not launch focused tests routinely while authoring.
 
-For each core behavior, identify an observed rejected wrong variant: the reproduced
-pre-fix bug or an existing controlled mutation/counterexample probe. Link the matrix
-row, wrong variant, intended failing assertion, checked revision and log. A green
-run alone or a hypothetical bug list is not sensitivity evidence. Mark unprobed
-variants explicitly. If a wrong variant passes, improve the scenario/assertion.
-Delegate source-mutating probes to the implementing agent or existing mutation runner;
-never edit src/ yourself. Do not demand a full mutation suite for every row.
+If the full suite exposes a failure, repair the assigned test-side problem and use
+`test:unit:focus -- explicit/test/file -t case` for that failure. Never weaken a
+correct assertion or edit src/ to obtain green. Missing exports/compile errors are
+not behavioral sensitivity. Record the full-run failure and focused diagnostic.
 
-Use affected tests or check:focus as needed; coordinate staging with the caller.
-Read summary.json before full logs. Report matrix/test files, correctness rationale,
-observed rejection evidence, preliminary red or missing probes and material ambiguity.
-The implementing agent completes behavioral red/green and any outstanding probe,
-then runs check:changed at the logical task/substantial-change checkpoint, not per
-file edit. Do not claim completion from an unrun test or a green count alone.
+For core behavior link the matrix row, independently justified expected result and
+observed wrong variant rejected. Reuse full-run regressions or deliberate boundary
+quality experiments; hypothetical bug lists/green counts alone are not proof. Hand
+source-mutating probes to the implementer/existing mutation runner, disclose unprobed
+variants, and do not require a full mutation suite per row.
+
+Report files/matrix IDs, rationale, actual commands/results and unresolved questions.
+`test:unit:changed` is an explicit unit-only staged impact tool, not an implicit
+per-edit check. Static `check` follows complete logical modules; full units follow
+task completion. Never run E2E mid-task: all configured `test:e2e` belongs to final
+feature completion after unit repairs. Pre-commit/check:changed are static-only;
+they neither run nor prove unit/browser success. Coordinate staging with the caller.
