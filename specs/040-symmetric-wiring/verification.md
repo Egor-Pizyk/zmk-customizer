@@ -385,3 +385,16 @@ Targeted native run passes6/6 Chromium/Firefox/WebKit light/dark cases
 file to the full Chromium suite; the diagnostic run was stopped after static checks,
 before browser execution, to avoid duplicating the mandatory final broad run. It is
 not a successful focus receipt. Required final gate uses the complete task snapshot.
+
+
+T085 completion recorded2026-10-30: mandatory final tree
+1aaaa357051efb9f40e88d3dcd6a5523f5c3b371 againstda6ac8e passes all static checks,
+344/344 related units and186/186 Chromium cases including six native performance
+cases,423002ms. Receipt `.check-logs/1aaaa357051e-da6ac8e3bdc8/{summary,passed}.json`;
+implementation commit804c361 reuses the exact passing snapshot. Six targeted native
+three-engine cases recorded above cover all six assigned controls before Generate,
+read-only preview, Apply/Undo and Cancel. BM085–087 reject the reproduced allocation
+omission; BM088 preserves capacity refusal, with unprobed variants disclosed above.
+No firmware build, CI result or broader040 completion claimed. Existing saved
+unassigned geometry is repaired only through an explicit Generate/Apply, not Open.
+This follow-up changes task/evidence text only; user draft tmp.txt.save is preserved.
