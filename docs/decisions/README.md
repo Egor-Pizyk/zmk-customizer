@@ -1,62 +1,26 @@
 # Architecture decisions
 
-One file per decision: `NNNN-short-title.md`, ≤30 lines, never rewritten after acceptance. To change a decision, add a new ADR that supersedes the old one and set the old one's status to `Superseded by NNNN` (or `Partially superseded by NNNN` with the affected scope).
-
-A new runtime dependency always needs an ADR (docs/tooling.md). Undecided questions live in `docs/roadmap.md` → "Open decisions" until an ADR settles them.
-
-## Template
-
-```
-# NNNN. Title
-
-Status: Accepted | Superseded by NNNN | Partially superseded by NNNN
-Date: YYYY-MM-DD
-
-## Context
-What forces the decision. Facts, constraints, links.
-
-## Decision
-What we do. One paragraph or a short list.
-
-## Consequences
-What becomes easier, what becomes harder, what we must now keep true.
-```
-
-## Index
+Keep short rationale for durable architecture/dependency choices. New runtime dependencies need a brief decision; ordinary fixes and features do not need planning artifacts or approval stages. AGENTS.md and the current owning docs define implementation policy. Old workflow decisions have been retired.
 
 | # | Decision | Status |
 |---|---|---|
-| [0001](0001-static-spa-no-backend.md) | Static single-page app, no backend | Accepted |
-| [0002](0002-react-19-vite.md) | React 19 + Vite | Accepted |
-| [0003](0003-single-project-state.md) | Single serializable Project state, pure operations, versioned migrations | Accepted |
-| [0004](0004-oxlint-oxfmt.md) | oxlint + oxfmt instead of ESLint/Prettier | Accepted |
-| [0005](0005-docker-makefile.md) | Docker for dev and prod, Makefile for non-Node commands | Accepted |
-| [0006](0006-spec-kit.md) | Spec-Driven Development with GitHub Spec Kit | Partially superseded by 0019 |
-| [0007](0007-golden-file-tests.md) | Golden-file tests of generators against upstream ZMK shields | Accepted |
-| [0008](0008-svg-layout-editor.md) | SVG layout editor with keyboard-accessible table | Accepted |
-| [0009](0009-runtime-dependencies.md) | Runtime dependencies limited to react, zod, fflate | Accepted |
-| [0010](0010-target-zmk-v0-3.md) | Generated output targets ZMK v0.3 | Accepted |
-| [0011](0011-tailwind-design-system.md) | Tailwind CSS v4 as the design system | Accepted |
-| [0012](0012-behavior-testing.md) | Real React/DOM behavior tests and regression coverage floors | Accepted |
-
-- [0013 — Development architecture parser](0013-architecture-parser.md)
-
-- [0014 — Real browser behavioral testing](0014-browser-behavior-testing.md)
-
-- [0015 — Module public APIs and exact import aliases](0015-module-public-apis.md)
-
-- [0016 — Nested module APIs, infrastructure and agent context](0016-nested-modules-and-agent-context.md)
-
-- [0017 — Separate UI logic and React components](0017-ui-logic-and-components.md)
-
-- [0018 — Task-scoped agent context and proportional SDD](0018-task-scoped-agent-context.md)
-
-- [0019 — GitHub flow with stacked PRs and per-PR releases](0019-github-flow.md)
-
-- [0020 — One feature PR and asynchronous delivery](0020-single-pr-asynchronous-delivery.md)
-
-- [0021 — Selective local checks and PR delivery](0021-selective-checks-and-pr-delivery.md)
-
-- [0022 — Evidence-based mechanical technology selection](0022-mechanical-technology-evaluation.md) — Accepted evaluation process; technology choice pending research.
-
-- [0023 — JointJS Schematic projection](0023-jointjs-schematic-projection.md) — Accepted UI-only dependency and state boundary; implementation pending.
+| [0001](0001-static-spa-no-backend.md) | 0001. Static single-page app, no backend | Accepted |
+| [0002](0002-react-19-vite.md) | 0002. React 19 + Vite | Accepted |
+| [0003](0003-single-project-state.md) | 0003. Single serializable Project state, pure operations, versioned migrations | Accepted |
+| [0004](0004-oxlint-oxfmt.md) | 0004. oxlint + oxfmt instead of ESLint/Prettier | Accepted |
+| [0005](0005-docker-makefile.md) | 0005. Docker for dev and prod, Makefile for non-Node commands | Accepted |
+| [0007](0007-golden-file-tests.md) | 0007. Golden-file tests of generators against upstream ZMK shields | Accepted |
+| [0008](0008-svg-layout-editor.md) | 0008. SVG layout editor with keyboard-accessible table | Partially superseded by 0023 (Schematic scene ownership only; SVG and accessible alternatives retained) |
+| [0009](0009-runtime-dependencies.md) | 0009. Runtime dependencies limited to react, zod, fflate | Partially superseded by 0023 (@joint/core 4.3.3 in the Schematic adapter only) |
+| [0010](0010-target-zmk-v0-3.md) | 0010. Generated output targets ZMK v0.3 | Accepted |
+| [0011](0011-tailwind-design-system.md) | 0011. Tailwind CSS v4 as the design system | Accepted |
+| [0012](0012-behavior-testing.md) | 0012. Test observable behavior with real React and DOM | Partially superseded by 0026 (test selection and coverage floors) |
+| [0013](0013-architecture-parser.md) | 0013: Parser for repository architecture gates | accepted. Date: 2026-10-12. |
+| [0014](0014-browser-behavior-testing.md) | 0014: Real browser behavioral testing | Accepted |
+| [0015](0015-module-public-apis.md) | 0015: Module public APIs and exact import aliases | Superseded by 0016. Date: 2026-10-13. |
+| [0016](0016-nested-modules-and-agent-context.md) | 0016: Nested module APIs, infrastructure and agent context | Partially superseded by 0027 (agent context only); module APIs and infrastructure remain accepted |
+| [0017](0017-ui-logic-and-components.md) | 0017: Separate UI logic and React components | Accepted |
+| [0022](0022-mechanical-technology-evaluation.md) | 0022. Evidence-based mechanical technology selection | Accepted |
+| [0023](0023-jointjs-schematic-projection.md) | 0023. JointJS as a disposable Schematic projection | Accepted |
+| [0026](0026-business-risk-testing.md) | 0026. Business-risk test selection and aggregate coverage | Accepted |
+| [0027](0027-direct-development.md) | 0027. Direct implementation with focused feedback | Accepted |

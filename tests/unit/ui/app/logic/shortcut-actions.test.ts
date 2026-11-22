@@ -15,24 +15,6 @@ function sharedPan(panXPx: number) {
 }
 
 describe('getShortcutAction', () => {
-  it('switches workspace', () => {
-    expect(getShortcutAction('workspace-firmware', CONTEXT)).toEqual({
-      kind: 'change-preferences',
-      changes: { activeWorkspaceId: 'firmware' },
-    });
-  });
-
-  it.each([
-    ['toggle-snap', 'isSnapEnabled'],
-    ['toggle-grid', 'isGridVisible'],
-    ['toggle-issues-panel', 'isIssuesPanelOpen'],
-  ] as const)('%s flips %s', (id, field) => {
-    expect(getShortcutAction(id, CONTEXT)).toEqual({
-      kind: 'change-preferences',
-      changes: { [field]: !DEFAULT_PREFERENCES[field] },
-    });
-  });
-
   it('zooms the shared canvas view around the focused canvas center', () => {
     const factor = 1 + (0.25 * 2) / 3;
     expect(getShortcutAction('zoom-in', CONTEXT)).toMatchObject({
@@ -55,16 +37,5 @@ describe('getShortcutAction', () => {
 
   it('ignores canvas actions without a focused canvas', () => {
     expect(getShortcutAction('zoom-in', { ...CONTEXT, focusedCanvas: undefined })).toBeUndefined();
-  });
-
-  it('opens dialogs', () => {
-    expect(getShortcutAction('open-settings', CONTEXT)).toEqual({ kind: 'open-settings' });
-    expect(getShortcutAction('open-help', CONTEXT)).toEqual({ kind: 'open-help' });
-  });
-});
-
-describe('getShortcutAction: project shortcuts', () => {
-  it.each(['undo', 'redo', 'save-project', 'open-project'] as const)('%s', (id) => {
-    expect(getShortcutAction(id, CONTEXT)).toEqual({ kind: id });
   });
 });

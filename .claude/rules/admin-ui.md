@@ -1,1 +1,0 @@
-../../docs/guidelines/frontend/admin-ui.md

@@ -27,6 +27,35 @@ const project: Project = {
   insulatedCrossings: [],
 };
 
+test('marquee starts beside a wire while close clicks still select it at different zooms @cross-browser', async ({
+  page,
+}) => {
+  await openProject(page, project);
+  const canvas = page.locator('[data-canvas-workspace="schematic"]');
+  for (const zoom of ['normal', 'reduced']) {
+    if (zoom === 'reduced') {
+      for (let step = 0; step < 3; step += 1) {
+        await canvas.press('-');
+      }
+    }
+    for (const side of [
+      { offsetY: -5, keyIndex: 0, end: { xU: 4.5, yU: 2.5 } },
+      { offsetY: 5, keyIndex: 1, end: { xU: 10.5, yU: 10.5 } },
+    ]) {
+      const line = await screen(page, { xU: 6, yU: 5 });
+      await drag(page, { x: line.x, y: line.y + side.offsetY }, await screen(page, side.end));
+      await expect(
+        page.getByRole('checkbox', { name: `Select key ${side.keyIndex}`, exact: true }),
+      ).toBeChecked();
+      await expect(page.locator('[data-section-id="w1:0:0"] path[data-selected]')).toHaveCount(0);
+      await page.mouse.click(line.x, line.y + 2);
+      await expect(page.locator('[data-section-id="w1:0:0"] path[data-selected]')).toHaveCount(1);
+      expect(await saved(page)).toEqual(project);
+      await expect(history(page, 'Undo')).toHaveAttribute('aria-disabled', 'true');
+    }
+  }
+});
+
 for (const theme of ['light', 'dark'] as const) {
   test(`wire marquee intersects actual segments and mixed deletion is atomic in ${theme} @cross-browser`, async ({
     page,

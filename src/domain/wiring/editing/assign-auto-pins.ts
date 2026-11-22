@@ -1,5 +1,5 @@
 import { getNets } from '@domain/wires/nets';
-import { getWireHalf } from '@domain/wiring';
+import { getWireHalf } from '@domain/wires/geometry';
 import { getRetainedWires } from './get-retained-wires';
 import type { ControllerBoard, Half, Project, Result, WiringTerminal } from '@domain';
 

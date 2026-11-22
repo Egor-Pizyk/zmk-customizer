@@ -1,3 +1,4 @@
+import { refuseProtectedEdit } from './refuse-protected-edit';
 import { getSelectedKeyIds } from './get-selected-key-ids';
 import { getSelectedSectionIds } from './get-selected-section-ids';
 import { getKeySectionSelection } from './get-key-section-selection';
@@ -22,7 +23,7 @@ export function pressKeyOrSection(state: PointerState, input: Press): boolean {
 
 function startMultiKeyDrag(state: PointerState, world: WirePoint, event: Press['event']) {
   const selectedKeys = getSelectedKeyIds(state.selection, { project: state.project });
-  if (selectedKeys.length === 0) {
+  if (selectedKeys.length === 0 || refuseProtectedEdit(state, { keyIds: selectedKeys })) {
     return;
   }
   event.preventDefault();
@@ -52,7 +53,7 @@ function startSingleKeyDrag(
 ) {
   const key = state.project.keys.find((candidate) => candidate.id === event.keyId);
   state.onSelectionChange({ kind: 'key', keyId: event.keyId });
-  if (key !== undefined) {
+  if (key !== undefined && !refuseProtectedEdit(state, { keyIds: [key.id] })) {
     event.preventDefault();
     event.focus();
     event.capture();

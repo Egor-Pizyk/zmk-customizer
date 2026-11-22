@@ -1,8 +1,9 @@
+import { preserveWireProtection } from '@domain/wires/protection';
 import type { KeyGeometry, Project } from '@domain';
 import { createProject } from './create-project';
 import { PROJECT_BUDGET } from './project-budget';
 
-export function replaceProjectLayout(
+function replaceProjectLayoutCandidate(
   project: Project,
   geometries: readonly KeyGeometry[],
 ): Project {
@@ -14,4 +15,11 @@ export function replaceProjectLayout(
     name: project.name,
     keys: geometries.map((geometry, index) => ({ id: `k${index}`, ...geometry })),
   };
+}
+
+export function replaceProjectLayout(
+  project: Project,
+  input: Parameters<typeof replaceProjectLayoutCandidate>[1],
+): Project {
+  return preserveWireProtection(project, replaceProjectLayoutCandidate(project, input));
 }

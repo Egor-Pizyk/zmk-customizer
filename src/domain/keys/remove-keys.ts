@@ -1,4 +1,5 @@
-import { removeKey } from './remove-key';
+import { removeKeyCandidate } from './remove-key-candidate';
+import { preserveWireProtection } from '@domain/wires/protection';
 import type { Project } from '@domain';
 
 export function removeKeys(
@@ -7,7 +8,7 @@ export function removeKeys(
 ): Project {
   let next = project;
   for (const keyId of input.keyIds) {
-    next = removeKey(next, { keyId });
+    next = removeKeyCandidate(next, { keyId });
   }
-  return next;
+  return preserveWireProtection(project, next);
 }

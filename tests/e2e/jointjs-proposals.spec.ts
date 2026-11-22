@@ -13,7 +13,7 @@ import {
 test('proposal inspection and native Save/ZIP use accepted data', async ({ page }) => {
   await openProject(page, wiredFixture);
   await page.getByText('Wiring', { exact: true }).click();
-  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
+  await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Complete wiring', exact: true })).toHaveCount(0);
   await expect(page.locator('[data-wire-bend]')).toHaveCount(0);
   await key(page).focus();

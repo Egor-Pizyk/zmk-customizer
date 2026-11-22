@@ -1,5 +1,5 @@
 import { assignAutoPins } from './assign-auto-pins';
-import type { WiringEdit } from './edit-wiring';
+import type { WiringEdit } from './wiring-edit';
 import type { ControllerBoard, Project, Result, WiringTerminal } from '@domain';
 
 export function prepareTerminals(
@@ -7,7 +7,11 @@ export function prepareTerminals(
   input: WiringEdit,
   terminals: readonly WiringTerminal[],
 ): Result<readonly WiringTerminal[], string> {
-  if (input.kind === 'auto') {
+  if (
+    input.kind === 'auto' ||
+    (input.kind === 'mode' && input.mode === 'matrix') ||
+    (input.kind === 'topology' && project.wiring?.kind === 'matrix')
+  ) {
     return assignAutoPins(project, { board: input.board, terminals });
   }
   const error = getPinCapacityError(terminals, input.board);

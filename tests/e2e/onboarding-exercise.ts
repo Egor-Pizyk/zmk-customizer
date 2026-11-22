@@ -48,10 +48,11 @@ export async function continueOnboardingExercise(page: Page, info: TestInfo, isK
   await expect(
     page.getByRole('heading', { name: 'Connect the matrix', exact: true }),
   ).toBeVisible();
-  await activate(page.getByRole('button', { name: 'Rebuild wiring', exact: true }), isKeyboard);
+  await activate(page.getByRole('button', { name: 'Generate wiring', exact: true }), isKeyboard);
   await expect(
     page.getByRole('heading', { name: 'Connect the matrix', exact: true }),
   ).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toBeEnabled();
   await activate(page.getByRole('button', { name: 'Apply wiring', exact: true }), isKeyboard);
   await expect(
     page.getByRole('heading', { name: 'Check the six GPIOs', exact: true }),
@@ -99,7 +100,9 @@ export async function continueOnboardingExercise(page: Page, info: TestInfo, isK
     'Hardware and app settings',
     'App settings',
   ]) {
-    await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible();
+    const stepHeading = page.getByRole('heading', { name: heading, exact: true });
+    await expect(stepHeading).toBeVisible();
+    await expect(stepHeading).toBeFocused();
     await activate(page.getByRole('button', { name: 'Confirm and continue' }), isKeyboard);
   }
   await expect(

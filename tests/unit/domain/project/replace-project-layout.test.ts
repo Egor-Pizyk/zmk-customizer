@@ -11,7 +11,7 @@ it('replaces layout immutably with deterministic IDs and resets unrelated conten
   const project = replaceProjectLayout(UNIBODY_PRESET, [geometry]);
   expect(UNIBODY_PRESET).toEqual(before);
   expect(project).toEqual({
-    schemaVersion: 13,
+    schemaVersion: 14,
     encoders: [],
     name: before.name,
     controllerId: before.controllerId,

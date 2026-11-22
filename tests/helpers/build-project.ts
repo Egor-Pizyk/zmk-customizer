@@ -10,7 +10,7 @@ export function buildProject(input: {
   readonly layers?: Project['layers'];
 }): Project {
   return {
-    schemaVersion: 13,
+    schemaVersion: 14,
     encoders: [],
     combos: [],
     macros: [],

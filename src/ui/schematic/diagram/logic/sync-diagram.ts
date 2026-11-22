@@ -172,7 +172,9 @@ function updateExistingCell(
       existing.set({ attrs: attributes }, { silent: true });
       paper.findViewByModel<dia.ElementView>(existing).update(undefined, delta);
     } else {
-      existing.set({ attrs: attributes, z: index, markup }, { sort: false });
+      // New markup creates new SVG nodes: reset attributes from the old selector
+      // positions (notably text:null) must not clear a newly created group.
+      existing.set({ attrs: getAttributes(descriptor), z: index, markup }, { sort: false });
     }
   }).ok;
 }

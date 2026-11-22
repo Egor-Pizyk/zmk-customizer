@@ -3,7 +3,6 @@ import type { WiringEdit } from '@domain/wiring/editing';
 import type { Half, Project } from '@domain';
 import { NumberInput } from '@ui/components/components';
 import { WiringGrid } from './wiring-grid';
-import { WiringPinControls } from './wiring-pin-controls';
 
 export function WiringHalfControls({
   project,
@@ -16,7 +15,6 @@ export function WiringHalfControls({
       <legend className="font-semibold">{`${half} wiring`}</legend>
       <div className="flex flex-wrap gap-2">
         <WiringDimensions project={project} half={half} onEdit={handleEdit} />
-        <WiringPinControls project={project} half={half} onEdit={handleEdit} />
       </div>
       <WiringGrid project={project} half={half} onAssignCell={handleAssignCell} />
     </fieldset>

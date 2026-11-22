@@ -31,15 +31,6 @@ The workflow requires only the built-in `GITHUB_TOKEN` (`contents: write`), Node
 from `.nvmrc`, and the runner's GitHub CLI. No external token or dependency is needed.
 Release API reference: https://docs.github.com/en/rest/releases/releases
 
-## Maintenance scope and verification
-
-This is focused maintenance of the existing GitHub CI, not a product feature;
-Spec Kit's stored selection `013-matrix-wiring-editor` does not own this work.
-Preserved contracts: application code, serialized projects, undo/redo and ZMK output.
-Checks: `make check`, release-tool tests, workflow formatting, PR CI, then a real
-`release:patch` merge and inspection of the published version, tag and changelog.
-Browser coverage is unchanged because the release workflow has no user journey.
-
 CI's Docker-based mutation and ZMK jobs set `APP_USER=root` to write runner-owned
 bind mounts (the runner UID differs from the image's `node` UID). Local Compose
 continues to default to `node`; production image behavior is unchanged. This

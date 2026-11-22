@@ -10,15 +10,15 @@ it('cancels rebuilding without saving and applies it as one undoable edit', asyn
   const { user } = renderApp(source);
   await user.click(screen.getByText('Wiring', { exact: true }));
   expect(screen.queryByRole('button', { name: 'Complete wiring' })).toBeNull();
-  await user.click(screen.getByRole('button', { name: 'Rebuild wiring' }));
+  await user.click(screen.getByRole('button', { name: 'Generate wiring' }));
   expect(screen.getByText('Wiring preview', { exact: true })).toBeTruthy();
   expect(loadProject().project).toEqual(source);
   await user.click(screen.getByRole('button', { name: 'Cancel wiring' }));
   expect(loadProject().project).toEqual(source);
-  await user.click(screen.getByRole('button', { name: 'Rebuild wiring' }));
+  await user.click(screen.getByRole('button', { name: 'Generate wiring' }));
   await user.click(screen.getByRole('button', { name: 'Apply wiring' }));
   await waitFor(() => {
-    expect(loadProject().project.wires).toHaveLength(2);
+    expect(loadProject().project.wires).toHaveLength(3);
   });
   await user.click(screen.getByRole('button', { name: /^Undo/u }));
   await waitFor(() => {
@@ -31,7 +31,7 @@ it('inspects proposed sections by keyboard without deleting or cancelling them o
   const { user } = renderApp(source);
   await user.click(screen.getByText('Wiring', { exact: true }));
   expect(screen.queryByRole('button', { name: 'Complete wiring' })).toBeNull();
-  await user.click(screen.getByRole('button', { name: 'Rebuild wiring' }));
+  await user.click(screen.getByRole('button', { name: 'Generate wiring' }));
   await user.click(screen.getByText('Inspect wire sections', { exact: true }));
   const inspector = screen.getByRole('group', { name: 'Inspect wire sections' });
   const section = within(inspector).getByRole('checkbox', { name: /^Section 1,/u });

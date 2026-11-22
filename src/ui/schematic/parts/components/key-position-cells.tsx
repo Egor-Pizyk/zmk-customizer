@@ -1,6 +1,8 @@
+import { useProject } from '@ui/project/logic';
+import { refuseProtectedEdit } from '@ui/schematic/interaction';
 import { getKeyGeometry } from '@domain/geometry';
 import { editLayout, moveKey, setKeyGeometries } from '@domain/keys';
-import type { Key, KeyGeometry } from '@domain';
+import type { Key, KeyGeometry, Project } from '@domain';
 import { usePreferences } from '@ui/preferences';
 import { NumberInput } from '@ui/components/components';
 import type { Commit } from '@ui/schematic/interaction';
@@ -14,6 +16,7 @@ const FIELDS = [
 ] as const;
 
 type KeyPositionCellsProps = {
+  readonly project: Project;
   readonly schematicKey: Key;
   readonly keyIndex: number;
   readonly hasProblem: boolean;
@@ -21,11 +24,13 @@ type KeyPositionCellsProps = {
 };
 
 export function KeyPositionCells({
+  project,
   schematicKey,
   keyIndex,
   hasProblem,
   commit,
 }: KeyPositionCellsProps) {
+  const { announce } = useProject();
   const { gridSizeU } = usePreferences().preferences;
   const geometry = getKeyGeometry(schematicKey);
   return FIELDS.map(({ field, label }) => (
@@ -35,7 +40,9 @@ export function KeyPositionCells({
         issuePath={`keys.${keyIndex}`}
         label={`Key ${keyIndex} ${label}`}
         onCommit={(value) => {
-          commitPosition(commit, { schematicKey, field, value });
+          if (!refuseProtectedEdit({ project, onHint: announce }, { keyIds: [schematicKey.id] })) {
+            commitPosition(commit, { schematicKey, field, value });
+          }
         }}
         step={field === 'rotationDeg' ? 1 : gridSizeU}
         value={geometry[field]}

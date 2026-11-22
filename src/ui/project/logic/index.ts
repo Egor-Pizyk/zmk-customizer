@@ -7,8 +7,6 @@ export type { ProjectHistory, ProjectHistoryAction } from './project-history';
 export {
   createInitialState,
   withAnnouncement,
-  getProjectAnalysis,
-  getValidationIssues,
   applyHistoryAction,
   getSaveStatus,
   createHistoryActions,
@@ -33,4 +31,5 @@ export {
 } from './tutorial-session';
 export { createTutorialActions } from './tutorial-actions';
 
+export { getProjectAnalysis, getValidationIssues } from './project-analysis';
 export { useKleImport } from './use-kle-import';

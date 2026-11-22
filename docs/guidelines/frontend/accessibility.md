@@ -1,24 +1,24 @@
 ---
-description: WCAG 2.2 AA baseline — landmarks, keyboard, ARIA, focus, feature checklist.
+description: WCAG 2.2 AA baseline — landmarks, keyboard, ARIA, focus, canvas interactions.
 paths:
   - src/ui/**/*.tsx
 ---
 
 # Accessibility
 
-Baseline: WCAG 2.2 AA (docs/principles.md, ADR 0008). A feature is not done until its checklist at the bottom passes. Primitives and copy: `admin-ui.md`. Focus-ring and state classes: `tailwind.md`.
+Baseline: WCAG 2.2 AA (docs/principles.md, ADR 0008). Local verification follows [testing policy](../../testing.md#fast-local-loop). Primitives and copy: `admin-ui.md`. Focus-ring and state classes: `tailwind.md`.
 
 ## Structure
 
 - Landmarks as in `admin-ui.md` → "App shell". First focusable element is a "Skip to main content" link (`sr-only focus:not-sr-only`).
-- One `<h1>` = the current workspace name. `<h2>` per section (Canvas, Keys, Problems), `<h3>` inside. Dialog titles are `<h2>`. Never skip levels; never pick a heading for its size.
+- One `<h1>` = the current workspace name. `<h2>` per section (Canvas, Keys, Problems), `<h3>` inside. Dialog titles are `<h2>`.
 - On workspace change, focus moves to the workspace's `<h1>` (`tabIndex={-1}`) and `<title>` becomes "Schematic — ZMK Customizer". This is how the current workspace is announced (roadmap 001).
 
 ## Keyboard
 
 - Everything a pointer can do, the keyboard can do (2.1.1). Every drag has a non-drag alternative: nudge keys and inspector number fields (2.5.7).
 - Tab order follows visual order; no positive `tabIndex`. Composite widgets (canvas, tabs, table selection column) are one tab stop each with roving tabindex inside.
-- Single keys work only while their widget has focus (2.1.4; canvas: `s`, `g`, `=`/`+`, `-`, arrows, `?`); global shortcuts use Alt+Shift+key matched by `KeyboardEvent.code` (Alt+Shift+1..4, `,`, P, /); project shortcuts use the primary modifier matched by `code`: Mod+Z undo, Mod+Shift+Z redo, Mod+S save, Mod+O open (`specs/002-project-foundation/contracts/shortcuts.md`). Full list: `specs/001-app-shell-ui/contracts/shortcuts.md`; precedence: `admin-ui.md` → "Keyboard shortcuts".
+- Single keys work only while their widget has focus (2.1.4; canvas: `s`, `g`, `=`/`+`, `-`, arrows, `?`); global shortcuts use Alt+Shift+key matched by `KeyboardEvent.code` (Alt+Shift+1..4, `,`, P, /); project shortcuts use the primary modifier matched by `code`: Mod+Z undo, Mod+Shift+Z redo, Mod+S save, Mod+O open. Full list: `src/ui/shortcuts/shortcuts.ts`; precedence: `admin-ui.md` → "Keyboard shortcuts".
 - Modal dialogs use native `<dialog>` + `showModal()`: focus is trapped, Escape closes, focus returns to the opener. Popovers close on Escape and return focus. The inspector is not modal and does not trap focus.
 - Focus is never lost: after deleting the focused key, focus moves to the next key by index (or the canvas if none remain); after closing the problems panel, focus stays on its "Problems (N)" toggle.
 
@@ -46,19 +46,6 @@ Baseline: WCAG 2.2 AA (docs/principles.md, ADR 0008). A feature is not done unti
 
 ### SVG
 
-```tsx
-// ✅
-<svg role="listbox" aria-multiselectable="true" aria-labelledby="canvas-title" aria-describedby="canvas-help">
-  <title id="canvas-title">Schematic, 42 keys</title>
-  <desc id="canvas-help">Arrow keys move between keys. The Keys table below lists every property.</desc>
-  <g role="option" tabIndex={isActive ? 0 : -1} aria-selected={isSelected}
-     aria-label="Key 12, 1.5u, at 3, 0.5, rotated 15°, conflict: shares row 2 col 5 with key 13">…</g>
-</svg>
-
-// ❌ no role, no name, focus only by mouse, conflict only as red stroke
-<g onClick={handleKeyClick}><rect className="stroke-danger" /></g>
-```
-
 - Key names start with "Key N" and add what the view is about: Schematic → size, position, rotation, cell and half; Bindings → binding label for the current layer ("Key 12, Base layer: A"). Build the string with a `formatX` function, not inline JSX.
 - Key labels rendered inside the SVG are `aria-hidden`; the `aria-label` carries the text once.
 
@@ -85,17 +72,4 @@ The onboarding Step instructions section is a named, keyboard-focusable scroll r
 
 ## Testing
 
-- Lint (jsx-a11y rules) runs in `make check`; its findings are errors.
-- UI tests, where they exist, query by role and accessible name (`getByRole('option', { name: /^Key 12,/ })`), which doubles as a name check.
-- Manual pass per feature before it is marked done, recorded in the feature's `tasks.md`:
-
-1. Unplug the mouse: complete the feature's acceptance flows with keyboard only.
-2. Tab through the workspace: order matches layout, every stop has a visible focus ring, no focus lands on hidden or covered elements.
-3. Each composite widget (canvas, tabs, table selection) is one tab stop; its arrow keys work as documented above.
-4. Every drag or pointer gesture has a keyboard or field equivalent that was used in step 1.
-5. Open and close each dialog/popover with keyboard: focus goes in, Escape closes, focus returns to the opener.
-6. Single-key shortcuts do nothing while typing in a text field; Mod+Z inside a field undoes text, not the project.
-7. Trigger each validation issue the feature adds: it appears in the problems panel and the workspace tab's issue badge, on the field/key with text or icon (not only color), and the list button focuses the entity.
-8. Screen reader smoke test (VoiceOver + Safari or NVDA + Firefox): workspace heading is announced on navigation, key names read correctly, status messages are spoken once.
-9. Switch the OS to dark mode and check contrast of any new token pair; toggle reduced motion.
-10. Zoom to 200% at 1280px: nothing is clipped, the page does not scroll horizontally.
+Accessibility lint runs in `make check`. Automated behavior coverage and optional manual review follow [testing policy](../../testing.md#fast-local-loop); no blanket manual checklist is required. Preserve the keyboard, focus and announcement contracts above.

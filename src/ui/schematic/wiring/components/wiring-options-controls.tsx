@@ -1,8 +1,7 @@
 import { WIRING_OPTIONS, getControllerBoard } from '@catalog/controllers';
 import type { WiringEdit } from '@domain/wiring/editing';
 import type { Project } from '@domain';
-import { usePreferences } from '@ui/preferences';
-import { Button, DocsLink, Field } from '@ui/components/components';
+import { DocsLink, Field } from '@ui/components/components';
 import { INPUT_CLASSES } from '@ui/components/logic';
 
 export function WiringOptionsControls({ project, onEdit: handleEdit }: WiringOptionsControlsInput) {
@@ -41,7 +40,7 @@ export function WiringOptionsControls({ project, onEdit: handleEdit }: WiringOpt
           />
         ) : undefined}
       </div>
-      <WiringOptionLinks project={project} onEdit={handleEdit} />
+      <WiringOptionLinks project={project} />
     </>
   );
 }
@@ -86,7 +85,7 @@ type WiringOptionsControlsInput = {
   readonly onEdit: (input: WiringEdit) => void;
 };
 
-function WiringOptionLinks({ project, onEdit: handleEdit }: WiringOptionsControlsInput) {
+function WiringOptionLinks({ project }: Pick<WiringOptionsControlsInput, 'project'>) {
   const wiring = project.wiring;
   if (wiring === undefined) {
     return null;
@@ -107,7 +106,6 @@ function WiringOptionLinks({ project, onEdit: handleEdit }: WiringOptionsControl
         }
         topic="Keyboard topology"
       />
-      <WiringAutoActions project={project} onEdit={handleEdit} />
     </div>
   );
 }
@@ -117,24 +115,4 @@ function getTopologyEdit(value: string, board: WiringEdit['board']): WiringEdit 
 }
 function getDirectionEdit(value: string, board: WiringEdit['board']): WiringEdit {
   return { kind: 'direction', direction: value === 'row2col' ? 'row2col' : 'col2row', board };
-}
-
-function WiringAutoActions({ project, onEdit: handleEdit }: WiringOptionsControlsInput) {
-  const board = getControllerBoard(project.controllerId);
-  const { gridSizeU } = usePreferences().preferences;
-  return (
-    <>
-      <p className="text-text-muted">
-        Rebuild wiring replaces managed connections and cells. Review the preview before applying.
-      </p>
-      <Button
-        variant="secondary"
-        onClick={() => {
-          handleEdit({ kind: 'auto', gridStepU: gridSizeU, board });
-        }}
-      >
-        Rebuild wiring
-      </Button>
-    </>
-  );
 }

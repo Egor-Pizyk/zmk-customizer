@@ -1,5 +1,5 @@
-import { findWireContacts } from '@domain/wires';
-import type { WireContacts } from '@domain/wires';
+import { findWireContacts } from '@domain/wires/contacts';
+import type { WireContacts } from '@domain/wires/contacts';
 import { isSameCrossing } from './is-same-crossing';
 import type { CrossingRef, Project, WirePoint } from '@domain';
 

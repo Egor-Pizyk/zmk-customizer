@@ -1,1 +1,0 @@
-../../docs/guidelines/frontend/react.md

@@ -1,9 +1,11 @@
+import type { RoutingSettings } from './routing-types';
 import type { Encoder, EncoderBinding } from './encoder-types';
 import type { Combo, Macro, ConditionalLayer } from './advanced-keymap-types';
 import type { CustomBehavior, BehaviorParameter } from './behavior-types';
 
 export type Project = {
-  readonly schemaVersion: 13;
+  readonly schemaVersion: 14;
+  readonly routing?: RoutingSettings;
   readonly wireContacts?: readonly (WireContact | false)[];
   readonly encoders: readonly Encoder[];
   readonly combos: readonly Combo[];
@@ -165,6 +167,7 @@ export type WireEndSide = 'start' | 'end';
 export type WireContact = { readonly keyId: string; readonly pin: KeyPin; readonly at: WirePoint };
 
 export type Wire = {
+  readonly locked?: true;
   readonly half?: Half;
   readonly anchors?: { readonly start: WirePoint; readonly end: WirePoint };
   readonly contacts?: readonly WireContact[];
@@ -184,6 +187,9 @@ export type CrossingRef = {
 };
 
 export type ValidationCode =
+  | 'wire-locked'
+  | 'routing-settings-invalid'
+  | 'routing-cell-conflict'
   | 'encoder-invalid'
   | 'encoder-pin-missing'
   | 'encoder-pin-conflict'

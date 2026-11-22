@@ -1,5 +1,6 @@
-import { findWireContacts } from '@domain/wires';
-import type { WireCrossing } from '@domain/wires';
+import { preserveWireProtection } from '@domain/wires/protection';
+import { findWireContacts } from '@domain/wires/contacts';
+import type { WireCrossing } from '@domain/wires/contacts';
 import { getNets } from '@domain/wires/nets';
 import { getProjectResourceError } from '@domain/project';
 import type { Project } from '@domain';
@@ -28,7 +29,7 @@ export function preserveKeyWiring(before: Project, candidate: Project): Project 
   if (getProjectResourceError(next) !== undefined) {
     return before;
   }
-  return partitions(before) === partitions(next) ? next : before;
+  return partitions(before) === partitions(next) ? preserveWireProtection(before, next) : before;
 }
 
 function partitions(project: Project): string {

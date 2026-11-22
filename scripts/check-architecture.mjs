@@ -84,14 +84,21 @@ function allowedEdge(file, target, typeOnly) {
     const engineModule =
       target.startsWith('src/domain/wiring/matrix/') ||
       target.startsWith('src/domain/wires/nets/') ||
+      target.startsWith('src/domain/wires/contacts/') ||
       target.startsWith('src/domain/validation/');
     const mixedQueryModule = path.posix.dirname(target);
     const name = path.posix.basename(target, '.ts');
+    if (mixedQueryModule === 'src/domain/wires/protection') {
+      const safeQuery = name === 'get-wire-protection' || name === 'set-wire-locked';
+      const commitGuard =
+        name === 'validate-wire-protection' && file === 'src/ui/project/logic/project-state.ts';
+      if (!safeQuery && !commitGuard) return false;
+    }
     if (mixedQueryModule === 'src/domain/wires' && !UI_WIRE_FILES.has(name)) return false;
     if (mixedQueryModule === 'src/domain/crossings' && !UI_CROSSING_FILES.has(name)) return false;
     if (
       target.startsWith('src/domain/analysis/') &&
-      file !== 'src/ui/project/logic/project-state.ts'
+      file !== 'src/ui/project/logic/project-analysis.ts'
     )
       return false;
     if (engineModule) return false;

@@ -1,3 +1,4 @@
+import { preserveWireProtection } from '@domain/wires/protection';
 import type { Project, WireEnd, WireEndSide } from '@domain';
 
 function withBoardPin(end: WireEnd, boardPin: number | undefined, ground = false): WireEnd {
@@ -12,7 +13,7 @@ function withBoardPin(end: WireEnd, boardPin: number | undefined, ground = false
     : { kind: 'free', at: end.at, boardPin };
 }
 
-export function setWireEndBoardPin(
+function setWireEndBoardPinCandidate(
   project: Project,
   input: {
     readonly wireId: string;
@@ -38,4 +39,11 @@ export function setWireEndBoardPin(
       : wire,
   );
   return { ...project, wires };
+}
+
+export function setWireEndBoardPin(
+  project: Project,
+  input: Parameters<typeof setWireEndBoardPinCandidate>[1],
+): Project {
+  return preserveWireProtection(project, setWireEndBoardPinCandidate(project, input));
 }

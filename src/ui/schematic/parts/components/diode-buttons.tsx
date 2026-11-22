@@ -17,7 +17,7 @@ export function DiodeButtons({ project, view, commit }: DiodeButtonsProps) {
     return null;
   }
   return project.keys.map((key, keyIndex) =>
-    PINS.map((pin) => (
+    PINS.filter((pin) => project.wiring?.kind !== 'direct' || key.diode?.pin === pin).map((pin) => (
       <DiodeButton
         commit={commit}
         key={`${key.id}:${pin}`}

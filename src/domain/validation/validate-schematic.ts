@@ -1,7 +1,8 @@
-import { getWireHalf } from '@domain/wiring';
+import { getConnectedSpineEnds } from './get-connected-spine-ends';
+import { getWireHalf, getKeyPinPosition } from '@domain/wires/geometry';
 import { validateNetsWithoutBoardPin } from './validate-nets-without-board-pin';
 import { formatBoardPin, getKeyPinWires } from '@domain/wires';
-import { getKeyPinPosition } from '@domain/wires/geometry';
+
 import { getNets } from '@domain/wires/nets';
 import type { Net, NetBoardPin } from '@domain/wires/nets';
 import { isKeyPositionFree } from '@domain/geometry';
@@ -40,6 +41,7 @@ function validateUnconnectedPins(project: Project): ValidationIssue[] {
 }
 
 function validateFreeEnds(project: Project): ValidationIssue[] {
+  const connected = getConnectedSpineEnds(project);
   const pins = project.keys.flatMap((key) => KEY_PINS.map((pin) => getKeyPinPosition(key, pin)));
   return project.wires.flatMap((wire, wireIndex) =>
     (['start', 'end'] as const)
@@ -50,7 +52,10 @@ function validateFreeEnds(project: Project): ValidationIssue[] {
           end.boardPin === undefined &&
           end.terminalId === undefined &&
           end.ground !== true &&
-          !pins.some((pin) => Math.hypot(pin.xU - end.at.xU, pin.yU - end.at.yU) < 1e-4)
+          !pins.some((pin) => Math.hypot(pin.xU - end.at.xU, pin.yU - end.at.yU) < 1e-4) &&
+          !(connected.get(wire.id) ?? []).some(
+            (point) => Math.hypot(point.xU - end.at.xU, point.yU - end.at.yU) < 1e-4,
+          )
         );
       })
       .map((side) => ({

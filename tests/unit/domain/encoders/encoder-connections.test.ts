@@ -4,7 +4,7 @@ import { placeEncoder, validateEncoders } from '@domain/encoders';
 import { getControllerBoard } from '@catalog/controllers';
 import { BINDINGS_CATALOG } from '@catalog/bindings';
 import { validateSchematic } from '@domain/validation';
-import { getWireHalf } from '@domain/wiring';
+import { getWireHalf } from '@domain/wires/geometry';
 import type { Project, Wire } from '@domain';
 
 function connected(): Project {

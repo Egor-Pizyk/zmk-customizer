@@ -27,13 +27,10 @@ for (const theme of ['light', 'dark'] as const) {
     await page.emulateMedia({ colorScheme: theme });
     await openProject(page);
     const before = await saved(page);
+    await page.getByText('Wiring', { exact: true }).click();
     for (const width of [390, 1024, 1440]) {
       await page.setViewportSize({ width, height: width === 390 ? 844 : 768 });
-      const rebuild = page.getByRole('button', { name: 'Rebuild wiring', exact: true });
-      if (!(await rebuild.isVisible())) {
-        await page.getByText('Wiring', { exact: true }).click();
-      }
-      await rebuild.click();
+      await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
       for (const direction of [1, -1]) {
         const scanning = page.getByRole('combobox', { name: 'Scanning type', exact: true });
         await scanning.hover();

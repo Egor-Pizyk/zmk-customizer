@@ -1,3 +1,4 @@
+import { getSelectedWireIds } from './get-selected-wire-ids';
 import type { SchematicSelection } from '@ui/schematic/interaction';
 import type { Project, WirePoint, Wire } from '@domain';
 
@@ -13,7 +14,12 @@ export function getWireBendHandles(
   selection?: SchematicSelection,
 ): readonly WireBendHandle[] {
   const handles = new Map<string, WireBendHandle>();
+  const selected =
+    project.wiring?.kind === 'direct' ? getSelectedWireIds(project, selection) : undefined;
   for (const wire of project.wires) {
+    if (selected !== undefined && !selected.has(wire.id)) {
+      continue;
+    }
     const corners = getWireCorners(paths.get(wire.id) ?? []);
     const points = getHandlePoints(wire, corners, selection);
     for (const point of points) {

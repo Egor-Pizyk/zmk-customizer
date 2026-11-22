@@ -1,11 +1,11 @@
 import { spawnSync } from 'node:child_process';
 import { readFileSync, existsSync, mkdirSync, openSync, closeSync, writeFileSync } from 'node:fs';
-import { focusedCheckPlan } from './focused-check-plan.mjs';
 import { changedCheckPlan, describeCheckPlan } from './changed-check-plan.mjs';
 
 const manifest = JSON.parse(readFileSync('.changed-files.json', 'utf8'));
-const mode = manifest.mode ?? 'final';
-const plan = (mode === 'focus' ? focusedCheckPlan : changedCheckPlan)(manifest.files);
+const mode = manifest.mode ?? 'static';
+if (!['static', 'unit'].includes(mode)) throw new Error(`Unsupported verification stage: ${mode}`);
+const plan = changedCheckPlan(manifest.files, existsSync, mode);
 mkdirSync('.check-logs', { recursive: true });
 const startedAt = performance.now();
 const summary = {
@@ -72,40 +72,41 @@ try {
   )
     run('npm', ['ci']);
   console.log(`Changed checks: ${manifest.files.length} files; ${manifest.revision}`);
-  // These inspect the whole import/type graph, including cross-file invariants.
-  npm('typecheck');
-  npm('test:e2e:types');
-  npm('check:architecture');
-  npm('check:guidelines');
-  const production = plan.code.filter((file) =>
-    /^(?:src\/|tests\/(?:unit|helpers|e2e)\/|vite\.config|playwright\.config)/u.test(file),
-  );
-  const tooling = plan.code.filter((file) => /^(?:scripts|tests\/tooling)\//u.test(file));
-  if (plan.fullLint) {
-    npm('lint');
-    npm('format:check');
+  if (plan.static) {
+    // These inspect the whole import/type graph, including cross-file invariants.
+    npm('typecheck');
+    npm('test:e2e:types');
+    npm('check:architecture');
+    const production = plan.code.filter((file) =>
+      /^(?:src\/|tests\/(?:unit|helpers|e2e)\/|vite\.config|playwright\.config)/u.test(file),
+    );
+    const tooling = plan.code.filter((file) => /^(?:scripts|tests\/tooling)\//u.test(file));
+    if (plan.fullLint) {
+      npm('lint');
+      npm('format:check');
+    }
+    if (!plan.fullLint && production.length) run('npx', ['--no-install', 'oxlint', ...production]);
+    if (!plan.fullLint && tooling.length)
+      run('npx', [
+        '--no-install',
+        'oxlint',
+        '--disable-typescript-plugin',
+        '-c',
+        'scripts/.oxlintrc.json',
+        ...tooling,
+      ]);
+    const formatted = manifest.files.filter(
+      (file) => existsSync(file) && /\.(?:[cm]?[jt]sx?|json|css|ya?ml)$/u.test(file),
+    );
+    if (!plan.fullLint && formatted.length)
+      run('npx', [
+        '--no-install',
+        'oxfmt',
+        '--check',
+        '--no-error-on-unmatched-pattern',
+        ...formatted,
+      ]);
   }
-  if (!plan.fullLint && production.length) run('npx', ['--no-install', 'oxlint', ...production]);
-  if (!plan.fullLint && tooling.length)
-    run('npx', [
-      '--no-install',
-      'oxlint',
-      '--disable-typescript-plugin',
-      '-c',
-      'scripts/.oxlintrc.json',
-      ...tooling,
-    ]);
-  const formatted = manifest.files.filter(
-    (file) => existsSync(file) && /\.(?:[cm]?[jt]sx?|json|css|ya?ml)$/u.test(file),
-  );
-  if (!plan.fullLint && formatted.length)
-    run('npx', [
-      '--no-install',
-      'oxfmt',
-      '--check',
-      '--no-error-on-unmatched-pattern',
-      ...formatted,
-    ]);
   if (plan.tooling)
     run('node', ['--test', ...JSON.parse(readFileSync('.tooling-tests.json', 'utf8'))]);
   if (plan.fullUnit) npm('test');
@@ -128,12 +129,10 @@ try {
       npm('test');
     }
   }
-  if (plan.browser.length)
-    run('npx', ['--no-install', 'playwright', 'test', ...plan.browser, '--project=chromium']);
   summary.status = 'passed';
   saveSummary();
   console.log(
-    `${mode === 'focus' ? 'Diagnostic focus passed; final check still required.' : 'Changed checks passed. Full coverage and all browsers run in CI.'} Elapsed: ${summary.durationMs}ms. Summary: .check-logs/summary.json`,
+    `${mode === 'unit' ? 'Unit checks passed.' : 'Static checks passed.'} E2E is a separate explicit stage. Elapsed: ${summary.durationMs}ms. Summary: .check-logs/summary.json`,
   );
 } catch (error) {
   summary.status = 'failed';

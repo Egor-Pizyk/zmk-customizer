@@ -1,4 +1,4 @@
-/** Product resource limits measured in specs/024-codebase-health-audit/research.md. */
+/** Product resource limits bound import, analysis and export workloads. */
 export const PROJECT_BUDGET = {
   firmwareOptions: 128,
   firmwareStringLength: 1024,

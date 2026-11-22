@@ -17,3 +17,4 @@ export { SettingsIcon } from './settings-icon';
 export { WarningIcon } from './warning-icon';
 export { WireIcon } from './wire-icon';
 export { ReplayIcon } from './replay-icon';
+export { WireLockIcon } from './wire-lock-icon';

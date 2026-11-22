@@ -1,25 +1,10 @@
 // @vitest-environment jsdom
 import { fireEvent, render } from '@testing-library/react';
 import { beforeEach, expect, it, vi } from 'vitest';
+import { installPlatformShims } from '../../../helpers/app-platform';
 import { Dialog } from '@ui/components/components';
 
-beforeEach(() => {
-  Object.defineProperties(HTMLDialogElement.prototype, {
-    showModal: {
-      configurable: true,
-      value(this: HTMLDialogElement) {
-        this.open = true;
-      },
-    },
-    close: {
-      configurable: true,
-      value(this: HTMLDialogElement) {
-        this.open = false;
-        this.dispatchEvent(new Event('close'));
-      },
-    },
-  });
-});
+beforeEach(installPlatformShims);
 
 it('ignores a delayed native close event from the preceding opening', () => {
   const handleClose = vi.fn<() => void>();

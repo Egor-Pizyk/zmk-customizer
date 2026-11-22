@@ -1,9 +1,9 @@
-import { getWirePinContacts, getWireConductors } from '@domain/wires/geometry';
+import { getWirePinContacts, getWireConductors, getWireHalf } from '@domain/wires/geometry';
 import type { Project, Wire, WirePoint } from '@domain';
-import { getWireHalf } from '@domain/wiring';
+
 import { createSectionEndLabel } from './get-section-end-label';
 import { getOverlapBoundaries } from './get-overlap-boundaries';
-import { findWireContacts } from './find-wire-contacts';
+import { findWireContacts } from '@domain/wires/contacts';
 
 export type WireSection = {
   readonly id: string;

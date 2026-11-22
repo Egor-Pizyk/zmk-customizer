@@ -1,192 +1,38 @@
-# Behavioral regression testing
+# Test business risks
 
-This document owns behavioral test policy and browser verification. Completion commands by change type live in [commands.md](commands.md). Historical measurements are in [testing history](testing-history.md); they are not current-tree verification.
+Test electrical correctness, edits across related entities, protected connections, history, persistence/migrations, import races, validation and actual generated/downloaded bytes. UI/tooling tests are useful when they protect those outcomes, critical keyboard access or a concrete regression.
 
-## Contracts and test boundaries
+Skip trivial getters/setters, pass-through wrappers, literal tables/order, exact copy, font sizes, CSS classes and arithmetic already exercised by a meaningful flow. A short function needs a separate test only for a specific invariant, boundary or regression. Reuse existing scenarios instead of testing the same rule at every layer.
 
-Tests assert what the product must do, independently of its implementation. Inputs
-come from requirement examples, historical project fixtures and pinned upstream
-ZMK output. Expectations must not be computed by the function being tested.
+## Fast local loop
 
-| Contract | Protection |
-|---|---|
-| Every edit preserves unrelated keys, layers and wiring | Pure domain tests, frozen-input edit sequences, exact undo/redo and JSON round trips |
-| Key identity survives deletion, multi-selection and layer reorder | Multi-key/multi-layer lifecycle tests and rendered app flows |
-| Electrical connections survive matrix derivation | 12 matrix dimensions; reconstruct pin pairs from output; unique cells, polarity reversal and wire-order invariance |
-| Old or malformed user data cannot corrupt a current project | v1–v5 fixture migration tests, schema rejection, import/storage tests and rendered upload/retry |
-| Controller families retain or drop the correct contacts | Four-controller catalog/golden checks, rendered selection, endpoint repair and exact undo |
-| Binding editors change the intended layer and keys | Real Action panel search, modifiers, multi-paste, dangling copied targets, tap-dance and mod-morph tests |
-| Project edits appear and persist | Real App + providers + StrictMode, labeled controls, screen results and independently loaded saved JSON |
-| Canvas gestures are undoable and keyboard alternatives work | Drag preview/commit/cancel, snap/overlap, multi-drag/delete, focus/nudge, selection and pan/zoom |
-| Invalid projects cannot export | Rendered validation, disabled action, hidden stale preview, linked problem navigation and recovery |
-| Exported bytes match preview and upstream contract | Independent golden fixtures; real ZIP click → unzip → path/content comparison; copy/download bytes and URL cleanup |
-| Async failures can be retried safely | Real-hook ZIP lock/failure/retry, clipboard rejection and malformed-file retry |
-| App settings do not change project data | Theme/grid validation/reset and physical-key shortcut precedence tests |
+1. Read the affected code and nearest meaningful tests. Implement directly; no spec, matrix, journal or mandatory test-first ritual.
+2. Run the named file/case or related tests immediately. Use watch mode while iterating. No prior full-suite failure is required for a focused run.
+3. Lint/format the edited files; typecheck after a coherent typed/module change. Run architecture checks when imports, public APIs or layer boundaries change.
+4. For a native browser bug, run the relevant Playwright file/case in Chromium. Add Firefox/WebKit only for an engine-sensitive risk. A broad UI feature may need several journeys; a small fix does not need the complete browser suite.
+5. Stop when the relevant behavior is verified. Broaden for shared setup/schema/import changes, actual failures or unresolved risk. Full units/coverage, browser matrices and mutation suites remain in CI and are available explicitly.
 
-Query controls by role and accessible name; use visible button text where jsdom
-cannot account for CSS-hidden tooltip text. Avoid class names, internal React
-elements, hook call counts and whole-page snapshots. SVG geometry assertions are
-limited to externally visible placement/polarity contracts. Golden text assertions
-remain intentional: emitted Devicetree/Kconfig bytes are a product output.
+Documentation-only changes need link/instruction checks. No mandatory screenshots, before/after review, manual accessibility audit, behavioral mutation probe or firmware build for unrelated changes. When generator/ZMK syntax changes, verify against pinned independent golden fixtures and run the relevant firmware build when needed to establish correctness.
 
-Mock OS/browser boundaries only: file reads, downloads, clipboard denial and ZIP
-failure injection. React, its hooks, providers, domain functions and generators run
-normally. jsdom shims model missing native APIs, not business behavior.
+Commands: [commands.md](commands.md). Report the checks actually run and any material limit in the reply/PR; do not create evidence documents for routine work.
 
-## Commands and regression floors
+## Test boundaries
 
-Use the local snapshot selection, conservative test expansion and exact-tree receipts
-in [commands](commands.md). CI owns full unit coverage, static/tooling, browser,
-image and mutation suites; firmware compilation is local-only (see Git flow).
-Direct/full local commands require a diagnostic or justified-necessity reason in
-the task journal. No repeated full-local or three-run browser gate is required.
-Tests-first, manual acceptance and the final-index hook remain mandatory.
+- Derive expected results independently from user requirements, domain invariants, historical files or verified pinned ZMK sources. Do not copy the implementation's answer or update goldens just to get green.
+- Domain/storage/generator tests protect state, boundaries and output bytes. Keep old-file fixtures for migrations and independent golden output for ZMK syntax.
+- Query rendered controls by accessible role/name. Assert visible effects, saved Project or actual downloaded bytes when relevant; avoid internal hook calls, class names and whole-page snapshots.
+- Mock browser/OS boundaries and failure injection only; do not mock React state, domain or generators. jsdom shims model missing browser APIs.
+- Native pointer/geometry/focus bugs need an isolated production-browser test using real gestures. No force clicks, synthetic handler calls, state edits through evaluate or arbitrary sleeps. Observe DOM/geometry through evaluate only.
+- Keep representative viewport/theme/engine cases only for a concrete rendering or compatibility risk. A full combination matrix is not a default requirement.
 
-Keep tests-first red/green diagnosis early. Finish planned production changes,
-regression scenarios and applicable lint/format fixes before the mandatory staged
-check, so avoidable omissions do not repeatedly trigger the broad local selection.
-After success, rerun when executable changes, failures or unresolved concerns
-invalidate evidence; do not manually repeat suites already covered for that revision.
-Reporting-only edits follow the documentation route. The final-index hook, exact-tree
-receipts, conservative browser selection and CI/manual gates remain mandatory.
+## Coverage
 
-CI publishes one bot coverage comment per PR with the checked SHA, metrics, threshold
-outcome and run link. New runs replace it; stale heads/attempts cannot overwrite current
-results. Missing/failed coverage is explicit. The publisher runs trusted main code with
-minimal write permissions; PR code only runs with read permissions. Full reports are CI artifacts.
+`vite.config.ts` measures domain, generators, storage and catalog parsing/lookups. Aggregate floors: 75% lines/statements, 70% functions, 65% branches. No per-file/per-layer/UI quota. Coverage is a coarse alarm, not a reason to test every line; change scope/floors deliberately with a business rationale. CI keeps reports and final-revision status checks.
 
-Coverage includes executable domain, generators, storage, UI and catalog lookup/
-key-header parsing. Static catalog tables, the composition root and type declarations
-are not useful coverage targets; their runtime contracts are tested through consumers.
-`vite.config.ts` defines both global and layer-specific floors. Do not lower floors
-or exclude executable files merely to make checks pass. Missing branches guide new
-behavioral scenarios; a percentage alone is not evidence of assertion quality.
+## Mutation and performance tools
 
-`make test-mutations` runs 29 seeded business regressions and requires a failing
-behavioral test for each. Run it **alone**: it temporarily changes production files,
-restores their exact original bytes including uncommitted work, and refuses to
-overwrite a concurrently changed file. It detects changes in controller retention,
-key deletion, undo/redo, layer indices in generated keymaps, export validation,
-controller/diode UI handlers and explicit shield naming. Update mutation anchors
-after a refactor; they are test-quality probes, not product contracts.
+Mutation runners temporarily edit production files: run alone, restore exact original bytes and refuse concurrent edits. They are deliberate regression-quality diagnostics, not a task gate. Performance checks may overlap independent work; isolate a rerun only when diagnosing contention. Existing metrics/thresholds remain.
 
 ## Limits
 
-These Vitest tests verify semantic DOM, displayed text/state, event wiring, SVG geometry,
-persistence and output bytes. jsdom has no layout/paint engine: tests do not prove
-pixel appearance, responsive clipping, contrast, native modal focus trapping or
-screen-reader behavior. They do not compile firmware. Seeded mutations are
-not an exhaustive mutation score, and no finite suite guarantees detecting every bug.
-Remaining untested branches stay visible in the coverage report.
-
-## References
-
-- [Testing Library guiding principles](https://testing-library.com/docs/guiding-principles/)
-- [user-event interaction model](https://testing-library.com/docs/user-event/intro/)
-- [Vitest coverage and thresholds](https://vitest.dev/config/coverage)
-- [ADR 0012](decisions/0012-behavior-testing.md)
-
-## Real browser behavioral coverage (feature 025)
-
-`make test-e2e` builds a dedicated Node 24 Bookworm browser image and tests the production
-build on port 4175. It runs the complete Chromium suite and focused Firefox/WebKit cases.
-The existing Alpine development container is retained; Playwright Firefox/WebKit require
-glibc. `npm run test:e2e` is the equivalent on a supported host after `npm ci` and
-`npx playwright install --with-deps chromium firefox webkit`. The app runner never reuses
-an existing server or a normal browser profile. Every test has an isolated context and
-imports predictable JSON through the real app's file dialog. Runtime dependencies stay unchanged.
-
-`make check` also typechecks/lints the browser tests; it retains the Vitest coverage gates.
-Browser execution is a separate required CI job. It uses one worker and zero retries,
-so a flaky first attempt stays visible. CI uploads `playwright-report/` and `test-results/`
-for 14 days even on failure. Traces and screenshots are retained for failed tests;
-`npx playwright show-trace <trace.zip>` opens a captured trace. Reports and build output
-are ignored in git and excluded from Docker build context.
-
-[Git flow](guidelines/git-flow.md#merge-and-release) owns required statuses,
-protection and local firmware evidence. CI runs once per PR to main, cancels obsolete
-runs, and does not run on push or after merge; releases use a separate workflow.
-Keep complete viewport/theme matrices in Chromium; Firefox/WebKit need representative
-engine-sensitive cases rather than repeating every presentation combination.
-
-Apply the mandatory browser rules below. Playwright's role union omits
-graphics-symbol; canvas keys use the actual Graphics role plus an accessible-name
-CSS prefix as a documented compatibility fallback.
-
-Screen polygons are checked corner-by-corner against independent trigonometry, not just
-rotated bounding boxes. Screen tolerance is 0.75 CSS px for subpixel layout/serialization;
-anchor and edge errors of a meaningful grid step are tens of pixels. Native mouse coordinates
-may round to whole pixels, so snap tests choose 0.31u and 43° safely away from 0.375u/37.5°
-boundaries; expected snaps remain exactly 0.25u and 45°. Project values use 0.0001u precision.
-Switch rotation journeys verify center/corners and painted key visibility, and capture
-light/dark screenshots for rendered review. The former resize-preview PNG baselines were
-retired when Schematic resize controls were removed (012 FR-021). Browser geometry
-assertions remain independent of captured screenshots.
-
-`make test-e2e-mutations` runs alone after `make test-e2e` has prepared the browser image.
-It first checks the relevant Chromium baseline, then temporarily seeds disabled rotation,
-invisible preview, shifted hit area, lost save, extra Undo, cancelled-value resurrection,
-lost actual wiring routes, prematurely saved wiring previews and wrong split column offset.
-Each seed must fail its expected behavioral assertion; compiler/runner exceptions do not
-count. Exact original production bytes are restored in finally, and concurrent modifications
-are never overwritten. Evidence lives in ignored `.e2e-mutations/`. Do not run it alongside
-checks, other browser runs or production edits.
-
-See [coverage matrix](../specs/025-playwright-e2e/coverage-matrix.md) and
-[verification](../specs/025-playwright-e2e/verification.md) for measured results and limits.
-Real-browser automation does not establish screen-reader speech, OS-originated pointercancel,
-all desktop sizes/themes, physical keyboard firmware behavior, or absence of all user bugs.
-
-## File organization
-
-Use [folder ownership](folder-structure.md#tests) for test locations and module APIs.
-Re-export indexes are excluded from coverage because implementation contracts and
-compiler checks cover them.
-
-## Mandatory browser coverage rules
-
-For new or changed user journeys, add or update Playwright E2E tests and include them in the spec, plan and tasks. Keep domain permutations in unit tests; E2E verifies real interaction and agreement across the application. If a feature does not change user behavior and needs no new E2E coverage, record the reason in its artifacts.
-
-- Run the production app in an isolated browser context with a predictable project and real React/providers, storage, domain and generators. Never use or modify an ordinary user browser profile.
-- Assert the expected visible result and, where applicable, the saved project and actual downloaded JSON/ZIP. DOM attributes or absence of errors alone are insufficient.
-- Use accessible roles/names. For canvas interactions use coordinates of displayed elements; perform drags with `mouse.move/down/up` and intermediate movements.
-- Do not mock core services, use `force:true`, dispatch synthetic events, call handlers, change state through `evaluate`, or use arbitrary sleeps. `evaluate` is observation-only; wait for a concrete state.
-- Check screen geometry, including corners of rotated elements rather than only bounding boxes. Add independent visual snapshots where they detect paint errors; justify tolerances and inspect the cause of differences before updating references.
-- For a discovered bug, first reproduce a failing test, then fix its cause in the owning architectural layer. Domain/generator repairs also require their own tests-first contracts.
-- For a substantial new interaction contract, prove test sensitivity with a controlled behavioral regression. Run it separately from checks and production edits, require a user-facing or saved-data assertion failure, and restore exact original files. Do not require every domain permutation or all six existing browser seeds for every feature.
-- The complete Chromium suite is mandatory in CI. Add targeted Firefox/WebKit cases for SVG, foreignObject, pointer capture, native inputs and focus where the feature touches them.
-- Apply the change-specific completion checks in [commands.md](commands.md). Local selection runs through the changed-check script; full cross-browser execution belongs to CI.
-- Retain useful failure traces/screenshots. Record scenario → risk → existing coverage → new E2E → visible assertion → saved/exported assertion, verification results and remaining limits in feature artifacts. Commands and artifact handling are documented in `docs/testing.md`.
-- Never weaken assertions to make CI green or claim absence of user problems solely from passing tests.
-
-## Post-implementation UI/UX review (Codex)
-
-After creating or changing an interface, review the implemented result against its specification and project UI/accessibility guidelines as required by [workflow.md](workflow.md#frontend-uiux-workflow-codex). Apply web-relevant checks within the supported product scope; record unrelated items as inapplicable with a reason.
-
-- Check affected flows and relevant empty, error, disabled and success states; labels, hierarchy, consistency and feedback; keyboard navigation, focus visibility/order/restoration, accessible names and non-pointer alternatives; contrast in supported themes, overflow/responsive layout, text zoom and reduced motion where applicable.
-- Inspect the actual rendered result in isolated Playwright under the browser rules above. Local search output or source inspection alone is not rendered-interface verification. Use the required automated checks from [commands.md](commands.md); UI/UX review supplements those checks.
-- Record the reviewed scope, design guidance used, acceptance criteria, findings, fixes, check commands/results and remaining manual limits in the owning feature's verification artifacts. Give each finding a stable ID and status and link its requirement/task/check without duplicating an existing traceability mapping.
-- Reproduce regressions before fixes and rerun affected checks after fixes. An unresolved acceptance failure keeps its task open and blocks completion. Never label unperformed keyboard, screen-reader, visual or other manual checks as passed.
-
-## Mutation runner implementation
-
-Both mutation orchestrators are Node ES modules under scripts/. Root Makefile delegates to npm run test:mutations and npm run test:e2e:mutations. These orchestration commands run on host Node 24 and invoke isolated Docker test containers; they do not require host Python. Run them sequentially and alone. Unit mutation subprocesses retain the 120-second timeout. Shared byte mutation/restoration code refuses concurrent edits.
-
-Tooling contracts for restoration, concurrent edits, missing/duplicate anchors, timeout and report acceptance run through npm run check:mutation-runners in make check. Historical migration evidence is linked below.
-
-## Historical evidence
-
-See [testing history](testing-history.md), [browser verification](../specs/025-playwright-e2e/verification.md) and [mutation migration verification](../specs/030-node-mutation-runners/verification.md).
-
-## Focused diagnostic loop
-
-Implement the behavior, then adapt semantic tests to the resulting requirements.
-Stage explicit paths and inspect `npm run check:focus -- --plan`; run
-`npm run check:focus` while fixing failures. Read `summary.json` first and open full
-logs only where needed. The bounded UI mapping includes cross-cutting accessibility,
-keyboard and onboarding journeys; unknown/shared/global changes retain broad selection.
-Update mapping and selection regressions together when introducing new UI areas.
-After diagnostics, stage the complete change and run the mandatory `check:changed`
-once; rerun after executable changes or unresolved failures. Focus and final receipts
-are separate. This reduces repeated output and diagnostic work without changing final
-coverage policy. Test assertions still require human/agent judgment; no script rewrites them.
+jsdom does not prove paint/layout, native modal focus trapping, screen-reader speech or firmware compilation. Browser tests do not prove physical keyboard firmware behavior. Passing counts/coverage alone do not establish absence of bugs.

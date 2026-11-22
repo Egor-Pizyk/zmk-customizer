@@ -44,3 +44,11 @@ export type {
 } from './advanced-keymap-types';
 
 export type { Encoder, EncoderBinding } from './encoder-types';
+
+export type {
+  RoutingSettings,
+  RoutingTargetCell,
+  WiringProposalFailure,
+  WiringProposalSummary,
+  WiringProposalResult,
+} from './routing-types';

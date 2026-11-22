@@ -5,7 +5,7 @@ import type { ProjectHistory } from '@ui/project/logic';
 
 function named(name: string): Project {
   return {
-    schemaVersion: 13,
+    schemaVersion: 14,
     encoders: [],
     combos: [],
     macros: [],
