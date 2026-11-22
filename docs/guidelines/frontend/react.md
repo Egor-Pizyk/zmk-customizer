@@ -72,6 +72,7 @@ Effects sync with systems outside React. A change that adds, moves or removes an
 
 | Effect | Where |
 |---|---|
+| Mount/dispose the external diagram, delegate native key/focus events and synchronize the latest projection; cleanup removes Paper/listeners | `schematic/diagram/logic/use-diagram-host.ts` |
 | Persist the visible first learning offer; idempotent marker only, never Project writes | `onboarding/logic/use-onboarding-welcome.ts` |
 | Synchronize active tutorial workspace/panel visibility with navigation preferences | `onboarding/logic/use-onboarding-controller.ts` |
 | Measure/reveal tutorial target; clean ResizeObserver, MutationObserver, resize/scroll listeners | `onboarding/logic/use-onboarding-target.ts` |

@@ -52,7 +52,7 @@ function mount(partsGroups: readonly string[]) {
   return result;
 }
 
-function installPlatformShims() {
+export function installPlatformShims() {
   Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', {
     configurable: true,
     value() {

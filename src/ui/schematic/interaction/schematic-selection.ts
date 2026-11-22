@@ -1,4 +1,4 @@
-import type { Project, WireEndSide } from '@domain';
+import type { Project, WireEndSide, WirePoint } from '@domain';
 
 // UI state, not project data: never saved or undone (react.md "Project state").
 export type SchematicSelection =
@@ -10,7 +10,7 @@ export type SchematicSelection =
       readonly keyIds?: readonly string[];
     }
   | { readonly kind: 'key'; readonly keyId: string }
-  | { readonly kind: 'wire'; readonly wireId: string }
+  | { readonly kind: 'wire'; readonly wireId: string; readonly activeBend?: WirePoint }
   | { readonly kind: 'wire-end'; readonly wireId: string; readonly side: WireEndSide }
   | {
       readonly kind: 'multi';

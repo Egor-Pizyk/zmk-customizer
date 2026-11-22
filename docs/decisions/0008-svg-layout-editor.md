@@ -1,6 +1,6 @@
 # 0008. SVG layout editor with keyboard-accessible table
 
-Status: Accepted
+Status: Partially superseded by 0023 (Schematic scene ownership only; SVG and accessible alternatives retained)
 Date: 2026-09-27
 
 ## Context

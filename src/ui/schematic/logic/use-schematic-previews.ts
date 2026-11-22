@@ -25,6 +25,7 @@ export function useSchematicPreviews(
     layout: {
       ...layout,
       handlePreview: (...args: Parameters<typeof layout.handlePreview>) => {
+        input.pointer.cancelDraft();
         wiring.handleCancel();
         layout.handlePreview(...args);
       },

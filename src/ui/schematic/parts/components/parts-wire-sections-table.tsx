@@ -142,7 +142,7 @@ function SectionChoices({
 }
 
 function focusCanvas() {
-  document.querySelector<SVGSVGElement>('[data-canvas-workspace="schematic"]')?.focus();
+  document.querySelector<SVGElement | HTMLElement>('[data-canvas-workspace="schematic"]')?.focus();
 }
 
 function createSectionKeyHandler({

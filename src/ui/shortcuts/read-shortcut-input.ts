@@ -26,12 +26,17 @@ function isTypingTarget(target: EventTarget | null): boolean {
   );
 }
 
-export function findCanvas(target: EventTarget | null): SVGElement | undefined {
+export function findCanvas(target: EventTarget | null): SVGElement | HTMLElement | undefined {
   const canvas = target instanceof Element ? target.closest('[data-canvas-workspace]') : null;
-  return canvas instanceof SVGElement ? canvas : undefined;
+  if (canvas !== null && canvas.querySelector('[data-canvas-input-disabled="true"]') !== null) {
+    return undefined;
+  }
+  return canvas instanceof SVGElement || canvas instanceof HTMLElement ? canvas : undefined;
 }
 
-export function canvasIdOf(canvas: SVGElement | undefined): CanvasWorkspaceId | undefined {
+export function canvasIdOf(
+  canvas: SVGElement | HTMLElement | undefined,
+): CanvasWorkspaceId | undefined {
   const id = canvas?.dataset['canvasWorkspace'] ?? '';
   return isCanvasWorkspaceId(id) ? id : undefined;
 }

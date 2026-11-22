@@ -9,7 +9,7 @@ import { matchKeyShortcut } from '@ui/shortcuts';
 import type { ShortcutId } from '@ui/shortcuts';
 import { findNearestKey } from '@ui/canvas/logic';
 import type { Direction } from '@ui/canvas/logic';
-import type { KeyboardEvent } from 'react';
+import type { KeyInput } from './key-input';
 
 type KeyKeyboardOptions = {
   readonly project: Project;
@@ -54,7 +54,7 @@ function findTargetKeyId(
 // Keys of a focused key (accessibility.md "Canvas"): arrows move focus, Shift+arrows nudge by the
 // grid step, Home/End jump. Handled here and stopped so the canvas pan shortcuts do not also run.
 export function createKeyKeyboardHandler(options: KeyKeyboardOptions) {
-  return (keyId: string, event: KeyboardEvent<SVGGElement>) => {
+  return (keyId: string, event: KeyInput) => {
     if (toggleSelection(options, keyId, event)) {
       return;
     }
@@ -87,11 +87,7 @@ export function createKeyKeyboardHandler(options: KeyKeyboardOptions) {
   };
 }
 
-function toggleSelection(
-  options: KeyKeyboardOptions,
-  keyId: string,
-  event: KeyboardEvent<SVGGElement>,
-): boolean {
+function toggleSelection(options: KeyKeyboardOptions, keyId: string, event: KeyInput): boolean {
   if ((event.ctrlKey || event.metaKey) && !event.altKey && event.code === 'Space') {
     event.preventDefault();
     event.stopPropagation();

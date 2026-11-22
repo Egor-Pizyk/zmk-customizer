@@ -37,7 +37,9 @@ Read this index when locating feature ownership. Read only the spec, plan, tasks
 - [036-ui-ux-remediation](036-ui-ux-remediation/) — items 1–23 implemented or regression-verified; user-reported manual acceptance; PR #24 merged and v0.5.0 published on 2026-10-25
 - [037-interactive-onboarding](037-interactive-onboarding/) — final scheduled product feature after delivered 036; implementation/acceptance evidence in its verification journal.
 
-- [038-automatic-wiring-routing](038-automatic-wiring-routing/) — local matrix wiring trees and grouped output blocks per half.
+- [038-jointjs-schematic-editor](038-jointjs-schematic-editor/) — private JointJS projection, preserving Project authority.
+- [038-automatic-wiring-routing](038-automatic-wiring-routing/) — local matrix wiring trees and grouped outputs.
 - [039-focused-local-checks](039-focused-local-checks/) — focused checks and compact reports.
 
-037 follows delivered 036 directly. The former proposed residual-audit stage was cancelled on 2026-10-25; deferred 020–022 remain deferred.
+
+037 follows delivered 036 directly within the historical first-major schedule. The proposed residual audit stage was cancelled on 2026-10-25 before any 038 spec directory existed. The new 038 JointJS migration is a distinct owner request, not reinstatement of that stage; deferred 020–022 remain deferred.

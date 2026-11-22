@@ -1,17 +1,5 @@
 export { BendHandles } from './bend-handles';
-export { CrossingBridge } from './crossing-bridge';
-export { DiodeSymbol } from './diode-symbol';
 export { HoverPreviewLayer } from './hover-preview-layer';
-export { KeyArt } from './key-art';
-export { KeyPins } from './key-pins';
-export { KeyShape } from './key-shape';
 export { KeyTransformFrames } from './key-transform-frames';
-export { KeysLayer } from './keys-layer';
-export { PinsLayer } from './pins-layer';
-export { SchematicContent } from './schematic-content';
 export { SchematicEditingScreenLayer } from './schematic-editing-screen-layer';
 export { SchematicScreenLayer } from './schematic-screen-layer';
-export { WireEndMarker } from './wire-end-marker';
-export { WireEndsLayer } from './wire-ends-layer';
-export { WireShape } from './wire-shape';
-export { WiresLayer } from './wires-layer';

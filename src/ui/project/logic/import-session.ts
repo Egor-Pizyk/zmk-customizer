@@ -4,6 +4,7 @@ export function createImportSession() {
   let revision = 0;
   return {
     getRequest: () => request,
+    getRevision: () => revision,
     begin: () => {
       request += 1;
       return { request, revision };

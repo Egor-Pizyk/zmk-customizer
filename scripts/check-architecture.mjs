@@ -164,6 +164,14 @@ export function checkSource(file, source, { loadSource } = {}) {
   }
   const isPure = !isTest && PURE_LAYERS.has(file.split('/')[1]);
   const aliases = new Map();
+  const diagramImports = new Set();
+  walk(ast, (node) => {
+    if (node.type !== 'ImportDeclaration' || node.source.value !== '@joint/core') return;
+    if (node.importKind === 'type') return;
+    for (const item of node.specifiers) {
+      if (item.importKind !== 'type') diagramImports.add(item.local.name);
+    }
+  });
   function origin(node) {
     if (node?.type === 'Identifier') {
       return aliases.get(node.name) ?? node.name;
@@ -211,12 +219,15 @@ export function checkSource(file, source, { loadSource } = {}) {
     if (isTest || !file.startsWith('src/')) return;
     const target = resolveProjectImport(file, specifier);
     if (!target) {
+      const diagramAllowed =
+        file.startsWith('src/ui/schematic/diagram/logic/') && specifier === '@joint/core';
       const externalAllowed =
-        file.startsWith('src/ui/') || file === 'src/main.tsx'
+        diagramAllowed ||
+        (file.startsWith('src/ui/') || file === 'src/main.tsx'
           ? ['react', 'react-dom', 'fflate'].some(
               (name) => specifier === name || specifier.startsWith(`${name}/`),
             )
-          : file.startsWith('src/storage/') && ['zod', 'fflate'].includes(specifier);
+          : file.startsWith('src/storage/') && ['zod', 'fflate'].includes(specifier));
       if (!externalAllowed)
         report(node, 'external-import', `External import ${specifier} is not allowed here`);
       return;
@@ -239,6 +250,25 @@ export function checkSource(file, source, { loadSource } = {}) {
     }
   }
   walk(ast, (node, parent) => {
+    if (['ExportNamedDeclaration', 'ExportAllDeclaration'].includes(node.type)) {
+      const directCore = node.source?.value === '@joint/core' && node.exportKind !== 'type';
+      const exported = node.specifiers?.some(
+        (item) =>
+          item.exportKind !== 'type' && diagramImports.has(origin(item.local).split('.')[0]),
+      );
+      const declaration =
+        node.declaration?.type === 'VariableDeclaration' &&
+        node.declaration.declarations.some((item) =>
+          diagramImports.has(origin(item.init).split('.')[0]),
+        );
+      if (directCore || exported || declaration) {
+        report(
+          node,
+          'diagram-public-api',
+          'JointJS runtime values must remain private to the diagram adapter',
+        );
+      }
+    }
     if (file.endsWith('/index.ts') && node.type === 'ExportAllDeclaration') {
       report(node, 'public-api', 'Public indexes use explicit named exports, not export *');
     }
