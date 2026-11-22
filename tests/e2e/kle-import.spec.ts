@@ -26,6 +26,18 @@ test('KLE review, keyboard apply, saved/downloaded geometry and one-step history
 }) => {
   await openProject(page);
   const before = await saved(page);
+  for (const name of [
+    'Duplicate selected keys',
+    'Delete selected keys',
+    'Renumber by position',
+    'Edit selected layout',
+  ]) {
+    await expect(page.getByRole('button', { name, exact: true })).toHaveCount(0);
+  }
+  await expect(page.getByText('Precise properties', { exact: true })).toHaveCount(0);
+  await expect(page.getByRole('heading', { name: 'Layout', exact: true })).toHaveCount(0);
+  await expect(page.getByText('Import KLE layout', { exact: true })).toHaveCount(0);
+  await page.getByRole('button', { name: 'New', exact: true }).click();
   const summary = page.getByText('Import KLE layout', { exact: true });
   await summary.focus();
   await page.keyboard.press('Enter');
@@ -51,7 +63,8 @@ test('KLE review, keyboard apply, saved/downloaded geometry and one-step history
   const apply = page.getByRole('button', { name: 'Replace project with KLE layout' });
   await apply.focus();
   await page.keyboard.press('Enter');
-  await expect(input).toBeFocused();
+  await expect(page.getByRole('dialog', { name: 'Start a new project?' })).not.toBeVisible();
+  await expect(page.getByRole('button', { name: 'New', exact: true })).toBeFocused();
   await expect
     .poll(async () => (await saved(page)).keys)
     .toEqual([first, { ...first, id: 'k1', xU: 4.5, widthU: 1 }]);
@@ -71,9 +84,10 @@ test('KLE review, keyboard apply, saved/downloaded geometry and one-step history
   await expect(page.getByRole('button', { name: 'Download .zip', exact: true })).toBeDisabled();
 });
 
-test('KLE malformed retry and edit invalidation preserve current project', async ({ page }) => {
+test('KLE malformed retry and closing New preserve current project', async ({ page }) => {
   await openProject(page);
   const before = await saved(page);
+  await page.getByRole('button', { name: 'New', exact: true }).click();
   await page.getByText('Import KLE layout', { exact: true }).click();
   const input = page.getByLabel('KLE JSON file');
   await input.setInputFiles({
@@ -89,13 +103,39 @@ test('KLE malformed retry and edit invalidation preserve current project', async
     buffer: Buffer.from('[ ["A"] ]'),
   });
   await expect(page.getByText('1 physical key ready to import.')).toBeVisible();
-  const name = page.getByRole('textbox', { name: 'Name', exact: true });
-  await name.fill('Edited name');
-  await name.press('Enter');
-  await expect(page.getByRole('alert')).toContainText('expired');
-  await history(page, 'Undo').click();
-  await expect.poll(() => saved(page)).toEqual(before);
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('button', { name: 'New', exact: true })).toBeFocused();
+  expect(await saved(page)).toEqual(before);
+  await page.getByRole('button', { name: 'New', exact: true }).click();
+  await page.getByText('Import KLE layout', { exact: true }).click();
+  await expect(page.getByText('1 physical key ready to import.')).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Replace project with KLE layout' })).toHaveCount(
     0,
   );
+  expect(await saved(page)).toEqual(before);
 });
+
+for (const colorScheme of ['light', 'dark'] as const) {
+  test(`KLE review in New reflows in ${colorScheme}`, async ({ page }, testInfo) => {
+    await page.emulateMedia({ colorScheme, reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 640, height: 500 });
+    await openProject(page);
+    await page.getByRole('button', { name: 'New', exact: true }).click();
+    await page.getByText('Import KLE layout', { exact: true }).click();
+    await page.getByLabel('KLE JSON file').setInputFiles({
+      name: 'layout.json',
+      mimeType: 'application/json',
+      buffer: Buffer.from(JSON.stringify(layout)),
+    });
+    const dialog = page.getByRole('dialog', { name: 'Start a new project?' });
+    const apply = dialog.getByRole('button', { name: 'Replace project with KLE layout' });
+    await apply.focus();
+    await expect(apply).toBeInViewport();
+    expect(await dialog.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(
+      true,
+    );
+    await page.screenshot({ path: testInfo.outputPath(`kle-new-${colorScheme}.png`) });
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('button', { name: 'New', exact: true })).toBeFocused();
+  });
+}

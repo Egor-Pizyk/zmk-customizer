@@ -8,6 +8,7 @@ import {
   history,
   importText,
   openProject,
+  openPartsGroups,
   saved,
   wiredFixture,
   workspace,
@@ -41,6 +42,7 @@ test('new project → layout → wiring → bindings → validated ZIP with matc
   await page.goto('/');
   await page.getByRole('banner').getByRole('button', { name: 'New', exact: true }).click();
   await page.getByRole('button', { name: 'Start empty project', exact: true }).click();
+  await openPartsGroups(page);
   await page.getByRole('button', { name: 'Add key', exact: true }).click();
   await editNumber(page, 'Key 0 X (u)', '5');
   await editNumber(page, 'Key 0 Y (u)', '5');

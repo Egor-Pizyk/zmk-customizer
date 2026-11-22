@@ -1,9 +1,12 @@
+import { EDITING_GROUPS, openPartsGroups } from './parts-fixture';
 import { expect } from '@playwright/test';
 import type { Locator, Page } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import { unzipSync, strFromU8 } from 'fflate';
 import type { Key, Project } from '@domain';
 import { parseProjectFile } from '@storage/project';
+
+export { openPartsGroups } from './parts-fixture';
 
 export type Point = { readonly x: number; readonly y: number };
 export const fixture: Project = {
@@ -66,12 +69,17 @@ export async function importText(page: Page, content: string) {
     await chooser
   ).setFiles({ name: 'project.json', mimeType: 'application/json', buffer: Buffer.from(content) });
 }
-export async function openProject(page: Page, project: Project = fixture) {
+export async function openProject(
+  page: Page,
+  project: Project = fixture,
+  partsGroups: readonly string[] = EDITING_GROUPS,
+) {
   await page.goto('/');
   await importText(page, JSON.stringify(project));
   await expect(page.getByRole('textbox', { name: 'Name', exact: true })).toHaveValue(project.name);
   await expect.poll(() => saved(page)).toEqual(project);
   await page.getByRole('button', { name: 'Center keyboard', exact: true }).click();
+  await openPartsGroups(page, partsGroups);
 }
 export async function saved(page: Page): Promise<Project> {
   const text = await page.evaluate(() => localStorage.getItem('zmk-customizer:project'));
@@ -214,6 +222,9 @@ export async function workspace(page: Page, name: string) {
     .getByRole('button', { name: new RegExp(`^${name}(,|$)`, 'u') })
     .click();
   await expect(page.getByRole('heading', { name, level: 1 })).toBeVisible();
+  if (name === 'Schematic') {
+    await openPartsGroups(page);
+  }
 }
 export async function downloadJson(page: Page) {
   const pending = page.waitForEvent('download');

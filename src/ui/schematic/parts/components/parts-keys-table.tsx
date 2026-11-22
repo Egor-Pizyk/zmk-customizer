@@ -1,3 +1,4 @@
+import { PartsGroup } from './parts-group';
 import type { WiresOfPin } from '@ui/schematic/formatting';
 import type { PartsTableProps } from './parts-list';
 import { PartsTableHead } from './parts-table-head';
@@ -25,8 +26,7 @@ export function PartsKeysTable(props: PartsTableProps & { readonly wiresOf: Wire
     setActiveKeyId(keyId);
   }
   return (
-    <div className="flex flex-col gap-2">
-      <h3 className="font-semibold">Keys</h3>
+    <PartsGroup title="Keys">
       {project.keys.length === 0 ? (
         <p className="text-text-muted">
           No keys yet. Pick the Key tool and click the canvas, or add one here.
@@ -47,6 +47,6 @@ export function PartsKeysTable(props: PartsTableProps & { readonly wiresOf: Wire
         </div>
       )}
       <AddKeyButton project={project} commit={commit} />
-    </div>
+    </PartsGroup>
   );
 }

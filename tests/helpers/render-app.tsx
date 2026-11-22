@@ -1,5 +1,5 @@
 import { StrictMode } from 'react';
-import { render } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import { App } from '@ui/app/components';
@@ -15,6 +15,7 @@ type Project = ReturnType<typeof loadProject>['project'];
 export function renderApp(
   project: Project = UNIBODY_PRESET,
   preferences: Partial<Preferences> = {},
+  partsGroups: readonly string[] = ['Keys', 'Wire sections', 'Wires', 'Crossings'],
 ) {
   installPlatformShims();
   localStorage.setItem('zmk-customizer:onboarding-shown', '{"version":1,"hasBeenShown":true}');
@@ -26,11 +27,11 @@ export function renderApp(
     ...preferences,
   });
   const user = userEvent.setup();
-  return { user, ...mount(), mount };
+  return { user, ...mount(partsGroups), mount: () => mount(partsGroups) };
 }
 
-function mount() {
-  return render(
+function mount(partsGroups: readonly string[]) {
+  const result = render(
     <StrictMode>
       <PreferencesProvider>
         <ProjectProvider initialLoad={loadProject()}>
@@ -39,6 +40,16 @@ function mount() {
       </PreferencesProvider>
     </StrictMode>,
   );
+  // Editing fixtures explicitly open their controls. Default-state tests pass an empty list.
+  act(() => {
+    for (const name of partsGroups) {
+      const summary = result.queryByRole('heading', { name, level: 3 })?.closest('summary');
+      if (summary !== null && summary !== undefined) {
+        fireEvent.click(summary);
+      }
+    }
+  });
+  return result;
 }
 
 function installPlatformShims() {

@@ -23,12 +23,11 @@ for (const theme of ['light', 'dark'] as const) {
     await page.setViewportSize({ width: 1024, height: 800 });
     await openProject(page, fixture);
     await selectKey(page);
-    await page.getByText('Precise properties', { exact: true }).click();
     await expect(page.getByRole('button', { name: /^Resize key/u })).toHaveCount(0);
     await expect(page.getByRole('spinbutton', { name: /width|height/iu })).toHaveCount(0);
     await expect(page.getByRole('button', { name: /^Rotate key 0/u })).toHaveCount(1);
     await expect(
-      page.getByRole('spinbutton', { name: 'Selected rotation (°)', exact: true }),
+      page.getByRole('spinbutton', { name: 'Key 0 Rotation (°)', exact: true }),
     ).toBeVisible();
     await workspace(page, 'Bindings');
     await key(page).click({ button: 'right' });
@@ -39,7 +38,9 @@ for (const theme of ['light', 'dark'] as const) {
     const sized = await saved(page);
     expect(sized.keys[0]?.widthU).toBe(2.25);
     await workspace(page, 'Schematic');
-    await page.getByText('Parts', { exact: true }).click();
+    if (!(await page.getByRole('checkbox', { name: 'Select key 0', exact: true }).isVisible())) {
+      await page.getByText('Parts', { exact: true }).click();
+    }
     await selectKey(page);
     await expectGeometry(page, sized.keys[0] ?? { id: 'k0', xU: 5, yU: 5 });
     await expect(page.getByRole('button', { name: /^Resize key/u })).toHaveCount(0);

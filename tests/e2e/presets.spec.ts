@@ -127,12 +127,12 @@ test('QWERTY macropad edits undo and redo, save current work before New and reta
   expect(files['config/unibody_six.keymap']).toContain('&kp A');
 });
 
-test('Lily58 and Sofle preserve halves in both modes; New dialog reflows at narrow desktop @cross-browser', async ({
-  page,
-}, testInfo) => {
-  await openProject(page);
-  await page.setViewportSize({ width: 720, height: 700 });
-  for (const presetId of ['lily58-58', 'sofle-58']) {
+for (const presetId of ['lily58-58', 'sofle-58']) {
+  test(`${presetId} preserves halves in both modes; New dialog reflows at narrow desktop @cross-browser`, async ({
+    page,
+  }, testInfo) => {
+    await openProject(page);
+    await page.setViewportSize({ width: 720, height: 700 });
     let geometries;
     for (const mode of ['QWERTY', 'Empty keymap']) {
       await page.getByRole('banner').getByRole('button', { name: 'New', exact: true }).click();
@@ -236,5 +236,5 @@ test('Lily58 and Sofle preserve halves in both modes; New dialog reflows at narr
         mode === 'QWERTY' ? 58 : 0,
       );
     }
-  }
-});
+  });
+}

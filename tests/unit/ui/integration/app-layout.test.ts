@@ -1,4 +1,3 @@
-import { getKeyGeometry } from '@domain/geometry';
 import { loadProject } from '@storage/project';
 // @vitest-environment jsdom
 import { fireEvent, screen, within, waitFor } from '@testing-library/react';
@@ -16,9 +15,6 @@ function project() {
   });
 }
 async function edit(user: ReturnType<typeof renderApp>['user'], name: string, value: string) {
-  if (screen.queryByRole('spinbutton', { name }) === null) {
-    await user.click(screen.getByText('Precise properties'));
-  }
   const field = screen.getByRole('spinbutton', { name });
   await user.clear(field);
   await user.type(field, `${value}{Enter}`);
@@ -72,53 +68,6 @@ it('edits all geometry via labeled fields, persists and renders equal sized/rota
   await user.click(historyButton('Undo'));
   expect(loadProject().project).toEqual(saved);
 });
-it('previews a multi-key geometry edit without saving, cancels and applies with one undo step', async () => {
-  const { user } = renderApp(project());
-  const before = loadProject().project;
-  await user.click(screen.getByRole('checkbox', { name: 'Select key 0' }));
-  await user.click(screen.getByRole('checkbox', { name: 'Select key 1' }));
-  await edit(user, 'Selected rotation (°)', '-15');
-  expect(loadProject().project).toEqual(before);
-  expect(screen.getByRole('graphics-symbol', { name: /^Key 0\b/u }).getAttribute('transform')).toBe(
-    'rotate(-15 0.5 0.5)',
-  );
-  await user.click(screen.getByRole('button', { name: 'Cancel preview' }));
-  expect(loadProject().project).toEqual(before);
-  await edit(user, 'Selected rotation (°)', '-15');
-  await user.click(screen.getByRole('button', { name: 'Apply layout' }));
-  expect(loadProject().project.keys.map((key) => getKeyGeometry(key).widthU)).toEqual([1, 1]);
-  await user.click(historyButton('Undo'));
-  expect(loadProject().project).toEqual(before);
-  await user.click(historyButton('Redo'));
-  expect(loadProject().project.keys.map((key) => key.rotationDeg)).toEqual([-15, -15]);
-});
-it('duplicates selected layers and diode without wires, renumbers and deletes atomically with undo', async () => {
-  const { user } = renderApp(project());
-  await user.click(screen.getByRole('checkbox', { name: 'Select key 0' }));
-  await user.click(screen.getByRole('checkbox', { name: 'Select key 1' }));
-  const before = loadProject().project;
-  await user.click(screen.getByRole('button', { name: 'Duplicate selected keys' }));
-  const copied = loadProject().project;
-  expect(copied.keys).toHaveLength(4);
-  expect(copied.layers[0]?.bindings).toMatchObject({ k2: { kind: 'trans' }, k3: { kind: 'none' } });
-  expect(copied.wires).toEqual(before.wires);
-  await user.click(historyButton('Undo'));
-  expect(loadProject().project).toEqual(before);
-  await user.click(screen.getByRole('checkbox', { name: 'Select key 0' }));
-  await user.click(screen.getByRole('checkbox', { name: 'Select key 1' }));
-  await edit(user, 'Key 0 Y (u)', '3');
-  const moved = loadProject().project;
-  await user.click(screen.getByRole('button', { name: 'Renumber by position' }));
-  expect(loadProject().project.keys.map((key) => key.id)).toEqual(['k1', 'k0']);
-  expect(loadProject().project.layers).toEqual(before.layers);
-  await user.click(historyButton('Undo'));
-  expect(loadProject().project).toEqual(moved);
-  await user.click(screen.getByRole('button', { name: 'Delete selected keys' }));
-  expect(loadProject().project.keys).toHaveLength(0);
-  expect(loadProject().project.layers[0]?.bindings).toEqual({});
-  await user.click(historyButton('Undo'));
-  expect(loadProject().project).toEqual(moved);
-});
 it('nudges the complete selected rotated cluster and preserves origin, native field keys and redo on cancel', async () => {
   const initial = project();
   const { user } = renderApp({
@@ -148,28 +97,6 @@ it('nudges the complete selected rotated cluster and preserves origin, native fi
   await user.tab();
   expect(loadProject().project).toEqual(before);
   expect(historyButton('Redo')).toHaveProperty('disabled', false);
-});
-
-it('applies an explicitly entered first-key value to mixed selection and keeps table keyboard focus after deletion', async () => {
-  const initial = project();
-  const { user } = renderApp({
-    ...initial,
-    keys: [initial.keys[0], { id: 'k1', xU: 4, yU: 2, rotationDeg: 2 }].filter(
-      (key) => key !== undefined,
-    ),
-  });
-  const first = screen.getByRole('checkbox', { name: 'Select key 0' });
-  await user.click(first);
-  await user.keyboard('{Shift>}{ArrowDown}{/Shift}');
-  expect(screen.getByRole('checkbox', { name: 'Select key 1' })).toHaveProperty('checked', true);
-  await edit(user, 'Selected rotation (°)', '0');
-  await user.click(screen.getByRole('button', { name: 'Apply layout' }));
-  expect(loadProject().project.keys.map((key) => getKeyGeometry(key).rotationDeg)).toEqual([0, 0]);
-  await user.click(screen.getByRole('button', { name: 'Delete key 1' }));
-  expect(screen.getByRole('checkbox', { name: 'Select key 0' })).toHaveProperty('tabIndex', 0);
-  await waitFor(() => {
-    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Add key' }));
-  });
 });
 
 it('extends canvas selection with Mod+Space without moving or saving keys', async () => {

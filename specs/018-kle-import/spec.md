@@ -55,3 +55,5 @@ Imported layout: ordered rectangular key geometry plus review warnings; transien
 ## Assumptions and open questions
 
 The next roadmap item is 018 because 017 is recorded implemented. Downloaded strict JSON is the supported interchange format; KLE's permissive editor text is excluded and explained on failure. KLE does not identify electrical halves, so imported layouts are unibody until edited. Labels are omitted because Project has no label field; the warning makes this explicit. No new dependency or migration is needed. These defaults resolve scope without material open questions.
+
+2026-10-26 entry-point refinement: import is offered in New rather than Schematic; see 032 FR-009/010. The reviewed replacement policy and one-step Undo remain unchanged.
