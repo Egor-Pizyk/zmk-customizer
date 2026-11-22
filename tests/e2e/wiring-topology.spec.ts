@@ -37,6 +37,7 @@ for (const { mode, pinLabel } of [
     const unified = await readWirePaths(paths);
     const topology = page.getByRole('combobox', { name: 'Keyboard topology', exact: true });
     await topology.selectOption('split');
+    await expect(page.getByText('Wiring preview', { exact: true })).toBeVisible();
     await page.getByText('Manual assignments', { exact: true }).click();
     await expect(page.getByRole('combobox', { name: 'Key 2 half', exact: true })).toHaveValue(
       'right',
