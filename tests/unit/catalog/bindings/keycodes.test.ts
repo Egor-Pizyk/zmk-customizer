@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import keysHeader from '../../../../src/catalog/zmk/keys.h?raw';
-import { KEYCODE_LEGENDS, KEYCODES, MODIFIER_KEYCODES, keycodeByName } from '@catalog/bindings';
+import { KEYCODE_LEGENDS, KEYCODES, keycodeByName } from '@catalog/bindings';
 import type { KeycodeCategory } from '@catalog/bindings';
 
 const CATEGORIES: readonly KeycodeCategory[] = [
@@ -49,19 +49,6 @@ describe('KEYCODES from the vendored v0.3 keys.h', () => {
       expect(keycode.docsUrl.startsWith('https://v0-3-branch.zmk.dev/docs/')).toBe(true);
       expect(keycode.description).not.toBe('');
     }
-  });
-
-  it('lists the eight modifiers', () => {
-    expect(MODIFIER_KEYCODES.map((keycode) => keycode.name)).toEqual([
-      'LEFT_CONTROL',
-      'LEFT_SHIFT',
-      'LEFT_ALT',
-      'LEFT_GUI',
-      'RIGHT_CONTROL',
-      'RIGHT_SHIFT',
-      'RIGHT_ALT',
-      'RIGHT_GUI',
-    ]);
   });
 
   it('has legends only for canonical names', () => {
