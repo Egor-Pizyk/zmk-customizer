@@ -28,7 +28,7 @@ export function projectDiagramSections({ project, view, selection }: ProjectDiag
             class: 'fill-none',
             d: path,
             'pointer-events': 'stroke',
-            'stroke-width': 12,
+            'stroke-width': 6,
             'vector-effect': 'non-scaling-stroke',
           }),
           ...(isSelected ? projectEndpoints(section.path, view.pxPerU) : []),
