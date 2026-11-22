@@ -12,7 +12,7 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    maxWorkers: 4,
+    maxWorkers: 2,
     testTimeout: 15_000,
     include: ['tests/unit/**/*.test.{ts,tsx}'],
     setupFiles: ['tests/helpers/setup-tests.ts'],
