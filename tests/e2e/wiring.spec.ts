@@ -102,6 +102,7 @@ test('BLE split uses separate GPIO namespaces and full key order in downloaded s
   await page
     .getByRole('combobox', { name: 'Keyboard topology', exact: true })
     .selectOption('split');
+  await expect(page.getByText('Wiring preview', { exact: true })).toBeVisible();
   await page.getByText('Manual assignments', { exact: true }).click();
   await expect(page.getByRole('combobox', { name: 'Key 2 half', exact: true })).toHaveValue(
     'right',
