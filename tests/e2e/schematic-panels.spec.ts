@@ -30,6 +30,7 @@ test('keeps the canvas visible beside or above a bounded editor @cross-browser',
     if (size.width >= 1280) {
       expect(panel.width).toBeLessThanOrEqual(Math.min(640, root.width * 0.45) + 1);
       expect(canvas.width).toBeGreaterThanOrEqual(root.width * 0.55);
+      expect(panel.x).toBeGreaterThanOrEqual(canvas.x + canvas.width);
     } else {
       expect(panel.height).toBeLessThanOrEqual(root.height * 0.45 + 1);
       expect(canvas.height).toBeGreaterThanOrEqual(root.height * 0.5);
@@ -104,7 +105,7 @@ test('resizes editors with pointer and keyboard, cancels and retains preferred s
   }
   await page.mouse.move(start.x + start.width / 2, start.y + 40);
   await page.mouse.down();
-  await page.mouse.move(start.x + start.width / 2 + 96, start.y + 40, { steps: 8 });
+  await page.mouse.move(start.x + start.width / 2 - 96, start.y + 40, { steps: 8 });
   await expect.poll(width).toBe(544);
   expect(
     await page.evaluate(() => localStorage.getItem('zmk-customizer:preferences')),
@@ -112,9 +113,10 @@ test('resizes editors with pointer and keyboard, cancels and retains preferred s
   await page.keyboard.press('Escape');
   await page.mouse.up();
   await expect.poll(width).toBe(448);
+  // Overshoot both width limits while keeping the captured pointer inside the window.
   for (const [delta, expected] of [
-    [1000, 640],
-    [-1000, 320],
+    [-400, 640],
+    [400, 320],
   ] as const) {
     const edge = await handle.boundingBox();
     if (edge === null) {
@@ -129,13 +131,13 @@ test('resizes editors with pointer and keyboard, cancels and retains preferred s
   await handle.focus();
   await page.keyboard.press('Home');
   await expect.poll(width).toBe(320);
-  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('ArrowLeft');
   await expect.poll(width).toBe(336);
-  await page.keyboard.press('Shift+ArrowRight');
+  await page.keyboard.press('Shift+ArrowLeft');
   await expect.poll(width).toBe(400);
   await page.keyboard.press('End');
   await expect.poll(width).toBe(640);
-  await page.keyboard.press('ArrowLeft');
+  await page.keyboard.press('ArrowRight');
   await expect.poll(width).toBe(624);
   const next = await handle.boundingBox();
   if (next === null) {
@@ -143,7 +145,7 @@ test('resizes editors with pointer and keyboard, cancels and retains preferred s
   }
   await page.mouse.move(next.x + next.width / 2, next.y + 40);
   await page.mouse.down();
-  await page.mouse.move(next.x + next.width / 2 - 112, next.y + 40, { steps: 8 });
+  await page.mouse.move(next.x + next.width / 2 + 112, next.y + 40, { steps: 8 });
   await page.mouse.up();
   await expect.poll(width).toBe(512);
   await page.reload();
@@ -159,7 +161,7 @@ test('resizes editors with pointer and keyboard, cancels and retains preferred s
   }
   expect(await width()).toBeLessThanOrEqual(area.width * 0.45 + 1);
   expect(canvas.width).toBeGreaterThanOrEqual(area.width * 0.55 - 1);
-  expect((await panel.boundingBox())?.x).toBeLessThan(canvas.x);
+  expect((await panel.boundingBox())?.x).toBeGreaterThanOrEqual(canvas.x + canvas.width);
   await page.setViewportSize({ width: 768, height: 800 });
   await expect(handle).toBeHidden();
   await page.setViewportSize({ width: 1920, height: 1080 });
@@ -168,7 +170,7 @@ test('resizes editors with pointer and keyboard, cancels and retains preferred s
   await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toBeVisible();
   await handle.focus();
-  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('ArrowLeft');
   await expect(page.getByRole('button', { name: 'Apply wiring', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Cancel wiring', exact: true }).click();
   expect(await saved(page)).toEqual(original);
@@ -196,4 +198,47 @@ test('resizes editors with pointer and keyboard, cancels and retains preferred s
   }
   await handle.dblclick();
   await expect.poll(width).toBe(448);
+});
+
+test('gives peer editor headings equal size without Layout and removes obsolete layout controls', async ({
+  page,
+}, info) => {
+  await openProject(page);
+  const original = await saved(page);
+  const editors = page.getByLabel('Schematic editors', { exact: true });
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 1000 });
+    for (const theme of ['Light', 'Dark']) {
+      await page.getByRole('button', { name: 'Settings', exact: true }).click();
+      await page
+        .getByRole('dialog', { name: 'Settings', exact: true })
+        .getByRole('radio', { name: theme, exact: true })
+        .press('Space');
+      await page.keyboard.press('Escape');
+      const sizes = [];
+      for (const name of ['Controller', 'Wiring', 'Parts']) {
+        const heading = editors.getByRole('heading', { name, exact: true });
+        const row = heading.locator('..');
+        sizes.push(await row.boundingBox());
+      }
+      const first = sizes[0];
+      if (!first) {
+        throw new Error('Missing editor heading');
+      }
+      for (const size of sizes) {
+        expect(size?.height).toBeCloseTo(40, 0);
+        expect(size?.width).toBeCloseTo(first.width, 0);
+      }
+      await expect(editors.getByText('Precise properties', { exact: true })).toHaveCount(0);
+      await expect(editors.getByRole('heading', { name: 'Layout', exact: true })).toHaveCount(0);
+      await editors
+        .getByRole('heading', { name: 'Controller', exact: true })
+        .scrollIntoViewIfNeeded();
+      await page.screenshot({ path: info.outputPath(`editor-hierarchy-${width}-${theme}.png`) });
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+        true,
+      );
+    }
+  }
+  expect(await saved(page)).toEqual(original);
 });

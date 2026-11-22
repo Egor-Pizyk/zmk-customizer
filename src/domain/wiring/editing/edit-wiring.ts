@@ -5,6 +5,8 @@ import { initializeWiring } from './initialize-wiring';
 import { getWiringCells } from '@domain/wiring/matrix';
 import type { WiringCell } from '@domain/wiring/matrix';
 import { routeWiring } from './route-wiring';
+import type { WiringConnection } from './route-wiring';
+import { routeMatrixWiring } from './route-matrix-wiring';
 import type { ControllerBoard, Half, Project, Result, Wiring } from '@domain';
 
 export type WiringEdit = { readonly board: ControllerBoard } & (
@@ -79,15 +81,9 @@ function applyCells(
   const keys = getWiringKeys(project, nextWiring, cells);
   const connections = getWiringConnections(nextWiring, cells);
   let terminalIds = terminals.map((terminal) => terminal.id);
-  if (input.kind === 'cell') {
-    const oldConnections = getWiringConnections(wiring, getWiringCells(project));
-    terminalIds = [
-      ...new Set(
-        [...oldConnections, ...connections]
-          .filter((connection) => connection.keyId === input.keyId)
-          .map((connection) => connection.terminalId),
-      ),
-    ];
+  terminalIds = getAffectedTerminalIds(project, input, { wiring, connections, terminalIds });
+  if (nextWiring.kind === 'matrix' && ['auto', 'topology', 'mode'].includes(input.kind)) {
+    return routeMatrixWiring({ ...project, keys, wiring: nextWiring }, connections);
   }
   return routeWiring(
     { ...project, keys, wiring: nextWiring },
@@ -277,4 +273,28 @@ function hasSameDimensions(wiring: Wiring, input: Extract<WiringEdit, { kind: 'd
     rowCount === input.rows &&
     terminals.filter((terminal) => terminal.kind === colKind).length === input.cols
   );
+}
+
+function getAffectedTerminalIds(
+  project: Project,
+  input: WiringEdit,
+  context: {
+    readonly wiring: Wiring;
+    readonly connections: readonly WiringConnection[];
+    readonly terminalIds: readonly string[];
+  },
+) {
+  const { wiring, connections } = context;
+  let terminalIds = [...context.terminalIds];
+  if (input.kind === 'cell') {
+    const oldConnections = getWiringConnections(wiring, getWiringCells(project));
+    terminalIds = [
+      ...new Set(
+        [...oldConnections, ...connections]
+          .filter((connection) => connection.keyId === input.keyId)
+          .map((connection) => connection.terminalId),
+      ),
+    ];
+  }
+  return terminalIds;
 }

@@ -22,7 +22,7 @@ export function EditorResizeHandle({ onDraft, onCommit, onCancel }: EditorResize
       type="button"
       aria-label="Resize editors, use left and right arrow keys"
       aria-controls="schematic-editor-content"
-      className="absolute inset-y-0 right-0 z-10 hidden w-6 cursor-ew-resize touch-none border-r border-border-strong hover:bg-surface-muted focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus xl:block"
+      className="absolute inset-y-0 left-0 z-10 hidden w-6 cursor-ew-resize touch-none border-l border-border-strong hover:bg-surface-muted focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus xl:block"
       onPointerDown={pointer.handlePointerDown}
       onPointerMove={pointer.handlePointerMove}
       onPointerUp={pointer.handlePointerUp}
@@ -98,7 +98,7 @@ function useResizeMovement(
     }
     onDraft(
       clampWidth({
-        widthPx: start.widthPx + event.clientX - start.xPx,
+        widthPx: start.widthPx + start.xPx - event.clientX,
         maxWidthPx: start.maxWidthPx,
       }),
     );
@@ -112,7 +112,7 @@ function useResizeMovement(
     onFinish();
     onCommit(
       clampWidth({
-        widthPx: start.widthPx + event.clientX - start.xPx,
+        widthPx: start.widthPx + start.xPx - event.clientX,
         maxWidthPx: start.maxWidthPx,
       }),
     );
@@ -142,8 +142,8 @@ function handleResizeKey(
   const widths: Readonly<Record<string, number>> = {
     Home: 320,
     End: maximum,
-    ArrowLeft: width - step,
-    ArrowRight: width + step,
+    ArrowLeft: width + step,
+    ArrowRight: width - step,
   };
 
   onCommit(clampWidth({ widthPx: widths[event.key] ?? width, maxWidthPx: maximum }));

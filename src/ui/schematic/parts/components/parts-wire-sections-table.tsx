@@ -10,7 +10,10 @@ import { Button } from '@ui/components/components';
 import type { PartsTableProps } from './parts-list';
 import type { KeyboardEvent } from 'react';
 
-type SectionTableProps = PartsTableProps & { readonly isReadOnly?: boolean };
+type SectionTableProps = PartsTableProps & {
+  readonly isReadOnly?: boolean;
+  readonly hasHeading?: boolean;
+};
 
 export function PartsWireSectionsTable(props: SectionTableProps) {
   const [focused, setFocused] = useState(0);
@@ -18,7 +21,7 @@ export function PartsWireSectionsTable(props: SectionTableProps) {
     useSectionActions(props);
   return (
     <section aria-label="Wire sections" className="flex flex-col gap-2">
-      <h3 className="font-semibold">Wire sections</h3>
+      {props.hasHeading === false ? null : <h3 className="font-semibold">Wire sections</h3>}
       {failure === undefined ? undefined : <p role="alert">{failure}</p>}
       <p className="text-text-muted">
         {props.isReadOnly === true

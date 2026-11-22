@@ -17,6 +17,7 @@ export async function continueOnboardingExercise(page: Page, info: TestInfo, isK
   const name = page.getByRole('textbox', { name: 'Name', exact: true });
   await name.fill('My macropad');
   await name.press('Enter');
+  await activate(page.getByRole('heading', { name: 'Keys', level: 3 }).locator('..'), isKeyboard);
   for (let index = 0; index < 9; index += 1) {
     await activate(page.getByRole('button', { name: 'Add key', exact: true }), isKeyboard);
     if (index < 8) {

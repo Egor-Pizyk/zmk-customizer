@@ -106,7 +106,6 @@ body {
   min-height: 0;
   min-width: 0;
   @media (min-width: 80rem) {
-    order: -1;
     flex: 0 0 clamp(320px, var(--schematic-editor-width, 448px), 640px);
     max-width: 45%;
     max-height: 100%;

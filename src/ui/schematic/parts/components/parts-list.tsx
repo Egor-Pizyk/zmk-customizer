@@ -1,14 +1,12 @@
-import { PartsWireSectionsTable } from './parts-wire-sections-table';
+import { PartsTables } from './parts-tables';
 import { getKeyPinWires } from '@domain/wires';
 import type { Project } from '@domain';
 import { usePreferences } from '@ui/preferences';
 import type { WorkspaceIssue } from '@ui/issues';
-import { PartsCrossingsTable } from './parts-crossings-table';
 import { PartsKeysTable } from './parts-keys-table';
-import { PartsWiresTable } from './parts-wires-table';
 import type { SchematicSelection, SelectionChange } from '@ui/schematic/interaction';
 import { useId } from 'react';
-import type { SyntheticEvent } from 'react';
+import type { ReactNode, SyntheticEvent } from 'react';
 
 export type PartsTableProps = {
   readonly project: Project;
@@ -20,7 +18,10 @@ export type PartsTableProps = {
 
 // The complete non-canvas alternative (FR-029, ADR 0008): every key, wire, crossing and board
 // pin, with the same edits as the canvas. Open state is an interface preference.
-export function PartsList(props: PartsTableProps) {
+export function PartsList({
+  children,
+  ...props
+}: PartsTableProps & { readonly children: ReactNode }) {
   const { preferences, changePreferences } = usePreferences();
   const headingId = useId();
   // One lookup per render (perf: getKeyPinWires walks every wire for every pin).
@@ -33,7 +34,7 @@ export function PartsList(props: PartsTableProps) {
   return (
     <section
       aria-labelledby={headingId}
-      className="shrink-0 border-t border-border bg-surface-raised"
+      className="shrink-0 border-b border-border bg-surface-raised"
     >
       <details name="schematic-editor" onToggle={handleToggle} open={preferences.isPartsListOpen}>
         <summary className="cursor-pointer px-4 py-2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus">
@@ -41,11 +42,10 @@ export function PartsList(props: PartsTableProps) {
             Parts
           </h2>
         </summary>
-        <div className="flex max-h-72 flex-col gap-6 overflow-auto px-4 pb-4">
+        <div className="flex max-h-96 flex-col gap-6 overflow-auto px-4 pb-4">
           <PartsKeysTable {...props} wiresOf={wiresOf} />
-          <PartsWireSectionsTable {...props} />
-          <PartsWiresTable {...props} />
-          <PartsCrossingsTable {...props} />
+          {children}
+          <PartsTables {...props} />
         </div>
       </details>
     </section>
