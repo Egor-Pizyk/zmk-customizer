@@ -94,7 +94,7 @@ Indexes list explicit named value/type exports; implementation files are private
 - `tests/helpers/`: Shared builders, rendering helpers and setup.
 - `tests/fixtures/`: Project inputs, independent golden files and upstream references.
 
-Tests consume the same public module aliases as production consumers. `make check` discovers, typechecks and lints the relocated tests, enforces coverage floors and rejects test files in `src/`. Split a growing group when it contains distinct responsibilities; avoid arbitrary numbered folders, generic `utils` groups and one folder per function.
+Tests consume the same public module aliases as production consumers. `make check` discovers, typechecks and lints tests and rejects test files in `src/`. The separate coverage stage follows [business-risk policy](testing.md#coverage); a module does not need a test file merely because it exists. Split a growing group when it contains distinct responsibilities; avoid arbitrary numbered folders, generic `utils` groups and one folder per function.
 
 Nested modules own files under their most specific registered root. Parent indexes expose only files owned by that root, not the entire subtree. Cross-group imports use the exact owning alias; within a group use relative implementation imports. Every populated source responsibility group has an explicit named index; raw upstream catalog assets are exempt.
 
@@ -108,4 +108,4 @@ Every UI responsibility group that contains both .ts and .tsx implementations is
 
 ## Feature 038 adapter ownership
 
-`src/ui/schematic/diagram/logic/` owns the private JointJS lifecycle, immutable projection descriptors and normalized event bridge; `src/ui/schematic/diagram/components/` owns the React host. Tests mirror those owners. Their named aliases are registered in tsconfig.json. Shared canvas remains library-independent; no Graph/Paper type escapes this adapter into domain/storage/generators. See [038 plan](../specs/038-jointjs-schematic-editor/plan.md).
+`src/ui/schematic/diagram/logic/` owns the private JointJS lifecycle, immutable projection descriptors and normalized event bridge; `src/ui/schematic/diagram/components/` owns the React host. Tests mirror those owners. Their named aliases are registered in tsconfig.json. Shared canvas remains library-independent; no Graph/Paper type escapes this adapter into domain/storage/generators. See [architecture](architecture.md#jointjs-schematic-presentation-boundary-038).

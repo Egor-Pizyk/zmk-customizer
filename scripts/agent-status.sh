@@ -10,5 +10,3 @@ printf '\nUnstaged diff summary:\n'
 git diff --stat
 printf '\nStaged diff summary:\n'
 git diff --cached --stat
-printf '\nSpec Kit selection (verify against request; not feature ownership):\n'
-bash .specify/scripts/bash/check-prerequisites.sh --paths-only --json

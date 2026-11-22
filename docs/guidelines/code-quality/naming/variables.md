@@ -4,7 +4,6 @@ paths:
   - src/**/*
   - tests/**/*
   - docs/**/*
-  - specs/**/*
 ---
 
 # Naming: variables, types, files
@@ -25,7 +24,7 @@ Names are nouns from the glossary below; one term per concept across code, tests
 | `cell` | Electrical matrix location `{ row, col }` | `coord`, `rc`, `matrixPos` |
 | `row` / `col` | Matrix row / column number | `column`, `r`, `c` |
 | `pin` (`PinRef`) | A GPIO pin reference, via connector (`&pro_micro 4`) or direct (`&gpio0 8`) | `gpio` (as a noun), `port`, `wire` |
-| `keyPin` (`KeyPin`) | Contact 1 or 2 of a key's switch on the Schematic (spec 003) | `leg`, `contact`, `pin` (alone, when a GPIO pin could be meant) |
+| `keyPin` (`KeyPin`) | Contact 1 or 2 of a key's switch on the Schematic | `leg`, `contact`, `pin` (alone, when a GPIO pin could be meant) |
 | `boardPin` | Controller contact in schematic wiring; resolve board-specific GPIO syntax through the controller catalog | `gpio`, `port` |
 | `wire` | A drawn connection on the Schematic: two ends plus bend points | `line`, `trace`, `link` |
 | `junction` | A wire end that joins another wire | `tee`, `node` |
@@ -42,7 +41,7 @@ Names are nouns from the glossary below; one term per concept across code, tests
 | `kconfigOption` | A `CONFIG_*` build setting | `setting`, `flag`, `option` (alone) |
 | `issue` (`ValidationIssue`) | One validation problem | `error`, `problem`, `warning` |
 | `file` (`GeneratedFile`) | Generator output `{ path, content }` | `output`, `artifact` |
-| `keycap` | A key drawn in the Bindings workspace (spec 004) | `cap`, `button` |
+| `keycap` | A key drawn in the Bindings workspace | `cap`, `button` |
 | `legend` | Text printed on a keycap: tap part, optional hold part | `label` (for this meaning) |
 | `modifier` (`Modifier`) | ZMK modifier function `LC`…`RG` added to a keystroke | `mod`, `meta` |
 | `keyStroke` (`KeyStroke`) | A keycode plus modifiers, one binding parameter | `chord`, `combo` |
@@ -52,13 +51,10 @@ UI copy may say "keyboard" and "controller" for readability; code and types use 
 
 ## Rules
 
-- Variables and types are nouns; booleans read as a yes/no question: `isSplit`, `hasEncoder`, `canExport`, `shouldAutosave`.
-- Collections are plural (`keys`, `layers`, `rowPins`); one element is the singular (`for (const key of keys)`).
 - Lookup maps/records are `xByY`: `keyByCell`, `pinsByHalf`, `issuesByKeyIndex`.
 - Units in the name whenever a number has one: `xU`, `widthU`, `rotationDeg`, `debounceMs`, `tappingTermMs`. Converted values say so: `xCentiU` when emitting centi-units for DT.
 - Counts are `xCount` (`keyCount`), not `numKeys` / `keysLength`.
 - IDs of user-defined entities are `xId` (`behaviorId`, `macroId`); the DT label generated from it is `xLabel` (`behaviorLabel`).
-- No single-letter names except `i`/`j` in index loops. Lambdas name the element too: `keys.map((key) => key.xU)`.
 - Acronyms are cased as words: `GpioPin`, `dtLabel`, `KconfigOption`, `zmkVersion`. Allowed abbreviations: ZMK, GPIO, DT, kscan, RC, u, BLE, HID, RGB, USB, Kconfig, `id`. Nothing else (`cfg`, `btn`, `idx`, `tmp`, `val`).
 
 ## Constants and types
@@ -69,11 +65,6 @@ UI copy may say "keyboard" and "controller" for readability; code and types use 
 
 ## Files
 
-- All files kebab-case, named after their single export: `add-key.ts` → `addKey`, `matrix-grid.tsx` → `MatrixGrid`, `project-schema.ts` → `projectSchema`. One rule for everything; avoids case-only renames on case-insensitive filesystems.
+- All files kebab-case, named after their single export: `add-key.ts` → `addKey`, `matrix-grid.tsx` → `MatrixGrid`, `project-schema.ts` → `projectSchema`.
 - Tests live separately in mirrored groups: `tests/unit/domain/keys/add-key.test.ts`. Golden fixtures: `tests/fixtures/<shield>/` (docs/architecture.md).
 - `.tsx` only for files containing JSX.
-
-## Enforced by
-
-- oxlint: `unicorn/filename-case` (kebab-case), `id-length` (if configured, with `i`/`j` exceptions).
-- Review only: glossary terms and banned synonyms, boolean prefixes, `xByY`, units in names, constant casing.

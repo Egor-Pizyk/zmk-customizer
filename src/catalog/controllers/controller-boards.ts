@@ -37,7 +37,7 @@ function createPins(input: {
   }));
 }
 
-// Maps verified against pinned v0.3/Zephyr sources in specs/011-controller-boards/research.md.
+// Maps verified against pinned v0.3/Zephyr sources in docs/zmk/boards.md.
 export const DEFAULT_CONTROLLER_ID = 'nice_nano_v2';
 
 export const CONTROLLER_BOARDS = [

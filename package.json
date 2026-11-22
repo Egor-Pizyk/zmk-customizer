@@ -30,7 +30,9 @@
     "test:unit": "npm run test && npm run test:tooling",
     "test:tooling": "node --test tests/tooling/*.test.mjs",
     "test:unit:changed": "node scripts/check-changes.mjs --unit-only",
-    "test:unit:focus": "node scripts/unit-test-focus.mjs"
+    "test:unit:focus": "node scripts/unit-test-focus.mjs",
+    "test:related": "vitest related --run",
+    "test:e2e:quick": "playwright test --project=chromium"
   },
   "dependencies": {
     "@joint/core": "4.3.3",

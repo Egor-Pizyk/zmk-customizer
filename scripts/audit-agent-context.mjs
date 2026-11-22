@@ -65,7 +65,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
     process.exitCode = 2;
   } else if (argumentsList.includes('--help')) {
     process.stdout.write(
-      'Audit project-owned startup, architecture, workflow, testing, guidelines and agent instructions. Excludes third-party skills, plugins and Spec Kit files. Reports words, local inline Markdown links and exact repeated prose (35+ words). No remote access or writes. --json emits the complete report.\n',
+      'Audit project-owned startup, architecture, workflow, testing, guidelines and agent instructions. Excludes third-party skills and plugins. Reports words, local inline Markdown links and exact repeated prose (35+ words). No remote access or writes. --json emits the complete report.\n',
     );
   } else {
     const directories = ['docs/guidelines', '.claude/agents'];
@@ -74,8 +74,6 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
       'CLAUDE.md',
       'docs/product.md',
       'docs/principles.md',
-      'docs/workflow.md',
-      'docs/agent-rules.md',
       'docs/architecture.md',
       'docs/folder-structure.md',
       'docs/domain-model.md',
@@ -83,7 +81,6 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
       'docs/testing.md',
       'docs/commands.md',
       'docs/repository-map.md',
-      'specs/README.md',
     ]);
     for (const directory of directories) {
       for (const file of findMarkdown(path.join(ROOT, directory)))

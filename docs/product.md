@@ -11,7 +11,7 @@ ZMK is configured through Devicetree and Kconfig. For a non-standard keyboard (h
 
 ### 1.3 Core flows (in order the user goes through them)
 
-The UI is an app shell with a left tab bar and four workspaces (spec `specs/001-app-shell-ui/`): **Schematic** (flows 1–2; owns the project JSON config), **Bindings** (flow 3), **Firmware** (flow 4), **Export** (flow 5). App preferences (theme, grid, snap) live in the Settings window, not in the project.
+The UI is an app shell with a left tab bar and four workspaces: **Schematic** (flows 1–2; owns the project JSON config), **Bindings** (flow 3), **Firmware** (flow 4), **Export** (flow 5). App preferences (theme, grid, snap) live in the Settings window, not in the project.
 
 1. **Layout** — place keys on a canvas: position, size, rotation (in `u`, 1u = 19.05 mm key pitch). Start empty or from a preset.
 2. **Wiring** — choose controller board, split/unified, kscan type (matrix / direct / charlieplex), diode direction; assign every key a `(row, col)` in the electrical matrix and every row/col a GPIO pin. The UI shows the matrix as a grid and highlights conflicts (two keys on one cell, unassigned pins, a pin used twice).

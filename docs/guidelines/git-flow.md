@@ -1,78 +1,17 @@
 # Git flow
 
-Owner of branch, PR and delivery rules. Load the relevant section before a Git
-operation or feature dependency decision; reuse unchanged context under `AGENTS.md`.
-[Workflow](../workflow.md) owns SDD; [testing](../testing.md) owns verification.
+Inspect status/diff and preserve existing edits. Use the current branch for the requested work unless isolation is needed; no feature resolver, artifact directory, reserved number or one-active-feature gate. Do not stash/reset unrelated work.
 
-## Start
+## Commit and PR
 
-- Inspect status, branches and open PRs. One active feature by default: unfinished
-  work with unmerged changes or an open PR. Merged historical branches do not count.
-- Finish the active feature before starting another. A second active branch requires
-  a user request or acute necessity recorded in the task journal. Dependency-bot PRs
-  are maintenance, not active product features.
-- Every new feature starts from current `origin/main`. Use worktrees only when an
-  actual isolation need exists; record why. Never create feature stacks.
-- Preserve existing edits in separate thematic commits on their owning branch;
-  inspect explicit staged paths. Never automatically stash, reset, absorb unrelated
-  work, secrets or generated files.
-
-```sh
-git status --short
-gh pr list
-git fetch origin
-git switch main
-git pull --ff-only
-git switch -c feature/NNN-short-name
-# implement; stage explicit paths; pre-commit checks the index snapshot
-git commit -m "feat: describe resulting behavior"
-git push -u origin HEAD
-gh pr create --base main --body-file /tmp/pr-description.md
-# Report PR + local checks + limits, then stop. No auto-merge or CI polling.
-```
-
-Use Conventional Commits. Branch prefixes: `feature/`, `fix/`, `docs/`, `test/`,
-`chore/`, `refactor/`; lowercase ASCII kebab-case. Keep the exact `NNN-short-name`
-for specified features; maintenance uses a descriptive slug without inventing a
-spec number. Spec directories stay unprefixed. Resolve Spec Kit selection and
-compare it with the request; persisted selection alone does not establish ownership.
-
-## Deliver
-
-One feature = one branch and one PR to main, including spec, code, tests and evidence.
-Use separate logical commits for local changes; do not split a feature into PR stacks.
-Follow [separate verification stages](../commands.md): static checks after complete
-modules, all units at task completion, full configured E2E only for the completed
-feature/final commit. Pre-commit is static-only. Inspect the final diff and record limits.
-Required manual acceptance still applies: open a draft when it is outstanding.
-The PR describes the problem, resulting behavior, validation and compatibility limits.
-
-Set exactly one release label before merge:
-
-| Label | Use |
-|---|---|
-| `release:patch` | small fix, docs, tests, tooling or behavior-preserving refactor |
-| `release:minor` | feature, significant user-impacting fix, incompatible 0.x change |
-| `release:major` | intentional incompatible public contract at 1.x+ |
-
-**Finish after creating/updating the PR.** Do not submit merge or enable auto-merge
-unless the user separately requests it. Do not wait for CI or release publication.
-Never claim unobserved CI, manual acceptance, merge or release success.
+- Use Conventional Commits and separate coherent changes. Stage explicit paths; exclude secrets, generated assets and reports. A commit does not require a full local browser run.
+- Branch names use a descriptive `feature/`, `fix/`, `docs/`, `test/`, `chore/` or `refactor/` slug when creating a branch. New branches start from current main; do not create stacks unless requested.
+- Commit/push/create or update a PR when requested. Describe the resulting behavior, relevant checks and material limits; no matrix, task journal or command transcript.
+- Local verification is proportional under [testing policy](../testing.md). CI owns the complete final-revision checks; optional pre-commit verifies static staged bytes only.
+- Stop after requested delivery. No CI/release polling or auto-merge unless requested. Do not claim unobserved acceptance, merge or publication.
 
 ## Merge and release
 
-Main requires a PR, up-to-date checks, resolved conversations and linear history,
-including for administrators. All CI suites must pass for the final revision:
-`check` aggregates static checks, unit/coverage, `e2e`, `image`, `mutations` and
-browser mutations. Protected statuses remain `check`, `e2e`, `image` and `mutations`.
-Firmware compilation is local-only via `make zmk-build`; record local evidence for
-generator/export changes under [commands](../commands.md). Failure, cancellation or
-unexpected skip blocks the gate. Preserve the existing protected status names; never use `--admin` or weaken protection.
+Main requires a PR, passing protected checks, resolved conversations and linear history. Do not bypass protection or use `--admin`. Protected statuses remain `check`, `e2e`, `image` and `mutations`; check aggregates existing static, units/coverage, browser, image and mutation jobs. This workflow change does not weaken CI.
 
-When separately authorized and acceptance is complete, squash merge through GitHub.
-The existing release workflow publishes one release per merged PR at its merge SHA.
-Tags own application versions; project schema versions are independent. Never move
-published tags. Report pending, merged and published states distinctly.
-
-Dependabot PRs follow the same gates and default to `release:patch`; assess majors
-and dependency policy explicitly. Branch cleanup is a separate explicit action.
+Merge requires a separate user request. Set exactly one release label: `release:patch` for fixes/docs/tooling/refactors; `release:minor` for features/significant 0.x changes; `release:major` for intentional incompatible 1.x+ contracts. The release workflow publishes at the merge SHA. Tags own app versions; schema versions are separate. Never move published tags. Branch cleanup is a separate action. Details: [releases](../releases.md).

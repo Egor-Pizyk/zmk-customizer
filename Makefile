@@ -53,11 +53,15 @@ check-changed: ## Static checks for staged files (exact index snapshot)
 
 .PHONY: test-unit test-unit-changed test-unit-focus
 
-test-unit: ## All application/tooling unit tests at task completion
+test-unit: ## All application/tooling unit tests when broad verification is needed
 	$(RUN) npm run test:unit
 
 test-unit-changed: ## Unit tests related to staged changes
 	npm run test:unit:changed
 
-test-unit-focus: ## Diagnose a failed unit: make test-unit-focus ARGS='tests/unit/example.test.ts'
+test-unit-focus: ## Run a focused unit: make test-unit-focus ARGS='tests/unit/example.test.ts'
 	$(RUN) npm run test:unit:focus -- $(ARGS)
+
+.PHONY: test-related
+test-related: ## Units related to source files; make test-related ARGS=src/domain/keys/move-key.ts
+	$(RUN) npm run test:related -- $(ARGS)

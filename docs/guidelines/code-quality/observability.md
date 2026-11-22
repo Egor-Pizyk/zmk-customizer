@@ -27,16 +27,6 @@ type ValidationIssue = {
 - Tests assert on `code` and `path`; message wording can change freely.
 - Export is blocked while any issue exists; the export view lists all issues, each linking to its entity.
 
-```ts
-// ✅
-{ code: 'key-without-cell', message: 'Key 12 has no matrix cell. Assign it a row and column in Wiring.', path: ['keys', 12] }
-{ code: 'pin-used-twice', message: 'Pin D4 is used by row 2 and col 5 on the left half. Pick a different pin for one of them.', path: ['halves', 'left', 'rowPins', 2] }
-
-// ❌
-{ code: 'error', message: 'Invalid matrix', path: [] }
-throw new Error('duplicate pin');
-```
-
 ## Storage failures (`storage/`)
 
 Storage is the only I/O and every failure mode is handled explicitly, mapped to a readable message:
@@ -52,21 +42,6 @@ Storage is the only I/O and every failure mode is handled explicitly, mapped to 
 - Parse functions return `Result` (`typescript.md`); callers switch on `ok`, they do not wrap in try/catch.
 - `try/catch` exists only around the actual browser call that can throw (`localStorage.setItem`, `JSON.parse`, `file.text()`), and converts the error into a `Result`/message right there.
 - Never an empty `catch`, never `catch` that only rethrows, never a catch that hides the failure without telling the user.
-
-```ts
-// ✅
-export function saveProject(project: Project): Result<void, StorageError> {
-  try {
-    localStorage.setItem(PROJECT_STORAGE_KEY, serializeProject(project));
-    return { ok: true, value: undefined };
-  } catch (error) {
-    return { ok: false, error: toStorageError(error) }; // 'quota-exceeded' | 'unavailable'
-  }
-}
-
-// ❌
-try { localStorage.setItem(PROJECT_STORAGE_KEY, json); } catch {}
-```
 
 ## Crashes (programmer errors)
 
@@ -90,11 +65,6 @@ try { localStorage.setItem(PROJECT_STORAGE_KEY, json); } catch {}
 
 - The project JSON contains only what the user typed. Do not add user agent, timestamps, machine info or IDs derived from the environment to it or to exports.
 - No `fetch`, `XMLHttpRequest`, `WebSocket`, `sendBeacon`, analytics or error-reporting SDKs. External links (ZMK docs) are plain `<a>` elements.
-
-## Enforced by
-
-- oxlint: `no-console`, `no-empty` (empty `catch`), `no-useless-catch`, `typescript/no-floating-promises` (type-aware, if enabled).
-- Review only: issue shape and message quality, path correctness, storage failure table, no network APIs, error boundary behavior, no PII in exports.
 
 ## External diagram renderer boundary (038)
 

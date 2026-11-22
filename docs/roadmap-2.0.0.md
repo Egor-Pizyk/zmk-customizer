@@ -61,7 +61,7 @@ The initial [component-source research](research/2.0.0-component-sources.md) rec
 
 ## Dedicated feature — mechanical technology research
 
-**Working name:** `mechanical-technology-research`; a separate research feature before production CAD integration and monorepo restructuring. Assign its immutable Spec Kit number only when formally specifying it; this documentation task does not create a feature directory. The user requires a full comparative study and an evidence-backed ADR choosing language, framework and geometry kernel. [ADR 0022](decisions/0022-mechanical-technology-evaluation.md) records this evaluation gate, not a technology selection.
+**Working name:** `mechanical-technology-research`; a separate research feature before production CAD integration and monorepo restructuring. The user requires a full comparative study and an evidence-backed ADR choosing language, framework and geometry kernel. [ADR 0022](decisions/0022-mechanical-technology-evaluation.md) records this evaluation gate, not a technology selection.
 
 **Questions to answer independently**
 
@@ -110,7 +110,7 @@ No experiments or prototypes listed above have been performed in this documentat
 7. Which traceable online dimension/model sources and exact asset licenses will be used, how will their revisions and physical verification be maintained, and who can print/test the reference assemblies?
 8. Agree target hardware/browser performance budgets and the bounded future-complexity cases for the dedicated technology-research feature; actual language/framework/kernel selection follows its evidence and final ADR.
 
-## Constraints to resolve before specification
+## Open product decisions
 
 Current [principles](principles.md), [architecture](architecture.md) and [tooling policy](tooling.md) remain authoritative. This draft does not amend them. In particular:
 
@@ -123,4 +123,4 @@ Current [principles](principles.md), [architecture](architecture.md) and [toolin
 - Reuse ideas independently from code or assets. Check provenance and licenses for any actual reuse; Cosmos documents different licenses for code, models and documentation and has non-public features.
 - Preserve accessibility with a useful structured alternative to manipulating the 3D scene, as well as keyboard selection and editing.
 
-After these decisions, create feature specifications and an implementation sequence through the existing workflow. Do not start monorepo restructuring, engine integration or UI implementation from this draft alone.
+Resolve these decisions with the user before implementing the affected product behavior. Do not start monorepo restructuring, engine integration or UI implementation from this draft alone.

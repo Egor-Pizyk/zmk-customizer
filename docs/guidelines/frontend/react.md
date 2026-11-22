@@ -9,13 +9,11 @@ paths:
 
 How `src/ui/` is written. Type conventions are in `code-quality/typescript.md`; naming in `code-quality/naming/functions.md`. Styling: `tailwind.md`; screen patterns: `admin-ui.md`; keyboard and ARIA: `accessibility.md`.
 
-## Component fundamentals
+## Component boundary
 
 - Function components, props as a `type <Component>Props` next to the component, destructured in the signature. No `React.FC`.
 - Components contain no ZMK rules: they call domain queries/operations and render the result. A condition like "is this pin already used" is a domain function, not inline JSX logic.
 - Derive during render; `useEffect` is only for syncing with the outside world (localStorage, `document` listeners), never for computing state from other state.
-- List `key` props use stable identity, never the array index of a reorderable list.
-- Hooks follow the rules of hooks; dependency arrays are complete, not silenced.
 
 ## Where components live
 
@@ -42,19 +40,6 @@ Mixed UI groups split .ts functions/hooks/contracts into `logic/` and .tsx rende
 - One store: `useReducer` in `ProjectProvider` holding `{ past, present, future }` of `Project` (ADR 0003). Components get `{ project, issues, commit, undo, redo }` from `useProject()`.
 - `commit` takes an updater that calls one domain operation. The reducer stays generic; it never learns about keys or pins.
 - `getProjectAnalysis(project)` owns contacts, nets, matrix and issues. A WeakMap in project-analysis.ts shares one result per immutable project across history, provider, schematic and export. UI consumers do not build a separate electrical validation pipeline.
-
-```tsx
-// ✅
-const { project, commit } = useProject();
-function handleWidthCommit(widthU: number) {
-  commit((current) => resizeKey(current, { keyIndex, widthU }));
-}
-
-// ❌ rule inline, mutation, reducer knows the domain
-if (project.keys.some((key) => key.cell?.row === row && key.cell?.col === col)) setError('Cell taken');
-project.keys[keyIndex].widthU = widthU;
-dispatch({ type: 'resize-key', keyIndex, widthU });
-```
 
 - One user gesture = one `commit` = one undo step. A drag keeps a local preview offset in state and commits `moveKey` once on `pointerup`; a text field commits on blur/Enter, not per keystroke (see "Inputs").
 - UI state is not project state: hover, open dialog, active tab, selection, drag preview, draft field text live in `useState` of the lowest component that needs them. They are not saved, exported or undone.
@@ -92,10 +77,9 @@ Effects sync with systems outside React. Feature040 additionally permits lifecyc
 | Bindings `keydown` on `globalThis`: Mod+C / Mod+V copy and paste a binding on the Bindings canvas or Keys table | `bindings/interaction/use-bindings-shortcuts.ts` |
 | `keydown` on `globalThis`: Escape inside `[data-action-panel]` returns focus to the canvas | `bindings/panel/components/action-panel.tsx` |
 
-- Autosave is not an effect: `saveProject` runs in the project provider's dispatch, the handler that changes the project (spec 002 research R6), so loading never writes and no effect stores the save result.
+- Autosave is not an effect: `saveProject` runs in the project provider's dispatch, the handler that changes the project, so loading never writes and no effect stores the save result.
 - Page title is `<title>` rendered by the workspace screen (React 19 hoists it), not an effect on `document.title`.
 - Canvas-scoped single keys are matched by the global `keydown` listener in `app/logic/use-global-shortcuts.ts` when `event.target` is inside `[data-canvas-workspace]` (`onKeyDown` on `role="application"` fails jsx-a11y `no-noninteractive-element-interactions`). Keys of interactive elements (a `<button>` drag handle, a table selection column) use `onKeyDown` on that element.
-- Every listener added in an effect is removed in its cleanup. Dependency arrays are complete (`code-quality/typescript.md`).
 
 ## Inputs and forms
 
@@ -103,14 +87,6 @@ Effects sync with systems outside React. Feature040 additionally permits lifecyc
 - Native attributes mirror catalog constraints (`min`, `max`, `step`, `required`, `maxLength`) for instant feedback. The domain `ValidationIssue` is the source of truth; never block a commit on `checkValidity()` (domain operations are total, `code-quality/typescript.md`).
 - Issues for a field are found by `path` and rendered under it (`admin-ui.md` → "Validation display").
 - Dialog forms (new layer, add combo) use `<form onSubmit>` with `event.preventDefault()`; no page reloads, no uncontrolled `FormData` reads.
-
-```tsx
-// ✅
-<NumberField label="Width" unit="u" min={0.25} step={0.25} value={key.widthU} issues={widthIssues} onCommit={handleWidthCommit} />
-
-// ❌ commits every keystroke (floods undo), string math in the component
-<input type="number" value={key.widthU} onChange={(event) => commit((p) => resizeKey(p, { keyIndex, widthU: +event.target.value }))} />
-```
 
 ## Lists and keys
 

@@ -15,7 +15,6 @@
     "**/*.md",
     ".claude/**",
     ".agents/**",
-    ".specify/**",
     "tests/fixtures/**"
   ]
 }

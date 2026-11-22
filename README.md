@@ -1,48 +1,32 @@
 # ZMK Customizer
 
-Browser tool that turns a custom keyboard description — physical layout, matrix wiring, keymap, behaviors, ZMK settings — into a ready ZMK shield (`Kconfig.shield`, `Kconfig.defconfig`, `<name>.overlay`, `<name>.keymap`, split variants, `.conf`) packaged as a `zmk-config` repository zip.
+Browser tool for keyboard layout, electrical wiring, keymaps, behaviors and firmware settings. Exports a ready-to-build ZMK v0.3.0 shield in a zmk-config repository ZIP.
 
-Static site: no backend, no accounts, works offline. Projects are saved in the browser and can be exported/imported as JSON. It does not compile or flash firmware; build with your `zmk-config` GitHub Actions.
+Static/offline application: no backend or accounts. Projects autosave in the browser and import/export as versioned JSON. Firmware building/flashing happens outside the app.
 
 ## Quick start
 
-Requires Docker.
+Requires Docker, or a prepared Node 24 host with `npm ci`.
 
+```sh
+make up       # http://localhost:5173
+make sh       # prepared app container for focused checks
+make test-unit-focus ARGS='tests/unit/domain/keys/move-key.test.ts'
+make test-related ARGS='src/domain/keys/move-key.ts'
+make help
 ```
-make up      # dev server at http://localhost:5173
-make check   # architecture, types, lint, format (no unit/E2E)
-make test-unit # all app/tooling units at task completion
-make test-e2e  # full browser suite at feature/final completion
-make help    # all targets
-```
-
-Full command list: [docs/commands.md](docs/commands.md).
-
-## App layout
-
-A left tab bar switches between four workspaces:
-- **Schematic** — physical layout and wiring (canvas with a tools window);
-- **Bindings** — keymap (canvas);
-- **Firmware** — ZMK settings (placeholder for now);
-- **Export** — generated files and download (placeholder for now).
-
-Settings (theme, grid, snap, rulers, minimap) open from the gear at the bottom of the tab bar. Keyboard shortcuts are listed under the `?` button. Spec: [`specs/001-app-shell-ui/spec.md`](specs/001-app-shell-ui/spec.md).
 
 ## Development
 
-Features are built spec-first with [GitHub Spec Kit](https://github.com/github/spec-kit) in Claude Code:
+Implement directly from the user's request. Read the affected code/tests, make a coherent change and run the smallest useful check. Focused tests, watch mode and targeted Chromium journeys are available immediately. Broaden for shared changes or unresolved risk; CI retains full checks. No specification pipeline, feature numbering, behavior matrix or routine evidence journal.
 
-1. Pick the next feature in [docs/roadmap.md](docs/roadmap.md) (one-time setup: roadmap "Step 0").
-2. `/speckit-specify <prompt from the roadmap>` → `/speckit-clarify` → `/speckit-plan` → `/speckit-tasks` → `/speckit-analyze` → `/speckit-implement`.
-3. `make check` passes; commit with Conventional Commits.
+[AGENTS.md](AGENTS.md) is the agent startup guide; [commands](docs/commands.md) lists focused and broad checks. Optional `zmk-reviewer` and `domain-test-writer` helpers live in `.claude/agents/`.
 
-Rules for humans and agents: [AGENTS.md](AGENTS.md). Project subagents (`zmk-reviewer`, `domain-test-writer`, `spec-reviewer`) live in `.claude/agents/`.
+## Workspaces and references
 
-## Docs
+Schematic owns physical layout and electrical wiring; Bindings owns layers/actions; Firmware owns typed ZMK settings; Export previews/downloads generated files. Settings holds app preferences separately from Project. Keyboard shortcuts are available from the lower navigation.
 
-- [AGENTS.md](AGENTS.md) — product, domain model, architecture, stack, principles
-- [docs/folder-structure.md](docs/folder-structure.md) — source groups and separate test folders
-- [docs/roadmap.md](docs/roadmap.md) — features in implementation order
-- [docs/decisions/](docs/decisions/README.md) — architecture decision records
-- [docs/zmk/](docs/zmk/README.md) — verified ZMK reference notes
-- [docs/guidelines/code-quality/](docs/guidelines/code-quality/) — code rules
+- [Product](docs/product.md) and [future direction](docs/roadmap.md)
+- [Architecture](docs/architecture.md), [folder structure](docs/folder-structure.md), [domain model](docs/domain-model.md)
+- [Testing](docs/testing.md) and [project guidelines](docs/guidelines/)
+- [Verified ZMK notes](docs/zmk/README.md) and [architectural decisions](docs/decisions/README.md)

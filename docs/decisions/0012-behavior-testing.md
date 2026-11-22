@@ -1,6 +1,6 @@
 # 0012. Test observable behavior with real React and DOM
 
-Status: Accepted
+Status: Partially superseded by 0026 (test selection and coverage floors)
 Date: 2026-10-12
 
 ## Context

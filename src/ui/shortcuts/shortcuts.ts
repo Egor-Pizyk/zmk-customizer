@@ -2,7 +2,7 @@ import type { CanvasWorkspaceId } from '@storage/preferences';
 
 // Globals are Alt+Shift matched by `code` (Option on macOS changes `key`; Alt+digit alone
 // switches browser tabs on Linux). Single keys work only while a canvas has focus (WCAG 2.1.4).
-// Contract: specs/001-app-shell-ui/contracts/shortcuts.md.
+// Shared by dispatch and shortcut help so physical-key shortcuts stay consistent.
 export const SHORTCUTS = [
   {
     scope: 'global',

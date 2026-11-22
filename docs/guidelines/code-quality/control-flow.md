@@ -11,11 +11,9 @@ How functions are shaped. Types and exhaustiveness: `typescript.md`. Error surfa
 
 ## Shape
 
-- Guard clauses first, happy path last and unindented. No `else` after `return`/`throw`/`continue`.
-- Max nesting depth 3 (blocks inside a function). Deeper → extract a named function.
-- No nested ternaries. One ternary for a simple value is fine; more branches → `switch` or early returns.
-- A function does one thing and fits on a screen (~40 lines). Generators split per DT node / section (`renderKscanNode`, `renderMatrixTransform`), not one long template.
-- Any function taking two or more same-typed params, or any optional behavior, takes an options object (see "No branded types" in `typescript.md`).
+- Use options objects for two or more same-typed parameters or optional behavior; no positional boolean flags.
+- Split generators by DT node / section (`renderKscanNode`, `renderMatrixTransform`).
+- Mechanical function-shape rules are enforced by lint; see enforcement below.
 
 ## Purity and immutability
 
@@ -24,22 +22,10 @@ How functions are shaped. Types and exhaustiveness: `typescript.md`. Error surfa
 - Mutating a value created inside the same function (e.g. pushing lines into a local array) is fine; it must not escape before it is complete.
 - Generators sort explicitly before emitting anything whose order comes from user actions (combos, macros, Kconfig options) — see determinism in docs/architecture.md.
 
-## Loops
-
-- Transforms (`map`, `filter`, `flatMap`, `some`, `every`, `find`) use array methods. Pass explicit callbacks rather than bare function references: array methods also pass index and array.
-- `for...of` when you need early exit, several outputs from one pass, or sequential `await`.
-- No `forEach` (use `for...of`). `reduce` only for trivial folds (sum, max); anything building objects is `for...of` or `Object.fromEntries`.
-- Index loops (`for (let i…)`) only when the index is the data (e.g. walking rows × cols of the matrix grid).
-
-## Boolean flag parameters
-
-- No boolean positional parameters. Split into two functions, or take a union / options object with a named field.
-
 ## Async
 
 - Async code exists only in `storage/` (file reading, zip building) and `ui/` (event handlers). `domain/` and `generators/` are synchronous.
 - No floating promises: every promise is `await`ed or explicitly handled; UI handlers catch and report (`observability.md`).
-- No `async` functions without an `await`.
 
 ## Side effects
 

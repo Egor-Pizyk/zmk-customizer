@@ -51,13 +51,13 @@ test('formatter skips excluded agent files but still rejects malformed formattin
   const formatter = fileURLToPath(new URL('../../node_modules/oxfmt/bin/oxfmt', import.meta.url));
   const runner = fileURLToPath(new URL('../../scripts/run-changed-checks.mjs', import.meta.url));
   try {
-    for (const name of ['.specify', 'bin', 'node_modules/vitest'])
+    for (const name of ['.claude', 'bin', 'node_modules/vitest'])
       mkdirSync(path.join(directory, name), { recursive: true });
     writeFileSync(
       path.join(directory, '.oxfmtrc.json'),
-      JSON.stringify({ ignorePatterns: ['.specify/**'] }),
+      JSON.stringify({ ignorePatterns: ['.claude/**'] }),
     );
-    writeFileSync(path.join(directory, '.specify/integration.json'), '{"version":"1.2.3"}');
+    writeFileSync(path.join(directory, '.claude/settings.json'), '{"hooks":{}}');
     writeFileSync(path.join(directory, 'bin/npm'), '#!/bin/sh\nexit 0\n', { mode: 0o755 });
     writeFileSync(
       path.join(directory, 'bin/npx'),
@@ -81,10 +81,10 @@ process.exit(result.status??1);
         encoding: 'utf8',
       });
     };
-    const excluded = check(['.specify/integration.json']);
+    const excluded = check(['.claude/settings.json']);
     assert.equal(excluded.status, 0, excluded.stderr);
     writeFileSync(path.join(directory, 'bad.json'), '{"items":[1,2,3]}');
-    const malformed = check(['.specify/integration.json', 'bad.json']);
+    const malformed = check(['.claude/settings.json', 'bad.json']);
     assert.notEqual(malformed.status, 0, 'formatting errors must still block the snapshot');
     assert.match(malformed.stderr, /bad\.json/u);
   } finally {
