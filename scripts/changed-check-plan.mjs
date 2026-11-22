@@ -28,3 +28,13 @@ export function changedCheckPlan(files, exists = existsSync) {
     ),
   };
 }
+
+export function describeCheckPlan(plan) {
+  return {
+    static: 'Whole-project types/architecture/guidelines; changed-file lint/format',
+    unit: plan.fullUnit ? 'all' : plan.related,
+    browser: plan.browser,
+    tooling: plan.tooling,
+    reasons: plan.reasons ?? ['Final check retains conservative Chromium expansion.'],
+  };
+}

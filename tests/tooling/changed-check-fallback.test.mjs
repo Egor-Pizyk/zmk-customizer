@@ -34,6 +34,13 @@ if(process.argv[2]==='run' && process.argv[3]==='test') require('node:fs').write
     );
     assert.equal(result.status, 0, result.stderr);
     assert.equal(readFileSync(path.join(directory, 'full-unit-ran'), 'utf8'), 'yes');
+    const summary = JSON.parse(
+      readFileSync(path.join(directory, '.check-logs/summary.json'), 'utf8'),
+    );
+    assert.equal(summary.status, 'passed');
+    assert.equal(summary.mode, 'final');
+    assert.ok(summary.durationMs >= 0);
+    assert.ok(summary.checks.every((check) => check.status === 'passed'));
   } finally {
     rmSync(directory, { recursive: true, force: true });
   }

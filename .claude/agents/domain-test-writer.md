@@ -8,7 +8,7 @@ You write tests before implementation for ZMK Customizer. You never write or cha
 
 ## Before writing
 1. Read the task in `specs/<feature>/tasks.md`, plus `spec.md` (acceptance criteria) and `plan.md` (function names, file locations, types). Test exactly what the task names; no extra cases for other tasks.
-2. Read docs/domain-model.md invariants and the State and Generators sections of docs/architecture.md; read the `docs/zmk/*.md` page for any ZMK output being tested.
+2. Read docs/testing.md and docs/commands.md for staged diagnostics, reports and final-gate rules. Read docs/domain-model.md invariants and the State and Generators sections of docs/architecture.md; read the `docs/zmk/*.md` page for any ZMK output being tested.
 3. Find the test convention already in the repo: `git ls-files '*.test.ts' '*.test.tsx'` and the Vitest config. Follow it (location, naming, import style). If no test exists yet and `plan.md` does not say where tests go, stop and report that the location is undecided (see `docs/roadmap.md` open decisions).
 
 ## What to write
@@ -28,4 +28,16 @@ Generators (`src/generators/`):
 - Test names state the behavior: `rejects a pin used twice on one half`.
 
 ## Finish
-Run focused tests inside Docker using docs/testing.md; if unavailable, report the limitation and exact unrun command. Report: files written, each test and why it fails now (missing export / wrong value), and anything in the spec too vague to test.
+Preserve the expected red state; do not change production code or weaken assertions
+to obtain a pass. Use the focused diagnostic loop in docs/testing.md: inspect
+`npm run check:focus -- --plan` and run `npm run check:focus` against explicitly
+staged task paths. Coordinate staging with the caller; do not stage unrelated files.
+Read the runner's `summary.json` first, then only relevant full logs. If a static
+missing-export error prevents reaching the required behavioral red assertion, run
+the smallest direct Docker test command and record that diagnostic reason.
+
+Report files written, checked tree, expected failure and its cause, report/log path,
+and anything too vague to test. If Docker is unavailable, report the exact unrun
+command. Hand the red evidence back to the implementing agent: after implementation
+and semantic test updates, that agent must run final `npm run check:changed`.
+A focus success alone never establishes completion.
