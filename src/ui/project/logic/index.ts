@@ -32,3 +32,4 @@ export {
 export { createTutorialActions } from './tutorial-actions';
 
 export { getProjectAnalysis, getValidationIssues } from './project-analysis';
+export { useKleImport } from './use-kle-import';

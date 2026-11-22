@@ -9,6 +9,11 @@ export function focusAfterDelete(input: {
       `[data-parts-delete="${input.table}:${input.index}"]`,
     );
     const fallback = document.querySelector<HTMLElement>(`[data-parts-add="${input.table}"]`);
-    (next ?? fallback)?.focus();
+    const target = next ?? fallback;
+    if (target?.closest('details:not([open])') !== null) {
+      document.querySelector<SVGSVGElement>('[data-canvas-workspace="schematic"]')?.focus();
+      return;
+    }
+    target.focus();
   });
 }

@@ -202,17 +202,17 @@ export const MUTATIONS = [
   ],
   [
     'cancelled numeric geometry resurfaces',
-    'src/ui/schematic/layout/components/layout-controls.tsx',
-    'props.hasPreview &&',
+    'src/ui/components/components/number-input.tsx',
+    '        setDraft(undefined);',
     '',
-    ['tests/unit/ui/integration/app-key-transforms.test.ts'],
+    ['tests/unit/ui/integration/app-switch-size.test.ts'],
   ],
   [
-    'numeric editing loses live preview',
-    'src/ui/schematic/layout/components/layout-controls.tsx',
-    'props.onPreview(next);',
+    'numeric editing loses committed geometry',
+    'src/ui/schematic/parts/components/key-position-cells.tsx',
+    'commitPosition(commit, { schematicKey, field, value });',
     '',
-    ['tests/unit/ui/integration/app-key-transforms.test.ts'],
+    ['tests/unit/ui/integration/app-switch-size.test.ts'],
   ],
 ];
 

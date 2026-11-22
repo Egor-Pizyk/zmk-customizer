@@ -14,7 +14,6 @@ export function PartsWiresTable(props: PartsTableProps) {
   const { project } = props;
   return (
     <div className="flex flex-col gap-2">
-      <h3 className="font-semibold">Wires</h3>
       <SelectionProtectionNotice {...props} />
       {project.wires.length === 0 ? (
         <p className="text-text-muted">

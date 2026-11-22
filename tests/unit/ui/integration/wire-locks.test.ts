@@ -49,19 +49,6 @@ it('refuses a mixed protected and free key deletion as one operation', async () 
   expect(screen.getByRole('checkbox', { name: 'Select key 0' })).toHaveProperty('checked', true);
 });
 
-it('retains the mixed selection after the bulk delete button refuses and links to its protecting wire', async () => {
-  const { user } = renderApp(buildLockedWiringProject());
-  const before = loadProject().project;
-  await user.click(screen.getByRole('checkbox', { name: 'Select key 0' }));
-  await user.click(screen.getByRole('checkbox', { name: 'Select key 2' }));
-  await user.click(screen.getByRole('button', { name: 'Delete selected keys' }));
-  expect(loadProject().project).toEqual(before);
-  expect(screen.getByRole('checkbox', { name: 'Select key 0' })).toHaveProperty('checked', true);
-  expect(screen.getByRole('checkbox', { name: 'Select key 2' })).toHaveProperty('checked', true);
-  await user.click(screen.getByRole('button', { name: 'Find protecting wire 0' }));
-  expect(screen.getByRole('button', { name: 'Unlock wire 0' })).toBe(document.activeElement);
-});
-
 it('explains a protected GPIO edit without changing the saved assignment', () => {
   renderApp(buildLockedWiringProject());
   const before = loadProject().project;

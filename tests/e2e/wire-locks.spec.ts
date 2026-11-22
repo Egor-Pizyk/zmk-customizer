@@ -7,6 +7,7 @@ import {
   importText,
   key,
   openProject,
+  openPartsGroups,
   saved,
   wiredFixture,
 } from './helpers';
@@ -44,6 +45,7 @@ for (const colorScheme of ['light', 'dark'] as const) {
     await importText(page, json);
     await expect.poll(() => saved(page)).toEqual(locked);
     await page.reload();
+    await openPartsGroups(page, ['Wires']);
     await expect(page.getByRole('button', { name: 'Unlock wire 0', exact: true })).toHaveAttribute(
       'aria-pressed',
       'true',
@@ -67,7 +69,7 @@ test('protected mixed key gestures and bulk delete remain atomic until explicit 
   await page.mouse.move(at.x + 48, at.y, { steps: 4 });
   await page.mouse.up();
   expect(await saved(page)).toEqual(locked);
-  await page.getByRole('button', { name: 'Delete selected keys', exact: true }).click();
+  await key(page, 0).press('Delete');
   expect(await saved(page)).toEqual(locked);
   await expect(page.getByRole('checkbox', { name: 'Select key 0' })).toBeChecked();
   await expect(page.getByRole('checkbox', { name: 'Select key 1' })).toBeChecked();

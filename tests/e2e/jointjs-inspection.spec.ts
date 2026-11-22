@@ -7,6 +7,7 @@ import {
   workspace,
   expectGeometry,
   importText,
+  openPartsGroups,
 } from './helpers';
 import { readFile } from 'node:fs/promises';
 
@@ -57,6 +58,7 @@ test('empty, invalid and composite encoder projects retain inspection and repair
   await importText(page, JSON.stringify(empty));
   await expect.poll(() => saved(page)).toEqual(empty);
   await expect(page.locator('.joint-paper')).toHaveCount(1);
+  await openPartsGroups(page, ['Keys']);
   await expect(page.getByRole('button', { name: 'Add key', exact: true })).toBeVisible();
   expect(await saved(page)).toEqual(empty);
   const invalid = { ...wiredFixture, wires: [] };
