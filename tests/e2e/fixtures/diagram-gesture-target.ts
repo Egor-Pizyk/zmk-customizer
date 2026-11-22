@@ -1,3 +1,4 @@
+import { openPartsGroups } from '../parts-fixture';
 import { readFile } from 'node:fs/promises';
 import type { Page } from '@playwright/test';
 
@@ -6,8 +7,11 @@ type Scenario = (typeof DIAGRAM_SCENARIOS)[number];
 
 export async function startDiagramGesture(page: Page, scenario: Scenario) {
   if (scenario === 'multi-key') {
+    await openPartsGroups(page, ['Keys']);
     await page.getByRole('checkbox', { name: 'Select key 44', exact: true }).check();
     await page.getByRole('checkbox', { name: 'Select key 45', exact: true }).check();
+    // Measure the diagram with the same default collapsed editor as the other scenarios.
+    await page.getByRole('heading', { name: 'Keys', level: 3, exact: true }).locator('..').click();
   }
   const reference = await readPairedReference(scenario);
   const origin = await gestureOrigin(page, scenario, reference);
