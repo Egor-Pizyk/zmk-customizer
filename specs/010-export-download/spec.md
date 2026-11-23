@@ -78,3 +78,5 @@ A user copies or downloads one previewed file to update an existing repository.
 - Use the documented v0.3 tag for manifest and reusable workflow, resolving the roadmap open revision question from docs/zmk/README.md.
 - Workflow inclusion defaults on and resets when Export is remounted; no schema migration is needed.
 - Out of scope: pushing to GitHub, compiling/flashing, settings, new wiring types, boards or split support.
+
+Export readiness and the order of repair, download and optional controls are specified in [041 FR-001](../041-product-ux-audit/spec.md).

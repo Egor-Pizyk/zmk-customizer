@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Button } from '@ui/components/components';
+import { formatIssueCount } from '@ui/issues';
 import { useProject } from '@ui/project/logic';
 import { IssueButton, PlaceholderFooter } from '@ui/shell/components';
 import type { WorkspaceIssue } from '@ui/issues';
@@ -25,18 +27,19 @@ export function ExportWorkspace() {
   return (
     <>
       <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-auto px-4 pb-4">
-        <ExportToolbar
-          controllerId={project.controllerId}
-          includeWorkflow={includeWorkflow}
-          onWorkflowChange={handleWorkflowChange}
-          problemCount={problems.length}
-          actions={actions}
-        />
-        {actions.feedback === '' ? undefined : <p>{actions.feedback}</p>}
         {problems.length > 0 ? (
           <ExportProblems issues={problems} />
         ) : (
-          <FilePreview files={files} actions={actions} />
+          <>
+            <ExportToolbar
+              controllerId={project.controllerId}
+              includeWorkflow={includeWorkflow}
+              onWorkflowChange={handleWorkflowChange}
+              actions={actions}
+            />
+            {actions.feedback === '' ? undefined : <p>{actions.feedback}</p>}
+            <FilePreview files={files} actions={actions} />
+          </>
         )}
       </div>
       <PlaceholderFooter />
@@ -48,7 +51,7 @@ function ExportProblems({ issues }: { readonly issues: readonly WorkspaceIssue[]
   return (
     <section aria-labelledby="export-problems-title" className="flex flex-col gap-2">
       <h2 className="text-base font-semibold" id="export-problems-title">
-        Fix problems to preview files
+        Fix {formatIssueCount(issues.length)} to export
       </h2>
       <ul className="flex flex-col gap-2">
         {issues.map((issue) => (
@@ -57,6 +60,9 @@ function ExportProblems({ issues }: { readonly issues: readonly WorkspaceIssue[]
           </li>
         ))}
       </ul>
+      <Button className="self-start" isDisabled variant="primary">
+        Download .zip
+      </Button>
     </section>
   );
 }

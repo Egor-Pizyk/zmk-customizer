@@ -1,6 +1,7 @@
 import type { LayoutEdit } from '@domain/keys';
 import type { Key, Project } from '@domain';
 import { getSelectedKeyIds } from '@ui/schematic/interaction';
+import { KleImport } from './kle-import';
 import { LayoutActions } from './layout-actions';
 import { LayoutFields } from './layout-fields';
 import type { PartsTableProps } from '@ui/schematic/parts/components';
@@ -41,8 +42,13 @@ export function LayoutControls(props: LayoutControlsProps) {
       className="flex max-h-64 shrink-0 flex-col gap-2 overflow-auto border-t border-border bg-surface-raised p-2"
       data-layout-controls
     >
-      <LayoutActions {...props} />
-      <PreciseProperties {...props} first={first} edit={edit} onEditChange={handleEditChange} />
+      <div className="flex flex-wrap gap-2">
+        {project.keys.length > 0 && <LayoutActions {...props} />}
+        <KleImport />
+      </div>
+      {project.keys.length > 0 && (
+        <PreciseProperties {...props} first={first} edit={edit} onEditChange={handleEditChange} />
+      )}
     </section>
   );
 }

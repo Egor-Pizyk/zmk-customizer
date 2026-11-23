@@ -79,6 +79,7 @@ function WorkspaceCanvas({ workspace, marks }: WorkspaceCanvasProps) {
     >
       <ToolWindow
         activeToolId={activeToolId}
+        hasKeys={project.keys.length > 0}
         hint={workspace.hint}
         onToolChange={workspace.handleToolChange}
       />

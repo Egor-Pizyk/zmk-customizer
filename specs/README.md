@@ -40,3 +40,5 @@ Read this index when locating feature ownership. Read only the spec, plan, tasks
 - [039-focused-local-checks](039-focused-local-checks/) — diagnostic test selection and compact timing/failure reports; final checks remain mandatory.
 
 037 follows delivered 036 directly. The proposed 038 stage was cancelled by the user on 2026-10-25; deferred 020–022 remain deferred.
+
+- [041-product-ux-audit](041-product-ux-audit/) — workflow clarity across the four workspaces.

@@ -112,3 +112,11 @@ Every catalog-backed control (behavior, keycode, Kconfig option) shows label, on
 ### Feature 033 panel exception
 
 Schematic editing panels and app Settings additionally support the narrow viewports specified by 033, including 390px. Retain base/lg/xl conventions and existing tokens/control density. Use one expanded non-modal Schematic editor, base lower area and xl docking, with canvas/panel budgets in 033. This does not redesign other workspaces or change their desktop target.
+
+## Workspace priorities and recovery
+
+- Put the current task before optional tools in visual and keyboard order. An empty editor starts with the action that creates or reveals the first editable item. Show actions on existing items once the prerequisite is present.
+- Keep the current layer controls ahead of optional Bindings libraries. Use disclosures for work that applies only to particular projects, while keeping existing settings available when they apply.
+- When validation blocks an output, put the count and linked repairs before optional output controls. Use the existing issue target to take focus to the cause. Keep ordinary form errors at the labeled field with a concrete correction.
+- Use the existing button, field, and disclosure primitives and semantic tokens. Clearing a search restores focus to the field. Use an explicit no-results message and keep the recovery reachable on narrow screens.
+- Check the shortest path from empty, blocked and filled states with keyboard and pointer. Review focus, wrapping and state cues in both themes at narrow and desktop sizes before committing.

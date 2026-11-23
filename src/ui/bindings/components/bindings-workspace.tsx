@@ -33,13 +33,13 @@ export function BindingsWorkspace() {
   return (
     <div className="flex min-h-0 flex-1 overflow-hidden">
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-        <BindingLibraries workspace={workspace} />
         <LayerBar
           actions={layers}
           layers={project.layers}
           panelId={panelId}
           tabIdPrefix={tabIdPrefix}
         />
+        <BindingLibraries workspace={workspace} />
         <div
           aria-labelledby={toTabId(tabIdPrefix, openLayerId)}
           className="flex min-h-0 min-w-0 flex-1 flex-col"
@@ -81,8 +81,8 @@ function EmptyBindingsWorkspace({
 }) {
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      <BindingLibraries workspace={workspace} />
       <NoKeys />
+      <BindingLibraries workspace={workspace} />
     </div>
   );
 }

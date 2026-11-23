@@ -6,12 +6,13 @@ import type { ToolId } from '@ui/schematic/tools/logic';
 
 type ToolWindowProps = {
   readonly activeToolId: ToolId;
+  readonly hasKeys: boolean;
   /** Last canvas hint ("There is already a key here."); also announced by StatusMessage. */
   readonly hint: string | undefined;
   readonly onToolChange: (toolId: ToolId) => void;
 };
 
-export function ToolWindow({ activeToolId, hint, onToolChange }: ToolWindowProps) {
+export function ToolWindow({ activeToolId, hasKeys, hint, onToolChange }: ToolWindowProps) {
   const { preferences, changePreferences } = usePreferences();
   const { toolWindow } = preferences;
 
@@ -46,7 +47,7 @@ export function ToolWindow({ activeToolId, hint, onToolChange }: ToolWindowProps
         options={TOOL_OPTIONS}
         value={activeToolId}
       />
-      <LayoutEditButton />
+      {hasKeys && <LayoutEditButton />}
       {hint === undefined ? undefined : <p className="max-w-40 text-xs text-warning">{hint}</p>}
     </FloatingPanel>
   );

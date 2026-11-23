@@ -1,4 +1,3 @@
-import { KleImport } from './kle-import';
 import { duplicateKeys, removeKeys, renumberKeys } from '@domain/keys';
 import { PROJECT_BUDGET } from '@storage/project';
 import { useProject } from '@ui/project/logic';
@@ -76,7 +75,6 @@ function LayoutActionButtons({
       <Button isDisabled={isEmpty} onClick={handleDeleteClick} size="sm" variant="danger">
         Delete selected keys
       </Button>
-      <KleImport />
       <Button onClick={handleRenumberClick} size="sm">
         Renumber by position
       </Button>

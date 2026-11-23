@@ -64,3 +64,5 @@ A firmware option defines a supported build setting, its type/default/constraint
 ## Assumptions and open questions
 
 Clarify audit (2026-10-17): no material ambiguity requires a user question; authorization permits reasonable scope defaults. Raw Kconfig is excluded. Board-owned ZMK_USB/ZMK_BLE are not offered; USB boot protocol and HID report choice cover output behavior. Bluetooth defaults depend on supported boards; connection counts are excluded from shared split .conf because central/peripheral defaults differ and shared configuration cannot safely tune both. Two-half split count/roles remain hardware-owned; battery fetching/proxy are supported together on the central through conditional Kconfig dependencies. Settings must not force central-only symbols on peripherals. Product bounds are conservative and explicitly distinguished from upstream Kconfig ranges. No unresolved questions.
+
+Clear-search availability and focus are specified in [041 FR-003](../041-product-ux-audit/spec.md).

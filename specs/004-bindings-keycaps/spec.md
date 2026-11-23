@@ -259,3 +259,5 @@ Every key's action is saved with the project: kept on reload, written to the pro
 ## Standard-size follow-up (2026-10-21)
 
 The earlier read-only geometry contract is amended only for explicit standard keycap sizing. Selection, bindings, movement/nudge and unrelated Schematic behavior stay as specified. Requirements and acceptance: [012 FR-017–FR-020](../012-layout-editor/spec.md#follow-up-standard-keycap-sizes-in-bindings-2026-10-21). Existing arbitrary/custom geometry is displayed and preserved until explicit replacement. Implementation, tasks and single evidence journal are owned by 012.
+
+Empty and populated workspace ordering is specified in [041 FR-002](../041-product-ux-audit/spec.md).

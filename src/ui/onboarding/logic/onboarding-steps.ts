@@ -92,13 +92,13 @@ export const ONBOARDING_CONTENT = {
     title: 'Review firmware options',
     why: 'Firmware controls typed ZMK v0.3.0 build settings such as sleep and debounce. Each supported setting has a description and pinned documentation link.',
     action:
-      'Inspect the settings. Keep compatible defaults for this macropad, or change a supported value. Confirm when there are no validation issues.',
+      'Search to find an option. Clear search returns you to the search field. Keep compatible defaults for this macropad, or change a supported value. Confirm when there are no validation issues.',
     target: 'workspace',
     workspace: 'firmware',
   },
   files: {
     title: 'Inspect generated files',
-    why: 'Export previews the actual repository files. The keymap assigns actions, .conf carries settings, and shield files describe the hardware.',
+    why: 'Export shows repair links when problems block the ZIP. Once the project is valid, it previews the actual repository files. The keymap assigns actions, .conf carries settings, and shield files describe the hardware.',
     action:
       'Focus or open the preview of a .keymap file, a .conf file and a boards/shields file. Confirm after inspecting all three groups. The ZIP will contain these same current files.',
     target: 'workspace',
