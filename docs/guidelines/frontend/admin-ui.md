@@ -59,7 +59,7 @@ Every catalog-backed control shows label, one-line description and `DocsLink` us
 ## Validation display
 
 - The problems panel lists issues: one `<button>` per issue with `issue.message` as text. Activating it selects the entity from `issue.path` and moves focus to it (key on canvas, field in inspector, pin row).
-- The Export workspace lists all issues and a download button that is `disabled` with visible text "Fix 3 problems to download" referenced by `aria-describedby`.
+- The blocked Export workspace lists the issue count and linked repairs before its unavailable download button. The button references the heading with `aria-describedby`.
 - Field-level: `Field` renders issues whose `path` matches under the control, sets `aria-invalid` and adds the message id to `aria-describedby`. Canvas: conflicting keys get `data-conflict`, a warning icon and the issue in their accessible name.
 - Issues are shown while editing, not only after an attempt; domain operations are total, so the conflict is visible the moment it exists.
 
@@ -90,3 +90,11 @@ Every catalog-backed control shows label, one-line description and `DocsLink` us
 ### Narrow editing panels
 
 Schematic editing panels and app Settings additionally support narrow viewports, including 390px. Retain base/lg/xl conventions and existing tokens/control density. Use one expanded non-modal Schematic editor, base lower area and xl docking, preserving the usable canvas area while the editor is open. This does not redesign other workspaces or change their desktop target.
+
+## Workspace priorities and recovery
+
+- Put the current task before optional tools in visual and keyboard order. An empty editor starts with the action that creates or reveals the first editable item. Show actions on existing items once the prerequisite is present.
+- Keep the current layer controls ahead of optional Bindings libraries. Use disclosures for work that applies only to particular projects, while keeping existing settings available when they apply.
+- When validation blocks an output, put the count and linked repairs before optional output controls. Use the existing issue target to take focus to the cause. Keep ordinary form errors at the labeled field with a concrete correction.
+- Use the existing button, field, and disclosure primitives and semantic tokens. Clearing a search restores focus to the field. Use an explicit no-results message and keep the recovery reachable on narrow screens.
+- Check the shortest path from empty, blocked and filled states with keyboard and pointer. Review focus, wrapping and state cues in both themes at narrow and desktop sizes before committing.

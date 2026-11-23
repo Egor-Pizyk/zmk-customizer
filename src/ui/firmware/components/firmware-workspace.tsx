@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { REVEAL_ISSUE_EVENT } from '@ui/issues';
 import { Button, Field } from '@ui/components/components';
 import { INPUT_CLASSES } from '@ui/components/logic';
@@ -43,8 +43,15 @@ function FirmwareSearch({
   readonly search: string;
   readonly onChange: (value: string) => void;
 }) {
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  function handleClearClick() {
+    handleChange('');
+    searchRef.current?.focus();
+  }
+
   return (
-    <div className="flex items-end gap-2">
+    <div className="flex flex-wrap items-end gap-2">
       <div className="min-w-0 flex-1">
         <Field
           label="Search firmware settings"
@@ -55,18 +62,14 @@ function FirmwareSearch({
               onChange={(event) => {
                 handleChange(event.target.value);
               }}
+              ref={searchRef}
               type="search"
               value={search}
             />
           )}
         />
       </div>
-      <Button
-        onClick={() => {
-          handleChange('');
-        }}
-        variant="secondary"
-      >
+      <Button isDisabled={search === ''} onClick={handleClearClick} variant="secondary">
         Clear search
       </Button>
     </div>

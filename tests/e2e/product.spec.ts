@@ -49,9 +49,7 @@ test('new project → layout → wiring → bindings → validated ZIP with matc
   await expectGeometry(page, { id: 'k0', xU: 5, yU: 5, widthU: 1 });
   await workspace(page, 'Export');
   await expect(page.getByRole('button', { name: 'Download .zip', exact: true })).toBeDisabled();
-  await expect(
-    page.getByRole('paragraph').filter({ hasText: /Fix .* problems to download/u }),
-  ).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Fix \d+ problems? to export/u })).toBeVisible();
   await workspace(page, 'Schematic');
   const keyId = (await saved(page)).keys[0]?.id;
   if (keyId === undefined) {

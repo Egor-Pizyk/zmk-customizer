@@ -10,14 +10,16 @@ export function NoKeys() {
   }
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-2">
-      <EmptyState
-        description="Draw keys in Schematic; they appear here as keycaps."
-        title="No keys yet"
-      />
-      <Button onClick={handleGoToSchematicClick} variant="primary">
-        Go to Schematic
-      </Button>
+    <div className="flex flex-1 flex-col items-center justify-center pb-4">
+      <div className="flex flex-col items-center">
+        <EmptyState
+          description="Draw keys in Schematic; they appear here as keycaps."
+          title="No keys yet"
+        />
+        <Button onClick={handleGoToSchematicClick} variant="primary">
+          Go to Schematic
+        </Button>
+      </div>
     </div>
   );
 }
