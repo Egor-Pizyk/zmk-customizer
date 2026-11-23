@@ -1,3 +1,4 @@
+import { legacyV13ProjectSchema } from './legacy-v13-project-schema';
 import { legacyV12ProjectSchema } from './legacy-v12-project-schema';
 import { legacyV11ProjectSchema } from './legacy-v11-project-schema';
 import { serializeProject } from './serialize-project';
@@ -57,6 +58,16 @@ function parseLegacyProject(
     }
     input.value = legacy.data;
     input.version = 12;
+  }
+  if (input.version <= 13) {
+    const legacy = legacyV13ProjectSchema.safeParse(
+      migrateProject(input.value, { fromVersion: input.version, toVersion: 13 }),
+    );
+    if (!legacy.success) {
+      return { ok: false, error: toNotProject(legacy.error) };
+    }
+    input.value = legacy.data;
+    input.version = 13;
   }
   return { ok: true, value: input };
 }

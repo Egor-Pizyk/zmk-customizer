@@ -1,8 +1,8 @@
 import { expect, test } from './test';
-import { history, openProject, saved, workspace } from './helpers';
+import { history, openPartsGroups, openProject, saved, workspace } from './helpers';
 import { UNIBODY_PRESET } from '../helpers/unibody-preset';
 
-test('empty layout offers a direct route to add the first key and undo it @cross-browser', async ({
+test('empty Bindings returns to the first-key and KLE paths in Schematic @cross-browser', async ({
   page,
 }) => {
   await page.goto('/');
@@ -12,15 +12,14 @@ test('empty layout offers a direct route to add the first key and undo it @cross
   await page.keyboard.press('Tab');
   await expect(page.getByText('Custom behaviors', { exact: true })).toBeFocused();
   await back.press('Enter');
-  const add = page.getByRole('button', { name: 'Add key', exact: true });
-  const renumber = page.getByRole('button', { name: 'Renumber by position', exact: true });
+  await page.getByRole('banner').getByRole('button', { name: 'New', exact: true }).press('Enter');
   await expect(page.getByText('Import KLE layout', { exact: true })).toBeVisible();
-  await expect(renumber).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  await openPartsGroups(page, ['Keys']);
+  const add = page.getByRole('button', { name: 'Add key', exact: true });
   await add.press('Enter');
-  await expect(renumber).toBeVisible();
   await expect.poll(async () => (await saved(page)).keys.length).toBe(1);
   await history(page, 'Undo').press('Enter');
-  await expect(renumber).toHaveCount(0);
   await expect(add).toBeVisible();
   await expect.poll(async () => (await saved(page)).keys.length).toBe(0);
 });

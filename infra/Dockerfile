@@ -1,4 +1,5 @@
 FROM node:24-alpine AS dev
+RUN apk add --no-cache git
 WORKDIR /app
 RUN chown node:node /app
 USER node

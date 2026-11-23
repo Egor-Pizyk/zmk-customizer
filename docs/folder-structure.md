@@ -27,6 +27,8 @@ not relax layer boundaries.
 | `src/domain/bindings/editing/` | Behavior and binding edits |
 | `src/domain/wires/` | Endpoints, pin contacts and wire queries |
 | `src/domain/wires/editing/` | Wire edits |
+| `src/domain/wires/contacts/` | Geometric conductor contacts, crossing and overlap descriptions |
+| `src/domain/wires/protection/` | Locked-wire query, edits and full-candidate protection policy |
 | `src/domain/wires/nets/` | Electrical net derivation |
 | `src/domain/crossings/` | Wire intersections and insulation |
 | `src/domain/diodes/` | Diode presence, pin and polarity |
@@ -92,7 +94,7 @@ Indexes list explicit named value/type exports; implementation files are private
 - `tests/helpers/`: Shared builders, rendering helpers and setup.
 - `tests/fixtures/`: Project inputs, independent golden files and upstream references.
 
-Tests consume the same public module aliases as production consumers. `make check` discovers, typechecks and lints the relocated tests, enforces coverage floors and rejects test files in `src/`. Split a growing group when it contains distinct responsibilities; avoid arbitrary numbered folders, generic `utils` groups and one folder per function.
+Tests consume the same public module aliases as production consumers. `make check` discovers, typechecks and lints tests and rejects test files in `src/`. The separate coverage stage follows [business-risk policy](testing.md#coverage); a module does not need a test file merely because it exists. Split a growing group when it contains distinct responsibilities; avoid arbitrary numbered folders, generic `utils` groups and one folder per function.
 
 Nested modules own files under their most specific registered root. Parent indexes expose only files owned by that root, not the entire subtree. Cross-group imports use the exact owning alias; within a group use relative implementation imports. Every populated source responsibility group has an explicit named index; raw upstream catalog assets are exempt.
 
@@ -103,3 +105,7 @@ To keep barrels acyclic, query/policy modules are below editing modules, net der
 ## Logic and component groups
 
 Every UI responsibility group that contains both .ts and .tsx implementations is split into logic/ and components/. Functions, hooks and shared types live in logic/; JSX lives in components/. Each child has its own explicit index.ts and exact alias, for example @ui/bindings/picker/logic and @ui/bindings/picker/components. Index files are the extension exception. Pure groups are retained; no empty folders or parent compatibility barrels are created. Tests mirror the source owner, including .test.ts contracts for .tsx components. The source architecture gate rejects mixed implementation extensions and misplaced files in logic/components.
+
+## Feature 038 adapter ownership
+
+`src/ui/schematic/diagram/logic/` owns the private JointJS lifecycle, immutable projection descriptors and normalized event bridge; `src/ui/schematic/diagram/components/` owns the React host. Tests mirror those owners. Their named aliases are registered in tsconfig.json. Shared canvas remains library-independent; no Graph/Paper type escapes this adapter into domain/storage/generators. See [architecture](architecture.md#jointjs-schematic-presentation-boundary-038).

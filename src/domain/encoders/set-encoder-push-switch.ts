@@ -1,3 +1,4 @@
+import { getWireProtection } from '@domain/wires/protection';
 import { PROJECT_BUDGET } from '@domain/project';
 import type { Encoder, Project } from '@domain';
 import { getEncoderGeometry } from '@domain/geometry';
@@ -24,7 +25,10 @@ export function setEncoderPushSwitch(
     return project;
   }
   if (!input.enabled) {
-    return removePushKey(project, encoder);
+    return encoder.pushKeyId !== undefined &&
+      getWireProtection(project, { keyIds: [encoder.pushKeyId] }).length > 0
+      ? project
+      : removePushKey(project, encoder);
   }
   if (project.keys.length >= PROJECT_BUDGET.keys) {
     return project;

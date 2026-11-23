@@ -14,3 +14,4 @@ export { PartsTableHead } from './parts-table-head';
 export { PartsWiresTable } from './parts-wires-table';
 export { WireBendsEditor } from './wire-bends-editor';
 export { PartsWireSectionsTable } from './parts-wire-sections-table';
+export { PartsGroup } from './parts-group';

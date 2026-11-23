@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 14,
+  "encoders": [
+    {
+      "id": "e0",
+      "xU": 6,
+      "yU": 0,
+      "half": "left",
+      "steps": 20,
+      "triggersPerRotation": 20,
+      "wiringMode": "schematic",
+      "pushKeyId": "k3"
+    }
+  ],
+  "combos": [],
+  "macros": [],
+  "conditionalLayers": [],
+  "behaviors": [],
+  "firmware": {},
+  "controllerId": "nice_nano_v2",
+  "name": "Routing contract",
+  "keys": [
+    {
+      "id": "k0",
+      "xU": 0,
+      "yU": 0
+    },
+    {
+      "id": "k1",
+      "xU": 2,
+      "yU": 0
+    },
+    {
+      "id": "k2",
+      "xU": 4,
+      "yU": 0
+    },
+    {
+      "id": "k3",
+      "xU": 6,
+      "yU": 0
+    }
+  ],
+  "wires": [
+    {
+      "id": "w0",
+      "start": {
+        "kind": "key-pin",
+        "keyId": "k0",
+        "pin": 1
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 5,
+          "yU": 0.3667
+        }
+      },
+      "bends": [],
+      "anchors": {
+        "start": {
+          "xU": 0.3,
+          "yU": 0.3667
+        },
+        "end": {
+          "xU": 5,
+          "yU": 0.3667
+        }
+      },
+      "contacts": [
+        {
+          "keyId": "k1",
+          "pin": 1,
+          "at": {
+            "xU": 2.3,
+            "yU": 0.3667
+          }
+        }
+      ],
+      "contactIds": [
+        0
+      ],
+      "locked": true
+    },
+    {
+      "id": "w1",
+      "start": {
+        "kind": "free",
+        "at": {
+          "xU": 3,
+          "yU": -1
+        }
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 3,
+          "yU": 2
+        }
+      },
+      "bends": []
+    },
+    {
+      "id": "w2",
+      "start": {
+        "kind": "junction",
+        "wireId": "w0",
+        "at": {
+          "xU": 1,
+          "yU": 0.3667
+        }
+      },
+      "end": {
+        "kind": "free",
+        "at": {
+          "xU": 1,
+          "yU": 2
+        }
+      },
+      "bends": []
+    }
+  ],
+  "insulatedCrossings": [
+    {
+      "wireIds": [
+        "w0",
+        "w1"
+      ],
+      "ordinal": 0
+    }
+  ],
+  "layers": [
+    {
+      "id": "l0",
+      "name": "Base",
+      "bindings": {}
+    }
+  ],
+  "wireContacts": [
+    {
+      "keyId": "k2",
+      "pin": 1,
+      "at": {
+        "xU": 4.3,
+        "yU": 0.3667
+      }
+    }
+  ]
+}

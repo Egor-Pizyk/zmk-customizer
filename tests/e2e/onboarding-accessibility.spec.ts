@@ -23,6 +23,8 @@ test('onboarding keyboard focus, escape and responsive spotlight @cross-browser'
   await page.keyboard.type('My macropad');
   await page.keyboard.press('Enter');
   await expect(page.getByRole('heading', { name: 'Place nine keys' })).toBeFocused();
+  await expect(page.getByRole('button', { name: 'Add key', exact: true })).toBeHidden();
+  await page.getByRole('heading', { name: 'Keys', level: 3 }).locator('..').press('Enter');
   await expect(page.getByRole('button', { name: 'Add key', exact: true })).toBeVisible();
   for (const colorScheme of ['light', 'dark'] as const) {
     await page.emulateMedia({ colorScheme, reducedMotion: 'reduce' });

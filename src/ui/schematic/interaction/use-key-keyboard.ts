@@ -1,7 +1,6 @@
+import { nudgeSelection } from './nudge-selection';
 import { getKeySectionSelection } from './get-key-section-selection';
 import { getSelectedSectionIds } from './get-selected-section-ids';
-import { isKeyPositionFree } from '@domain/geometry';
-import { moveKeys } from '@domain/keys';
 import { getSelectedKeyIds } from './get-selected-key-ids';
 import type { SchematicSelection, SelectionChange } from './schematic-selection';
 import type { Project } from '@domain';
@@ -9,14 +8,15 @@ import { matchKeyShortcut } from '@ui/shortcuts';
 import type { ShortcutId } from '@ui/shortcuts';
 import { findNearestKey } from '@ui/canvas/logic';
 import type { Direction } from '@ui/canvas/logic';
-import type { KeyboardEvent } from 'react';
+import type { KeyInput } from './key-input';
 
-type KeyKeyboardOptions = {
+export type KeyKeyboardOptions = {
   readonly project: Project;
   readonly selection: SchematicSelection;
   readonly onSelectionChange: SelectionChange;
   readonly gridSizeU: number;
   readonly commit: (change: (project: Project) => Project) => void;
+  readonly announce?: ((text: string) => void) | undefined;
   readonly onFocusKey: (keyId: string) => void;
 };
 
@@ -54,7 +54,7 @@ function findTargetKeyId(
 // Keys of a focused key (accessibility.md "Canvas"): arrows move focus, Shift+arrows nudge by the
 // grid step, Home/End jump. Handled here and stopped so the canvas pan shortcuts do not also run.
 export function createKeyKeyboardHandler(options: KeyKeyboardOptions) {
-  return (keyId: string, event: KeyboardEvent<SVGGElement>) => {
+  return (keyId: string, event: KeyInput) => {
     if (toggleSelection(options, keyId, event)) {
       return;
     }
@@ -87,11 +87,7 @@ export function createKeyKeyboardHandler(options: KeyKeyboardOptions) {
   };
 }
 
-function toggleSelection(
-  options: KeyKeyboardOptions,
-  keyId: string,
-  event: KeyboardEvent<SVGGElement>,
-): boolean {
+function toggleSelection(options: KeyKeyboardOptions, keyId: string, event: KeyInput): boolean {
   if ((event.ctrlKey || event.metaKey) && !event.altKey && event.code === 'Space') {
     event.preventDefault();
     event.stopPropagation();
@@ -108,35 +104,4 @@ function toggleSelection(
     return true;
   }
   return false;
-}
-
-function nudgeSelection(
-  options: KeyKeyboardOptions,
-  {
-    keyId,
-    nudge,
-  }: { readonly keyId: string; readonly nudge: { readonly dx: number; readonly dy: number } },
-) {
-  const selected = getSelectedKeyIds(options.selection, { project: options.project });
-  const keyIds = selected.includes(keyId) ? selected : [keyId];
-  const moves = options.project.keys
-    .filter((candidate) => keyIds.includes(candidate.id))
-    .map((candidate) => ({
-      keyId: candidate.id,
-      position: {
-        xU: candidate.xU + nudge.dx * options.gridSizeU,
-        yU: candidate.yU + nudge.dy * options.gridSizeU,
-      },
-    }));
-  if (
-    moves.every((move) =>
-      isKeyPositionFree(options.project, {
-        position: move.position,
-        key: options.project.keys.find((candidate) => candidate.id === move.keyId),
-        ignoreKeyIds: keyIds,
-      }),
-    )
-  ) {
-    options.commit((project) => moveKeys(project, { moves }));
-  }
 }

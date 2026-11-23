@@ -1,3 +1,4 @@
+import { refuseProtectedEdit } from './refuse-protected-edit';
 import { getPointerRotationDeg, getRotationSnap } from '@domain/geometry/transforms';
 import { getEncoderGeometry } from '@domain/geometry';
 import type { Encoder, WirePoint } from '@domain';
@@ -24,10 +25,13 @@ export function startEncoderDrag(state: PointerState, { hit, world, event }: Pre
   }
   // Native text dragging after repeated presses cancels the authored pointer gesture.
   event.preventDefault();
-  event.currentTarget.focus();
+  event.focus();
   const geometry = getEncoderGeometry(state.project, encoder);
   state.onSelectionChange({ kind: 'encoder', encoderId: encoder.id });
-  event.currentTarget.setPointerCapture(event.pointerId);
+  if (refuseProtectedEdit(state, { encoderIds: [encoder.id] })) {
+    return true;
+  }
+  event.capture();
   state.onDragChange({
     kind: 'encoder',
     encoderId: encoder.id,

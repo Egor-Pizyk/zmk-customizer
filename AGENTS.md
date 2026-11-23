@@ -1,56 +1,37 @@
 # ZMK Customizer
 
-Static browser application for custom keyboard design and ready-to-build ZMK v0.3 shields. No backend.
+Static browser application for keyboard design and ready-to-build ZMK v0.3.0 shields. No backend.
 
-## Required startup context
+## Work directly, keep feedback fast
 
-Read these imports once per session unless already supplied in full by the client. Follow-up messages do not restart startup reading. Reuse unchanged rules still available in context; reopen changed documents or recover missing applicable sections after compaction. Claude Code expands `@path`; other agents open the same files manually. Linked documents follow the routing below.
+- Start with the user's request and `git status --short`. Search the relevant code/tests; implement without creating specs, plans, tasks, behavior matrices or verification journals. No Spec Kit, feature resolver or mandatory review stages.
+- Make a coherent change, then run the smallest useful check immediately. Focused tests are allowed from the first edit. Use watch mode for repeated work; broaden only for shared/broad changes, failures or unresolved risk. Full units, coverage, browser matrices and mutation suites belong to CI or explicit risk-driven verification, not every task.
+- Prefer a focused unit/integration regression. Use one real-browser scenario when native hit testing, gestures, layout or browser behavior is the problem. Test business/data risks; skip trivial wrappers, literal/copy/style snapshots and tests written only for coverage.
+- Reuse checks for unchanged code. Documentation-only work needs link/instruction checks, not product tests. Do not wait for unrelated suites or CI to provide feedback.
+- Keep progress and final replies concise: result, checks and material limits. No per-task documentation, test-count inventories or evidence receipts unless requested. Update docs only when a durable project contract or setup actually changes.
+- Preserve existing edits; stay within the request. Work on the current branch unless isolation is needed. Commit/push when requested; merging and release are separate actions.
 
-@docs/product.md
-@docs/principles.md
-@docs/workflow.md
-@docs/agent-rules.md
+## Project constraints
 
-## Critical implementation constraints
+- Target pinned ZMK v0.3.0. Before changing emitted syntax/catalog facts, read only the relevant verified `docs/zmk/` note and independent fixture. Never emit main-only features or invent syntax from memory.
+- One plain-JSON `Project`; pure immutable domain operations; deterministic generators. Preserve existing files, stable identities and Undo/Redo. Schema changes require migrations and old-file tests.
+- Business rules: domain. ZMK facts: catalog. Untrusted input: storage. UI renders and dispatches. Follow existing public module aliases; `tsconfig.json` is their registry.
+- Preserve keyboard access and existing user data. Update onboarding only when affected controls/flows change. Keep runtime dependencies intentional; record a short ADR for a new dependency or changed architecture.
+- Do not use Computer Use or ordinary browser profiles without an explicit request. Isolated Playwright tests are allowed. Report only checks actually performed; never commit generated reports, dist or node_modules.
 
-- Target pinned ZMK v0.3.0; never offer or emit main-only features. Read relevant verified `docs/zmk/` notes before changing ZMK syntax; do not generate it from memory.
-- One serializable `Project`; domain operations are pure and immutable. Schema changes require migrations and old-file tests.
-- Business rules belong in domain, ZMK facts in catalog, untrusted parsing in storage. UI renders and dispatches. Generators are pure and deterministic.
-- Preserve keyboard access, undo/redo and existing user data. New runtime dependencies require an ADR.
+## Load context only when needed
 
-These are reminders; the routed documents own the detailed rules.
+This file is the complete startup context. Do not preload linked docs, all guidelines or ADRs. Follow a link only to answer the next concrete question; reuse unchanged context across follow-ups.
 
-For testing, follow `docs/testing.md#focused-diagnostic-loop`: stage explicit task
-paths, inspect `check:focus -- --plan`, use focus reports during diagnosis, then run
-the mandatory final `check:changed`. Preserve tests-first requirements; focus success
-never substitutes for final verification.
-
-## Load context for the task
-
-Before editing, identify the change type using `docs/workflow.md`, inspect the working tree, and resolve the intended feature from the user request and Spec Kit feature resolver. Check the resolved directory against the task; do not assume a remembered feature or branch is current.
-
-Read all matching rows before working in that area. Conditional reading is mandatory when its trigger applies; expand the set if the task crosses boundaries.
-
-| Task / area | Required context |
+| Need | Reference |
 |---|---|
-| Start/resume work, create a feature/branch; finish work, commit, push, open/merge PRs or release | `docs/guidelines/git-flow.md` (review at startup and delivery; reuse unchanged context) |
-| Find files or feature ownership | `docs/repository-map.md`, `specs/README.md`; relevant roadmap entry for scope |
-| Plan or change production code | `docs/architecture.md`, `docs/folder-structure.md`, `docs/tooling.md` |
-| Implement existing feature work | Relevant `spec.md`, `plan.md`, `tasks.md` and contracts; other artifacts only when cited or needed |
-| Domain / TypeScript code | `docs/domain-model.md`, `docs/guidelines/code-quality/typescript.md`, `control-flow.md`, and both `naming/*.md` in that directory |
-| Errors, validation, storage / migrations | Above code-quality rules, `docs/guidelines/code-quality/observability.md`, relevant storage and compatibility contracts |
-| Frontend / interface design, implementation or review | Before/after UI workflow in `docs/workflow.md` and review evidence in `docs/testing.md` |
-| React / UI behavior | Code-quality rules, `docs/guidelines/frontend/react.md`, `accessibility.md`, `admin-ui.md` |
-| Styles / design tokens | `docs/guidelines/frontend/tailwind.md`, `accessibility.md`, existing `src/styles.css` tokens |
-| ZMK output / catalog facts | `docs/zmk/README.md`, relevant reference pages, generator/catalog contracts and independent fixtures |
-| Tests or code verification | `docs/testing.md`, `docs/commands.md` |
-| Dependencies / infrastructure / tooling | `docs/tooling.md`, `docs/commands.md`, relevant ADRs |
-| Change a project decision | `docs/decisions/README.md` and affected ADRs |
+| Commands / focused checks / Docker | `docs/commands.md` |
+| Which behaviors need tests | `docs/testing.md` |
+| Layer or module boundary | Relevant section of `docs/architecture.md`, `docs/folder-structure.md` |
+| Project/ZMK concepts | `docs/domain-model.md`; relevant `docs/zmk/` page |
+| Code convention | Applicable section under `docs/guidelines/`; do not read the whole tree |
+| UI styling | Existing `src/styles.css` tokens; relevant frontend guideline |
+| Product scope | `docs/product.md`; roadmap only for future product questions |
+| Commit, PR or release | `docs/guidelines/git-flow.md` |
 
-Do not recursively load all specs, ADRs, guidelines, templates or skills. Load a Spec Kit skill only for its stage. `.claude/rules` provides path-scoped adapters to the same guidelines; agents without this mechanism follow the table explicitly.
-
-## Rule ownership
-
-`docs/principles.md` owns principles; `docs/workflow.md` owns SDD and completion gates; `docs/architecture.md` owns dependency rules; `docs/folder-structure.md` owns placement; guidelines own implementation conventions. ADRs explain decisions and their history; current normative rules live in the owning documents. `tsconfig.json` owns the exact module alias registry.
-
-Feature specs define behavior; plans define its implementation; tasks track execution; verification records evidence. When sources disagree, do not silently choose whichever permits the change: preserve the user's explicit scope, resolve the conflict in the owning documents, and update affected derived artifacts. `.specify/memory/constitution.md` is a compact Spec Kit projection of project principles, not a separate policy source.
+The request, code and meaningful tests define the work. Documentation supplies project facts, not an implementation approval process. Resolve conflicts with the user's explicit scope; no feature number or artifact directory is required.

@@ -1,7 +1,7 @@
+import { installPlatformShims } from './app-platform';
 import { StrictMode } from 'react';
-import { render } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
 import { App } from '@ui/app/components';
 import { PreferencesProvider } from '@ui/preferences';
 import { ProjectProvider } from '@ui/project/components';
@@ -15,6 +15,7 @@ type Project = ReturnType<typeof loadProject>['project'];
 export function renderApp(
   project: Project = UNIBODY_PRESET,
   preferences: Partial<Preferences> = {},
+  partsGroups: readonly string[] = ['Keys', 'Wire sections', 'Wires', 'Crossings'],
 ) {
   installPlatformShims();
   localStorage.setItem('zmk-customizer:onboarding-shown', '{"version":1,"hasBeenShown":true}');
@@ -26,11 +27,11 @@ export function renderApp(
     ...preferences,
   });
   const user = userEvent.setup();
-  return { user, ...mount(), mount };
+  return { user, ...mount(partsGroups), mount: () => mount(partsGroups) };
 }
 
-function mount() {
-  return render(
+function mount(partsGroups: readonly string[]) {
+  const result = render(
     <StrictMode>
       <PreferencesProvider>
         <ProjectProvider initialLoad={loadProject()}>
@@ -39,41 +40,14 @@ function mount() {
       </PreferencesProvider>
     </StrictMode>,
   );
-}
-
-function installPlatformShims() {
-  Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', {
-    configurable: true,
-    value() {
-      // jsdom has no layout/scroll engine; real geometry is checked in Playwright.
-    },
-  });
-  // jsdom has no layout engine or native modal implementation. These shims only
-  // allow React to mount; tests make no claims about painting or native focus traps.
-  vi.stubGlobal(
-    'ResizeObserver',
-    class {
-      observe() {
-        // Layout is unavailable in jsdom.
+  // Editing fixtures explicitly open their controls. Default-state tests pass an empty list.
+  act(() => {
+    for (const name of partsGroups) {
+      const summary = result.queryByRole('heading', { name, level: 3 })?.closest('summary');
+      if (summary !== null && summary !== undefined) {
+        fireEvent.click(summary);
       }
-      disconnect() {
-        // No observer resources are created.
-      }
-    },
-  );
-  Object.defineProperties(HTMLDialogElement.prototype, {
-    showModal: {
-      configurable: true,
-      value(this: HTMLDialogElement) {
-        this.open = true;
-      },
-    },
-    close: {
-      configurable: true,
-      value(this: HTMLDialogElement) {
-        this.open = false;
-        this.dispatchEvent(new Event('close'));
-      },
-    },
+    }
   });
+  return result;
 }

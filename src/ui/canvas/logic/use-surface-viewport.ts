@@ -21,7 +21,7 @@ type Draft = {
 // shell does not re-render at 60 Hz.
 export function useSurfaceViewport(
   workspaceId: CanvasWorkspaceId,
-  svgRef: RefObject<SVGSVGElement | null>,
+  svgRef: RefObject<Element | null>,
 ) {
   const { viewport, control } = useViewportControl(workspaceId);
   useWheelGestures(svgRef, control);
@@ -122,8 +122,8 @@ function nextViewportForWheel(viewport: Viewport, event: WheelEvent, svg: Elemen
 }
 
 // The draft commits 200 ms after the last wheel event, and on unmount (workspace switch).
-function useWheelGestures(svgRef: RefObject<SVGSVGElement | null>, control: ViewportControl) {
-  const handleWheel = useEffectEvent((event: WheelEvent, svg: SVGSVGElement) => {
+function useWheelGestures(svgRef: RefObject<Element | null>, control: ViewportControl) {
+  const handleWheel = useEffectEvent((event: WheelEvent, svg: Element) => {
     event.preventDefault();
     control.draft(nextViewportForWheel(control.current(), event, svg));
     control.flushLater(WHEEL_COMMIT_DELAY_MS);
@@ -134,8 +134,8 @@ function useWheelGestures(svgRef: RefObject<SVGSVGElement | null>, control: View
 
   useEffect(() => {
     const svg = svgRef.current;
-    function handleNativeWheel(event: WheelEvent) {
-      if (svg !== null) {
+    function handleNativeWheel(event: Event) {
+      if (svg !== null && event instanceof WheelEvent) {
         handleWheel(event, svg);
       }
     }
@@ -164,14 +164,14 @@ function useMiddleButtonPan(control: ViewportControl) {
   }
 
   return {
-    handlePointerDown: (event: PointerEvent<SVGSVGElement>) => {
+    handlePointerDown: (event: PointerEvent) => {
       if (event.button === MIDDLE_BUTTON) {
         event.currentTarget.setPointerCapture(event.pointerId);
         const pointer = { xPx: event.clientX, yPx: event.clientY };
         startRef.current = { pointer, viewport: control.current() };
       }
     },
-    handlePointerMove: (event: PointerEvent<SVGSVGElement>) => {
+    handlePointerMove: (event: PointerEvent) => {
       const start = startRef.current;
       if (start !== null) {
         control.draft({

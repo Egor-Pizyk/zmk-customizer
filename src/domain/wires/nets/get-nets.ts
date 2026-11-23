@@ -1,5 +1,6 @@
-import { findWireContacts, getKeyPinWires } from '@domain/wires';
-import type { WireContacts } from '@domain/wires';
+import { findWireContacts } from '@domain/wires/contacts';
+import { getKeyPinWires } from '@domain/wires';
+import type { WireContacts } from '@domain/wires/contacts';
 import { isSameCrossing } from '@domain/crossings';
 import type { KeyPin, Project, Wire, WireEndSide } from '@domain';
 

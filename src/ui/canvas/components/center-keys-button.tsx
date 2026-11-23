@@ -9,7 +9,7 @@ import type { RefObject } from 'react';
 
 export type CenterKeysButtonProps = {
   readonly viewport: Viewport;
-  readonly svgRef: RefObject<SVGSVGElement | null>;
+  readonly svgRef: RefObject<Element | null>;
   readonly onViewportCommit: (viewport: Viewport) => void;
 };
 

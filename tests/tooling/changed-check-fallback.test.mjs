@@ -14,7 +14,7 @@ test('unknown test impact runs full units when Vitest produces no related-test r
     writeFileSync(path.join(directory, 'src/probe.ts'), 'export const probe = 1;');
     writeFileSync(
       path.join(directory, '.changed-files.json'),
-      JSON.stringify({ files: ['src/probe.ts'], revision: 'test-tree' }),
+      JSON.stringify({ mode: 'unit', files: ['src/probe.ts'], revision: 'test-tree' }),
     );
     writeFileSync(
       path.join(directory, 'bin/npm'),
@@ -38,7 +38,7 @@ if(process.argv[2]==='run' && process.argv[3]==='test') require('node:fs').write
       readFileSync(path.join(directory, '.check-logs/summary.json'), 'utf8'),
     );
     assert.equal(summary.status, 'passed');
-    assert.equal(summary.mode, 'final');
+    assert.equal(summary.mode, 'unit');
     assert.ok(summary.durationMs >= 0);
     assert.ok(summary.checks.every((check) => check.status === 'passed'));
   } finally {
@@ -51,13 +51,13 @@ test('formatter skips excluded agent files but still rejects malformed formattin
   const formatter = fileURLToPath(new URL('../../node_modules/oxfmt/bin/oxfmt', import.meta.url));
   const runner = fileURLToPath(new URL('../../scripts/run-changed-checks.mjs', import.meta.url));
   try {
-    for (const name of ['.specify', 'bin', 'node_modules/vitest'])
+    for (const name of ['.claude', 'bin', 'node_modules/vitest'])
       mkdirSync(path.join(directory, name), { recursive: true });
     writeFileSync(
       path.join(directory, '.oxfmtrc.json'),
-      JSON.stringify({ ignorePatterns: ['.specify/**'] }),
+      JSON.stringify({ ignorePatterns: ['.claude/**'] }),
     );
-    writeFileSync(path.join(directory, '.specify/integration.json'), '{"version":"1.2.3"}');
+    writeFileSync(path.join(directory, '.claude/settings.json'), '{"hooks":{}}');
     writeFileSync(path.join(directory, 'bin/npm'), '#!/bin/sh\nexit 0\n', { mode: 0o755 });
     writeFileSync(
       path.join(directory, 'bin/npx'),
@@ -81,10 +81,10 @@ process.exit(result.status??1);
         encoding: 'utf8',
       });
     };
-    const excluded = check(['.specify/integration.json']);
+    const excluded = check(['.claude/settings.json']);
     assert.equal(excluded.status, 0, excluded.stderr);
     writeFileSync(path.join(directory, 'bad.json'), '{"items":[1,2,3]}');
-    const malformed = check(['.specify/integration.json', 'bad.json']);
+    const malformed = check(['.claude/settings.json', 'bad.json']);
     assert.notEqual(malformed.status, 0, 'formatting errors must still block the snapshot');
     assert.match(malformed.stderr, /bad\.json/u);
   } finally {

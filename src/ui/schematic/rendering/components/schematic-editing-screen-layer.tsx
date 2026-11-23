@@ -1,3 +1,4 @@
+import { WireLockButtons } from './wire-lock-buttons';
 import { KeyTransformFrames } from './key-transform-frames';
 import { SchematicScreenLayer } from './schematic-screen-layer';
 import type { SchematicSelection } from '@ui/schematic/interaction';
@@ -11,6 +12,7 @@ export function SchematicEditingScreenLayer(props: EditingScreenLayerProps) {
   return (
     <>
       <SchematicScreenLayer {...props} />
+      <WireLockButtons {...props} />
       {props.hasTransformFrames ? (
         <KeyTransformFrames project={props.project} view={props.view} selection={props.selection} />
       ) : null}

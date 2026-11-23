@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 13,
+  "encoders": [],
+  "combos": [],
+  "macros": [],
+  "conditionalLayers": [],
+  "behaviors": [],
+  "firmware": {},
+  "controllerId": "nice_nano_v2",
+  "name": "Routing contract",
+  "keys": [
+    {
+      "id": "k0",
+      "xU": 0,
+      "yU": 0,
+      "half": "left"
+    },
+    {
+      "id": "k1",
+      "xU": 1.5,
+      "yU": 0,
+      "half": "left"
+    },
+    {
+      "id": "k2",
+      "xU": 8.5,
+      "yU": 0,
+      "half": "right"
+    },
+    {
+      "id": "k3",
+      "xU": 10,
+      "yU": 0,
+      "half": "right"
+    }
+  ],
+  "wires": [],
+  "insulatedCrossings": [],
+  "layers": [
+    {
+      "id": "l0",
+      "name": "Base",
+      "bindings": {}
+    }
+  ],
+  "wiring": {
+    "kind": "matrix",
+    "topology": "split",
+    "diodeDirection": "col2row",
+    "terminals": []
+  }
+}

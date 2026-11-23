@@ -6,3 +6,4 @@ export { WiringHalfControls } from './wiring-half-controls';
 export { WiringOptionsControls } from './wiring-options-controls';
 export { WiringPinControls } from './wiring-pin-controls';
 export { WiringTable } from './wiring-table';
+export { WiringPreviewFeedback } from './wiring-preview-feedback';

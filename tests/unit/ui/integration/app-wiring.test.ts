@@ -23,7 +23,7 @@ it('previews a row pin edit without saving, then applies once and undoes the act
   expect(loadProject().project).toEqual(before);
 });
 
-it('discards a stale preview after project changes and does not resurrect it on Undo', async () => {
+it('keeps a stale preview visible and non-applicable after project changes and Undo', async () => {
   const { user } = renderApp(UNIBODY_PRESET);
   await user.click(screen.getByText('Wiring', { exact: true }));
   await user.selectOptions(screen.getByRole('combobox', { name: 'left row 0 pin' }), '21');
@@ -31,9 +31,13 @@ it('discards a stale preview after project changes and does not resurrect it on 
     screen.getByRole('combobox', { name: 'Controller board' }),
     'seeeduino_xiao_ble',
   );
-  expect(screen.queryByText('Wiring preview')).toBeNull();
+  expect(screen.getByRole('button', { name: 'Apply wiring' }).getAttribute('aria-disabled')).toBe(
+    'true',
+  );
   await user.click(within(screen.getByRole('banner')).getByRole('button', { name: /^Undo/u }));
-  expect(screen.queryByText('Wiring preview')).toBeNull();
+  expect(screen.getByRole('button', { name: 'Apply wiring' }).getAttribute('aria-disabled')).toBe(
+    'true',
+  );
   expect(loadProject().project).toEqual(UNIBODY_PRESET);
 });
 it('opens the wiring pin target from an export problem and permits repair', async () => {
@@ -75,7 +79,7 @@ function unavailableFirstRow(
 it('restores an automatic unibody circuit and GPIOs after a topology-only preview round trip', async () => {
   const { user } = renderApp(UNIBODY_PRESET);
   await user.click(screen.getByText('Wiring', { exact: true }));
-  await user.click(screen.getByRole('button', { name: 'Rebuild wiring' }));
+  await user.click(screen.getByRole('button', { name: 'Generate wiring' }));
   await user.click(screen.getByRole('button', { name: 'Apply wiring' }));
   const before = loadProject().project;
   const pin = screen.getByRole('combobox', { name: 'left col 2 pin' });
@@ -87,7 +91,10 @@ it('restores an automatic unibody circuit and GPIOs after a topology-only previe
       .getByRole('option', { selected: true })
       .getAttribute('value'),
   ).toBe(originalOption);
-  expect(screen.queryByText('Wiring preview', { exact: true })).toBeNull();
+  expect(await screen.findByText('No wiring changes needed.')).toBeDefined();
+  expect(screen.getByRole('button', { name: 'Apply wiring' }).getAttribute('aria-disabled')).toBe(
+    'true',
+  );
   expect(loadProject().project).toEqual(before);
 });
 

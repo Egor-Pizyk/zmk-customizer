@@ -86,8 +86,9 @@ test('a wire stays selected while and after dragging a bend @cross-browser', asy
   const inserted = await saved(page);
   expect(inserted.wires[0]?.contacts).toEqual(beforeInsert.wires[0]?.contacts);
   expect(await section.boundingBox()).toEqual(sectionBounds);
-  // Collinear saved points do not add redundant handles between actual turns (FR-008).
-  await expect(page.locator('[data-wire-bend]')).toHaveCount(1);
+  // Keep the real turn plus the active newly inserted collinear waypoint.
+  await expect(page.locator('[data-wire-bend]')).toHaveCount(2);
+  await expect(page.locator('[data-wire-bend][data-bend-index="0"]')).toBeVisible();
   await history(page, 'Undo').click();
   expect(await saved(page)).toEqual(beforeInsert);
   await history(page, 'Redo').click();
@@ -199,12 +200,12 @@ test('rebuild previews safely, allocates GPIOs and exports the applied circuit @
   };
   await openProject(page, partial);
   await page.getByText('Wiring', { exact: true }).click();
-  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
+  await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
   await expect(page.getByText('Wiring preview', { exact: true })).toBeVisible();
   expect(await saved(page)).toEqual(partial);
   await page.getByRole('button', { name: 'Cancel wiring', exact: true }).click();
   expect(await saved(page)).toEqual(partial);
-  await page.getByRole('button', { name: 'Rebuild wiring', exact: true }).click();
+  await page.getByRole('button', { name: 'Generate wiring', exact: true }).click();
   await page.getByRole('button', { name: 'Apply wiring', exact: true }).click();
   const complete = await saved(page);
   expect(getWiringCells(complete).map((cell) => [cell.row, cell.col])).toEqual([
@@ -215,7 +216,7 @@ test('rebuild previews safely, allocates GPIOs and exports the applied circuit @
   expect(complete.wires.length).toBeGreaterThan(0);
   const files = await downloadZip(page);
   expect(files['boards/shields/browser_shield/browser_shield.overlay']).toContain(
-    '<&pro_micro 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>',
+    '<&pro_micro 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>',
   );
   expect(files['boards/shields/browser_shield/browser_shield.overlay']).toContain('RC(0,2)');
   await history(page, 'Undo').click();

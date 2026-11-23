@@ -1,1 +1,0 @@
-../../docs/guidelines/code-quality/typescript.md

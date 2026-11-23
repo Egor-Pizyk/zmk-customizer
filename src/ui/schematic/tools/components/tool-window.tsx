@@ -1,18 +1,17 @@
 import { TOOL_OPTIONS } from './tool-options';
-import { Button, FloatingPanel, RadioGroup } from '@ui/components/components';
+import { FloatingPanel, RadioGroup } from '@ui/components/components';
 import type { PanelPosition } from '@ui/components/logic';
 import { usePreferences } from '@ui/preferences';
 import type { ToolId } from '@ui/schematic/tools/logic';
 
 type ToolWindowProps = {
   readonly activeToolId: ToolId;
-  readonly hasKeys: boolean;
   /** Last canvas hint ("There is already a key here."); also announced by StatusMessage. */
   readonly hint: string | undefined;
   readonly onToolChange: (toolId: ToolId) => void;
 };
 
-export function ToolWindow({ activeToolId, hasKeys, hint, onToolChange }: ToolWindowProps) {
+export function ToolWindow({ activeToolId, hint, onToolChange }: ToolWindowProps) {
   const { preferences, changePreferences } = usePreferences();
   const { toolWindow } = preferences;
 
@@ -28,7 +27,9 @@ export function ToolWindow({ activeToolId, hasKeys, hint, onToolChange }: ToolWi
     onToolChange(toolId);
     // Return focus to the canvas so canvas shortcuts (Escape, Delete, …) work immediately.
     requestAnimationFrame(() => {
-      document.querySelector<SVGSVGElement>('[data-canvas-workspace="schematic"]')?.focus();
+      document
+        .querySelector<SVGElement | HTMLElement>('[data-canvas-workspace="schematic"]')
+        ?.focus();
     });
   }
 
@@ -47,26 +48,7 @@ export function ToolWindow({ activeToolId, hasKeys, hint, onToolChange }: ToolWi
         options={TOOL_OPTIONS}
         value={activeToolId}
       />
-      {hasKeys && <LayoutEditButton />}
       {hint === undefined ? undefined : <p className="max-w-40 text-xs text-warning">{hint}</p>}
     </FloatingPanel>
-  );
-}
-
-function handleEditClick() {
-  const details = document.querySelector<HTMLDetailsElement>('[data-precise-properties]');
-  if (details !== null) {
-    details.open = true;
-  }
-  requestAnimationFrame(() => {
-    document.querySelector<HTMLInputElement>('[data-layout-controls] input')?.focus();
-  });
-}
-
-function LayoutEditButton() {
-  return (
-    <Button onClick={handleEditClick} size="sm">
-      Edit selected layout
-    </Button>
   );
 }

@@ -9,16 +9,30 @@ import { changedCheckPlan } from '../../scripts/changed-check-plan.mjs';
 
 const exists = () => true;
 
-test('selects related units, expands production browser journeys, and keeps docs lightweight', () => {
-  assert.deepEqual(changedCheckPlan(['src/domain/keys/move.ts'], exists).related, [
+test('selects units only in the unit stage and never expands browser journeys', () => {
+  assert.deepEqual(changedCheckPlan(['src/domain/keys/move.ts'], exists, 'unit').related, [
     'src/domain/keys/move.ts',
   ]);
-  assert.deepEqual(changedCheckPlan(['src/domain/keys/move.ts'], exists).browser, ['tests/e2e']);
+  assert.deepEqual(changedCheckPlan(['src/domain/keys/move.ts'], exists).browser, []);
   assert.equal(changedCheckPlan(['docs/testing.md'], exists).fullUnit, false);
   assert.deepEqual(changedCheckPlan(['docs/testing.md'], exists).browser, []);
-  assert.deepEqual(changedCheckPlan(['tests/e2e/wiring.spec.ts'], exists).browser, [
-    'tests/e2e/wiring.spec.ts',
-  ]);
+  assert.deepEqual(changedCheckPlan(['tests/e2e/wiring.spec.ts'], exists).browser, []);
+});
+
+test('VC-01 static changes never select business/tooling units or browser tests', () => {
+  for (const files of [
+    ['src/domain/probe.ts'],
+    ['package.json'],
+    ['scripts/probe.mjs'],
+    ['src/deleted.ts'],
+  ]) {
+    const plan = changedCheckPlan(files, () => !files.includes('src/deleted.ts'));
+    assert.equal(plan.static, true);
+    assert.equal(plan.fullUnit, false);
+    assert.deepEqual(plan.related, []);
+    assert.equal(plan.tooling, false);
+    assert.deepEqual(plan.browser, []);
+  }
 });
 
 test('global inputs, deleted files and tooling widen checks', () => {
@@ -28,10 +42,10 @@ test('global inputs, deleted files and tooling widen checks', () => {
     'tests/fixtures/old.json',
     'src/domain/index.ts',
   ]) {
-    assert.equal(changedCheckPlan([file], () => true).fullUnit, true, file);
+    assert.equal(changedCheckPlan([file], () => true, 'unit').fullUnit, true, file);
   }
-  assert.equal(changedCheckPlan(['src/removed.ts'], () => false).fullUnit, true);
-  assert.equal(changedCheckPlan(['scripts/check-changes.mjs'], () => true).tooling, true);
+  assert.equal(changedCheckPlan(['src/removed.ts'], () => false, 'unit').fullUnit, true);
+  assert.equal(changedCheckPlan(['scripts/check-changes.mjs'], () => true, 'unit').tooling, true);
 });
 
 test('snapshot uses staged bytes, includes deleted/renamed paths and preserves working tree/index', () => {

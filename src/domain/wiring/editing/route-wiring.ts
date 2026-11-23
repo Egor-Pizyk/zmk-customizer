@@ -1,7 +1,10 @@
+import { validateWireProtection } from '@domain/wires/protection';
+import { findWireContacts } from '@domain/wires/contacts';
+import { getKeyPinWires, captureWireContacts } from '@domain/wires';
 import { createEntityId, getProjectResourceError, PROJECT_BUDGET } from '@domain/project';
-import { findWireContacts, getKeyPinWires, captureWireContacts } from '@domain/wires';
 import { getKeyPinPosition } from '@domain/wires/geometry';
 import { getNets } from '@domain/wires/nets';
+import { findDirectRoute } from './find-direct-route';
 import { getOutputPosition } from './get-output-position';
 import { getRetainedWires } from './get-retained-wires';
 import type { Key, KeyPin, Project, Result, Wire, WirePoint } from '@domain';
@@ -21,7 +24,7 @@ function findTerminalId(wire: Wire): string | undefined {
   return undefined;
 }
 
-export function routeWiring(
+function routeWiringCandidate(
   project: Project,
   input: {
     readonly connections: readonly WiringConnection[];
@@ -84,7 +87,7 @@ function getRouteInsulation(project: Project, candidate: Project) {
       return (
         first !== undefined &&
         second !== undefined &&
-        findTerminalId(first) !== findTerminalId(second)
+        (project.wiring?.kind === 'direct' || findTerminalId(first) !== findTerminalId(second))
       );
     })
     .map(({ wireIds: ids, ordinal }) => ({ wireIds: ids, ordinal }));
@@ -156,13 +159,15 @@ function findRoute(
   connection: WiringConnection,
   context: FindRouteInput,
 ): Wire | undefined {
+  if (project.wiring?.kind === 'direct') {
+    return findDirectRoute(project, connection, context);
+  }
   const { key, terminalId, id, index, wires } = context;
   const output = findOutput(project, { terminalId, wires });
   if (output === undefined) {
     return undefined;
   }
   const start = getKeyPinPosition(key, connection.pin);
-  let routed: Wire | undefined;
   for (let attempt = 0; attempt < 12; attempt += 1) {
     const { xU, yU } = output;
     const escapeY =
@@ -183,12 +188,11 @@ function findRoute(
         wires.some((wire) => pair.includes(wire.id) && findTerminalId(wire) !== terminalId),
     );
     if (!hasOverlap && !touchesOtherPin(project, candidate, connection)) {
-      routed = candidate;
-      break;
+      return candidate;
     }
   }
 
-  return routed;
+  return undefined;
 }
 
 type FindRouteInput = {
@@ -262,4 +266,16 @@ function findOutput(
   );
   const output = getOutputPosition(project, { terminal, index, occupied });
   return output.ok ? output.value : undefined;
+}
+
+export function routeWiring(
+  project: Project,
+  input: Parameters<typeof routeWiringCandidate>[1],
+): Result<Project, string> {
+  const result = routeWiringCandidate(project, input);
+  if (!result.ok) {
+    return result;
+  }
+  const issue = validateWireProtection(project, result.value)[0];
+  return issue === undefined ? result : { ok: false, error: issue.message };
 }

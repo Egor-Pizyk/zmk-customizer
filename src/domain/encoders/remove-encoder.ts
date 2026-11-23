@@ -1,12 +1,19 @@
-import { removeKey } from '@domain/keys';
+import { getWireProtection, preserveWireProtection } from '@domain/wires/protection';
 import { removeOrphanWires } from '@domain/wires';
+import { removeKey } from '@domain/keys';
 import type { Project, Layer } from '@domain';
 
-export function removeEncoder(project: Project, encoderId: string): Project {
+function removeEncoderCandidate(project: Project, encoderId: string): Project {
   if (!project.encoders.some((entry) => entry.id === encoderId)) {
     return project;
   }
   const encoder = project.encoders.find((entry) => entry.id === encoderId);
+  if (
+    encoder?.pushKeyId !== undefined &&
+    getWireProtection(project, { keyIds: [encoder.pushKeyId] }).length > 0
+  ) {
+    return project;
+  }
   const withoutButton =
     encoder?.pushKeyId === undefined ? project : removeKey(project, { keyId: encoder.pushKeyId });
   const removedWireIds = project.wires
@@ -33,4 +40,11 @@ function removeLayerEncoder(layer: Layer, encoderId: string): Layer {
   );
   const { encoderBindings: _removed, ...rest } = layer;
   return Object.keys(remaining).length === 0 ? rest : { ...rest, encoderBindings: remaining };
+}
+
+export function removeEncoder(
+  project: Project,
+  input: Parameters<typeof removeEncoderCandidate>[1],
+): Project {
+  return preserveWireProtection(project, removeEncoderCandidate(project, input));
 }

@@ -1,4 +1,4 @@
-import type { ContentPointerHandler } from '@ui/canvas/logic';
+import { refuseProtectedEdit } from './refuse-protected-edit';
 import { getKeyCenter, getKeyGeometry } from '@domain/geometry';
 import {
   getPointerRotationDeg,
@@ -8,7 +8,7 @@ import {
 import type { RotationSnap, KeyPointerTransform } from '@domain/geometry/transforms';
 import type { Project } from '@domain';
 import { getSelectedKeyIds } from './get-selected-key-ids';
-import type { SchematicPointerOptions } from './pointer-types';
+import type { SchematicPointerOptions, SchematicPointerHandler } from './pointer-types';
 import { readTransformTarget } from './read-transform-target';
 import type { useSchematicPointer } from './use-schematic-pointer';
 
@@ -16,13 +16,14 @@ import { useState } from 'react';
 
 type Pointer = ReturnType<typeof useSchematicPointer>;
 type TransformHandlers = Omit<Pointer['surfaceHandlers'], 'onPointerUp'> & {
-  readonly onPointerUp: ContentPointerHandler;
+  readonly onPointerUp: SchematicPointerHandler;
 };
 type EditingPointer = Omit<Pointer, 'surfaceHandlers'> & {
   readonly surfaceHandlers: TransformHandlers;
 };
 type Draft = {
   readonly base: Project;
+  readonly revision: number;
   readonly selectionKey: string;
   readonly pointerId: number;
   readonly gesture: KeyPointerTransform;
@@ -37,6 +38,7 @@ export function useKeyTransformPointer(
   const selectionKey = getSelectedKeyIds(options.selection, { project: options.project }).join(',');
   const current =
     draft?.base === options.project &&
+    draft.revision === (options.projectRevision ?? 0) &&
     draft.selectionKey === selectionKey &&
     options.activeToolId === 'select'
       ? draft
@@ -106,7 +108,7 @@ function startTransform(
     readonly options: SchematicPointerOptions;
     readonly state: DraftHandlers;
   },
-  [world, event]: Parameters<ContentPointerHandler>,
+  [world, event]: Parameters<SchematicPointerHandler>,
 ) {
   const gesture =
     options.activeToolId === 'select' ? readTransformTarget(event.target, world) : undefined;
@@ -116,9 +118,15 @@ function startTransform(
   }
   pointer.cancelDraft();
   options.onHintClear();
-  event.currentTarget.setPointerCapture(event.pointerId);
+  if (refuseProtectedEdit(options, { keyIds: [gesture.keyId] })) {
+    return;
+  }
+  event.preventDefault();
+  event.focus();
+  event.capture();
   state.setDraft({
     base: options.project,
+    revision: options.projectRevision ?? 0,
     selectionKey: state.selectionKey,
     pointerId: event.pointerId,
     gesture,
@@ -137,7 +145,7 @@ function moveTransform(
     readonly options: SchematicPointerOptions;
     readonly state: DraftHandlers;
   },
-  [world, event]: Parameters<ContentPointerHandler>,
+  [world, event]: Parameters<SchematicPointerHandler>,
 ) {
   if (state.current === undefined) {
     pointer.surfaceHandlers.onPointerMove(world, event);
@@ -191,7 +199,7 @@ function initialRotationSnap(project: Project, keyId: string, timeMs: number): R
 function moveRotation(
   options: SchematicPointerOptions,
   draft: Draft,
-  [world, event]: Parameters<ContentPointerHandler>,
+  [world, event]: Parameters<SchematicPointerHandler>,
 ): Draft {
   const gesture = draft.gesture;
   const key = draft.base.keys.find((entry) => entry.id === gesture.keyId);

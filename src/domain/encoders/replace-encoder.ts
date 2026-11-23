@@ -1,3 +1,4 @@
+import { preserveWireProtection } from '@domain/wires/protection';
 import type { Encoder, Key, Project } from '@domain';
 import { getEncoderGeometry } from '@domain/geometry';
 import { setKeyGeometries, preserveKeyWiring } from '@domain/keys';
@@ -47,7 +48,7 @@ function setPushHalf(project: Project, encoder: Encoder): Project {
   return { ...project, keys: project.keys.map((entry) => (entry.id === key.id ? nextKey : entry)) };
 }
 
-export function replaceEncoder(project: Project, encoder: Encoder): Project {
+function replaceEncoderCandidate(project: Project, encoder: Encoder): Project {
   const previous = project.encoders.find((entry) => entry.id === encoder.id);
   if (previous === undefined) {
     return project;
@@ -79,4 +80,11 @@ export function replaceEncoder(project: Project, encoder: Encoder): Project {
     return project;
   }
   return setPushHalf({ ...transformed, encoders: next.encoders }, encoder);
+}
+
+export function replaceEncoder(
+  project: Project,
+  input: Parameters<typeof replaceEncoderCandidate>[1],
+): Project {
+  return preserveWireProtection(project, replaceEncoderCandidate(project, input));
 }

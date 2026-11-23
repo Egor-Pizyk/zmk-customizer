@@ -31,22 +31,20 @@ for (const presetId of ['macropad-9', 'corne-42', 'lily58-58']) {
   });
 }
 
-function expectClearOutputs(project: Project) {
+function expectClearOutputs(project: Project, options?: { readonly pointOnly: true }) {
+  const width = options?.pointOnly === true ? 0 : 2;
+  const height = options?.pointOnly === true ? 0 : 0.25;
   const corners = project.keys.map((key) => getKeyCorners(key));
-  const endpoints = project.wires.flatMap((wire) =>
-    [wire.start, wire.end].flatMap((end) =>
-      end.kind === 'free' && end.terminalId !== undefined ? [end] : [],
-    ),
-  );
+  const endpoints = terminalOutputs(project);
   for (const end of endpoints) {
     for (const points of corners) {
       const xs = points.map((point) => point.xU);
       const ys = points.map((point) => point.yU);
       const overlaps =
-        end.at.xU + 2 > Math.min(...xs) &&
+        end.at.xU + width > Math.min(...xs) &&
         end.at.xU < Math.max(...xs) &&
-        end.at.yU + 0.25 > Math.min(...ys) &&
-        end.at.yU - 0.25 < Math.max(...ys);
+        end.at.yU + height > Math.min(...ys) &&
+        end.at.yU - height < Math.max(...ys);
       expect(overlaps).toBe(false);
     }
   }
@@ -77,23 +75,20 @@ it('puts right row endpoints beyond the right half', () => {
       .filter((terminal) => terminal.kind === 'row')
       .map((terminal) => terminal.id),
   );
-  const ends = project.wires
-    .flatMap((wire) => [wire.start, wire.end])
-    .filter((end) => end.kind === 'free')
-    .filter((end) => ids.has(getDefinedValue(end.terminalId)));
+  const ends = terminalOutputs(project).filter((end) => ids.has(end.terminalId));
   expect(ends.length).toBeGreaterThan(0);
-  expect(ends.map((end) => end.at.xU).every((xU) => xU >= maxX + 1)).toBe(true);
+  expect(ends.map((end) => end.at.xU).every((xU) => xU >= maxX + 2.5)).toBe(true);
 });
 
-it('chooses bottom below an obstructing half and top above it, with fixed clearance', () => {
+it('keeps compact column outputs above each half rather than using legacy bottom fanout', () => {
   const project = createSplitKeys({ left: { xU: 0, yU: 5 }, right: { xU: 0, yU: 0 } });
   const proposed = getResultValue(auto(project));
-  expect(columnOutput(proposed, 'left').yU).toBe(7.5);
-  expect(columnOutput(proposed, 'right').yU).toBe(-1.5);
+  expect(columnOutput(proposed, 'left').yU).toBe(4.5);
+  expect(columnOutput(proposed, 'right').yU).toBe(-0.5);
   expect(getResultValue(auto(project))).toEqual(proposed);
 });
 
-it('extends an obstructed left output outward in fixed half-unit steps', () => {
+it('uses fixed symmetric row padding and keeps output points outside both halves', () => {
   const proposed = getResultValue(
     auto(createSplitKeys({ left: { xU: 0, yU: 0 }, right: { xU: -4, yU: 0 } })),
   );
@@ -108,8 +103,8 @@ it('extends an obstructed left output outward in fixed half-unit steps', () => {
       .filter((entry) => entry.kind === 'free')
       .find((entry) => entry.terminalId === id),
   );
-  expect(end.at).toEqual({ xU: -9, yU: 0 });
-  expectClearOutputs(proposed);
+  expect(end.at).toEqual({ xU: -2.5, yU: 0 });
+  expectClearOutputs(proposed, { pointOnly: true });
 });
 
 function createSplitKeys(input: {
@@ -117,7 +112,7 @@ function createSplitKeys(input: {
   readonly right: { readonly xU: number; readonly yU: number };
 }): Project {
   return {
-    schemaVersion: 13,
+    schemaVersion: 14,
     controllerId: board.id,
     name: 'Output spacing',
     keys: [
@@ -146,4 +141,16 @@ function columnOutput(project: Project, half: 'left' | 'right') {
       .filter((entry) => entry.kind === 'free')
       .find((entry) => entry.terminalId === id),
   ).at;
+}
+
+// Labels are short, unscaled SVG text above row wires; browser tests inspect their paint.
+// The close split fixture checks output points; preset fixtures retain conservative label clearance.
+function terminalOutputs(project: Project) {
+  return project.wires.flatMap((wire) =>
+    [wire.start, wire.end].flatMap((end) =>
+      end.kind === 'free' && end.terminalId !== undefined
+        ? [{ at: end.at, terminalId: end.terminalId }]
+        : [],
+    ),
+  );
 }

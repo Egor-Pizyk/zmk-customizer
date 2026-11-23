@@ -1,0 +1,10 @@
+JointJS v4.3.3 (2026-09-04) - JavaScript diagramming library
+
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+Package: @joint/core 4.3.3, published by client IO
+License: joint-core-LICENSE.txt
+Source: https://github.com/clientIO/joint/tree/v4.3.3
+The application uses the unmodified published @joint/core package.

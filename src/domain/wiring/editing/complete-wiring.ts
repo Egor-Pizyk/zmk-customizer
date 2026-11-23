@@ -1,7 +1,8 @@
+import { validateWireProtection } from '@domain/wires/protection';
+import { findKeyCurrentFlow } from '@domain/wires';
 import type { WiringCell } from '@domain/wiring/matrix';
 import { autoAssignCells, createWiringTerminals, getWiringConnections } from '@domain/wiring';
 import { getWiringCells } from '@domain/wiring/matrix';
-import { findKeyCurrentFlow } from '@domain/wires';
 import { getNets } from '@domain/wires/nets';
 import { initializeWiring } from './initialize-wiring';
 import { adoptManualTerminals } from './adopt-manual-terminals';
@@ -9,7 +10,7 @@ import { assignAutoPins } from './assign-auto-pins';
 import { routeWiring } from './route-wiring';
 import type { ControllerBoard, Project, Result, Wiring } from '@domain';
 
-export function completeWiring(
+function completeWiringCandidate(
   original: Project,
   input: { readonly board: ControllerBoard; readonly gridStepU: number },
 ): Result<Project, string> {
@@ -172,4 +173,16 @@ function findDiodeConflict(
   return invalid
     ? 'A retained diode conflicts with the assigned cells. Repair its orientation before completing.'
     : undefined;
+}
+
+export function completeWiring(
+  project: Project,
+  input: Parameters<typeof completeWiringCandidate>[1],
+): Result<Project, string> {
+  const result = completeWiringCandidate(project, input);
+  if (!result.ok) {
+    return result;
+  }
+  const issue = validateWireProtection(project, result.value)[0];
+  return issue === undefined ? result : { ok: false, error: issue.message };
 }

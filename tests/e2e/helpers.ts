@@ -1,3 +1,4 @@
+import { EDITING_GROUPS, openPartsGroups } from './parts-fixture';
 import { expect } from '@playwright/test';
 import type { Locator, Page } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
@@ -5,9 +6,11 @@ import { unzipSync, strFromU8 } from 'fflate';
 import type { Key, Project } from '@domain';
 import { parseProjectFile } from '@storage/project';
 
+export { openPartsGroups } from './parts-fixture';
+
 export type Point = { readonly x: number; readonly y: number };
 export const fixture: Project = {
-  schemaVersion: 13,
+  schemaVersion: 14,
   encoders: [],
   combos: [],
   macros: [],
@@ -66,12 +69,17 @@ export async function importText(page: Page, content: string) {
     await chooser
   ).setFiles({ name: 'project.json', mimeType: 'application/json', buffer: Buffer.from(content) });
 }
-export async function openProject(page: Page, project: Project = fixture) {
+export async function openProject(
+  page: Page,
+  project: Project = fixture,
+  partsGroups: readonly string[] = EDITING_GROUPS,
+) {
   await page.goto('/');
   await importText(page, JSON.stringify(project));
   await expect(page.getByRole('textbox', { name: 'Name', exact: true })).toHaveValue(project.name);
   await expect.poll(() => saved(page)).toEqual(project);
   await page.getByRole('button', { name: 'Center keyboard', exact: true }).click();
+  await openPartsGroups(page, partsGroups);
 }
 export async function saved(page: Page): Promise<Project> {
   const text = await page.evaluate(() => localStorage.getItem('zmk-customizer:project'));
@@ -204,7 +212,14 @@ export async function expectGeometry(page: Page, geometry: Key, keyIndex = 0) {
   }
 }
 export async function editNumber(page: Page, name: string, value: string) {
-  const input = page.getByRole('spinbutton', { name, exact: true });
+  const input = page.getByLabel(name, { exact: true });
+  if (!(await input.isVisible())) {
+    for (const disclosure of await page.locator('details').filter({ has: input }).all()) {
+      if ((await disclosure.getAttribute('open')) === null) {
+        await disclosure.locator(':scope > summary').click();
+      }
+    }
+  }
   await input.fill(value);
   await input.press('Enter');
 }
@@ -214,6 +229,9 @@ export async function workspace(page: Page, name: string) {
     .getByRole('button', { name: new RegExp(`^${name}(,|$)`, 'u') })
     .click();
   await expect(page.getByRole('heading', { name, level: 1 })).toBeVisible();
+  if (name === 'Schematic') {
+    await openPartsGroups(page);
+  }
 }
 export async function downloadJson(page: Page) {
   const pending = page.waitForEvent('download');

@@ -7,7 +7,7 @@ import { getWireSegmentCount } from '@domain/wires/geometry';
 import { layerSchema } from './project-layer-schema';
 import { legacyProjectContentSchema as projectContentSchema } from './project-content-schema';
 import { wiringSchema, findTerminalIssues } from './wiring-schema';
-import { PROJECT_BUDGET } from './project-budget';
+import { LEGACY_PROJECT_BUDGET as PROJECT_BUDGET } from './legacy-project-budget';
 import { CONTROLLER_BOARDS } from '@catalog/controllers';
 import { BOARD_PIN_COUNT, findWireContactError } from '@domain/wires';
 import type { Project as CurrentProject, Wire, WireEnd, WireEndSide } from '@domain';
@@ -114,7 +114,7 @@ function findWireIssues(project: Project): Issue[] {
       const path = ['wires', index, side];
       issues.push(...findEndIssues({ end: wire[side], path, wire, keyIds, wireIds }));
     }
-    issues.push(...findWireContactReferenceIssues({ ...project, schemaVersion: 13 }, wire, index));
+    issues.push(...findWireContactReferenceIssues({ ...project, schemaVersion: 14 }, wire, index));
     if (isSamePin(wire)) {
       issues.push({ message: 'Both ends are the same pin', path: ['wires', index, 'end'] });
     }
@@ -161,7 +161,9 @@ export const legacyV12ProjectSchema = z
       .max(1024)
       .exactOptional(),
     ...projectContentSchema.shape,
-    wiring: wiringSchema.exactOptional(),
+    wiring: wiringSchema
+      .refine((wiring) => wiring.terminals.length <= PROJECT_BUDGET.wires)
+      .exactOptional(),
     controllerId: z.enum(CONTROLLER_BOARDS.map((board) => board.id)),
     name: z.string().max(PROJECT_BUDGET.stringLength),
     shieldName: z.string().max(PROJECT_BUDGET.stringLength).exactOptional(),
@@ -208,13 +210,13 @@ export const legacyV12ProjectSchema = z
       }
     }
     const issues = [
-      ...findTerminalIssues({ ...project, schemaVersion: 13 }),
+      ...findTerminalIssues({ ...project, schemaVersion: 14 }),
       ...findDuplicateIds(project.keys, 'keys'),
       ...findDuplicateIds(project.encoders, 'encoders'),
       ...findEncoderBindingIssues(project),
       ...findDuplicateIds(project.wires, 'wires'),
       ...findWireIssues(project),
-      ...findContactPoolIssues({ ...project, schemaVersion: 13 }),
+      ...findContactPoolIssues({ ...project, schemaVersion: 14 }),
       ...findCrossingIssues(project),
       ...findDuplicateIds(project.layers, 'layers'),
       ...findDuplicateIds(project.behaviors, 'behaviors'),
@@ -247,7 +249,7 @@ function findContactIssues(project: Project): Issue[] {
   const issues: Issue[] = [];
 
   for (const [index, wire] of project.wires.entries()) {
-    const message = findWireContactError({ ...project, schemaVersion: 13 }, wire);
+    const message = findWireContactError({ ...project, schemaVersion: 14 }, wire);
     if (message !== undefined) {
       issues.push({ message, path: ['wires', index, 'contacts'] });
     }

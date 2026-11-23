@@ -41,7 +41,9 @@ export function pressSelectTool(state: PointerState, { hit, world, event }: Pres
     return;
   }
   // Empty space: start marquee selection
-  event.currentTarget.setPointerCapture(event.pointerId);
+  event.preventDefault();
+  event.focus();
+  event.capture();
   state.onDragChange({
     kind: 'marquee',
     start: world,

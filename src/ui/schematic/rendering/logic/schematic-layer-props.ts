@@ -3,8 +3,7 @@ import type { Project, WirePoint } from '@domain';
 import type { Marquee } from '@ui/canvas/components';
 import type { ContentView } from '@ui/canvas/logic';
 import type { SchematicMarks } from './schematic-marks';
-import type { SchematicSelection } from '@ui/schematic/interaction';
-import type { KeyboardEvent } from 'react';
+import type { SchematicSelection, KeyInput } from '@ui/schematic/interaction';
 
 export type SchematicLayerProps = {
   readonly project: Project;
@@ -15,6 +14,6 @@ export type SchematicLayerProps = {
   readonly activeKeyId: string | undefined;
   readonly marks: SchematicMarks;
   readonly crossings: readonly Crossing[];
-  readonly onKeyKeyDown: (keyId: string, event: KeyboardEvent<SVGGElement>) => void;
+  readonly onKeyKeyDown: (keyId: string, event: KeyInput) => void;
   readonly onKeyFocus: (keyId: string) => void;
 };

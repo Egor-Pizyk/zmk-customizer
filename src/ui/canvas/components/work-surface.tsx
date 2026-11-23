@@ -6,7 +6,6 @@ import { SurfaceControls } from './surface-controls';
 import { SurfaceOverlays } from './surface-overlays';
 import {
   snapToGrid,
-  toWorldPoint,
   useSurfaceViewport,
   SHARED_VIEW_WORKSPACE_ID,
   screenToWorld,
@@ -19,6 +18,7 @@ import type {
   ScreenPoint,
   WorldPoint,
 } from '@ui/canvas/logic';
+import { SurfaceHost } from './surface-host';
 import { SurfaceSvg } from './surface-svg';
 
 type WorkSurfaceProps = {
@@ -31,22 +31,19 @@ type WorkSurfaceProps = {
 };
 
 type PointerSubscriber = {
-  readonly onMove: (event: PointerEvent<SVGSVGElement>) => void;
+  readonly onMove: (event: PointerEvent) => void;
   readonly onLeave: () => void;
 };
 
 type Surface = ReturnType<typeof useSurfaceViewportType>;
 
-function usePointerForwarding(content: SurfaceContent | undefined, surface: Surface) {
+function usePointerForwarding(surface: Surface) {
   const subscribersRef = useRef<Set<PointerSubscriber>>(new Set());
-  const { viewport } = surface;
-
-  function handlePointerMove(event: PointerEvent<SVGSVGElement>) {
+  function handlePointerMove(event: PointerEvent) {
     surface.drag.handlePointerMove(event);
     for (const subscriber of subscribersRef.current) {
       subscriber.onMove(event);
     }
-    content?.onPointerMove?.(toWorldPoint(event, viewport), event);
   }
 
   function handlePointerLeave() {
@@ -61,30 +58,31 @@ function usePointerForwarding(content: SurfaceContent | undefined, surface: Surf
 export function WorkSurface({ workspaceId, children, content }: WorkSurfaceProps) {
   const { gridSizeU, isSnapEnabled } = usePreferences().preferences;
   const svgRef = useRef<SVGSVGElement>(null);
-  const surface = useSurfaceViewport(SHARED_VIEW_WORKSPACE_ID, svgRef);
+  const hostRef = useRef<HTMLDivElement>(null);
+  const surfaceRef = content?.kind === 'host' ? hostRef : svgRef;
+  const surface = useSurfaceViewport(SHARED_VIEW_WORKSPACE_ID, surfaceRef);
   const { viewport } = surface;
   const snapGridU = isSnapEnabled ? gridSizeU : undefined;
-  const forwarding = usePointerForwarding(content, surface);
+  const forwarding = usePointerForwarding(surface);
   const pointerInput = { snapGridU, subscribersRef: forwarding.subscribersRef, viewport };
 
   return (
     <div className="flex min-h-64 flex-1 flex-col">
       <SurfaceControls
         viewport={viewport}
-        svgRef={svgRef}
+        svgRef={surfaceRef}
         onViewportCommit={surface.handleViewportCommit}
       />
       <div className="relative min-h-0 flex-1 overflow-hidden">
-        <SurfaceSvg
+        <SurfaceScene
           content={content}
-          drag={surface.drag}
-          onPointerLeave={forwarding.handlePointerLeave}
-          onPointerMove={forwarding.handlePointerMove}
+          surface={surface}
+          forwarding={forwarding}
           svgRef={svgRef}
-          viewport={viewport}
+          hostRef={hostRef}
           workspaceId={workspaceId}
         />
-        <PointerOverlays {...pointerInput} surface={surface} svgRef={svgRef} />
+        <PointerOverlays {...pointerInput} surface={surface} svgRef={surfaceRef} />
         {children}
       </div>
       <PointerStatusBar
@@ -94,6 +92,29 @@ export function WorkSurface({ workspaceId, children, content }: WorkSurfaceProps
         zoom={viewport.zoom}
       />
     </div>
+  );
+}
+
+function SurfaceScene(input: {
+  readonly content: SurfaceContent | undefined;
+  readonly surface: Surface;
+  readonly forwarding: ReturnType<typeof usePointerForwarding>;
+  readonly svgRef: RefObject<SVGSVGElement | null>;
+  readonly hostRef: RefObject<HTMLDivElement | null>;
+  readonly workspaceId: CanvasWorkspaceId;
+}) {
+  const { content, surface, forwarding, svgRef, hostRef, workspaceId } = input;
+  const shared = {
+    drag: surface.drag,
+    viewport: surface.viewport,
+    workspaceId,
+    onPointerLeave: forwarding.handlePointerLeave,
+    onPointerMove: forwarding.handlePointerMove,
+  };
+  return content?.kind === 'host' ? (
+    <SurfaceHost {...shared} content={content} hostRef={hostRef} />
+  ) : (
+    <SurfaceSvg {...shared} content={content} svgRef={svgRef} />
   );
 }
 
@@ -133,7 +154,7 @@ function PointerOverlays(input: {
   readonly snapGridU: number | undefined;
   readonly viewport: Viewport;
   readonly surface: Surface;
-  readonly svgRef: RefObject<SVGSVGElement | null>;
+  readonly svgRef: RefObject<Element | null>;
 }) {
   const pointer = usePointerPosition(input);
   return <SurfaceOverlays pointer={pointer} surface={input.surface} svgRef={input.svgRef} />;

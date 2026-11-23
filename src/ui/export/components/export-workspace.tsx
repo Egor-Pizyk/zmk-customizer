@@ -60,7 +60,12 @@ function ExportProblems({ issues }: { readonly issues: readonly WorkspaceIssue[]
           </li>
         ))}
       </ul>
-      <Button className="self-start" isDisabled variant="primary">
+      <Button
+        aria-describedby="export-problems-title"
+        className="self-start"
+        isDisabled
+        variant="primary"
+      >
         Download .zip
       </Button>
     </section>

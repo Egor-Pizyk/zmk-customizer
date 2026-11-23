@@ -19,6 +19,7 @@ function history(name: 'Undo' | 'Redo') {
 it('reviews without saving, cancels, applies in one step, restores exact history and reloads', async () => {
   const { user, unmount, mount } = renderApp();
   const before = loadProject().project;
+  await user.click(screen.getByRole('button', { name: 'New' }));
   await user.click(screen.getByText('Import KLE layout'));
   await user.upload(screen.getByLabelText('KLE JSON file'), file('[[{"w":1.5},"A",{"x":1},"B"]]'));
   expect(await screen.findByText('2 physical keys ready to import.')).toBeTruthy();
@@ -32,7 +33,7 @@ it('reviews without saving, cancels, applies in one step, restores exact history
   expect(loadProject().project).toEqual(before);
   await user.upload(screen.getByLabelText('KLE JSON file'), file('[[{"w":1.5},"A",{"x":1},"B"]]'));
   await user.click(await screen.findByRole('button', { name: 'Replace project with KLE layout' }));
-  expect(document.activeElement).toBe(screen.getByLabelText('KLE JSON file'));
+  expect(screen.queryByLabelText('KLE JSON file')).toBeNull();
   const imported = loadProject().project;
   expect(imported.keys).toEqual([
     {
@@ -71,6 +72,7 @@ it('reviews without saving, cancels, applies in one step, restores exact history
 it('reports malformed/read failures and can retry the same file', async () => {
   const { user } = renderApp();
   const before = loadProject().project;
+  await user.click(screen.getByRole('button', { name: 'New' }));
   await user.click(screen.getByText('Import KLE layout'));
   const input = screen.getByLabelText('KLE JSON file');
   await user.upload(input, file('bad'));
@@ -91,6 +93,7 @@ it('reports malformed/read failures and can retry the same file', async () => {
 it('invalidates a review permanently after an edit followed by Undo', async () => {
   const { user } = renderApp();
   const before = loadProject().project;
+  await user.click(screen.getByRole('button', { name: 'New' }));
   await user.click(screen.getByText('Import KLE layout'));
   await user.upload(screen.getByLabelText('KLE JSON file'), file('[["A"]]'));
   await screen.findByRole('button', { name: 'Replace project with KLE layout' });
@@ -107,6 +110,7 @@ it('invalidates a review permanently after an edit followed by Undo', async () =
 it('discards superseded and cancelled reads and refuses a read after intervening edits', async () => {
   const { user } = renderApp();
   const before = loadProject().project;
+  await user.click(screen.getByRole('button', { name: 'New' }));
   await user.click(screen.getByText('Import KLE layout'));
   const input = screen.getByLabelText('KLE JSON file');
   let resolveRead: (text: string) => void = rejectUnstartedRead;
@@ -152,6 +156,7 @@ function rejectUnstartedRead() {
 
 it('clears a superseded KLE read when a project file is opened instead', async () => {
   const { user, container } = renderApp();
+  await user.click(screen.getByRole('button', { name: 'New' }));
   await user.click(screen.getByText('Import KLE layout'));
   let finish: ((text: string) => void) | undefined;
   const pending = new Promise<string>((resolve) => {

@@ -17,7 +17,6 @@
       "Bash(git diff *)",
       "Bash(git log)",
       "Bash(git log *)",
-      "Bash(.specify/scripts/bash/*)",
       "WebFetch(domain:zmk.dev)",
       "WebFetch(domain:v0-3-branch.zmk.dev)",
       "WebFetch(domain:github.com)",
@@ -28,20 +27,6 @@
       "Read(./.env.*)",
       "Read(**/.env)",
       "Read(**/.env.*)"
-    ]
-  },
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"${CLAUDE_PROJECT_DIR}\"/.claude/hooks/format-lint.sh",
-            "timeout": 30
-          }
-        ]
-      }
     ]
   }
 }

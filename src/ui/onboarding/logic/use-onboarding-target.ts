@@ -62,5 +62,13 @@ function revealTarget(id: string, revision: string) {
   const element = revision.startsWith('layout:')
     ? target?.querySelector<HTMLElement>('[data-parts-add="key"]')
     : target;
-  element?.scrollIntoView({ block: 'nearest', behavior: 'instant' });
+  let visible = element;
+  let details = element?.closest('details');
+  while (details !== null && details !== undefined) {
+    if (!details.open) {
+      visible = details.querySelector<HTMLElement>('summary') ?? undefined;
+    }
+    details = details.parentElement?.closest('details');
+  }
+  visible?.scrollIntoView({ block: 'nearest', behavior: 'instant' });
 }

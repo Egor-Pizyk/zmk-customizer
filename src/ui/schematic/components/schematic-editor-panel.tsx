@@ -19,10 +19,10 @@ export function SchematicEditorPanel({ children, preview }: SchematicEditorPanel
       className="schematic-editor-pane"
     >
       <EditorResizeHandle {...resize.handlers} />
-      <div className="border-b border-border p-2 xl:mr-6">
+      <div className="border-b border-border p-2 xl:ml-6">
         <h2 className="font-semibold">Editors</h2>
       </div>
-      <div id="schematic-editor-content" className="min-h-0 overflow-auto xl:mr-6">
+      <div id="schematic-editor-content" className="min-h-0 overflow-auto xl:ml-6">
         {children}
       </div>
       <SchematicPreviewBar {...preview} />

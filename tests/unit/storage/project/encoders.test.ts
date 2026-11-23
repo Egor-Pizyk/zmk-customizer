@@ -6,7 +6,7 @@ import legacy from '../../../fixtures/project/v10-encoders-legacy.json?raw';
 
 it('migrates historical v10 without changing its content and round trips encoder data', () => {
   const parsed = { value: getResultValue(parseProjectFile(legacy)) };
-  expect(parsed.value).toEqual({ ...JSON.parse(legacy), schemaVersion: 13, encoders: [] });
+  expect(parsed.value).toEqual({ ...JSON.parse(legacy), schemaVersion: 14, encoders: [] });
   const project = {
     ...parsed.value,
     encoders: [

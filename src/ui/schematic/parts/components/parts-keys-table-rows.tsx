@@ -1,4 +1,9 @@
-import { getSelectedKeyIds, focusAfterDelete } from '@ui/schematic/interaction';
+import { useProject } from '@ui/project/logic';
+import {
+  getSelectedKeyIds,
+  focusAfterDelete,
+  refuseProtectedEdit,
+} from '@ui/schematic/interaction';
 import { KeySelectCell } from './key-select-cell';
 import { removeKey } from '@domain/keys';
 import { Button } from '@ui/components/components';
@@ -58,6 +63,7 @@ function KeyRow(props: KeyRowProps) {
         hasProblem={problems.length > 0}
         keyIndex={keyIndex}
         schematicKey={schematicKey}
+        project={props.project}
       />
       <RowPinCells
         commit={commit}
@@ -71,15 +77,20 @@ function KeyRow(props: KeyRowProps) {
 }
 
 function KeyRowDeleteButton({
+  project,
   keyIndex,
   keyId,
   commit,
   onSelectionChange,
-}: Pick<PartsTableProps, 'commit' | 'onSelectionChange'> & {
+}: Pick<PartsTableProps, 'project' | 'commit' | 'onSelectionChange'> & {
   readonly keyIndex: number;
   readonly keyId: string;
 }) {
+  const { announce } = useProject();
   function handleDeleteClick() {
+    if (refuseProtectedEdit({ project, onHint: announce }, { keyIds: [keyId] })) {
+      return;
+    }
     commit((current) => removeKey(current, { keyId }), `Deleted key ${keyIndex}`);
     onSelectionChange();
     focusAfterDelete({ table: 'key', index: keyIndex });

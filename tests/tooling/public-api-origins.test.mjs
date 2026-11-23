@@ -28,3 +28,19 @@ for (const bridge of [
     );
   });
 }
+
+for (const code of [
+  "export { dia } from '@joint/core';",
+  "export * from '@joint/core';",
+  "import { dia } from '@joint/core'; export { dia };",
+  "import { dia as core } from '@joint/core'; const bridge = core; export { bridge };",
+  "import { dia } from '@joint/core'; export const Graph = dia.Graph;",
+]) {
+  test(`JointJS runtime cannot escape its adapter: ${code}`, () => {
+    assert.ok(
+      checkSource('src/ui/schematic/diagram/logic/index.ts', code).some(
+        (issue) => issue.rule === 'diagram-public-api',
+      ),
+    );
+  });
+}

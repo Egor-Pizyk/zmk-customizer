@@ -1,3 +1,4 @@
+import { preserveWireProtection } from '@domain/wires/protection';
 import type { ControllerBoard, Project, WireEnd } from '@domain';
 
 function changeEnd(
@@ -16,7 +17,7 @@ function changeEnd(
   return { kind: 'free', at: end.at, droppedBoardPin: `${previous.name} ${label}` };
 }
 
-export function changeController(
+function changeControllerCandidate(
   project: Project,
   input: { readonly boardId: string; readonly boards: readonly ControllerBoard[] },
 ): Project {
@@ -70,4 +71,11 @@ function changeEncoderPins(
       ...(canKeep && bPin !== undefined && next.gpioPins.includes(bPin) ? { bPin } : {}),
     };
   });
+}
+
+export function changeController(
+  project: Project,
+  input: Parameters<typeof changeControllerCandidate>[1],
+): Project {
+  return preserveWireProtection(project, changeControllerCandidate(project, input));
 }

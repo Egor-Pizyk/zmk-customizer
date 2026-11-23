@@ -35,15 +35,15 @@ for (const theme of ['light', 'dark'] as const) {
     await expect(page.getByRole('radio', { name: 'Select', exact: true })).toBeChecked();
     await page.getByText('Wiring', { exact: true }).click();
     await expect(page.getByRole('button', { name: 'Complete wiring', exact: true })).toHaveCount(0);
-    await expect(page.getByRole('button', { name: 'Rebuild wiring', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Generate wiring', exact: true })).toBeVisible();
     await page
-      .getByRole('button', { name: 'Rebuild wiring', exact: true })
+      .getByRole('button', { name: 'Generate wiring', exact: true })
       .scrollIntoViewIfNeeded();
     await page.screenshot({ path: test.info().outputPath('canvas-controls.png') });
     await page.setViewportSize({ width: 1024, height: 768 });
     await page.getByRole('button', { name: 'Center keyboard', exact: true }).click();
     await page
-      .getByRole('button', { name: 'Rebuild wiring', exact: true })
+      .getByRole('button', { name: 'Generate wiring', exact: true })
       .scrollIntoViewIfNeeded();
     await page.screenshot({ path: test.info().outputPath('canvas-controls-narrow.png') });
     await page.getByRole('button', { name: 'Bindings', exact: true }).click();

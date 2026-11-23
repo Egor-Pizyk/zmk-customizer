@@ -1,6 +1,7 @@
+import { preserveWireProtection } from '@domain/wires/protection';
 import type { Project, KeyDiode } from '@domain';
 
-export function reverseKeyDiode(project: Project, input: { readonly keyId: string }): Project {
+function reverseKeyDiodeCandidate(project: Project, input: { readonly keyId: string }): Project {
   const key = project.keys.find((candidate) => candidate.id === input.keyId);
   if (key?.diode === undefined) {
     return project;
@@ -12,4 +13,11 @@ export function reverseKeyDiode(project: Project, input: { readonly keyId: strin
     ...project,
     keys: project.keys.map((candidate) => (candidate.id === key.id ? replacement : candidate)),
   };
+}
+
+export function reverseKeyDiode(
+  project: Project,
+  input: Parameters<typeof reverseKeyDiodeCandidate>[1],
+): Project {
+  return preserveWireProtection(project, reverseKeyDiodeCandidate(project, input));
 }

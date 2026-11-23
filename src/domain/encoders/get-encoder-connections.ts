@@ -1,7 +1,7 @@
 import type { Encoder, Project } from '@domain';
 import { getNets } from '@domain/wires/nets';
 import type { Net } from '@domain/wires/nets';
-import { getWireHalf } from '@domain/wiring';
+import { getWireHalf } from '@domain/wires/geometry';
 
 function channel(net: Net | undefined): number | undefined {
   const pins = [...new Set(net?.boardPins.map((pin) => pin.boardPin))];

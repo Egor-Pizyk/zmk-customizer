@@ -1,7 +1,14 @@
+import { installDiagramPlatform } from './diagram-platform';
 import { cleanup } from '@testing-library/react';
 import { afterEach, vi } from 'vitest';
 
+// jsdom replaces only Worker construction; the platform shim runs real domain operations.
+vi.mock('../../src/ui/schematic/wiring/logic/wiring-worker?worker&inline', () => ({
+  default: createTestRoutingWorker,
+}));
+
 if (typeof document !== 'undefined') {
+  installDiagramPlatform();
   // jsdom replaces typed arrays while Node's TextEncoder returns a different realm's
   // Uint8Array. fflate uses instanceof; align the platform boundary, not archive code.
   globalThis.TextEncoder = class extends TextEncoder {
@@ -19,3 +26,7 @@ afterEach(() => {
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
 });
+
+function createTestRoutingWorker() {
+  return new Worker('routing-test');
+}
