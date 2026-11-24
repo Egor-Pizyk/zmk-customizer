@@ -35,7 +35,7 @@
     "test:e2e:quick": "playwright test --project=chromium"
   },
   "dependencies": {
-    "@joint/core": "4.3.3",
+    "@joint/core": "4.3.4",
     "fflate": "0.8.3",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
