@@ -36,6 +36,10 @@ export default defineConfig({
   webServer: {
     command: 'npm run build && npm run preview -- --host 0.0.0.0 --port 4175 --strictPort',
     url: 'http://127.0.0.1:4175',
+    env: {
+      VITE_GITHUB_AUTH_URL: 'http://127.0.0.1:4175/github-test-auth',
+      VITE_GITHUB_APP_SLUG: 'zmk-customizer-test',
+    },
     reuseExistingServer: false,
     timeout: 120_000,
   },

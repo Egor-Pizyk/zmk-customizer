@@ -7,7 +7,7 @@ paths:
 
 # Observability
 
-No backend, no telemetry, no network. Observability here means: every failure is visible to the user in words that say what to fix, and every bug is reproducible from the project JSON alone.
+No telemetry. Explain failures in words that tell the user what to fix. Local editing failures should be reproducible from the project JSON.
 
 ## Validation issues
 
@@ -64,7 +64,7 @@ Storage is the only I/O and every failure mode is handled explicitly, mapped to 
 ## Privacy
 
 - The project JSON contains only what the user typed. Do not add user agent, timestamps, machine info or IDs derived from the environment to it or to exports.
-- No `fetch`, `XMLHttpRequest`, `WebSocket`, `sendBeacon`, analytics or error-reporting SDKs. External links (ZMK docs) are plain `<a>` elements.
+- Only `src/storage/github/` performs browser network requests for the optional GitHub flow. Keep tokens, raw upstream errors and project contents out of logs. External links are plain `<a>` elements.
 
 ## External diagram renderer boundary (038)
 

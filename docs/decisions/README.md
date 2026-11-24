@@ -24,3 +24,4 @@ Keep short rationale for durable architecture/dependency choices. New runtime de
 | [0023](0023-jointjs-schematic-projection.md) | 0023. JointJS as a disposable Schematic projection | Accepted |
 | [0026](0026-business-risk-testing.md) | 0026. Business-risk test selection and aggregate coverage | Accepted |
 | [0027](0027-direct-development.md) | 0027. Direct implementation with focused feedback | Accepted |
+| [0028](0028-github-publishing.md) | 0028. Optional GitHub publishing | Accepted |

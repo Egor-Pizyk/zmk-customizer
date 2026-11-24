@@ -12,11 +12,13 @@ import {
 } from '@ui/shell/components';
 import { useGlobalShortcuts } from '@ui/app/logic';
 import { useShellDialogs } from '@ui/dialogs';
+import { useGithubSession } from '@ui/export/logic';
 import { WorkspaceView } from './workspace-view';
 
 export function App() {
   const { activeWorkspaceId, isIssuesPanelOpen } = usePreferences().preferences;
   const dialogs = useShellDialogs();
+  const github = useGithubSession();
   const { tutorial } = useProject();
   const [tourRequest, setTourRequest] = useState(0);
   useGlobalShortcuts(dialogs);
@@ -43,7 +45,7 @@ export function App() {
           className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-auto"
           id="main"
         >
-          <WorkspaceView workspaceId={activeWorkspaceId} />
+          <WorkspaceView workspaceId={activeWorkspaceId} github={github} />
         </main>
         {isIssuesPanelOpen ? <IssuesPanel /> : undefined}
         {tutorial === undefined ? undefined : <OnboardingPanel />}

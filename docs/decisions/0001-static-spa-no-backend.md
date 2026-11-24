@@ -1,6 +1,6 @@
 # 0001. Static single-page app, no backend
 
-Status: Accepted
+Status: Partially superseded by [ADR 0028](0028-github-publishing.md)
 Date: 2026-09-27
 
 ## Context

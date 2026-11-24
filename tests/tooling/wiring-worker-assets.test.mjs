@@ -12,7 +12,9 @@ test('production CSP permits Blob workers without widening scripts or network ac
   const source = readFileSync('infra/nginx.conf', 'utf8');
   assert.match(source, /worker-src blob:;/u);
   assert.match(source, /script-src 'self';/u);
-  assert.match(source, /connect-src 'none';/u);
+  assert.match(source, /connect-src \$\{ZMK_CONNECT_SOURCES\};/u);
+  const dockerfile = readFileSync('infra/Dockerfile', 'utf8');
+  assert.match(dockerfile, /ENV ZMK_CONNECT_SOURCES="'none'"/u);
   assert.doesNotMatch(source, /worker-src[^;]*(?:data:|https?:|\*)/u);
 });
 

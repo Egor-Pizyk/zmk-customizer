@@ -6,15 +6,19 @@ import { IssueButton, PlaceholderFooter } from '@ui/shell/components';
 import type { WorkspaceIssue } from '@ui/issues';
 import { ExportToolbar } from './export-toolbar';
 import { FilePreview } from './file-preview';
+import { GithubPublishPanel } from './github-publish-panel';
+import type { GithubSession } from '@ui/export/logic';
 import { getExportPreview, useExportActions } from '@ui/export/logic';
 
-export function ExportWorkspace() {
+type ExportWorkspaceProps = { readonly github: GithubSession };
+
+export function ExportWorkspace({ github }: ExportWorkspaceProps) {
   const { project, analysis, announce, tutorialDownloadStarted } = useProject();
   const [includeWorkflow, setIncludeWorkflow] = useState(true);
   const { files, problems, shieldName } = getExportPreview(analysis, { includeWorkflow });
-  function handleWorkflowChange(value: boolean) {
-    setIncludeWorkflow(value);
-  }
+  const githubFiles = includeWorkflow
+    ? files
+    : getExportPreview(analysis, { includeWorkflow: true }).files;
   const actions = useExportActions({
     files,
     shieldName,
@@ -30,17 +34,18 @@ export function ExportWorkspace() {
         {problems.length > 0 ? (
           <ExportProblems issues={problems} />
         ) : (
-          <>
-            <ExportToolbar
-              controllerId={project.controllerId}
-              includeWorkflow={includeWorkflow}
-              onWorkflowChange={handleWorkflowChange}
-              actions={actions}
-            />
-            {actions.feedback === '' ? undefined : <p>{actions.feedback}</p>}
-            <FilePreview files={files} actions={actions} />
-          </>
+          <ExportToolbar
+            controllerId={project.controllerId}
+            includeWorkflow={includeWorkflow}
+            onWorkflowChange={(value) => {
+              setIncludeWorkflow(value);
+            }}
+            actions={actions}
+          />
         )}
+        {problems.length === 0 && actions.feedback !== '' ? <p>{actions.feedback}</p> : undefined}
+        <GithubPublishPanel github={github} files={githubFiles} />
+        {problems.length === 0 ? <FilePreview files={files} actions={actions} /> : undefined}
       </div>
       <PlaceholderFooter />
     </>

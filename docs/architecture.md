@@ -7,7 +7,7 @@ src/
   domain/      Pure TS. Types + functions over project state. No DOM, no React, no I/O.
   catalog/     Static ZMK data: boards & pin maps, keycodes, behaviors, Kconfig options (with doc URLs).
   generators/  Pure functions: (Project) -> { path, content }[]. Deterministic text output.
-  storage/     localStorage + JSON import/export. The only place that parses untrusted input.
+  storage/     Local persistence, JSON import/export and optional GitHub I/O. Parses untrusted input.
   ui/          React components. Reads state, dispatches domain operations. No business rules.
                ui/components/ = design-system primitives; ui/<step>/ = feature screens.
   styles.css   Tailwind entry + design tokens (@theme). The only place for raw colors.

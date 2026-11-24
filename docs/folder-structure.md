@@ -53,6 +53,8 @@ not relax layer boundaries.
 | `src/storage/migrations/` | Versioned project migrations |
 | `src/storage/preferences/` | Application preferences |
 | `src/storage/export/` | ZIP construction |
+| `src/storage/github/` | GitHub authorization, repositories, commits and builds |
+| `src/domain/publication/` | Pure publication plan and replacement policy |
 | `src/ui/schematic/formatting/` | Schematic labels and wire issue text |
 | `src/ui/schematic/rendering/` | SVG keys, wires, diodes, markers and preview layers |
 | `src/ui/schematic/interaction/` | Pointer/keyboard input, selection, hit detection and drafts |

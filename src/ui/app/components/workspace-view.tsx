@@ -3,24 +3,26 @@ import { useProject } from '@ui/project/logic';
 import type { ReactNode } from 'react';
 import type { WorkspaceId } from '@storage/preferences';
 import { BindingsWorkspace } from '@ui/bindings/components';
+import type { GithubSession } from '@ui/export/logic';
 import { ExportWorkspace } from '@ui/export/components';
 import { FirmwareWorkspace } from '@ui/firmware/components';
 import { SchematicWorkspace } from '@ui/schematic/components';
 import { getWorkspaceLabel } from '@ui/navigation';
 
-const WORKSPACE_VIEWS: Record<WorkspaceId, () => ReactNode> = {
+const WORKSPACE_VIEWS: Record<WorkspaceId, (github: GithubSession) => ReactNode> = {
   schematic: () => <SchematicWorkspace />,
   bindings: () => <BindingsWorkspace />,
   firmware: () => <FirmwareWorkspace />,
-  export: () => <ExportWorkspace />,
+  export: (github) => <ExportWorkspace github={github} />,
 };
 
 type WorkspaceViewProps = {
   readonly workspaceId: WorkspaceId;
+  readonly github: GithubSession;
 };
 
 // Document title, <h1> and body of the active workspace.
-export function WorkspaceView({ workspaceId }: WorkspaceViewProps) {
+export function WorkspaceView({ workspaceId, github }: WorkspaceViewProps) {
   const { sessionId } = useProject();
   const headingRef = useWorkspaceHeadingFocus(workspaceId);
   const label = getWorkspaceLabel(workspaceId);
@@ -31,7 +33,7 @@ export function WorkspaceView({ workspaceId }: WorkspaceViewProps) {
         {label}
       </h1>
       <section className="flex min-h-0 flex-1 flex-col" key={sessionId}>
-        {WORKSPACE_VIEWS[workspaceId]()}
+        {WORKSPACE_VIEWS[workspaceId](github)}
       </section>
     </>
   );

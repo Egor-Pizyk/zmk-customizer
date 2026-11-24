@@ -1,6 +1,6 @@
 # ZMK Customizer
 
-Static browser application for keyboard design and ready-to-build ZMK v0.3.0 shields. No backend.
+Static browser application for keyboard design and ready-to-build ZMK v0.3.0 shields. Optional GitHub publishing uses a stateless authorization service.
 
 ## Work directly, keep feedback fast
 

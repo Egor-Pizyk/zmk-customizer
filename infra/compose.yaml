@@ -17,6 +17,11 @@ services:
       context: ..
       dockerfile: infra/Dockerfile
       target: prod
+      args:
+        VITE_GITHUB_AUTH_URL: ${VITE_GITHUB_AUTH_URL:-}
+        VITE_GITHUB_APP_SLUG: ${VITE_GITHUB_APP_SLUG:-}
+    environment:
+      ZMK_CONNECT_SOURCES: "${ZMK_CONNECT_SOURCES:-'none'}"
     ports:
       - '8080:80'
 

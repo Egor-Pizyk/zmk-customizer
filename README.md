@@ -2,7 +2,7 @@
 
 Browser tool for keyboard layout, electrical wiring, keymaps, behaviors and firmware settings. Exports a ready-to-build ZMK v0.3.0 shield in a zmk-config repository ZIP.
 
-Static/offline application: no backend or accounts. Projects autosave in the browser and import/export as versioned JSON. Firmware building/flashing happens outside the app.
+The editor works offline. Projects autosave in the browser and import/export as versioned JSON. Optional [GitHub publishing](docs/github.md) commits configuration and the editable project to a repository, where GitHub Actions builds the firmware.
 
 ## Quick start
 

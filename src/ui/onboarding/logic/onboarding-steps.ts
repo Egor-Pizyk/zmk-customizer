@@ -98,7 +98,7 @@ export const ONBOARDING_CONTENT = {
   },
   files: {
     title: 'Inspect generated files',
-    why: 'Export shows repair links when problems block the ZIP. Once the project is valid, it previews the actual repository files. The keymap assigns actions, .conf carries settings, and shield files describe the hardware.',
+    why: 'Export shows repair links when problems block the ZIP. Once the project is valid, it previews the repository files and can publish them to GitHub. Download the ZIP for this exercise. The keymap assigns actions, .conf carries settings, and shield files describe the hardware.',
     action:
       'Focus or open the preview of a .keymap file, a .conf file and a boards/shields file. Confirm after inspecting all three groups. The ZIP will contain these same current files.',
     target: 'workspace',
